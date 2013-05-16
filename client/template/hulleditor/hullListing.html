@@ -1,0 +1,27 @@
+<template name="hullListing">
+    <div class="sidemenu">
+        {{#each hullImages}}
+            {{> hullImage}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="hullImage">
+    <div class="hull {{selected}}">
+        <canvas class="hullcanvas" width="200" height="150"></canvas>
+        {{#if isSelected}}
+            {{#each hullLayouts}}
+                {{> hullLayout}}
+            {{/each}}
+        {{/if}}
+    </div>
+</template>
+
+<template name="hullLayout">
+    <div class="hullLayout {{selected}}">
+        <canvas class="hullcanvas" width="200" height="150"></canvas>
+        {{#each hullLayouts}}
+            {{> hullLayout}}
+        {{/each}}
+    </div>
+</template>
