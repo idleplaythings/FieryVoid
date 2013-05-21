@@ -1,17 +1,15 @@
-model.ShipDisplayGrid = function ShipGrid(ship, target, dispatcher)
+model.ShipDisplayGrid = function ShipDisplayGrid(layout, target)
 {
-    model.ShipDisplay.call(this, ship, target, "shipGrid", dispatcher);
+    model.ShipDisplay.call(this, layout, target);
 
     this.drawingTool = window.Tools.getCanvasDrawingTool();
-
     this.drawImage();
 }
 
-model.ShipDisplayGrid.prototype = Object.create(this.model.ShipDisplay.prototype);
+model.ShipDisplayGrid.prototype = Object.create(model.ShipDisplay.prototype);
 
 model.ShipDisplayGrid.prototype.drawImage = function()
 {
-    console.log("drawing grid");
     var dimensions = this.getDimensions();
     this.context.clearRect(0, 0, dimensions.width, dimensions.height);
     var zoom = this.calculateZoomForFit({

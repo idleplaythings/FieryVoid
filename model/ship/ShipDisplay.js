@@ -10,15 +10,13 @@ model.ShipDisplay = function ShipDisplay(layout, canvas)
 model.ShipDisplay.prototype.getDimensions = function()
 {
     return {
-        width:this.canvas.width(),
-        height:this.canvas.height()
+        width:$(this.canvas).width(),
+        height:$(this.canvas).height()
     };
 };
 
 model.ShipDisplay.prototype.resize = function(width, height)
 {
-    console.log("resize");
-
     this.canvas
         .attr("width", width)
         .attr("height", height);
@@ -41,21 +39,19 @@ model.ShipDisplay.prototype.drawImage = function()
     this.context.clearRect(0, 0, dimensions.width, dimensions.height);
     var data = this.image.data;
 
-    console.log(data);
     var width = data.width;
     var height = data.height;
 
     var zoom = this.calculateZoomForFit({width:width, height:height});
 
-    console.log("zoom: " + zoom);
     var pos = {
         x: (dimensions.width - width*zoom)/2,
         y: (dimensions.height - height*zoom)/2
     };
 
-    console.log(pos);
     //this.context.putImageData(data, 0, 0);
-    this.resizeImageDataAndDraw(this.context, pos, data, zoom);
+    window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(
+        this.context, pos, data, zoom);
 };
 
 model.ShipDisplay.prototype.calculateGridSize = function()

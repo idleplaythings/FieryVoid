@@ -90,7 +90,6 @@ Template.hullImage.hullLayouts = function()
 
 Template.hullImage.events({
     'click .create': function () {
-        console.log("create");
         Meteor.call('HullLayoutInsert', this.img, function(err, result){
            Session.set('selected_hullLayout', result);
         });
@@ -121,7 +120,84 @@ Template.hullLayout.selected = function()
 
 Template.hullLayout.events({
     'click .hullLayout': function () {
-        console.log("clicked");
         Session.set('selected_hullLayout', this._id);
     }
 });
+
+
+
+Template.hullmenu.height = function()
+{
+    return getHeight() + "px";
+};
+
+Template.hullmenu.hullName = function()
+{
+    return getFromSelectedLayout('name');
+};
+
+Template.hullmenu.tileWidth = function()
+{
+    return getFromSelectedLayout('width');
+};
+
+Template.hullmenu.tileHeight = function()
+{
+    return getFromSelectedLayout('height');
+};
+
+Template.hullmenu.tileScale = function()
+{
+    return getFromSelectedLayout('tileScale');
+};
+
+Template.hullmenu.events({
+    'blur input': function (event) {
+        handleDetailChange(event.currentTarget);
+    }
+});
+
+function getFromSelectedLayout(name)
+{
+    var hullLayoutId = Session.get("selected_hullLayout");
+    if (hullLayoutId)
+    {
+        var layout = HullLayouts.findOne({_id: hullLayoutId});
+        if (layout && layout[name])
+            return layout[name];
+    }
+
+    return '';
+}
+
+function handleDetailChange(element)
+{
+    console.log(element);
+    var name = jQuery(element).attr('name');
+    var value = jQuery(element).val();
+
+    console.log(name + ": " + value);
+
+    var hullLayoutId = Session.get("selected_hullLayout");
+    if (hullLayoutId)
+    {
+        var layout = HullLayouts.findOne({_id: hullLayoutId});
+        if (layout && layout.changeIfDiff(name, value))
+        {
+            var updateObject = {};
+            updateObject[name] = value;
+
+            console.log(updateObject);
+
+            Meteor.call(
+                'HullLayoutUpdate',
+                hullLayoutId,
+                updateObject,
+                function(err, result){
+                    console.log('Hull layout ' +name + ' updated to ' + value);
+                }
+            );
+        }
+    }
+
+}

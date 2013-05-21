@@ -36,3 +36,20 @@ model.HullLayout.prototype.getArgsForInsert = function()
         tileHeights: this.tileHeights
     };
 };
+
+model.HullLayout.prototype.changeIfDiff = function(name, value)
+{
+    if (this[name])
+        throw "Trying to change HullLayout value '" + name
+            +"' that does not exist";
+
+    console.log('hullis');
+    console.log(this[name]);
+    if (this[name] != value)
+    {
+        this[name] = value;
+        return true;
+    }
+
+    return false;
+}

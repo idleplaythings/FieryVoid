@@ -18,6 +18,13 @@
     box-shadow: inset -50px 0px 100px rgba(0,0,0,0.5);
 }
 
+.sidemenu.left
+{
+    border-right: 5px solid #16181d;
+    left:0px;
+    box-shadow: inset 50px 0px 100px rgba(0,0,0,0.5);
+}
+
 .hullcanvas
 {
     width:155px;
@@ -75,4 +82,10 @@
 
     padding: 0;
     cursor:pointer;
+}
+
+
+.hullmenu
+{
+    overflow:hidden;
 }

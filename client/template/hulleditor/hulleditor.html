@@ -1,7 +1,21 @@
 <template name="hulleditor">
     <div class="hulleditor" style="height:{{height}};">
+        {{> hullmenu}}
         {{> hullDisplay}}
         {{> hullListing}}
+    </div>
+</template>
+
+<template name="hullmenu">
+    <div class="sidemenu left hullmenu" style="height:{{height}};">
+        <div>Hull name:</div>
+        <input type="text" name="hullname" value="{{hullName}}"/>
+        <div>Width:</div>
+        <input type="text" name="tileWidth" value="{{tileWidth}}"/>
+        <div>Height:</div>
+        <input type="text" name="tileHeight" value="{{tileHeight}}"/>
+        <div>Scale:</div>
+        <input type="text" name="tileScale" value="{{tileScale}}"/>
     </div>
 </template>
 

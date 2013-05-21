@@ -52,8 +52,6 @@ model.ShipHullCompositeImage.prototype._doGetImageData = function()
 
 model.ShipHullCompositeImage.prototype._createImage = function()
 {
-    console.log('creating imagedata');
-
     var width = this.base.width;
     var height = this.base.height;
 

@@ -9,11 +9,11 @@ HullLayouts.allow({
     },
 
     update: function () {
-        return true;
+        return false;
     },
 
     remove: function () {
-        return true;
+        return false;
     }
 });
 
@@ -24,6 +24,18 @@ Meteor.methods({
         var args = layout.getArgsForInsert();
         console.log(args);
         return HullLayouts.insert(args);
+    },
+
+    HullLayoutUpdate: function(id, data)
+    {
+        console.log('hull update');
+        console.log(id);
+        console.log(data);
+
+        return HullLayouts.update(
+            { _id: id },
+            {$set: data}
+        );
     }
 });
 
