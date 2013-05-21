@@ -10,3 +10,7 @@ Meteor.publish("ShipLayouts", function () {
 Meteor.publish("HullImages", function () {
     return HullImages.find({});
 });
+
+Meteor.publish("HullLayouts", function () {
+    return HullLayouts.find({$or: [{"published": true}, {owner: this.userId}]});
+});

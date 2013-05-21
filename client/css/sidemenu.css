@@ -1,0 +1,78 @@
+.sidemenu
+{
+    position:absolute;
+    width:200px;
+    margin:0;
+    padding:0;
+    background-color:#515860;
+    border:1px solid black;
+    top:0px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.sidemenu.right
+{
+    border-left: 5px solid #16181d;
+    right:0px;
+    box-shadow: inset -50px 0px 100px rgba(0,0,0,0.5);
+}
+
+.hullcanvas
+{
+    width:155px;
+    margin: 5px auto;
+    cursor:pointer;
+    border: 1px solid #16181d;
+    background-color:#35383c;
+    box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
+}
+
+.hull.selected .hullcanvas
+{
+    cursor: default;
+}
+
+.sidemenu .hull
+{
+    position:relative;
+    margin:5px 15px 5px 5px;
+    width:90%;
+    background-color:#45586f;
+    border:2px solid #2f3648;
+    text-align: center;
+    box-shadow: 2px 2px 10px #000000;
+
+}
+.sidemenu .hull.selected
+{
+    box-shadow: inset 0px 0px 50px #6e96b8;
+}
+
+.create
+{
+    font-size: 16px;
+    font-weight: bold;
+    width:140px;
+    margin: 5px auto;
+}
+
+.list-entry
+{
+    font-size: 16px;
+    font-weight: bold;
+    width:140px;
+    margin: 5px auto;
+    text-align: center;
+    background-image: linear-gradient(to bottom, #3d3f43, #b2b8bb);
+    display: inline-block;
+
+    color:#2f3648;
+    border: 1px solid #c8e5e7;
+    box-shadow: 2px 2px 10px #000000;
+    text-shadow: 1px 1px 1px #c8e5e7;
+    border-radius: 3px;
+
+    padding: 0;
+    cursor:pointer;
+}

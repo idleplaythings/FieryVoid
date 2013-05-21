@@ -1,6 +1,6 @@
-model.ShipDisplay = function ShipDisplay(ship, canvas)
+model.ShipDisplay = function ShipDisplay(layout, canvas)
 {
-    this.layout = ship.layout;
+    this.layout = layout;
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
 

@@ -1,4 +1,76 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
+
 body{
     margin:0;
     padding:0;
+    overflow:hidden;
+    background-color:#16181d;
+    background-image:url('/raster.jpg');
+    font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight:300;
+
+    color: lightcyan;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    box-shadow: inset 0px 0px 500px rgba(0,0,0,1.0);
+}
+
+.hulleditor
+{
+    margin:0;
+    padding:0;
+    position:relative;
+}
+
+.button
+{
+    background-image: linear-gradient(to bottom, #2f3648, #c8e5e7);
+    display: inline-block;
+
+    color:#2f3648;
+    border: 1px solid #c8e5e7;
+    box-shadow: 2px 2px 10px #000000;
+    text-shadow: 1px 1px 1px #c8e5e7;
+    border-radius: 3px;
+
+    margin: 5px auto;
+    text-align: center;
+    padding: 0px 0px;
+    cursor:pointer;
+}
+
+.deprecated
+{
+    text-decoration: line-through;
+}
+
+.shipDisplayLarge
+{
+    position:absolute;
+    right:200px;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.centered
+{
+    -webkit-align-self: center;
+    align-self: center;
+    margin:auto;
+    display:inline-block;
+    text-align: center;
+}
+
+.info{
+    letter-spacing: 1px;
+    font-size: 30px;
+    font-weight: bold;
+    color:#0e0e0e;
+    text-shadow: 1px 1px 1px #5f5f5f;
 }

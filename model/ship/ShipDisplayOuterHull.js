@@ -1,9 +1,7 @@
-model.ShipDisplayOuterHull = function ShipOuterHullDisplay(ship, target)
+model.ShipDisplayOuterHull = function ShipOuterHullDisplay(layout, target, img)
 {
-    model.ShipDisplay.call(this, ship, target, "shipOuterHull");
-
-    console.log(ship);
-    ship.outerHullLarge.getImageDataToCallback($.proxy(this.receiveImageData, this));
+    model.ShipDisplay.call(this, layout, target);
+    img.getImageDataToCallback(jQuery.proxy(this.receiveImageData, this));
 }
 
-model.ShipDisplayOuterHull.prototype = Object.create(this.model.ShipDisplay.prototype);
+model.ShipDisplayOuterHull.prototype = Object.create(model.ShipDisplay.prototype);
