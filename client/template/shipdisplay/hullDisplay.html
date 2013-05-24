@@ -3,6 +3,7 @@
         {{#if hasSelectedHullLayout}}
             <canvas class="shipDisplay outerhull" width="{{width}}" height="{{height}}"></canvas>
             <canvas class="shipDisplay hullgrid" width="{{width}}" height="{{height}}"></canvas>
+            <div class="shipDisplay clickCatcher" width="{{width}}" height="{{height}}"></div>
         {{else}}
             <div class="centered info">SELECT A HULL →</div>
         {{/if}}

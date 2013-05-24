@@ -37,19 +37,30 @@ model.HullLayout.prototype.getArgsForInsert = function()
     };
 };
 
-model.HullLayout.prototype.changeIfDiff = function(name, value)
+model.HullLayout.prototype.updateIfDifferent = function(name, value)
 {
-    if (this[name])
+    if ( ! this[name])
         throw "Trying to change HullLayout value '" + name
             +"' that does not exist";
 
-    console.log('hullis');
-    console.log(this[name]);
     if (this[name] != value)
     {
         this[name] = value;
-        return true;
-    }
 
-    return false;
+        if (Meteor.isClient)
+        {
+            var updateObject = {};
+            updateObject[name] = value;
+
+            Meteor.call(
+                'HullLayoutUpdate',
+                this._id,
+                updateObject,
+                function(err, result){
+                    console.log('Hull layout ' +name + ' updated to ' + value);
+                }
+            );
+        }
+
+    }
 }

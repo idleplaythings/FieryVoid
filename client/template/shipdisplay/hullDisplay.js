@@ -16,27 +16,18 @@ Template.hullDisplay.rendered = function()
     {
         self.handle = Deps.autorun(function () {
             var hullLayoutId = Session.get("selected_hullLayout");
-
-            if (hullLayoutId === self.currentHullLayoutId)
-            {
-                return;
-            }
-
-            self.currentHullLayoutId = hullLayoutId;
             var hullLayout = HullLayouts.findOne({_id: hullLayoutId});
+
+            console.log("hull rendaus");
 
             if ( ! hullLayout)
                 return;
 
-            self.shiphullimage = new model.ShipHullCompositeImage(
-                {hullName: hullLayout.hullImgName});
-
             var outerHullCanvas = jQuery('canvas.shipDisplay.outerhull')[0];
-            self.outerHull = new model.ShipDisplayOuterHull(
-                hullLayout, outerHullCanvas, self.shiphullimage);
-
             var gridCanvas = jQuery('canvas.shipDisplay.hullgrid')[0];
-            self.hullGrid = new model.ShipDisplayGrid(hullLayout, gridCanvas)
+
+            self.shipView = new model.ShipView(
+                hullLayout, outerHullCanvas, gridCanvas);
         });
     }
 };
@@ -55,3 +46,9 @@ Template.hullDisplay.height = function()
 {
     return getHeight();
 };
+
+Template.hullDisplay .events({
+    'click .hullLayout': function () {
+        Session.set('selected_hullLayout', this._id);
+    }
+});

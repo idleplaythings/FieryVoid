@@ -172,31 +172,16 @@ function getFromSelectedLayout(name)
 
 function handleDetailChange(element)
 {
-    console.log(element);
     var name = jQuery(element).attr('name');
     var value = jQuery(element).val();
-
-    console.log(name + ": " + value);
 
     var hullLayoutId = Session.get("selected_hullLayout");
     if (hullLayoutId)
     {
         var layout = HullLayouts.findOne({_id: hullLayoutId});
-        if (layout && layout.changeIfDiff(name, value))
+        if (layout)
         {
-            var updateObject = {};
-            updateObject[name] = value;
-
-            console.log(updateObject);
-
-            Meteor.call(
-                'HullLayoutUpdate',
-                hullLayoutId,
-                updateObject,
-                function(err, result){
-                    console.log('Hull layout ' +name + ' updated to ' + value);
-                }
-            );
+            layout.updateIfDifferent(name, value);
         }
     }
 

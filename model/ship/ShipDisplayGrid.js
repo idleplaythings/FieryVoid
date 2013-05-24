@@ -3,10 +3,14 @@ model.ShipDisplayGrid = function ShipDisplayGrid(layout, target)
     model.ShipDisplay.call(this, layout, target);
 
     this.drawingTool = window.Tools.getCanvasDrawingTool();
-    this.drawImage();
 }
 
 model.ShipDisplayGrid.prototype = Object.create(model.ShipDisplay.prototype);
+
+model.ShipDisplayGrid.prototype.start = function()
+{
+    this.drawImage();
+}
 
 model.ShipDisplayGrid.prototype.drawImage = function()
 {
@@ -60,5 +64,25 @@ model.ShipDisplayGrid.prototype.drawImage = function()
             }
         }
     }
+};
+
+model.ShipDisplayGrid.prototype.getClickedTile = function(pos)
+{
+    var gridWidth = this.layout.width;
+    var gridHeight = this.layout.height;
+    var gridSize = this.calculateGridSize(gridWidth, gridHeight);
+
+    var width = gridSize * gridWidth;
+    var height = gridSize * gridHeight;
+
+    var startpos = {
+        x: (dimensions.width - width)/2,
+        y: (dimensions.height - height)/2
+    };
+
+    return {
+        x: Math.floor((pos.x - startpos.x) / gridSize),
+        y: Math.floor((pos.x - startpos.x) / gridSize)
+    };
 };
 
