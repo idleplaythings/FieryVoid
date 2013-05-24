@@ -1,8 +1,3 @@
-Template.hullDisplay.created = function()
-{
-
-};
-
 Template.hullDisplay.hasSelectedHullLayout = function()
 {
     return Session.get("selected_hullLayout");
@@ -11,6 +6,7 @@ Template.hullDisplay.hasSelectedHullLayout = function()
 Template.hullDisplay.rendered = function()
 {
     var self = this;
+    var data = self.data;
 
     if (! self.handle)
     {
@@ -26,7 +22,7 @@ Template.hullDisplay.rendered = function()
             var outerHullCanvas = jQuery('canvas.shipDisplay.outerhull')[0];
             var gridCanvas = jQuery('canvas.shipDisplay.hullgrid')[0];
 
-            self.shipView = new model.ShipView(
+            Template.hullDisplay.shipView = new model.ShipView(
                 hullLayout, outerHullCanvas, gridCanvas);
         });
     }
@@ -47,8 +43,21 @@ Template.hullDisplay.height = function()
     return getHeight();
 };
 
-Template.hullDisplay .events({
-    'click .hullLayout': function () {
-        Session.set('selected_hullLayout', this._id);
+Template.hullDisplay.events({
+    'click .shipDisplay.clickCatcher': function (event) {
+        console.log('click');
+        var hullLayoutId = Session.get("selected_hullLayout");
+        var hullLayout = HullLayouts.findOne({_id: hullLayoutId});
+
+        if ( ! hullLayout)
+            return;
+
+        var pos = Template.hullDisplay.shipView.getClickedTile(
+            window.Tools.getMouseCoordinatesInElement(event));
+
+        console.log(pos);
+
+        if (pos)
+            hullLayout.toggleDisabledTile(pos);
     }
 });

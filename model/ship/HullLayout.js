@@ -14,27 +14,42 @@ model.HullLayout = function HullLayout(args)
     this.tileHeights = args.tileHeights || [];
 
     this.deprecated = args.deprecated || false;
-    this.active = args.active || false;
+    this.published = args.published || false;
 };
 
-model.HullLayout.prototype.isDisabledTile = function()
+model.HullLayout.prototype.publish = function()
 {
-
+    Meteor.call(
+        'HullLayoutPublish',
+        this._id,
+        this.hullImgName,
+        function(err, result){}
+    );
 };
 
-model.HullLayout.prototype.getArgsForInsert = function()
+model.HullLayout.prototype.isDisabledTile = function(pos)
 {
-    return {
-        hullImgName: this.hullImgName,
-        active:false,
-        deprecated:false,
-        name: this.name,
-        width: this.width,
-        height: this.height,
-        tileScale: this.tileScale,
-        disabledTiles: this.disabledTiles,
-        tileHeights: this.tileHeights
-    };
+    var i = pos.y * this.width + pos.x;
+
+    return this.disabledTiles.indexOf(i) >= 0;
+};
+
+model.HullLayout.prototype.getTileHeight = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+    return this.tileHeights[i] || 1;
+};
+
+model.HullLayout.prototype.toggleDisabledTile = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+
+    Meteor.call(
+        'HullLayoutToggleDisabled',
+        this._id,
+        i,
+        function(err, result){}
+    );
 };
 
 model.HullLayout.prototype.updateIfDifferent = function(name, value)
@@ -46,21 +61,21 @@ model.HullLayout.prototype.updateIfDifferent = function(name, value)
     if (this[name] != value)
     {
         this[name] = value;
-
-        if (Meteor.isClient)
-        {
-            var updateObject = {};
-            updateObject[name] = value;
-
-            Meteor.call(
-                'HullLayoutUpdate',
-                this._id,
-                updateObject,
-                function(err, result){
-                    console.log('Hull layout ' +name + ' updated to ' + value);
-                }
-            );
-        }
-
+        this.updateValue(name, value);
     }
-}
+};
+
+model.HullLayout.prototype.updateValue = function(name, value)
+{
+    var updateObject = {};
+    updateObject[name] = value;
+
+    Meteor.call(
+        'HullLayoutUpdate',
+        this._id,
+        updateObject,
+        function(err, result){
+            console.log('Hull layout ' +name + ' updated to ' + value);
+        }
+    );
+};

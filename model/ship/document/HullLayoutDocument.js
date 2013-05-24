@@ -9,7 +9,7 @@ HullLayouts.allow({
     },
 
     update: function () {
-        return false;
+        return true;
     },
 
     remove: function () {
@@ -21,9 +21,21 @@ Meteor.methods({
     HullLayoutInsert: function (img) {
         console.log("hull insert");
         var layout = new model.HullLayout({hullImgName:img});
-        var args = layout.getArgsForInsert();
-        console.log(args);
-        return HullLayouts.insert(args);
+        delete layout._id;
+        return HullLayouts.insert(layout);
+    },
+
+    HullLayoutPublish: function(id, imgName)
+    {
+        HullLayouts.update(
+            {$and: [{'published': true}, {'hullImgName': imgName}]},
+            {$set: {'published': false}}
+        );
+
+        HullLayouts.update(
+            {'_id': id},
+            {$set: {'published': true}}
+        );
     },
 
     HullLayoutUpdate: function(id, data)
@@ -36,6 +48,30 @@ Meteor.methods({
             { _id: id },
             {$set: data}
         );
+    },
+
+    HullLayoutToggleDisabled: function(id, i)
+    {
+        console.log("set i: " + i);
+
+        var found = HullLayouts.findOne(
+            {$and: [{'_id': id}, {'disabledTiles': i}]}
+        );
+
+        if (found)
+        {
+            HullLayouts.update(
+                {'_id': id},
+                {$pull: {'disabledTiles': i}}
+            );
+        }
+        else
+        {
+            HullLayouts.update(
+                {'_id': id},
+                {$push: {'disabledTiles': i}}
+            );
+        }
     }
 });
 

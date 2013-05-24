@@ -13,6 +13,7 @@ files = [
   'tests/**/*Spec.js',
   'tests/**/*Mock.js',
   'lib/model/model.js',
+  'lib/CoordinateConverter.js',
   'model/ship/ShipDisplay.js',
   'model/ship/ShipDisplayGrid.js'
 ];

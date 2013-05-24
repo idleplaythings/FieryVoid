@@ -103,12 +103,12 @@ Template.hullImage.events({
 
 Template.hullLayout.activeClass = function()
 {
-    return this.active ? 'active' : '';
+    return this.published ? 'active' : '';
 };
 
 Template.hullLayout.layoutName = function()
 {
-    var star = this.active ? '★' : '☆';
+    var star = this.published ? '★' : '☆';
     return star + " " + this.name;
 };
 
@@ -154,8 +154,24 @@ Template.hullmenu.tileScale = function()
 Template.hullmenu.events({
     'blur input': function (event) {
         handleDetailChange(event.currentTarget);
+    },
+    'click .publish': function(event) {
+        var hullLayoutId = Session.get("selected_hullLayout");
+        if (hullLayoutId)
+        {
+            var layout = HullLayouts.findOne({_id: hullLayoutId});
+            if (layout)
+            {
+                layout.publish();
+            }
+        }
     }
 });
+
+Template.hullmenu.publishedClass = function()
+{
+    return getFromSelectedLayout('published') ? 'active' : '';
+};
 
 function getFromSelectedLayout(name)
 {

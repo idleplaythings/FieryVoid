@@ -23,7 +23,7 @@ model.ShipDisplayGrid.prototype.drawImage = function()
 
     var gridWidth = this.layout.width;
     var gridHeight = this.layout.height;
-    var gridSize = this.calculateGridSize(gridWidth, gridHeight);
+    var gridSize = this.calculateGridSize();
 
     var width = gridSize * gridWidth;
     var height = gridSize * gridHeight;
@@ -33,56 +33,48 @@ model.ShipDisplayGrid.prototype.drawImage = function()
         y: (dimensions.height - height)/2
     };
 
+
+    var lineWidth = 2;
+
     this.context.strokeStyle = "rgba(0,0,0,0.5)";
+    this.context.lineWidth = lineWidth;
+
     for (var y = 0; y < gridHeight; y++)
     {
         for (var x = 0; x < gridWidth; x++)
         {
-            if (x === 0 && y === 0)
+
+            if (this.layout.isDisabledTile({x:x, y:y}))
             {
-                this.drawingTool.drawBox(
-                    this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize
-                );
-            }
-            else if (x === 0)
-            {
-                this.drawingTool.drawHalfBoxWithSide(
-                    this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize
-                );
-            }
-            else if (y === 0)
-            {
-                this.drawingTool.drawHalfBoxWithTop(
-                    this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize
-                );
+                continue;
+                //this.context.strokeStyle = "rgba(184,30,13,0.5)";
             }
             else
             {
-                this.drawingTool.drawHalfBox(
-                    this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize
-                );
+                this.context.strokeStyle = "rgba(0,0,0,0.5)";
             }
+            this.drawingTool.drawBox(
+                this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize-lineWidth
+            );
         }
     }
 };
 
 model.ShipDisplayGrid.prototype.getClickedTile = function(pos)
 {
+    return this.getCoordinateTool().convert(pos);
+};
+
+model.ShipDisplayGrid.prototype.getCoordinateTool = function()
+{
     var gridWidth = this.layout.width;
     var gridHeight = this.layout.height;
-    var gridSize = this.calculateGridSize(gridWidth, gridHeight);
 
-    var width = gridSize * gridWidth;
-    var height = gridSize * gridHeight;
-
-    var startpos = {
-        x: (dimensions.width - width)/2,
-        y: (dimensions.height - height)/2
-    };
-
-    return {
-        x: Math.floor((pos.x - startpos.x) / gridSize),
-        y: Math.floor((pos.x - startpos.x) / gridSize)
-    };
+    return new model.CoordinateConverter(
+        this.getDimensions(),
+        {width: gridWidth, height: gridHeight},
+        this.calculateGridSize()
+    );
 };
+
 

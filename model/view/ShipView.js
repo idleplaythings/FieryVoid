@@ -29,3 +29,8 @@ model.ShipView.prototype.drawImages = function()
     this.outerHull.start();
     this.hullGrid.start();
 };
+
+model.ShipView.prototype.getClickedTile = function(pos)
+{
+    return this.hullGrid.getClickedTile(pos);
+};
