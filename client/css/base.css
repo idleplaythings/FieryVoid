@@ -8,7 +8,7 @@ body{
     font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight:300;
 
-    color: lightcyan;
+    color: lightgray;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -81,6 +81,7 @@ body{
 
 h2
 {
+    text-transform:uppercase;
     letter-spacing: 1px;
     font-size: 30px;
     font-weight: bold;
@@ -98,4 +99,29 @@ canvas
 {
     margin:0px;
     padding:0px;
+}
+
+.entry
+{
+    background-color:#333333;
+    margin:5px;
+    padding:5px;
+    border: 1px solid #16181d;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+.chessPiece
+{
+    position:absolute;
+    right:0px;
+    bottom:5px;
+    font-size:35px;
+    line-height:35px;
+    opacity: 0.8;
+}
+
+.label
+{
+    text-align: center;
+    background-color:#121212;
 }
