@@ -1,8 +1,36 @@
 <head>
-  <title>FieryVoid2Meteor</title>
+  <title>FieryVoid - Hull editor</title>
 </head>
 
 <body>
-    {{> topmenu}}
-    {{> hulleditor}}
+    {{> page}}
 </body>
+
+<template name="page">
+    {{> topmenu}}
+
+    {{#if nothingActive}}
+        {{> menu}}
+    {{/if}}
+
+    {{#if hullEditorActive}}
+        {{> hulleditor}}
+    {{/if}}
+
+    {{#if moduleEditorActive}}
+        {{> moduleEditor}}
+    {{/if}}
+
+    {{#if shipEditorActive}}
+        {{> shipEditor}}
+    {{/if}}
+
+    {{#if createShipActive}}
+    {{> createShip}}
+    {{/if}}
+
+</template>
+
+<template name="menu">
+    <div class="button" data-viewTarget="createShip">CREATE SHIP</div>
+</template>

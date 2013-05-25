@@ -1,43 +1,43 @@
-<template name="hulleditor">
+<template name="moduleEditor">
     <div class="mainContainer" style="height:{{height}};">
-        {{> hullmenu}}
-        {{> hullDisplay}}
-        {{> hullListing}}
+        {{> moduleMenu}}
+        {{> moduleDisplay}}
+        {{> moduleListing}}
     </div>
 </template>
 
-<template name="hullmenu">
-    <div class="sidemenu left hullmenu" style="height:{{height}};">
-        <div>Hull name:</div>
-        <input type="text" name="name" value="{{hullName}}"/>
+<template name="moduleMenu">
+    <div class="sidemenu left moduleMenu" style="height:{{height}};">
+        <div>Module name:</div>
+        <input type="text" name="name" value="{{moduleName}}"/>
         <div>Width:</div>
         <input type="text" name="width" value="{{tileWidth}}"/>
         <div>Height:</div>
         <input type="text" name="height" value="{{tileHeight}}"/>
         <div>Scale:</div>
         <input type="text" name="tileScale" value="{{tileScale}}"/>
-        <div>Color:</div>
-        <input type="text" name="color" value="{{color}}"/>
         <div>
             <div class="button publish {{publishedClass}}">Publish</div>
         </div>
     </div>
 </template>
 
-<template name="hullListing">
+<template name="moduleListing">
     <div class="sidemenu right" style="height:{{height}};">
-        {{#each hullImages}}
-            {{> hullImage}}
+        {{#each moduleImages}}
+            {{> moduleImage}}
         {{/each}}
     </div>
 </template>
 
-<template name="hullImage">
-    <div class="img-entry hull {{selected}}">
-        {{> smallHullImage}}
+<template name="moduleImage">
+    <div class="img-entry module {{selected}}">
+        <div class="list-entry-img" style="height:auto;">
+            <img style="padding:3px;" src="{{moduleImgSrc}}" />
+        </div>
         {{#if isSelected}}
-            {{#each hullLayouts}}
-                {{> hullLayout}}
+            {{#each moduleLayouts}}
+                {{> moduleLayout}}
             {{/each}}
             <div class="create button">
                 CREATE NEW
@@ -46,8 +46,8 @@
     </div>
 </template>
 
-<template name="hullLayout">
-    <div class="hullLayout {{selected}} list-entry {{activeClass}}">
+<template name="moduleLayout">
+    <div class="moduleLayout {{selected}} list-entry {{activeClass}}">
         {{layoutName}}
     </div>
 </template>

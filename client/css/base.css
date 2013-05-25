@@ -4,7 +4,6 @@ body{
     margin:0;
     padding:0;
     overflow:hidden;
-    background-color:#16181d;
     background-image:url('/raster.jpg');
     font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight:300;
@@ -17,11 +16,9 @@ body{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-    box-shadow: inset 0px 0px 500px rgba(0,0,0,1.0);
 }
 
-.hulleditor
+.mainContainer
 {
     margin:0;
     padding:0;
@@ -57,7 +54,7 @@ body{
     text-decoration: line-through;
 }
 
-.shipDisplayLarge
+.displayLarge
 {
     position:absolute;
     right:200px;
@@ -80,4 +77,25 @@ body{
     font-weight: bold;
     color:#0e0e0e;
     text-shadow: 1px 1px 1px #5f5f5f;
+}
+
+h2
+{
+    letter-spacing: 1px;
+    font-size: 30px;
+    font-weight: bold;
+    color:#0e0e0e;
+    text-shadow: 1px 1px 1px #5f5f5f;
+}
+
+.marginContainer
+{
+    width:90%;
+    margin: 20px 5%;
+}
+
+canvas
+{
+    margin:0px;
+    padding:0px;
 }

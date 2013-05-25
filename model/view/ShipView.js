@@ -16,7 +16,7 @@ model.ShipView = function ShipView(hullLayout, hullCanvas, gridCanvas)
 model.ShipView.prototype.create = function(hullCanvas, gridCanvas)
 {
     this.shiphullimage =
-        new model.ShipHullCompositeImage({hullName: this.hullLayout.hullImgName});
+        new model.CompositeImageShipHull(this.hullLayout);
 
     this.outerHull =
         new model.ShipDisplayOuterHull(this.hullLayout, hullCanvas, this.shiphullimage);

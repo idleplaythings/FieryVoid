@@ -51,10 +51,10 @@ model.ShipDisplayGrid.prototype.drawImage = function()
             }
             else
             {
-                this.context.strokeStyle = "rgba(0,0,0,0.5)";
+                this.context.strokeStyle = "rgba(0,40,255,0.3)";
             }
             this.drawingTool.drawBox(
-                this.context, x*gridSize + pos.x, y*gridSize + pos.y, gridSize-lineWidth
+                this.context, x*gridSize + pos.x - lineWidth/2, y*gridSize + pos.y - lineWidth/2, gridSize-lineWidth
             );
         }
     }

@@ -1,62 +1,62 @@
-model.HullLayout = function HullLayout(args)
+model.ModuleLayout = function ModuleLayout(args)
 {
-    if (! args.hullImgName)
+    if (! args.moduleImgName)
         throw "Ship layout needs hullName";
 
-    this.hullImgName = args.hullImgName;
+    this.moduleImgName = args.moduleImgName;
 
     this._id = args._id || null;
     this.name = args.name || 'unnamed';
-    this.width = args.width || 30;
-    this.height = args.height || 30;
+    this.description = args.description || '';
+    this.width = args.width || 10;
+    this.height = args.height || 10;
     this.tileScale = args.tileScale || 30;
     this.disabledTiles = args.disabledTiles || [];
     this.tileHeights = args.tileHeights || [];
-    this.color = args.color || '100,100,100';
 
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
 };
 
-model.HullLayout.prototype.publish = function()
+model.ModuleLayout.prototype.publish = function()
 {
     Meteor.call(
-        'HullLayoutPublish',
+        'ModuleLayoutPublish',
         this._id,
-        this.hullImgName,
+        this.moduleImgName,
         function(err, result){}
     );
 };
 
-model.HullLayout.prototype.isDisabledTile = function(pos)
+model.ModuleLayout.prototype.isDisabledTile = function(pos)
 {
     var i = pos.y * this.width + pos.x;
 
     return this.disabledTiles.indexOf(i) >= 0;
 };
 
-model.HullLayout.prototype.getTileHeight = function(pos)
+model.ModuleLayout.prototype.getTileHeight = function(pos)
 {
     var i = pos.y * this.width + pos.x;
     return this.tileHeights[i] || 1;
 };
 
-model.HullLayout.prototype.toggleDisabledTile = function(pos)
+model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 {
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(
-        'HullLayoutToggleDisabled',
+        'ModuleLayoutToggleDisabled',
         this._id,
         i,
         function(err, result){}
     );
 };
 
-model.HullLayout.prototype.updateIfDifferent = function(name, value)
+model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
 {
     if ( ! this[name])
-        throw "Trying to change HullLayout value '" + name
+        throw "Trying to change ModuleLayout value '" + name
             +"' that does not exist";
 
     if (this[name] != value)
@@ -66,17 +66,17 @@ model.HullLayout.prototype.updateIfDifferent = function(name, value)
     }
 };
 
-model.HullLayout.prototype.updateValue = function(name, value)
+model.ModuleLayout.prototype.updateValue = function(name, value)
 {
     var updateObject = {};
     updateObject[name] = value;
 
     Meteor.call(
-        'HullLayoutUpdate',
+        'ModuleLayoutUpdate',
         this._id,
         updateObject,
         function(err, result){
-            console.log('Hull layout ' +name + ' updated to ' + value);
+            console.log('ModuleLayout ' +name + ' updated to ' + value);
         }
     );
 };

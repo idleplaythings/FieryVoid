@@ -63,7 +63,12 @@ model.ShipDisplay.prototype.calculateGridSize = function()
     var sizeW = dimensions.width / gridWidth;
     var sizeH = dimensions.height / gridHeight;
 
-    return (sizeH < sizeW) ? sizeH : sizeW;
+    var size = (sizeH < sizeW) ? sizeH : sizeW;
+
+    if (size > 30)
+        return 30;
+
+    return size;
 };
 
 model.ShipDisplay.prototype.calculateZoomForFit = function(dimensions)
@@ -71,5 +76,10 @@ model.ShipDisplay.prototype.calculateZoomForFit = function(dimensions)
     var size = this.calculateGridSize();
     var nativeGridSize = this.layout.tileScale;
 
-    return size/nativeGridSize;
+    var zoom = size/nativeGridSize;
+
+    if (zoom > 1)
+        zoom = 1;
+
+    return zoom;
 }

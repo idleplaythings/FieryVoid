@@ -1,4 +1,4 @@
-Meteor.subscribe("HullImages");
+Meteor.subscribe("ModuleImages");
 
 Meteor.startup(function () {
     Deps.autorun(function () {
@@ -29,48 +29,53 @@ jQuery(window).resize(function()
     jQuery('.mainContainer, .sidemenu').height(getHeight());
 });
 
-Template.hulleditor.height = function()
+Template.moduleEditor.height = function()
 {
     return getHeight() + "px";
 };
 
-Template.hullListing.height = function()
+Template.moduleListing.height = function()
 {
     return getHeight() + "px";
 };
 
-Template.hullListing.hullImages = function () {
-    var hulls = HullImages.find({});
-    return hulls;
+Template.moduleListing.moduleImages = function () {
+    var imgs = ModuleImages.find({});
+    return imgs;
 };
 
 
 
 
-Template.hullImage.isSelected = function(){
-    return Session.get("selected_hullImg") === this._id;
+Template.moduleImage.isSelected = function(){
+    return Session.get("selected_moduleImg") === this._id;
 };
 
-Template.hullImage.selected = function (){
-    var selected = (Session.get("selected_hullImg") === this._id);
+Template.moduleImage.selected = function (){
+    var selected = (Session.get("selected_moduleImg") === this._id);
     return selected ? 'selected' : '';
 };
 
-Template.hullImage.events({
-    'click .hull': function () {
-        Session.set("selected_hullImg", this._id);
+Template.moduleImage.events({
+    'click .module': function () {
+        Session.set("selected_moduleImg", this._id);
     }
 });
 
-Template.hullImage.hullLayouts = function()
-{
-    return HullLayouts.find({hullImgName: this.img});
+Template.moduleImage.moduleImgSrc = function(){
+    console.log(this);
+    return '/module/' +this.img+ '-inside.png';
 };
 
-Template.hullImage.events({
+Template.moduleImage.moduleLayouts = function()
+{
+    return ModuleLayouts.find({moduleImgName: this.img});
+};
+
+Template.moduleImage.events({
     'click .create': function () {
-        Meteor.call('HullLayoutInsert', this.img, function(err, result){
-           Session.set('selected_hullLayout', result);
+        Meteor.call('ModuleLayoutInsert', this.img, function(err, result){
+           Session.set('selected_moduleLayout', result);
         });
     }
 });
@@ -80,70 +85,65 @@ Template.hullImage.events({
 
 
 
-Template.hullLayout.activeClass = function()
+Template.moduleLayout.activeClass = function()
 {
     return this.published ? 'active' : '';
 };
 
-Template.hullLayout.layoutName = function()
+Template.moduleLayout.layoutName = function()
 {
     var star = this.published ? '★' : '☆';
     return star + " " + this.name;
 };
 
-Template.hullLayout.selected = function()
+Template.moduleLayout.selected = function()
 {
-    var selected = (Session.get("selected_hullLayout") === this._id);
+    var selected = (Session.get("selected_moduleLayout") === this._id);
     return selected ? 'selected' : '';
 };
 
-Template.hullLayout.events({
-    'click .hullLayout': function () {
-        Session.set('selected_hullLayout', this._id);
+Template.moduleLayout.events({
+    'click .moduleLayout': function () {
+        Session.set('selected_moduleLayout', this._id);
     }
 });
 
 
 
-Template.hullmenu.height = function()
+Template.moduleMenu.height = function()
 {
     return getHeight() + "px";
 };
 
-Template.hullmenu.hullName = function()
+Template.moduleMenu.moduleName = function()
 {
     return getFromSelectedLayout('name');
 };
 
-Template.hullmenu.tileWidth = function()
+Template.moduleMenu.tileWidth = function()
 {
     return getFromSelectedLayout('width');
 };
 
-Template.hullmenu.tileHeight = function()
+Template.moduleMenu.tileHeight = function()
 {
     return getFromSelectedLayout('height');
 };
 
-Template.hullmenu.tileScale = function()
+Template.moduleMenu.tileScale = function()
 {
     return getFromSelectedLayout('tileScale');
 };
 
-Template.hullmenu.color = function()
-{
-    return getFromSelectedLayout('color');
-};
-
-Template.hullmenu.events({
+Template.moduleMenu.events({
     'blur input': function (event) {
         handleDetailChange(event.currentTarget);
     },
     'click .publish': function(event) {
-        var hullLayoutId = Session.get("selected_hullLayout");
-        if (hullLayoutId)
+        var layoutId = Session.get("selected_moduleLayout");
+        if (layoutId)
         {
-            var layout = HullLayouts.findOne({_id: hullLayoutId});
+            var layout = ModuleLayouts.findOne({_id: layoutId});
             if (layout)
             {
                 layout.publish();
@@ -152,17 +152,17 @@ Template.hullmenu.events({
     }
 });
 
-Template.hullmenu.publishedClass = function()
+Template.moduleMenu.publishedClass = function()
 {
     return getFromSelectedLayout('published') ? 'active' : '';
 };
 
 function getFromSelectedLayout(name)
 {
-    var hullLayoutId = Session.get("selected_hullLayout");
-    if (hullLayoutId)
+    var layoutId = Session.get("selected_moduleLayout");
+    if (layoutId)
     {
-        var layout = HullLayouts.findOne({_id: hullLayoutId});
+        var layout = ModuleLayouts.findOne({_id: layoutId});
         if (layout && layout[name])
             return layout[name];
     }
@@ -175,10 +175,10 @@ function handleDetailChange(element)
     var name = jQuery(element).attr('name');
     var value = jQuery(element).val();
 
-    var hullLayoutId = Session.get("selected_hullLayout");
-    if (hullLayoutId)
+    var layoutId = Session.get("selected_moduleLayout");
+    if (layoutId)
     {
-        var layout = HullLayouts.findOne({_id: hullLayoutId});
+        var layout = ModuleLayouts.findOne({_id: layoutId});
         if (layout)
         {
             layout.updateIfDifferent(name, value);

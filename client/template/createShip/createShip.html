@@ -1,0 +1,17 @@
+<template name="createShip">
+    <div class="marginContainer">
+        <h2>Select a hull for your new ship</h2>
+        {{#each shipHulls}}
+            {{> shipHull}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="shipHull">
+    <div class="createShip entry">
+        <div class="img-entry hull">
+            {{> smallHullImage}}
+            <div>{{name}}</div>
+        </div>
+    </div>
+</template>

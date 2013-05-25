@@ -5,36 +5,36 @@ if (Meteor.isClient) {
     Meteor.startup(function () {
         Deps.autorun(function () {
 
-            //var shipLayout = new model.ShipLayout({hullName:"hull1"});
-            //var ship = new model.Ship({id:1, shipLayout:shipLayout});
-
-            /*
-            if ( ! Session.get("selectedShip"))
-            {
-                window.gameState = new model.GameState();
-
-                var shipLayout = new model.ShipLayout({hullName:"hull1"});
-                var ship = new model.Ship({id:1, shipLayout:shipLayout});
-                Session.set("selectedShipId", ship);
-            }
-            */
         });
     });
 
-    /*
-    Template.hello.greeting = function () {
-    return "Welcome to FieryVoid2Meteor.";
+    Template.page.hullEditorActive = function () {
+        return Session.get("selected_view") == 'hullEditor';
     };
 
-    Template.hello.events({
-    'click input' : function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
-    }
+    Template.page.moduleEditorActive = function () {
+        return Session.get("selected_view") == 'moduleEditor';
+    };
+
+    Template.page.shipEditorActive = function () {
+        return Session.get("selected_view") == 'shipEditor';
+    };
+
+    Template.page.createShipActive = function()
+    {
+        return Session.get("selected_view") == 'createShip';
+    };
+
+    Template.page.nothingActive = function()
+    {
+        return ! Session.get("selected_view");
+    };
+
+    Template.menu.events({
+        'click .button': function (event) {
+            var element = jQuery(event.currentTarget);
+            Session.set("selected_view", element.data('viewtarget'));
+        }
     });
-
-    */
-
 
 }
