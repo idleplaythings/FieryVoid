@@ -26,11 +26,15 @@
     {{/if}}
 
     {{#if createShipActive}}
-    {{> createShip}}
+        {{> createShip}}
     {{/if}}
 
 </template>
 
 <template name="menu">
-    <div class="button" data-viewTarget="createShip">CREATE SHIP</div>
+    {{#if currentUser}}
+        <div class="button" data-viewTarget="createShip">CREATE SHIP</div>
+    {{else}}
+        <span>Log in create your own ships</span>
+    {{/if}}
 </template>

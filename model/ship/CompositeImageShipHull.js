@@ -40,7 +40,6 @@ model.CompositeImageShipHull.prototype._createImage = function()
 
 model.CompositeImageShipHull.prototype._applyColor = function(targetData, color)
 {
-    console.log(color);
     color = color.split(',');
     var data = targetData.data;
 

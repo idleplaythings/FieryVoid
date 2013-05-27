@@ -24,11 +24,6 @@ var getHeight = function()
     return window.innerHeight - 30;
 };
 
-jQuery(window).resize(function()
-{
-    jQuery('.mainContainer, .sidemenu').height(getHeight());
-});
-
 Template.moduleEditor.height = function()
 {
     return getHeight() + "px";

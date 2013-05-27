@@ -35,6 +35,17 @@ model.HullLayout.prototype.isDisabledTile = function(pos)
     return this.disabledTiles.indexOf(i) >= 0;
 };
 
+model.HullLayout.prototype.isUnavailableTile = function(pos)
+{
+    if (pos.x < 0 || pos.x > this.width || pos.y < 0 || pos.y > this.height-1)
+        return true;
+
+    if (this.isDisabledTile(pos))
+        return true;
+
+    return false;
+};
+
 model.HullLayout.prototype.getTileHeight = function(pos)
 {
     var i = pos.y * this.width + pos.x;

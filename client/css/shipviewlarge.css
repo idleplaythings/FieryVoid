@@ -1,12 +1,11 @@
-.shipviewlarge
-{
-    padding:0;
-    position:relative;
-}
-
 .shipDisplay
 {
     position:absolute;
     top:0px;
     right:0px;
+}
+
+.clickCatcher
+{
+    z-index:10;
 }

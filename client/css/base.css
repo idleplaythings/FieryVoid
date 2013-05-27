@@ -62,6 +62,13 @@ body{
     display: flex;
 }
 
+
+.activeRemove
+{
+    cursor:url(/misc/x.gif), auto;
+}
+
+
 .centered
 {
     -webkit-align-self: center;
@@ -101,13 +108,36 @@ canvas
     padding:0px;
 }
 
+.selectable
+{
+    cursor:pointer;
+}
+
+.selectable.selected
+{
+    box-shadow: inset 0px 0px 50px #c8e5e7;
+    cursor:default;
+}
+
+.shadow
+{
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
 .entry
 {
     background-color:#333333;
     margin:5px;
     padding:5px;
     border: 1px solid #16181d;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+.img-background
+{
+    margin: 5px auto;
+    border: 1px solid #16181d;
+    background-color:#35383c;
+    box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
 }
 
 .chessPiece

@@ -2,16 +2,15 @@ model.CompositeImageModule = function CompositeImageModule(args)
 {
     model.CompositeImage.call(this, args);
 
-    this.color = args.color || Array(255,255,255);
     this.imgName = args.imgName;
     this.imgType = args.imgType;
 
+    var filename = '/module/' +this.imgName+ '-' +this.imgType+ '.png';
     this.base =
-        this.imageLoader.loadImage('/module/' +this.imgName+ '-' +this.imgType+ '.png');
+        this.imageLoader.loadImage(filename);
 }
 
 model.CompositeImageModule.prototype = Object.create(model.CompositeImage.prototype);
-
 
 model.CompositeImageModule.prototype._createImage = function()
 {

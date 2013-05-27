@@ -16,6 +16,66 @@ model.ModuleLayout = function ModuleLayout(args)
 
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
+
+    this.position = null;
+};
+
+model.ModuleLayout.prototype.occupiesPosition = function(pos)
+{
+    var pos = {
+        x: pos.x - this.position.x,
+        y: pos.y - this.position.y
+    };
+
+    if (pos.x < 0 || pos.y < 0)
+        return false;
+
+    if (pos.x >= this.width || pos.y >= this.height)
+        return false;
+
+    if (this.isDisabledTile(pos))
+        return false;
+
+    return true;
+};
+
+model.ModuleLayout.prototype.setPosition = function(pos)
+{
+    this.position = pos;
+};
+
+model.ModuleLayout.prototype.isValidPosition = function(ship, pos)
+{
+    for (var x = 0; x < this.width; x++)
+    {
+        for (var y = 0; y < this.height; y++)
+        {
+            if ( ! this.isValidTileForPosition(ship, pos, {x:x, y:y}))
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+};
+
+model.ModuleLayout.prototype.isValidTileForPosition  = function(
+    ship, pos, tilePos)
+{
+    var hullLayout = ship.hullLayout;
+    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y + tilePos.y};
+
+    if (this.isDisabledTile(tilePos))
+        return true;
+
+    if (hullLayout.isUnavailableTile(hullLayoutPos))
+        return false;
+
+    if (ship.getModuleInPosition(hullLayoutPos))
+        return false;
+
+    return true;
 };
 
 model.ModuleLayout.prototype.publish = function()

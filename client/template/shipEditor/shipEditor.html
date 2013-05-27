@@ -1,8 +1,8 @@
 <template name="shipEditor">
     <div class="mainContainer" style="height:{{height}};">
         {{> shipMenu}}
-        {{> shipDisplay}}
-        {{> moduleListing}}
+            {{> shipDisplay}}
+        {{> availableModuleListing}}
     </div>
 </template>
 
@@ -24,14 +24,14 @@
 
 <template name="availableModuleListing">
     <div class="sidemenu right" style="height:{{height}};">
+        <div class="shadow" style="width:60px;height:60px;margin:5px;display:inline-block;">
+            <div class="img-background remove selectable {{selectedClass}}" style="height:60px; width:60px;position:relative;">
+                <img style="padding:5px;width:50px;" src="/misc/x.png" />
+            </div>
+        </div>
         {{#each availableModules}}
-        {{> module}}
+            {{> smallModuleImage}}
         {{/each}}
     </div>
 </template>
 
-<template name="module">
-    <div>
-        {{name}}
-    </div>
-</template>

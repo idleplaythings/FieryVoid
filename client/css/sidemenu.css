@@ -26,23 +26,6 @@
     overflow:hidden;
 }
 
-.list-entry-img
-{
-    padding: 5px 5px 0px 5px;
-    width:145px;
-    height:120px;
-    margin: 5px auto;
-    cursor:pointer;
-    border: 1px solid #16181d;
-    background-color:#35383c;
-    box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
-}
-
-.hull.selected .list-entry-img
-{
-    cursor: default;
-}
-
 .sidemenu .img-entry
 {
     position:relative;

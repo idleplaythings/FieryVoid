@@ -1,33 +1,35 @@
-model.ShipView = function ShipView(hullLayout, hullCanvas, gridCanvas)
+model.ShipView = function ShipView(target)
 {
-    this.hullLayout = hullLayout;
-    this.systemLayout = null;
-    this.shipDetails = null;
+    this.target = target;
 
     this.shiphullimage = null;
     this.outerHull = null;
     this.hullGrid = null;
+    this.modulesInside = null;
+    this.modulesOutside = null;
 
-    this.create(hullCanvas, gridCanvas);
-
-    this.drawImages();
+    this.create();
 };
 
-model.ShipView.prototype.create = function(hullCanvas, gridCanvas)
+model.ShipView.prototype.create = function()
 {
-    this.shiphullimage =
-        new model.CompositeImageShipHull(this.hullLayout);
 
     this.outerHull =
-        new model.ShipDisplayOuterHull(this.hullLayout, hullCanvas, this.shiphullimage);
-
-    this.hullGrid = new model.ShipDisplayGrid(this.hullLayout, gridCanvas)
+        new model.ShipDisplayOuterHull(this.target, 'outerhull');
+    this.hullGrid =
+        new model.ShipDisplayGrid(this.target, 'hullgrid');
+    this.modulesInside =
+        new model.ShipDisplayModules(this.target, 'moduleInside', 'inside');
+    this.modulesOutside =
+        new model.ShipDisplayModules(this.target, 'moduleOutside', 'outside');
 };
 
-model.ShipView.prototype.drawImages = function()
+model.ShipView.prototype.drawImages = function(ship)
 {
-    this.outerHull.start();
-    this.hullGrid.start();
+    this.outerHull.start(ship);
+    this.hullGrid.start(ship);
+    this.modulesInside.start(ship);
+    this.modulesOutside.start(ship);
 };
 
 model.ShipView.prototype.getClickedTile = function(pos)

@@ -17,12 +17,12 @@ if (Meteor.isClient) {
     };
 
     Template.page.shipEditorActive = function () {
-        return Session.get("selected_view") == 'shipEditor';
+        return Session.get("selected_ship") && Session.get("selected_view") == 'shipEditor';
     };
 
     Template.page.createShipActive = function()
     {
-        return Session.get("selected_view") == 'createShip';
+        return Meteor.userId() && Session.get("selected_view") == 'createShip';
     };
 
     Template.page.nothingActive = function()
@@ -37,4 +37,8 @@ if (Meteor.isClient) {
         }
     });
 
+    jQuery(window).resize(function()
+    {
+        jQuery('.mainContainer, .sidemenu').height(window.innerHeight - 30);
+    });
 }

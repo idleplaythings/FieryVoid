@@ -28,7 +28,6 @@ Meteor.startup(function () {
         var file = files[i];
 
         var name = pattern.exec(file);
-        console.log(name);
         if (name)
         {
             name = name[1];
@@ -38,5 +37,20 @@ Meteor.startup(function () {
                 ModuleImageStorage.insert(name);
             }
         }
+    }
+
+
+    var admin = Meteor.users.findOne({'isAdmin' : true});
+    if (! admin)
+    {
+        Accounts.createUser(
+            {
+                username: 'admin',
+                email: 'admin@fieryvoid.net',
+                password: 'kiiski'
+            }
+        );
+        Meteor.users.update({'username': 'admin'}, {$set: {'isAdmin': true}});
+        console.log('created admin accountpirate');
     }
 });

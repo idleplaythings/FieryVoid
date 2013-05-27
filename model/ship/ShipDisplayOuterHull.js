@@ -1,12 +1,15 @@
-model.ShipDisplayOuterHull = function ShipOuterHullDisplay(layout, target, img)
+model.ShipDisplayOuterHull = function ShipOuterHullDisplay(
+    target, canvasClass)
 {
-    model.ShipDisplay.call(this, layout, target);
-    this.img = img;
+    model.ShipDisplay.call(this, target, canvasClass);
+    this.img = null;
 }
 
 model.ShipDisplayOuterHull.prototype = Object.create(model.ShipDisplay.prototype);
 
-model.ShipDisplayOuterHull.prototype.start = function()
+model.ShipDisplayOuterHull.prototype.start = function(ship)
 {
+    this.ship = ship;
+    this.img = new model.CompositeImageShipHull(ship.hullLayout);
     this.img.getImageDataToCallback(jQuery.proxy(this.receiveImageData, this));
 }
