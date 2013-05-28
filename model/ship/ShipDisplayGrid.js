@@ -49,14 +49,19 @@ model.ShipDisplayGrid.prototype.drawImage = function()
     context.strokeStyle = "rgba(0,0,0,0.5)";
     context.lineWidth = lineWidth;
 
+    var layout = this.ship.hullLayout;
+
     for (var y = 0; y < gridHeight; y++)
     {
         for (var x = 0; x < gridWidth; x++)
         {
 
-            if (this.ship.hullLayout.isDisabledTile({x:x, y:y}))
+            if (layout.isDisabledTile({x:x, y:y}))
             {
                 continue;
+            }
+            else if (layout.isOutsideTile && layout.isOutsideTile({x:x, y:y}))
+            {
                 context.strokeStyle = "rgba(184,30,13,0.5)";
             }
             else

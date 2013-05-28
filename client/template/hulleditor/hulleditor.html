@@ -1,7 +1,13 @@
 <template name="hulleditor">
     <div class="mainContainer" style="height:{{height}};">
         {{> hullmenu}}
-        {{> hullDisplay}}
+        {{#if hasSelectedHullLayout}}
+            {{#with context}}
+                {{> shipDisplay}}
+            {{/with}}
+        {{else}}
+            <div class="centered info">SELECT A HULL →</div>
+        {{/if}}
         {{> hullListing}}
     </div>
 </template>
@@ -20,6 +26,10 @@
         <input type="text" name="color" value="{{color}}"/>
         <div>
             <div class="button publish {{publishedClass}}">Publish</div>
+
+            <h3>Tile height</h3>
+            <div class="button tileheight {{heightClass1}}">Height 1</div>
+            <div class="button tileheight {{heightClass2}}">Height 2</div>
         </div>
     </div>
 </template>

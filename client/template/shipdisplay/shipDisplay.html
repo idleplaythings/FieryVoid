@@ -1,13 +1,5 @@
 <template name="shipDisplay">
     <div class="displayLarge" style="width:{{width}}px;height:{{height}}px">
-        {{#if hasSelectedShip}}
-            {{> clickCatcher}}
-        {{else}}
-            <div class="centered info">SELECT A HULL →</div>
-        {{/if}}
+        {{> clickCatcher}}
     </div>
-</template>
-
-<template name="clickCatcher">
-    <div class="shipDisplay clickCatcher {{removeClass}}" style="width:{{width}}px; height:{{height}}px;"></div>
 </template>

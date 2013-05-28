@@ -12,12 +12,13 @@ model.ModuleLayout = function ModuleLayout(args)
     this.height = args.height || 10;
     this.tileScale = args.tileScale || 30;
     this.disabledTiles = args.disabledTiles || [];
+    this.outsideTiles = args.outsideTiles || [];
     this.tileHeights = args.tileHeights || [];
 
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
 
-    this.position = null;
+    this.position = {x:0, y:0};
 };
 
 model.ModuleLayout.prototype.occupiesPosition = function(pos)
@@ -69,7 +70,10 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
     if (this.isDisabledTile(tilePos))
         return true;
 
-    if (hullLayout.isUnavailableTile(hullLayoutPos))
+    var hullDisabledTile = hullLayout.isUnavailableTile(hullLayoutPos);
+    var outsideTile = this.isOutsideTile(tilePos);
+
+    if (outsideTile != hullDisabledTile)
         return false;
 
     if (ship.getModuleInPosition(hullLayoutPos))
@@ -95,6 +99,13 @@ model.ModuleLayout.prototype.isDisabledTile = function(pos)
     return this.disabledTiles.indexOf(i) >= 0;
 };
 
+model.ModuleLayout.prototype.isOutsideTile = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+
+    return this.outsideTiles.indexOf(i) >= 0;
+};
+
 model.ModuleLayout.prototype.getTileHeight = function(pos)
 {
     var i = pos.y * this.width + pos.x;
@@ -107,6 +118,18 @@ model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 
     Meteor.call(
         'ModuleLayoutToggleDisabled',
+        this._id,
+        i,
+        function(err, result){}
+    );
+};
+
+model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+
+    Meteor.call(
+        'ModuleLayoutToggleOutside',
         this._id,
         i,
         function(err, result){}

@@ -1,0 +1,12 @@
+<template name="shipListing">
+        {{#each shipsForListing}}
+            {{> shipListEntry}}
+        {{/each}}
+</template>
+
+<template name="shipListEntry">
+    <div class="selectable entry">
+        {{> smallShipImage}}
+        <div class="label">{{name}}</div>
+    </div>
+</template>

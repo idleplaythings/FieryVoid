@@ -3,18 +3,22 @@ ShipDesigns = new Meteor.Collection(
     {transform: function (doc) {
         var hullLayout = HullLayouts.findOne({'_id': doc.hullLayoutId})
         var modules = [];
-        doc.modules.forEach(function(moduleAndPos)
+
+        if (Array.isArray(doc.modules))
         {
-            var module = ModuleLayouts.findOne(
-                {'_id': moduleAndPos.module});
+            doc.modules.forEach(function(moduleAndPos)
+            {
+                var module = ModuleLayouts.findOne(
+                    {'_id': moduleAndPos.module});
 
-            module.setPosition(moduleAndPos.position);
+                module.setPosition(moduleAndPos.position);
 
-            modules.push(module);
+                modules.push(module);
 
-        });
+            });
 
-        doc.modules = modules;
+            doc.modules = modules;
+        }
 
         return new model.Ship(doc, hullLayout);
     }}

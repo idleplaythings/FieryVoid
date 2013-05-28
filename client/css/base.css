@@ -126,6 +126,7 @@ canvas
 
 .entry
 {
+    display:inline-block;
     background-color:#333333;
     margin:5px;
     padding:5px;

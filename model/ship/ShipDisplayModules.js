@@ -28,7 +28,6 @@ model.ShipDisplayModules.prototype.getImages = function(type)
 model.ShipDisplayModules.prototype.start = function(ship)
 {
     this.ship = ship;
-    console.log("modules start");
     this.images = this.getImages(this.type);
     this.drawnCount = 0;
 
@@ -55,9 +54,6 @@ model.ShipDisplayModules.prototype.receiveImageData = function(i, data)
 
 model.ShipDisplayModules.prototype.drawImage = function(image, i)
 {
-    console.log(image);
-    console.log(i);
-
     var data = image.data;
 
     var width = data.width;

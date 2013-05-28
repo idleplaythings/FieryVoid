@@ -9,6 +9,24 @@ model.ShipDisplay = function ShipDisplay(target, canvasClass)
     this.image = null;
 };
 
+model.ShipDisplay.prototype.setZIndex = function(value)
+{
+    this.canvases.forEach(function(canvas){
+        jQuery(canvas).css('z-index', value);
+    });
+
+    return this;
+};
+
+model.ShipDisplay.prototype.setOpacity = function(value)
+{
+    this.canvases.forEach(function(canvas){
+        jQuery(canvas).css('opacity', value);
+    });
+
+    return this;
+};
+
 model.ShipDisplay.prototype.createCanvases = function()
 {
     var dimensions = this.getDimensions();

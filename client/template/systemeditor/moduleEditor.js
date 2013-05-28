@@ -1,38 +1,52 @@
 Meteor.subscribe("ModuleImages");
 
-Meteor.startup(function () {
-    Deps.autorun(function () {
-
-        //var shipLayout = new model.ShipLayout({hullName:"hull1"});
-        //var ship = new model.Ship({id:1, shipLayout:shipLayout});
-
-        /*
-         if ( ! Session.get("selectedShip"))
-         {
-         window.gameState = new model.GameState();
-
-         var shipLayout = new model.ShipLayout({hullName:"hull1"});
-         var ship = new model.Ship({id:1, shipLayout:shipLayout});
-         Session.set("selectedShipId", ship);
-         }
-         */
-    });
-});
-
-var getHeight = function()
+Template.moduleEditor.context = function()
 {
-    return window.innerHeight - 30;
+    return {
+        shipView: null,
+        viewClass: model.ShipViewModule,
+        lastMouseOverPos: null,
+        modulePlacing: null,
+
+        handle: function(self) {
+
+            var module = ModuleLayouts.findOne(
+                {_id: Session.get("selected_moduleLayout")});
+
+            if ( ! module)
+                return;
+
+            self.shipView.drawImages({hullLayout: module, modules: [module]});
+        },
+
+        click: function(self, containerPos)
+        {
+            var shipView = self.shipView;
+            var module = ModuleLayouts.findOne(
+                {_id: Session.get("selected_moduleLayout")});
+
+            if ( ! module)
+                return;
+
+            var pos = shipView.getClickedTile(containerPos);
+
+            if (pos)
+            {
+                var type = Session.get('moduleEditor_brushType');
+
+                if ( ! type)
+                    module.toggleDisabledTile(pos);
+                else if (type == 'outside')
+                    module.toggleOutsideTile(pos);
+            }
+
+        }
+    };
 };
 
-Template.moduleEditor.height = function()
-{
-    return getHeight() + "px";
-};
+Template.moduleEditor = _.extend(Template.moduleEditor, BaseTemplate);
 
-Template.moduleListing.height = function()
-{
-    return getHeight() + "px";
-};
+Template.moduleListing = _.extend(Template.moduleListing, BaseTemplate);
 
 Template.moduleListing.moduleImages = function () {
     var imgs = ModuleImages.find({});
@@ -104,11 +118,8 @@ Template.moduleLayout.events({
 });
 
 
+Template.moduleMenu = _.extend(Template.moduleMenu, BaseTemplate);
 
-Template.moduleMenu.height = function()
-{
-    return getHeight() + "px";
-};
 
 Template.moduleMenu.moduleName = function()
 {
@@ -144,12 +155,29 @@ Template.moduleMenu.events({
                 layout.publish();
             }
         }
+    },
+    'click .outside': function(event) {
+        Session.set('moduleEditor_brushType', 'outside');
+    },
+    'click .disabled': function(event) {
+        Session.set('moduleEditor_brushType', null);
     }
+
 });
 
 Template.moduleMenu.publishedClass = function()
 {
     return getFromSelectedLayout('published') ? 'active' : '';
+};
+
+Template.moduleMenu.outsideClass = function()
+{
+    return Session.get('moduleEditor_brushType') == 'outside' ? 'active' : '';
+};
+
+Template.moduleMenu.disabledClass = function()
+{
+    return Session.get('moduleEditor_brushType') ? '' : 'active';
 };
 
 function getFromSelectedLayout(name)

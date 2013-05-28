@@ -1,7 +1,9 @@
 <template name="shipEditor">
     <div class="mainContainer" style="height:{{height}};">
         {{> shipMenu}}
+        {{#with context}}
             {{> shipDisplay}}
+        {{/with}}
         {{> availableModuleListing}}
     </div>
 </template>

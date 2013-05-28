@@ -68,6 +68,30 @@ Meteor.methods({
                 {$push: {'disabledTiles': i}}
             );
         }
+    },
+
+    ModuleLayoutToggleOutside: function(id, i)
+    {
+        console.log("set i: " + i);
+
+        var found = ModuleLayouts.findOne(
+            {$and: [{'_id': id}, {'outsideTiles': i}]}
+        );
+
+        if (found)
+        {
+            ModuleLayouts.update(
+                {'_id': id},
+                {$pull: {'outsideTiles': i}}
+            );
+        }
+        else
+        {
+            ModuleLayouts.update(
+                {'_id': id},
+                {$push: {'outsideTiles': i}}
+            );
+        }
     }
 });
 

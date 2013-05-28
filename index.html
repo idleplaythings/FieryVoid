@@ -34,6 +34,9 @@
 <template name="menu">
     {{#if currentUser}}
         <div class="button" data-viewTarget="createShip">CREATE SHIP</div>
+        <div class="marginContainer">
+            {{> shipListing}}
+        </div>
     {{else}}
         <span>Log in create your own ships</span>
     {{/if}}

@@ -1,7 +1,13 @@
 <template name="moduleEditor">
     <div class="mainContainer" style="height:{{height}};">
         {{> moduleMenu}}
-        {{> moduleDisplay}}
+        {{#if hasSelectedModuleLayout}}
+            {{#with context}}
+                {{> shipDisplay}}
+            {{/with}}
+        {{else}}
+            <div class="centered info">SELECT A HULL →</div>
+        {{/if}}
         {{> moduleListing}}
     </div>
 </template>
@@ -18,6 +24,9 @@
         <input type="text" name="tileScale" value="{{tileScale}}"/>
         <div>
             <div class="button publish {{publishedClass}}">Publish</div>
+            <h3>Click type</h3>
+            <div class="button outside {{outsideClass}}">Outside</div>
+            <div class="button disabled {{disabledClass}}">Disabled</div>
         </div>
     </div>
 </template>

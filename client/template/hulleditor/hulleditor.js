@@ -1,43 +1,45 @@
 Meteor.subscribe("HullImages");
 
-Meteor.startup(function () {
-    Deps.autorun(function () {
-
-        //var shipLayout = new model.ShipLayout({hullName:"hull1"});
-        //var ship = new model.Ship({id:1, shipLayout:shipLayout});
-
-        /*
-         if ( ! Session.get("selectedShip"))
-         {
-         window.gameState = new model.GameState();
-
-         var shipLayout = new model.ShipLayout({hullName:"hull1"});
-         var ship = new model.Ship({id:1, shipLayout:shipLayout});
-         Session.set("selectedShipId", ship);
-         }
-         */
-    });
-});
-
-var getHeight = function()
+Template.hulleditor.context = function()
 {
-    return window.innerHeight - 30;
+    return {
+        shipView: null,
+        viewClass: model.ShipViewHull,
+        lastMouseOverPos: null,
+        modulePlacing: null,
+
+        handle: function(self) {
+
+            var hullLayout = HullLayouts.findOne(
+                {_id: Session.get("selected_hullLayout")});
+
+            if ( ! hullLayout)
+                return;
+
+            self.shipView.drawImages({hullLayout: hullLayout});
+        },
+
+        click: function(self, containerPos)
+        {
+            var shipView = self.shipView;
+            var hullLayout = HullLayouts.findOne(
+                {_id: Session.get("selected_hullLayout")});
+
+            if ( ! hullLayout)
+                return;
+
+            var pos = shipView.getClickedTile(containerPos);
+
+            if (pos)
+                hullLayout.toggleDisabledTile(pos);
+        }
+    };
 };
 
-jQuery(window).resize(function()
-{
-    jQuery('.mainContainer, .sidemenu').height(getHeight());
-});
 
-Template.hulleditor.height = function()
-{
-    return getHeight() + "px";
-};
+Template.hulleditor = _.extend(Template.hulleditor, BaseTemplate);
 
-Template.hullListing.height = function()
-{
-    return getHeight() + "px";
-};
+Template.hullListing = _.extend(Template.hullListing, BaseTemplate);
 
 Template.hullListing.hullImages = function () {
     var hulls = HullImages.find({});
@@ -104,11 +106,7 @@ Template.hullLayout.events({
 });
 
 
-
-Template.hullmenu.height = function()
-{
-    return getHeight() + "px";
-};
+Template.hullmenu = _.extend(Template.hullmenu, BaseTemplate);
 
 Template.hullmenu.hullName = function()
 {
