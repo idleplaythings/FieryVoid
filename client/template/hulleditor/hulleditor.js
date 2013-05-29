@@ -9,7 +9,6 @@ Template.hulleditor.context = function()
         modulePlacing: null,
 
         handle: function(self) {
-
             var hullLayout = HullLayouts.findOne(
                 {_id: Session.get("selected_hullLayout")});
 

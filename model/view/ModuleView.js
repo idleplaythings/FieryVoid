@@ -32,8 +32,3 @@ model.ModuleView.prototype.drawImages = function()
     this.module.start();
     this.grid.start();
 };
-
-model.ModuleView.prototype.getClickedTile = function(pos)
-{
-    return this.grid.getClickedTile(pos);
-};
