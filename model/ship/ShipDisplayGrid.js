@@ -5,7 +5,8 @@ model.ShipDisplayGrid = function ShipDisplayGrid(target, canvasClass, settings)
     if ( ! settings)
         settings = {};
 
-    this.color = settings.color || "rgba(0,40,255,0.3)";
+    this.color = settings.color || "rgba(0,40,255,0.5)";
+    this.fillColor = settings.fillColor || "rgba(0,40,255,0.2)";
     this.width = settings.width || 2;
 
     this.drawingTool = window.Tools.getCanvasDrawingTool();
@@ -55,7 +56,6 @@ model.ShipDisplayGrid.prototype.drawImage = function()
     {
         for (var x = 0; x < gridWidth; x++)
         {
-
             if (layout.isDisabledTile({x:x, y:y}))
             {
                 continue;
@@ -63,13 +63,20 @@ model.ShipDisplayGrid.prototype.drawImage = function()
             else if (layout.isOutsideTile && layout.isOutsideTile({x:x, y:y}))
             {
                 context.strokeStyle = "rgba(184,30,13,0.5)";
+
+            }
+            else if (layout.getTileHeight && layout.getTileHeight({x:x, y:y}) == 2)
+            {
+                context.strokeStyle = "rgba(0,200,255,0.5)";
+                context.fillStyle = "rgba(0,200,255,0.2)";
             }
             else
             {
                 context.strokeStyle = this.color;
+                context.fillStyle = this.fillColor;
             }
             this.drawingTool.drawBox(
-                context, x*gridSize + pos.x + offset, y*gridSize + pos.y + offset, gridSize-lineWidth
+                context, x*gridSize + pos.x + offset, y*gridSize + pos.y + offset, gridSize-lineWidth, true
             );
         }
     }

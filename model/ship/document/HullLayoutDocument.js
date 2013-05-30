@@ -69,7 +69,30 @@ Meteor.methods({
         {
             HullLayouts.update(
                 {'_id': id},
+                {$pull: {'tileHeights': {'tile': i}}}
+            );
+
+            HullLayouts.update(
+                {'_id': id},
                 {$push: {'disabledTiles': i}}
+            );
+        }
+    },
+
+    HullLayoutSetTileHeight: function(id, i, height)
+    {
+        console.log("set i: " + i + " height to: " + height);
+
+        HullLayouts.update(
+            {'_id': id},
+            {$pull: {'tileHeights': {'tile': i}}}
+        );
+
+        if (height > 1)
+        {
+            HullLayouts.update(
+                {'_id': id},
+                {$push: {'tileHeights': {'tile': i, 'height': height}}}
             );
         }
     }

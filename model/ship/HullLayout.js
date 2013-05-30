@@ -49,7 +49,15 @@ model.HullLayout.prototype.isUnavailableTile = function(pos)
 model.HullLayout.prototype.getTileHeight = function(pos)
 {
     var i = pos.y * this.width + pos.x;
-    return this.tileHeights[i] || 1;
+
+    for (var k in this.tileHeights)
+    {
+        var tileAndHeight = this.tileHeights[k];
+        if (tileAndHeight.tile == i)
+            return tileAndHeight.height;
+    }
+
+    return 1;
 };
 
 model.HullLayout.prototype.toggleDisabledTile = function(pos)
@@ -63,6 +71,19 @@ model.HullLayout.prototype.toggleDisabledTile = function(pos)
         function(err, result){}
     );
 };
+
+model.HullLayout.prototype.setTileHeight = function(pos, height)
+{
+    var i = pos.y * this.width + pos.x;
+
+    Meteor.call(
+        'HullLayoutSetTileHeight',
+        this._id,
+        i,
+        height,
+        function(err, result){}
+    );
+}
 
 model.HullLayout.prototype.updateIfDifferent = function(name, value)
 {

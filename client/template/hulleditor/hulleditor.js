@@ -15,6 +15,8 @@ Template.hulleditor.context = function()
             if ( ! hullLayout)
                 return;
 
+            console.log(hullLayout);
+
             self.shipView.drawImages({hullLayout: hullLayout});
         },
 
@@ -30,7 +32,28 @@ Template.hulleditor.context = function()
             var pos = shipView.getClickedTile(containerPos);
 
             if (pos)
-                hullLayout.toggleDisabledTile(pos);
+            {
+                if (hullLayout.isDisabledTile(pos))
+                    hullLayout.toggleDisabledTile(pos);
+
+                var height = Session.get('hullEditor_tileHeight');
+                if ( ! height)
+                    height = 1;
+
+                var curHeight = hullLayout.getTileHeight(pos);
+
+                console.log(height);
+                console.log(curHeight);
+                if (height == curHeight)
+                {
+                    hullLayout.toggleDisabledTile(pos);
+                }
+                else
+                {
+                    hullLayout.setTileHeight(pos, height);
+                }
+            }
+
         }
     };
 };
@@ -132,6 +155,16 @@ Template.hullmenu.color = function()
     return getFromSelectedLayout('color');
 };
 
+Template.hullmenu.heightClass1 = function()
+{
+    return  ! Session.get('hullEditor_tileHeight') ? 'active' : '';
+};
+
+Template.hullmenu.heightClass2 = function()
+{
+    return Session.get('hullEditor_tileHeight') == '2' ? 'active' : '';
+};
+
 Template.hullmenu.events({
     'blur input': function (event) {
         handleDetailChange(event.currentTarget);
@@ -146,6 +179,16 @@ Template.hullmenu.events({
                 layout.publish();
             }
         }
+    },
+    'click .tileheight': function(event) {
+        var currentElement = event.target;
+        var height = jQuery(currentElement).data('tileheight');
+        console.log(height);
+
+        if (height === 1)
+            height = null;
+
+        Session.set('hullEditor_tileHeight', height);
     }
 });
 
