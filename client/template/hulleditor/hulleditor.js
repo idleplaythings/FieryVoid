@@ -1,6 +1,6 @@
 Meteor.subscribe("HullImages");
 
-Template.hulleditor.context = function()
+Template.hullEditor.context = function()
 {
     return {
         shipView: null,
@@ -59,7 +59,7 @@ Template.hulleditor.context = function()
 };
 
 
-Template.hulleditor = _.extend(Template.hulleditor, BaseTemplate);
+Template.hullEditor = _.extend(Template.hullEditor, BaseTemplate);
 
 Template.hullListing = _.extend(Template.hullListing, BaseTemplate);
 
