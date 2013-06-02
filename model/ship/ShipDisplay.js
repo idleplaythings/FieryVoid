@@ -149,7 +149,7 @@ model.ShipDisplay.prototype.calculateGridSize = function()
     return size;
 };
 
-model.ShipDisplay.prototype.calculateZoomForFit = function(dimensions)
+model.ShipDisplay.prototype.calculateZoomForFit = function()
 {
     var size = this.calculateGridSize();
     var nativeGridSize = this.ship.hullLayout.tileScale;

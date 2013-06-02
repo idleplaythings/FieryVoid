@@ -72,18 +72,17 @@ Template.moduleImage.events({
 });
 
 Template.moduleImage.moduleImgSrc = function(){
-    console.log(this);
-    return '/module/' +this.img+ '-inside.png';
+    return this.getDefault();
 };
 
 Template.moduleImage.moduleLayouts = function()
 {
-    return ModuleLayouts.find({moduleImgName: this.img});
+    return ModuleLayouts.find({image: this.name});
 };
 
 Template.moduleImage.events({
     'click .create': function () {
-        Meteor.call('ModuleLayoutInsert', this.img, function(err, result){
+        Meteor.call('ModuleLayoutInsert', this.name, function(err, result){
            Session.set('selected_moduleLayout', result);
         });
     }
@@ -126,12 +125,12 @@ Template.moduleMenu.moduleName = function()
     return getFromSelectedLayout('name');
 };
 
-Template.moduleMenu.tileWidth = function()
+Template.moduleMenu.tileGridWidth = function()
 {
     return getFromSelectedLayout('width');
 };
 
-Template.moduleMenu.tileHeight = function()
+Template.moduleMenu.tileGridHeight = function()
 {
     return getFromSelectedLayout('height');
 };

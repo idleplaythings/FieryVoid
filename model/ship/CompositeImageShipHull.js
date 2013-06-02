@@ -1,18 +1,36 @@
-model.CompositeImageShipHull = function CompositeImageShipHull(args)
+model.CompositeImageShipHull = function CompositeImageShipHull(ship)
 {
-    model.CompositeImage.call(this, args);
+    model.CompositeImage.call(this, ship);
 
-    this.color = args.color || '255,255,255';
-    this.hullImgName = args.hullImgName;
+    this.ship = ship;
+    this.color = ship.hullLayout.color || '255,255,255';
+    this.hullImgName = ship.hullLayout.hullImgName;
 
     this.base =
         this.imageLoader.loadImage('/ship/' +this.hullImgName+ '-base.png');
     this.details =
         this.imageLoader.loadImage('/ship/' +this.hullImgName+ '-details.png');
+
+    this.hullModuleImages = this.getModuleImages('hull');
 }
 
 model.CompositeImageShipHull.prototype = Object.create(model.CompositeImage.prototype);
 
+model.CompositeImageShipHull.prototype.getModuleImages = function(type)
+{
+    var images = [];
+
+    for (var i in this.ship.modules)
+    {
+        var module = this.ship.modules[i];
+        var image = module.image.getByType(type);
+
+        if (image)
+            images[i] = this.imageLoader.loadImage(image);
+    }
+
+    return images;
+};
 
 model.CompositeImageShipHull.prototype._createImage = function()
 {
@@ -35,7 +53,25 @@ model.CompositeImageShipHull.prototype._createImage = function()
     this.drawingTool.drawAndRotate(
         context, width, height, width*2, height*2, 0, this.details, false);
 
+    this._drawModuleImages(context, this.hullModuleImages);
+
+
     return context.getImageData(0, 0, width, height);
+};
+
+model.CompositeImageShipHull.prototype._drawModuleImages = function(context, images)
+{
+    for (var i in images)
+    {
+        var image = images[i];
+        var zoom = this.calculateZoomForFit();
+        var pos = this.getCanvasPosition(this.ship.modules[i].position);
+
+        var w = image.width*zoom;
+        var h = image.height*zoom;
+
+        context.drawImage(image, pos.x, pos.y, w, h);
+    }
 };
 
 model.CompositeImageShipHull.prototype._applyColor = function(targetData, color)
@@ -61,4 +97,44 @@ model.CompositeImageShipHull.prototype._applyColor = function(targetData, color)
         pixels -= 4;
     }
     targetData.data = data;
+};
+
+model.CompositeImageShipHull.prototype.getCanvasPosition = function(pos)
+{
+    return this.getCoordinateTool().convertGridToCanvas(pos);
+};
+
+model.CompositeImageShipHull.prototype.getCoordinateTool = function()
+{
+    var gridWidth = this.ship.hullLayout.width;
+    var gridHeight = this.ship.hullLayout.height;
+
+    return new model.CoordinateConverter(
+        {width: this.base.width, height: this.base.height},
+        {width: gridWidth, height: gridHeight},
+        this.calculateGridSize()
+    );
+};
+
+model.CompositeImageShipHull.prototype.calculateGridSize = function()
+{
+    var gridWidth = this.ship.hullLayout.width;
+    var gridHeight = this.ship.hullLayout.height;
+
+    var sizeW = this.base.width / gridWidth;
+    var sizeH = this.base.height / gridHeight;
+
+    var size = (sizeH < sizeW) ? sizeH : sizeW;
+
+    return size;
+};
+
+model.CompositeImageShipHull.prototype.calculateZoomForFit = function()
+{
+    var size = this.calculateGridSize();
+    var nativeGridSize = this.ship.hullLayout.tileScale;
+
+    var zoom = size/nativeGridSize;
+
+    return zoom;
 };

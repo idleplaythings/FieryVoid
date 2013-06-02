@@ -1,6 +1,10 @@
 ModuleLayouts = new Meteor.Collection(
     "ModuleLayouts",
-    {transform: function (doc) { return new model.ModuleLayout(doc); }}
+    {transform: function (doc) {
+        var image = ModuleImages.findOne({name: doc.image});
+        doc.image = image;
+        return new model.ModuleLayout(doc);
+    }}
 );
 
 ModuleLayouts.allow({
@@ -20,7 +24,7 @@ ModuleLayouts.allow({
 Meteor.methods({
     ModuleLayoutInsert: function (img) {
         console.log("module layout insert");
-        var layout = new model.ModuleLayout({moduleImgName:img});
+        var layout = new model.ModuleLayout({image:img});
         delete layout._id;
         return ModuleLayouts.insert(layout);
     },
@@ -28,7 +32,7 @@ Meteor.methods({
     ModuleLayoutPublish: function(id, imgName)
     {
         ModuleLayouts.update(
-            {$and: [{'published': true}, {'moduleImgName': imgName}]},
+            {$and: [{'published': true}, {'imgage': imgName}]},
             {$set: {'published': false}}
         );
 

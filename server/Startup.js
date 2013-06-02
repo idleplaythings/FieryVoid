@@ -31,11 +31,12 @@ Meteor.startup(function () {
         if (name)
         {
             name = name[1];
-            if ( ! ModuleImageStorage.findByName(name))
-            {
-                console.log("Inserting module image: " + name);
-                ModuleImageStorage.insert(name);
-            }
+            var inside = fs.existsSync('public/module/'+name+'-inside.png');
+            var outside = fs.existsSync('public/module/'+name+'-outside.png');
+            var hull = fs.existsSync('public/module/'+name+'-hull.png');
+
+            console.log(name + " hull " + hull);
+            ModuleImageStorage.insert(name, inside, outside, hull);
         }
     }
 

@@ -1,9 +1,9 @@
 model.ModuleLayout = function ModuleLayout(args)
 {
-    if (! args.moduleImgName)
-        throw "Ship layout needs hullName";
+    if (! args.image)
+        throw "Module layout needs image";
 
-    this.moduleImgName = args.moduleImgName;
+    this.image = args.image;
 
     this._id = args._id || null;
     this.name = args.name || 'unnamed';
@@ -72,13 +72,13 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
     if (this.isDisabledTile(tilePos))
         return true;
 
-    if (this.tileHeight > hullLayout.getTileHeight(hullLayoutPos))
-        return false;
-
     var hullDisabledTile = hullLayout.isUnavailableTile(hullLayoutPos);
     var outsideTile = this.isOutsideTile(tilePos);
 
     if (outsideTile != hullDisabledTile)
+        return false;
+
+    if ( ! outsideTile && this.tileHeight > hullLayout.getTileHeight(hullLayoutPos))
         return false;
 
     if (ship.getModuleInPosition(hullLayoutPos))
@@ -92,7 +92,7 @@ model.ModuleLayout.prototype.publish = function()
     Meteor.call(
         'ModuleLayoutPublish',
         this._id,
-        this.moduleImgName,
+        this.image.name,
         function(err, result){}
     );
 };

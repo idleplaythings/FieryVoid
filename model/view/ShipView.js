@@ -23,7 +23,7 @@ model.ShipView.prototype.create = function()
     this.outerHull =
         new model.ShipDisplayOuterHull(this.target, 'outerhull');
 
-    this.gridView();
+    this.hullView();
 };
 
 model.ShipView.prototype.drawImages = function(ship)

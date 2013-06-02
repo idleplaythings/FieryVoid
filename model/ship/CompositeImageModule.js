@@ -1,13 +1,8 @@
 model.CompositeImageModule = function CompositeImageModule(args)
 {
     model.CompositeImage.call(this, args);
-
-    this.imgName = args.imgName;
-    this.imgType = args.imgType;
-
-    var filename = '/module/' +this.imgName+ '-' +this.imgType+ '.png';
     this.base =
-        this.imageLoader.loadImage(filename);
+        this.imageLoader.loadImage(args.imageSrc);
 }
 
 model.CompositeImageModule.prototype = Object.create(model.CompositeImage.prototype);

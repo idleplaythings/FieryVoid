@@ -14,13 +14,15 @@ model.ShipDisplayModules.prototype = Object.create(model.ShipDisplay.prototype);
 model.ShipDisplayModules.prototype.getImages = function(type)
 {
     var images = [];
-    this.ship.modules.forEach(function(module)
-        {
-            images.push(new model.CompositeImageModule(
-                {imgName: module.moduleImgName, imgType: type})
-            );
-        }
-    );
+
+    for (var i in this.ship.modules)
+    {
+        var module = this.ship.modules[i];
+        var image = module.image.getByType(type);
+
+        if (image)
+            images[i] = new model.CompositeImageModule({imageSrc: image});
+    }
 
     return images;
 };

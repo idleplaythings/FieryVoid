@@ -11,7 +11,7 @@ model.ShipViewModule.prototype = Object.create(model.ShipView.prototype);
 model.ShipViewModule.prototype.create = function()
 {
     this.modulesInside =
-        new model.ShipDisplayModules(this.target, 'moduleInside', 'inside');
+        new model.ShipDisplayModules(this.target, 'moduleInside', 'default');
     this.hullGrid =
         new model.ShipDisplayGrid(this.target, 'hullgrid');
 };
