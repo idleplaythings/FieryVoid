@@ -13,7 +13,7 @@ model.ModuleLayout = function ModuleLayout(args)
     this.tileScale = args.tileScale || 30;
     this.disabledTiles = args.disabledTiles || [];
     this.outsideTiles = args.outsideTiles || [];
-    this.tileHeights = args.tileHeights || [];
+    this.tileHeight = args.tileHeight || 1;
 
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
@@ -70,6 +70,9 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
     if (this.isDisabledTile(tilePos))
         return true;
 
+    if (this.tileHeight > hullLayout.getTileHeight(hullLayoutPos))
+        return false;
+
     var hullDisabledTile = hullLayout.isUnavailableTile(hullLayoutPos);
     var outsideTile = this.isOutsideTile(tilePos);
 
@@ -108,8 +111,7 @@ model.ModuleLayout.prototype.isOutsideTile = function(pos)
 
 model.ModuleLayout.prototype.getTileHeight = function(pos)
 {
-    var i = pos.y * this.width + pos.x;
-    return this.tileHeights[i] || 1;
+    return this.tileHeight;
 };
 
 model.ModuleLayout.prototype.toggleDisabledTile = function(pos)

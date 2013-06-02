@@ -13,7 +13,7 @@
 </template>
 
 <template name="moduleMenu">
-    <div class="sidemenu left moduleMenu" style="height:{{height}};">
+    <div class="sidemenu left moduleMenu" style="height:{{height}}px;">
         <div>Module name:</div>
         <input type="text" name="name" value="{{moduleName}}"/>
         <div>Width:</div>
@@ -22,6 +22,8 @@
         <input type="text" name="height" value="{{tileHeight}}"/>
         <div>Scale:</div>
         <input type="text" name="tileScale" value="{{tileScale}}"/>
+        <div>Tile height:</div>
+        <input type="text" name="tileHeight" value="{{tileHeight}}"/>
         <div>
             <div class="button publish {{publishedClass}}">Publish</div>
             <h3>Click type</h3>
@@ -32,7 +34,7 @@
 </template>
 
 <template name="moduleListing">
-    <div class="sidemenu right" style="height:{{height}};">
+    <div class="sidemenu right" style="height:{{height}}px;">
         {{#each moduleImages}}
             {{> moduleImage}}
         {{/each}}

@@ -39,6 +39,6 @@ if (Meteor.isClient) {
 
     jQuery(window).resize(function()
     {
-        jQuery('.mainContainer, .sidemenu').height(window.innerHeight - 30);
+        //jQuery('.mainContainer, .sidemenu').height(window.innerHeight - 30);
     });
 }

@@ -141,6 +141,12 @@ Template.moduleMenu.tileScale = function()
     return getFromSelectedLayout('tileScale');
 };
 
+Template.moduleMenu.tileHeight = function()
+{
+    return getFromSelectedLayout('tileHeight');
+};
+
+
 Template.moduleMenu.events({
     'blur input': function (event) {
         handleDetailChange(event.currentTarget);

@@ -13,7 +13,7 @@
 </template>
 
 <template name="hullmenu">
-    <div class="sidemenu left hullmenu" style="height:{{height}};">
+    <div class="sidemenu left hullmenu" style="height:{{height}}px;">
         <div>Hull name:</div>
         <input type="text" name="name" value="{{hullName}}"/>
         <div>Width:</div>
@@ -35,7 +35,7 @@
 </template>
 
 <template name="hullListing">
-    <div class="sidemenu right" style="height:{{height}};">
+    <div class="sidemenu right" style="height:{{height}}px;">
         {{#each hullImages}}
             {{> hullImage}}
         {{/each}}

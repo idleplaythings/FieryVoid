@@ -48,3 +48,31 @@ model.Ship.prototype.getModuleInPosition = function(pos)
 
     return null;
 };
+
+model.Ship.prototype.updateIfDifferent = function(name, value)
+{
+    if ( ! this[name])
+        throw "Trying to change Ship design value '" + name
+            +"' that does not exist";
+
+    if (this[name] != value)
+    {
+        this[name] = value;
+        this.updateValue(name, value);
+    }
+};
+
+model.Ship.prototype.updateValue = function(name, value)
+{
+    var updateObject = {};
+    updateObject[name] = value;
+
+    Meteor.call(
+        'ShipDesignUpdate',
+        this._id,
+        updateObject,
+        function(err, result){
+            console.log('Ship ' +name + ' updated to ' + value);
+        }
+    );
+};

@@ -63,6 +63,7 @@ model.ShipDisplayGrid.prototype.drawImage = function()
             else if (layout.isOutsideTile && layout.isOutsideTile({x:x, y:y}))
             {
                 context.strokeStyle = "rgba(184,30,13,0.5)";
+                context.fillStyle = "rgba(184,30,13,0.2)";
 
             }
             else if (layout.getTileHeight && layout.getTileHeight({x:x, y:y}) == 2)

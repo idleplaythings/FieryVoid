@@ -84,6 +84,22 @@ Meteor.methods({
                 {'module': moduleId, 'position': modulePosition}}
             }
         );
-    }
+    },
+
+    ShipDesignPublish: function(id)
+    {
+        ShipDesigns.update(
+            {'_id': id},
+            {$set: {'published': true}}
+        );
+    },
+
+    ShipDesignUpdate: function(id, data)
+    {
+        return ShipDesigns.update(
+            { _id: id },
+            {$set: data}
+        );
+    },
 });
 
