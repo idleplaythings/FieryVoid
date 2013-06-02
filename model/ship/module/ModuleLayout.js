@@ -21,6 +21,8 @@ model.ModuleLayout = function ModuleLayout(args)
     this.position = {x:0, y:0};
 };
 
+_.extend(model.ModuleLayout.prototype, model.ModuleLayoutStorage.prototype);
+
 model.ModuleLayout.prototype.occupiesPosition = function(pos)
 {
     var pos = {
@@ -112,56 +114,4 @@ model.ModuleLayout.prototype.isOutsideTile = function(pos)
 model.ModuleLayout.prototype.getTileHeight = function(pos)
 {
     return this.tileHeight;
-};
-
-model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
-{
-    var i = pos.y * this.width + pos.x;
-
-    Meteor.call(
-        'ModuleLayoutToggleDisabled',
-        this._id,
-        i,
-        function(err, result){}
-    );
-};
-
-model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
-{
-    var i = pos.y * this.width + pos.x;
-
-    Meteor.call(
-        'ModuleLayoutToggleOutside',
-        this._id,
-        i,
-        function(err, result){}
-    );
-};
-
-model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
-{
-    if ( ! this[name])
-        throw "Trying to change ModuleLayout value '" + name
-            +"' that does not exist";
-
-    if (this[name] != value)
-    {
-        this[name] = value;
-        this.updateValue(name, value);
-    }
-};
-
-model.ModuleLayout.prototype.updateValue = function(name, value)
-{
-    var updateObject = {};
-    updateObject[name] = value;
-
-    Meteor.call(
-        'ModuleLayoutUpdate',
-        this._id,
-        updateObject,
-        function(err, result){
-            console.log('ModuleLayout ' +name + ' updated to ' + value);
-        }
-    );
 };
