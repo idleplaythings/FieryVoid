@@ -11,7 +11,7 @@ Template.shipHull.name = function()
 Template.shipHull.events({
     'click .createShip': function () {
         Meteor.call('ShipDesignInsert', this._id, function(err, result){
-            Session.set('selected_ship', result);
+          Meteor.Router.to('shipEditor', result);
         });
     }
 });
