@@ -1,5 +1,13 @@
-<template name="topmenu">
+<template name="topMenu">
     <div class="menubar top">
+        <ul>
+          <li><a class="button outside" href="{{hullEditorPath}}">Hull Editor</a></li>
+          <li><a class="button outside" href="{{moduleEditorPath}}">Module Editor</a></li>
+          <li><a class="button outside" href="{{shipEditorPath}}">Ship Editor</a></li>
+        </ul>
+        <ul>
+          <li><a class="button outside" href="{{createShipPath}}">Create Ship</a></li>
+        </ul>
         <div class="loginbuttoncontainer">
             {{loginButtons align="right"}}
         </div>

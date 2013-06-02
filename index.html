@@ -7,8 +7,11 @@
 </body>
 
 <template name="page">
-    {{> topmenu}}
+    {{> topMenu}}
+    {{renderPage}}
+</template>
 
+<!--
     {{#if nothingActive}}
         {{> menu}}
     {{/if}}
@@ -29,7 +32,7 @@
         {{> createShip}}
     {{/if}}
 
-</template>
+-->
 
 <template name="menu">
     {{#if currentUser}}
