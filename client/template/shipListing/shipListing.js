@@ -10,9 +10,6 @@ Template.shipListEntry.name = function()
 
 Template.shipListEntry.events({
     'click .selectable': function () {
-        console.log("click");
-        console.log(this);
-        Session.set("selected_ship", this._id);
-        Session.set("selected_view", 'shipEditor');
+      Meteor.Router.to('shipEditor', this);
     }
 });
