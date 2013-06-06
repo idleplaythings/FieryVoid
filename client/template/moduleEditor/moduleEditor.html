@@ -30,6 +30,11 @@
             <div class="button outside {{outsideClass}}">Outside</div>
             <div class="button disabled {{disabledClass}}">Disabled</div>
         </div>
+
+        {{#each traits}}
+            <div>{{label}}:</div>
+            <input type="text" name="{{name}}" value="{{value}}"/>
+        {{/each}}
     </div>
 </template>
 

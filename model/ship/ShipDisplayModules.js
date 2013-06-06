@@ -18,7 +18,7 @@ model.ShipDisplayModules.prototype.getImages = function(type)
     for (var i in this.ship.modules)
     {
         var module = this.ship.modules[i];
-        var image = module.image.getByType(type);
+        var image = ModuleImages.findOne({name: module.image}).getByType(type);
 
         if (image)
             images[i] = new model.CompositeImageModule({imageSrc: image});

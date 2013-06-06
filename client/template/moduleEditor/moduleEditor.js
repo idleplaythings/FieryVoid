@@ -145,6 +145,28 @@ Template.moduleMenu.tileHeight = function()
     return getFromSelectedLayout('tileHeight');
 };
 
+Template.moduleMenu.traits = function()
+{
+    var trait,
+        traits = [];
+
+    model.ModuleLayout.getAvailableTraits().every(function(traitName) {
+        trait = new model[traitName]();
+        value = getFromSelectedLayout(trait.name);
+
+        if (value) {
+            trait.value = value;
+        } else {
+            trait.value = '';
+        }
+
+        traits.push(trait);
+
+        return true;
+    });
+
+    return traits;
+}
 
 Template.moduleMenu.events({
     'blur input': function (event) {
@@ -191,6 +213,7 @@ function getFromSelectedLayout(name)
     if (layoutId)
     {
         var layout = ModuleLayouts.findOne({_id: layoutId});
+
         if (layout && layout[name])
             return layout[name];
     }

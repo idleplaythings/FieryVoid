@@ -1,27 +1,48 @@
 model.ModuleLayout = function ModuleLayout(args)
 {
-    if (! args.image)
-        throw "Module layout needs image";
+    // if (! args.image)
+    //     throw "Module layout needs image";
 
-    this.image = args.image;
+    this.image = null;
 
-    this._id = args._id || null;
-    this.name = args.name || 'unnamed';
-    this.description = args.description || '';
-    this.width = args.width || 10;
-    this.height = args.height || 10;
-    this.tileScale = args.tileScale || 30;
-    this.disabledTiles = args.disabledTiles || [];
-    this.outsideTiles = args.outsideTiles || [];
-    this.tileHeight = args.tileHeight || 1;
+    this._id = null;
+    this.name = 'unnamed';
+    this.description = '';
+    this.width = 10;
+    this.height = 10;
+    this.tileScale = 30;
+    this.disabledTiles = [];
+    this.outsideTiles = [];
+    this.tileHeight = 1;
 
-    this.deprecated = args.deprecated || false;
-    this.published = args.published || false;
+    this.deprecated = false;
+    this.published = false;
 
     this.position = {x:0, y:0};
+
+    this.traits = [];
+
+    this.initTraits();
 };
 
-_.extend(model.ModuleLayout.prototype, model.ModuleLayoutStorage.prototype);
+model.ModuleLayout.getAvailableTraits = function() {
+    var traits = [];
+
+    for (modelName in model) {
+        if (modelName.match(/^ModuleLayout\D+Trait$/) !== null) {
+            traits.push(modelName);
+        }
+    }
+
+    return traits;
+}
+
+model.ModuleLayout.prototype.initTraits = function() {
+    this.traits.every(function(traitName) {
+        traitName = 'ModuleLayout' + traitName[0].toUpperCase() + traitName.slice(1) + 'Trait';
+        _.extend(this, model[traitName].prototype);
+    }, this);
+}
 
 model.ModuleLayout.prototype.occupiesPosition = function(pos)
 {
@@ -114,4 +135,58 @@ model.ModuleLayout.prototype.isOutsideTile = function(pos)
 model.ModuleLayout.prototype.getTileHeight = function(pos)
 {
     return this.tileHeight;
+};
+
+
+
+model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+
+    Meteor.call(
+        'ModuleLayoutToggleDisabled',
+        this._id,
+        i,
+        function(err, result){}
+    );
+};
+
+model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
+{
+    var i = pos.y * this.width + pos.x;
+
+    Meteor.call(
+        'ModuleLayoutToggleOutside',
+        this._id,
+        i,
+        function(err, result){}
+    );
+};
+
+model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
+{
+    // if ( ! this[name])
+    //     throw "Trying to change ModuleLayout value '" + name
+    //         +"' that does not exist";
+
+    if (this[name] != value)
+    {
+        this[name] = value;
+        this.updateValue(name, value);
+    }
+};
+
+model.ModuleLayout.prototype.updateValue = function(name, value)
+{
+    var updateObject = {};
+    updateObject[name] = value;
+
+    Meteor.call(
+        'ModuleLayoutUpdate',
+        this._id,
+        updateObject,
+        function(err, result){
+            console.log('ModuleLayout ' +name + ' updated to ' + value);
+        }
+    );
 };
