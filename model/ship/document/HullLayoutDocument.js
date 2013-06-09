@@ -60,6 +60,7 @@ Meteor.methods({
 
         if (found)
         {
+            console.log("found ");
             HullLayouts.update(
                 {'_id': id},
                 {$pull: {'disabledTiles': i}}

@@ -8,8 +8,11 @@ Template.smallHullImage.rendered = function(){
 
     if ( ! self.shiphullimage)
         self.shiphullimage = new model.CompositeImageShipHull({
-            hullImgName: hullImgName,
-            color: color
+            hullLayout: {
+                hullImgName: hullImgName,
+                color: color
+            },
+            modules: []
         });
 
     self.shiphullimage.getImageDataToCallback(

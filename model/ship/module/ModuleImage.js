@@ -8,7 +8,7 @@ model.ModuleImage = function ModuleImage(args)
 
 model.ModuleImage.prototype.getImageInside = function(){
     if ( ! this.inside)
-        return null;
+        return this.getDefault();
 
     return '/module/' +this.name+ '-inside.png';
 };

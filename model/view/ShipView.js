@@ -23,10 +23,9 @@ model.ShipView.prototype.create = function()
     this.outerHull =
         new model.ShipDisplayOuterHull(this.target, 'outerhull');
 
-    this.hullView();
 };
 
-model.ShipView.prototype.drawImages = function(ship)
+model.ShipView.prototype.drawImages = function(ship, mode)
 {
     if ( ! ship)
         return;
@@ -35,6 +34,11 @@ model.ShipView.prototype.drawImages = function(ship)
     this.modulesInside.start(ship);
     this.modulesOutside.start(ship);
     this.outerHull.start(ship);
+
+    if (mode == 2)
+        this.hullView();
+    else
+        this.gridView();
 };
 
 model.ShipView.prototype.gridView = function()

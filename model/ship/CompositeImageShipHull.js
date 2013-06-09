@@ -8,6 +8,8 @@ model.CompositeImageShipHull = function CompositeImageShipHull(ship)
 
     this.base =
         this.imageLoader.loadImage('/ship/' +this.hullImgName+ '-base.png');
+    this.shadow =
+        this.imageLoader.loadImage('/ship/' +this.hullImgName+ '-shadow.png');
     this.details =
         this.imageLoader.loadImage('/ship/' +this.hullImgName+ '-details.png');
 
@@ -23,7 +25,7 @@ model.CompositeImageShipHull.prototype.getModuleImages = function(type)
     for (var i in this.ship.modules)
     {
         var module = this.ship.modules[i];
-        var image = module.image.getByType(type);
+        var image = ModuleImages.findOne({name: module.image}).getByType(type);
 
         if (image)
             images[i] = this.imageLoader.loadImage(image);
@@ -54,6 +56,9 @@ model.CompositeImageShipHull.prototype._createImage = function()
         context, width, height, width*2, height*2, 0, this.details, false);
 
     this._drawModuleImages(context, this.hullModuleImages);
+
+    this.drawingTool.drawAndRotate(
+        context, width, height, width*2, height*2, 0, this.shadow, false);
 
 
     return context.getImageData(0, 0, width, height);

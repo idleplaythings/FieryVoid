@@ -33,9 +33,6 @@ Template.hullEditor.context = function()
 
             if (pos)
             {
-                if (hullLayout.isDisabledTile(pos))
-                    hullLayout.toggleDisabledTile(pos);
-
                 var height = Session.get('hullEditor_tileHeight');
                 if ( ! height)
                     height = 1;
@@ -44,7 +41,7 @@ Template.hullEditor.context = function()
 
                 console.log(height);
                 console.log(curHeight);
-                if (height == curHeight)
+                if (height == curHeight || hullLayout.isDisabledTile(pos))
                 {
                     hullLayout.toggleDisabledTile(pos);
                 }

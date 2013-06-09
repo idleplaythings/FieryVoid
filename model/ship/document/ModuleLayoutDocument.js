@@ -33,7 +33,7 @@ Meteor.methods({
     ModuleLayoutPublish: function(id, imgName)
     {
         ModuleLayouts.update(
-            {$and: [{'published': true}, {'imgage': imgName}]},
+            {$and: [{'published': true}, {'image': imgName}]},
             {$set: {'published': false}}
         );
 

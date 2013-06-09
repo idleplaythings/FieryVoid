@@ -8,7 +8,9 @@ Template.shipEditor.context = function()
 
         handle: function(self) {
             self.shipView.drawImages(
-                ShipDesigns.findOne({_id: Session.get("selected_ship")}));
+                ShipDesigns.findOne({_id: Session.get("selected_ship")}),
+                Session.get('shipEditor_viewMode')
+            );
         },
 
         click: function(self, containerPos)
@@ -103,6 +105,16 @@ Template.shipMenu.designName = function()
     return getFromSelectedLayout('name');
 };
 
+Template.hullmenu.shipViewModeGrid = function()
+{
+    return  ! Session.get('shipEditor_viewMode') ? 'active' : '';
+};
+
+Template.hullmenu.shipViewModeHull = function()
+{
+    return Session.get('shipEditor_viewMode') == '2' ? 'active' : '';
+};
+
 Template.shipMenu.events({
     'blur input': function (event) {
         handleDetailChange(event.currentTarget);
@@ -117,6 +129,16 @@ Template.shipMenu.events({
                 layout.publish();
             }
         }
+    },
+    'click .shipViewMode': function(event) {
+        var currentElement = event.target;
+        var mode = jQuery(currentElement).data('view');
+        console.log(mode);
+
+        if (mode == 1)
+            mode = null;
+
+        Session.set('shipEditor_viewMode', mode);
     }
 });
 
