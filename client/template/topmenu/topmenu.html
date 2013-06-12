@@ -3,10 +3,12 @@
         <ul>
           <li><a class="button outside" href="{{shipMenuPath}}">Ships</a></li>
         </ul>
+        {{#if isAdmin}}
         <ul>
           <li><a class="button outside" href="{{hullEditorPath}}">Hull Editor</a></li>
           <li><a class="button outside" href="{{moduleEditorPath}}">Module Editor</a></li>
         </ul>
+        {{/if}}
         <div class="loginbuttoncontainer">
             {{loginButtons align="right"}}
         </div>

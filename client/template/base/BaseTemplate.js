@@ -23,6 +23,20 @@ BaseTemplate = {
     hasSelectedModuleLayout: function()
     {
         return Session.get("selected_moduleLayout")
+    },
+
+    isAdmin: function()
+    {
+        var user = Meteor.user();
+        return user && user.isAdmin;
+    },
+
+    isMyShip: function()
+    {
+        var user = Meteor.user();
+        var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")})
+
+        return user && (user.isAdmin || (ship && ship.owner == user._id));
     }
 };
 

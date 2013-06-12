@@ -2,5 +2,10 @@
     <div class="displayLarge" style="width:{{width}}px;height:{{height}}px">
         <div class="displayTarget" style="width:100%;height:100%;position:relative"></div>
         {{> clickCatcher}}
+        {{> viewModeButton}}
     </div>
+</template>
+
+<template name="viewModeButton">
+    <div class="hoverbutton shipViewMode {{activeShipViewMode}}"></div>
 </template>

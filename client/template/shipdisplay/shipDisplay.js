@@ -19,3 +19,19 @@ Template.shipDisplay.rendered = function()
         self.handle = Deps.autorun(function(){self.data.handle(self.data);});
     }
 };
+
+Template.viewModeButton.activeShipViewMode = function()
+{
+    return Session.get('shipEditor_viewMode') ? "hull" : "grid";
+};
+
+Template.viewModeButton.events({
+    'click .shipViewMode': function(event) {
+        var currentMode = Session.get('shipEditor_viewMode');
+        var mode = (currentMode == 2) ? null : 2
+
+        console.log(mode);
+
+        Session.set('shipEditor_viewMode', mode);
+    }
+});

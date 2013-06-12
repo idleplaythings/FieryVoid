@@ -1,3 +1,5 @@
+Template.shipEditor = _.extend(Template.shipEditor, BaseTemplate);
+
 Template.shipEditor.context = function()
 {
     return {
@@ -94,85 +96,3 @@ Template.availableModuleListing.selectedClass = function()
     return Session.get('selected_module') == 'remove' ? 'selected' : '';
 };
 
-
-
-
-
-Template.shipMenu = _.extend(Template.shipMenu, BaseTemplate);
-
-Template.shipMenu.designName = function()
-{
-    return getFromSelectedLayout('name');
-};
-
-Template.hullmenu.shipViewModeGrid = function()
-{
-    return  ! Session.get('shipEditor_viewMode') ? 'active' : '';
-};
-
-Template.hullmenu.shipViewModeHull = function()
-{
-    return Session.get('shipEditor_viewMode') == '2' ? 'active' : '';
-};
-
-Template.shipMenu.events({
-    'blur input': function (event) {
-        handleDetailChange(event.currentTarget);
-    },
-    'click .publish': function(event) {
-        var hullLayoutId = Session.get("selected_hullLayout");
-        if (hullLayoutId)
-        {
-            var layout = HullLayouts.findOne({_id: hullLayoutId});
-            if (layout)
-            {
-                layout.publish();
-            }
-        }
-    },
-    'click .shipViewMode': function(event) {
-        var currentElement = event.target;
-        var mode = jQuery(currentElement).data('view');
-        console.log(mode);
-
-        if (mode == 1)
-            mode = null;
-
-        Session.set('shipEditor_viewMode', mode);
-    }
-});
-
-Template.shipMenu.publishedClass = function()
-{
-    return getFromSelectedLayout('published') ? 'active' : '';
-};
-
-function getFromSelectedLayout(name)
-{
-    var id = Session.get("selected_ship");
-    if (id)
-    {
-        var ship = ShipDesigns.findOne({_id: id});
-        if (ship && ship[name])
-            return ship[name];
-    }
-
-    return '';
-}
-
-function handleDetailChange(element)
-{
-    var name = jQuery(element).attr('name');
-    var value = jQuery(element).val();
-
-    var id = Session.get("selected_ship");
-    if (id)
-    {
-        var ship = ShipDesigns.findOne({_id: id});
-        if (ship)
-        {
-            ship.updateIfDifferent(name, value);
-        }
-    }
-
-}

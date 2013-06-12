@@ -46,9 +46,14 @@ body{
 
 .button.active
 {
-    background-image: linear-gradient(to bottom, #226110, #c8e5e7);
+    background-image: linear-gradient(to bottom, #009cff, #c8e5e7);
     box-shadow: inset 2px 2px 10px #000000;
     border: 2px solid black;
+}
+
+.button.warning
+{
+    background-image: linear-gradient(to bottom, #009cff, #c8e5e7);
 }
 
 .deprecated
