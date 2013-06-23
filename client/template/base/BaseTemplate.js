@@ -34,9 +34,56 @@ BaseTemplate = {
     isMyShip: function()
     {
         var user = Meteor.user();
-        var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")})
+        var owner = Session.get("selected_ship_owner");
 
-        return user && (user.isAdmin || (ship && ship.owner == user._id));
+        return user && (user.isAdmin || (owner == user._id));
+    },
+
+    selectedShipOwnerName: function()
+    {
+        return Session.get("selected_ship_owner_name");
+    },
+
+    getFromSelectedLayout: function (name)
+    {
+        var id = Session.get("selected_ship");
+        if (id)
+        {
+            var ship = ShipDesigns.findOne({_id: id});
+            if (ship && ship[name])
+                return ship[name];
+        }
+
+        return '';
+    },
+
+    handleInputDetailChange: function (element)
+    {
+        var name = jQuery(element).attr('name');
+        var value = jQuery(element).val();
+
+        var id = Session.get("selected_ship");
+        if (id)
+        {
+            var ship = ShipDesigns.findOne({_id: id});
+            if (ship)
+            {
+                ship.updateIfDifferent(name, value);
+            }
+        }
+    },
+
+    handleDetailChange: function (name, value)
+    {
+        var id = Session.get("selected_ship");
+        if (id)
+        {
+            var ship = ShipDesigns.findOne({_id: id});
+            if (ship)
+            {
+                ship.updateIfDifferent(name, value);
+            }
+        }
     }
 };
 

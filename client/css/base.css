@@ -5,7 +5,7 @@ body{
     padding:0;
     overflow:hidden;
     background-image:url('/raster.jpg');
-    font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font:16px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight:300;
 
     color: lightgray;
@@ -27,11 +27,11 @@ body{
 
 .button
 {
-    background-image: linear-gradient(to bottom, #2f3648, #c8e5e7);
+    background-image: linear-gradient(to bottom, #2f3648, #9fbbca);
     display: inline-block;
 
     color:#2f3648;
-    border: 1px solid #c8e5e7;
+    border: 1px solid #9fbbca;
     box-shadow: 2px 2px 10px #000000;
     text-shadow: 1px 1px 1px #c8e5e7;
     border-radius: 3px;
@@ -42,6 +42,10 @@ body{
     cursor:pointer;
 
     text-decoration: none;
+
+    text-transform:uppercase;
+    font-size:16px;
+    font-weight:bold;
 }
 
 .button.active
@@ -53,7 +57,9 @@ body{
 
 .button.warning
 {
-    background-image: linear-gradient(to bottom, #009cff, #c8e5e7);
+    background-image: linear-gradient(to bottom, #ce321d, #ffdab9);
+    border: 1px solid #ffdab9;
+    text-shadow: 1px 1px 1px #ffdab9;
 }
 
 .deprecated
@@ -97,10 +103,31 @@ h2
 {
     text-transform:uppercase;
     letter-spacing: 1px;
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bold;
     color:#0e0e0e;
     text-shadow: 1px 1px 1px #5f5f5f;
+    opacity:0.8;
+    margin-bottom:10px;
+}
+
+h3
+{
+    margin: 2px 5px;
+    text-transform:uppercase;
+    letter-spacing: 1px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+h4
+{
+    display:inline-block;
+    margin: 2px 5px;
+    text-transform:uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .marginContainer
@@ -162,4 +189,6 @@ canvas
 {
     text-align: center;
     background-color:#121212;
+    opacity:0.7;
+    color:white;
 }

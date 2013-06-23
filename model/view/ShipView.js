@@ -7,6 +7,8 @@ model.ShipView = function ShipView(target)
     this.hullGrid = null;
     this.modulesInside = null;
     this.modulesOutside = null;
+    this.modulesOver = null;
+    this.modulesUnder = null;
     this.view = null;
 
     this.create();
@@ -21,6 +23,8 @@ model.ShipView.prototype.create = function()
         new model.ShipDisplayModules(this.target, 'moduleInside', 'inside');
     this.modulesOutside =
         new model.ShipDisplayModules(this.target, 'moduleOutside', 'outside');
+    this.modulesOver =
+        new model.ShipDisplayModules(this.target, 'moduleOver', 'over', true);
     this.outerHull =
         new model.ShipDisplayOuterHull(this.target, 'outerhull');
 
@@ -31,11 +35,11 @@ model.ShipView.prototype.drawImages = function(ship, mode)
     if ( ! ship)
         return;
 
-    console.log(mode);
     this.hullGrid.start(ship);
     this.modulesInside.start(ship);
     this.modulesOutside.start(ship);
     this.outerHull.start(ship);
+    this.modulesOver.start(ship);
 
     if (mode == 2)
         this.hullView();
@@ -49,6 +53,7 @@ model.ShipView.prototype.gridView = function()
         return;
 
     console.log("grid view");
+    this.modulesOver.setOpacity(0);
     this.outerHull.setZIndex(1).setOpacity(0.3);
     this.hullGrid.setZIndex(2).setOpacity(1);
     this.modulesInside.setZIndex(3).setOpacity(1);
@@ -63,6 +68,7 @@ model.ShipView.prototype.hullView = function()
         return;
 
     console.log("hull view");
+    this.modulesOver.setZIndex(3).setOpacity(1);
     this.outerHull.setZIndex(2).setOpacity(1);
     this.hullGrid.setOpacity(0);
     this.modulesInside.setOpacity(0);

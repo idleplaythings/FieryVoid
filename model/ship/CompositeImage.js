@@ -1,4 +1,4 @@
-model.CompositeImage = function CompositeImage(args)
+model.CompositeImage = function CompositeImage()
 {
     this.drawingTool = window.Tools.getCanvasDrawingTool();
     this.imageLoader = new model.ImageLoader();

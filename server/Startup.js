@@ -20,13 +20,14 @@ Meteor.startup(function () {
         }
     }
 
-    var files = fs.readdirSync('public/module');
+    files = fs.readdirSync('public/module');
 
-    var pattern = new RegExp(/^([a-z0-9]+)-outside\.png/);
+    var pattern = new RegExp(/^([a-zA-Z0-9]+)-outside\.png/);
     for (var i in files)
     {
         var file = files[i];
 
+        console.log("filename: " + file);
         var name = pattern.exec(file);
         if (name)
         {
@@ -34,12 +35,13 @@ Meteor.startup(function () {
             var inside = fs.existsSync('public/module/'+name+'-inside.png');
             var outside = fs.existsSync('public/module/'+name+'-outside.png');
             var hull = fs.existsSync('public/module/'+name+'-hull.png');
+            var over = fs.existsSync('public/module/'+name+'-over.png');
+            var under = fs.existsSync('public/module/'+name+'-under.png');
 
-            console.log(name + " hull " + hull);
-            ModuleImageStorage.insert(name, inside, outside, hull);
+            console.log(name);
+            ModuleImageStorage.insert(name, inside, outside, hull, over, under);
         }
     }
-
 
     var admin = Meteor.users.findOne({'isAdmin' : true});
     if (! admin)

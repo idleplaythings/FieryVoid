@@ -1,6 +1,6 @@
-HullImages = new Meteor.Collection("HullImages");
+HullPatternImages = new Meteor.Collection("HullPatternImages");
 
-HullImages.allow({
+HullPatternImages.allow({
     insert: function () {
         return false;
     },
@@ -14,21 +14,18 @@ HullImages.allow({
     }
 });
 
-HullImageStorage =
+HullPatternImageStorage =
 {
     insert: function(name)
     {
-        HullImages.insert({img: name});
-    },
-
-    findByName: function(name)
-    {
-        return HullImages.findOne({img: name});
+        HullPatternImages.insert({
+            name: name,
+        });
     },
 
     removeAll: function()
     {
-        HullImages.remove({});
+        HullPatternImages.remove({});
     }
 
 }

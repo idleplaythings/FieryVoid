@@ -9,6 +9,7 @@ model.Ship = function Ship(args, hullLayout)
 
 
     this.hullLayout = hullLayout;
+    this.hullColor = args.hullColor || hullLayout.color;
     this.modules = args.modules || [];
 };
 

@@ -1,8 +1,9 @@
 model.ShipDisplayModules = function ShipDisplayModules(
-    target, canvasClass, type)
+    target, canvasClass, type, shadow)
 {
     model.ShipDisplay.call(this, target, canvasClass);
 
+    this.shadow = shadow || false;
     this.type = type;
     this.drawingTool = window.Tools.getCanvasDrawingTool();
     this.images = null;
@@ -21,7 +22,8 @@ model.ShipDisplayModules.prototype.getImages = function(type)
         var image = ModuleImages.findOne({name: module.image}).getByType(type);
 
         if (image)
-            images[i] = new model.CompositeImageModule({imageSrc: image});
+            images[i] = new model.CompositeImageModule(
+                {imageSrc: image, shadow: this.shadow});
     }
 
     return images;

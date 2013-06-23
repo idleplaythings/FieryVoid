@@ -17,7 +17,6 @@ Template.shipEditor.context = function()
 
         click: function(self, containerPos)
         {
-            console.log("hi");
             var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")});
             var shipView = self.shipView;
 
@@ -78,6 +77,11 @@ Template.shipEditor.context = function()
     };
 };
 
+Template.shipEditor.isGridView = function()
+{
+    return ! Session.get('shipEditor_viewMode');
+};
+
 Template.availableModuleListing = _.extend(Template.availableModuleListing, BaseTemplate);
 
 Template.availableModuleListing.availableModules = function()
@@ -96,3 +100,41 @@ Template.availableModuleListing.selectedClass = function()
     return Session.get('selected_module') == 'remove' ? 'selected' : '';
 };
 
+
+Template.hullApperanceMenu = _.extend(Template.hullApperanceMenu, BaseTemplate);
+Template.hullApperanceMenu.rendered = function()
+{
+    if (! self.handle)
+    {
+        self.handle =
+            Deps.autorun(function(){
+                Template.hullApperanceMenu.initColorPicker();
+            });
+    }
+    else
+    {
+        Template.hullApperanceMenu.initColorPicker();
+    }
+};
+
+Template.hullApperanceMenu.initColorPicker = function()
+{
+    var color = Template.hullApperanceMenu.getFromSelectedLayout('hullColor');
+    jQuery("#hullColor").spectrum({
+        color: "rgb("+color+")",
+        preferredFormat: "rgb",
+        showButtons: false,
+        showInput: true,
+        change: Template.hullApperanceMenu.hullColorChanged
+    });
+}
+
+Template.hullApperanceMenu.hullColorChanged = function(color)
+{
+  console.log("change, color: " + color);
+
+  var pattern = new RegExp(/^rgb\((.+)\)$/);
+  var cleanColor = pattern.exec(color)[1];
+
+  Template.hullApperanceMenu.handleDetailChange('hullColor', cleanColor);
+};

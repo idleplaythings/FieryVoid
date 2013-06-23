@@ -1,15 +1,19 @@
 <template name="shipEditor">
     <div class="mainContainer" style="height:{{height}};">
-        {{#if isMyShip}}
+        <div class="sidemenu left shipmenu" style="height:{{height}}px;">
             {{> shipMenuOwned}}
-        {{/if}}
+        </div>
 
         {{#with context}}
             {{> shipDisplay}}
         {{/with}}
 
         {{#if isMyShip}}
-            {{> availableModuleListing}}
+            {{#if isGridView}}
+                {{> availableModuleListing}}
+            {{else}}
+                {{> hullApperanceMenu}}
+            {{/if}}
         {{/if}}
     </div>
 </template>
@@ -24,6 +28,14 @@
         {{#each availableModules}}
             {{> smallModuleImage}}
         {{/each}}
+    </div>
+</template>
+
+<template name="hullApperanceMenu">
+    <div class="sidemenu right" style="height:{{height}}px;">
+        <h3>Hull color</h3>
+        <input id="hullColor" type="text" name="hullColor"/>
+        {{hullColorPicker}}
     </div>
 </template>
 

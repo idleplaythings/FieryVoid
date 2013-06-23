@@ -4,6 +4,8 @@ model.ModuleImage = function ModuleImage(args)
     this.inside = args.inside || false;
     this.outside = args.outside || false;
     this.hull = args.hull || false;
+    this.over = args.over || false;
+    this.under = args.under || false;
 };
 
 model.ModuleImage.prototype.getImageInside = function(){
@@ -24,6 +26,13 @@ model.ModuleImage.prototype.getImageHull = function(){
     return '/module/' +this.name+ '-hull.png';
 };
 
+model.ModuleImage.prototype.getImageOver = function(){
+    if ( ! this.over)
+        return null;
+
+    return '/module/' +this.name+ '-over.png';
+};
+
 model.ModuleImage.prototype.getDefault = function(){
     if (this.inside)
         return this.getImageInside();
@@ -40,6 +49,9 @@ model.ModuleImage.prototype.getByType = function(type){
 
     if (type == 'hull')
         return this.getImageHull();
+
+    if (type == 'over')
+        return this.getImageOver();
 
     if (type == 'default')
         return this.getDefault();

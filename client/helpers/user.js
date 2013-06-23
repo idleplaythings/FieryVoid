@@ -13,3 +13,10 @@ isAdminUser = function() {
 
     return true;
 }
+
+displayName = function (user) {
+    if (user.profile && user.profile.name)
+        return user.profile.name;
+    var email = user.emails[0].address;
+    return email.split('@')[0];
+};

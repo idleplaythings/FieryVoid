@@ -10,12 +10,13 @@ basePath = '..';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'tests/**/*Spec.js',
-  'tests/**/*Mock.js',
-  'lib/model/model.js',
-  'lib/CoordinateConverter.js',
-  'model/ship/ShipDisplay.js',
-  'model/ship/ShipDisplayGrid.js'
+    'tests/**/*Spec.js',
+    'tests/**/*Mock.js',
+    'tests/mocks/jquery.min.js',
+    'lib/model/model.js',
+    'lib/CoordinateConverter.js',
+    'model/ship/ShipDisplay.js',
+    'model/ship/ShipDisplayGrid.js'
 ];
 
 

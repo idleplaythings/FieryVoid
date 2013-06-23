@@ -72,8 +72,8 @@ model.ShipDisplay.prototype.clear = function()
 model.ShipDisplay.prototype.getDimensions = function()
 {
     return {
-        width:$(this.target).width(),
-        height:$(this.target).height()
+        width:jQuery(this.target).width(),
+        height:jQuery(this.target).height()
     };
 };
 

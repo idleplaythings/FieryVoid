@@ -13,13 +13,20 @@
 
 <template name="menu">
     {{#if currentUser}}
-        <a class="button" href="{{createShipPath}}">CREATE SHIP</a>
         <div class="marginContainer">
+            <h2>Your ships</h2>
             {{> shipListing}}
+
         </div>
     {{else}}
         <span>Log in create your own ships</span>
     {{/if}}
+
+    <div class="marginContainer">
+        <h2>public ships</h2>
+        {{> shipListing}}
+
+    </div>
 </template>
 
 <template name="forbidden">

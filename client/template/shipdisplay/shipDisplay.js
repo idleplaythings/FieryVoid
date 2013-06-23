@@ -1,5 +1,11 @@
 Template.shipDisplay = _.extend(Template.shipDisplay, BaseTemplate);
 
+Template.shipDisplay.created = function()
+{
+    console.log('created');
+    Session.set('selected_module', null);
+};
+
 Template.shipDisplay.rendered = function()
 {
     var self = this;
@@ -16,7 +22,8 @@ Template.shipDisplay.rendered = function()
 
     if (! self.handle)
     {
-        self.handle = Deps.autorun(function(){self.data.handle(self.data);});
+        self.handle =
+            Deps.autorun(function(){self.data.handle(self.data);});
     }
 };
 

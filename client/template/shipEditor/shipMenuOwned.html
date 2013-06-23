@@ -1,10 +1,19 @@
 <template name="shipMenuOwned">
-    <div class="sidemenu left shipmenu" style="height:{{height}}px;">
-        <div>Ship design name:</div>
+    <div style="position:relative;width:90%;margin:10px auto;">
+        {{#if isMyShip}}
+        <h3>Ship design name</h3>
         <input type="text" name="name" value="{{designName}}"/>
-        <div>
-            <div class="button publish {{publishedClass}}">Publish</div>
-            <div class="button delete warning {{publishedClass}}">Delete</div>
+        {{else}}
+        <div class="label"><h3 style="font-size:18px;">{{designName}}</h3></div>
+        <div class="label">{{selectedShipOwnerName}}</div>
+        {{/if}}
+
+        <!--<div class="label" style="margin-top:20px;"><span>Weight:</span> 450t</div>-->
+        {{#if isMyShip}}
+        <div style="position:relative;width:100%;">
+            <div style="position:absolute;left:0px;width:70px;" class="button publish {{publishedClass}}">Publish</div>
+            <div style="position:absolute;right:0px;width:70px;" class="button delete warning {{publishedClass}}">Delete</div>
         </div>
+        {{/if}}
     </div>
 </template>
