@@ -77,7 +77,7 @@ Template.shipEditor.context = function()
     };
 };
 
-Template.shipEditor.isGridView = function()
+Template.shipEditorRightMenu.isGridView = function()
 {
     return ! Session.get('shipEditor_viewMode');
 };

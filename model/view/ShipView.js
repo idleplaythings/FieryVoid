@@ -52,7 +52,6 @@ model.ShipView.prototype.gridView = function()
     if (this.view == 'grid')
         return;
 
-    console.log("grid view");
     this.modulesOver.setOpacity(0);
     this.outerHull.setZIndex(1).setOpacity(0.3);
     this.hullGrid.setZIndex(2).setOpacity(1);
@@ -67,7 +66,6 @@ model.ShipView.prototype.hullView = function()
     if (this.view == 'hull')
         return;
 
-    console.log("hull view");
     this.modulesOver.setZIndex(3).setOpacity(1);
     this.outerHull.setZIndex(2).setOpacity(1);
     this.hullGrid.setOpacity(0);

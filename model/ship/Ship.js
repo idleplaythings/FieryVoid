@@ -11,6 +11,26 @@ model.Ship = function Ship(args, hullLayout)
     this.hullLayout = hullLayout;
     this.hullColor = args.hullColor || hullLayout.color;
     this.modules = args.modules || [];
+
+    this.public = args.public || false;
+};
+
+model.Ship.prototype.validateVariable = function(name, value)
+{
+    if (name === "public")
+    {
+        return value === true || value === false;
+    }
+    else if (name === "name")
+    {
+        return new RegExp(/^([a-zA-Z0-9]+\s?)*$/).exec(value);
+    }
+    else if (name === "hullColor")
+    {
+        return new RegExp(/^\d{1,3},\s\d{1,3},\s\d{1,3}$/).exec(value);
+    }
+
+    return false;
 };
 
 model.Ship.prototype.removeModule = function(pos)
@@ -52,7 +72,7 @@ model.Ship.prototype.getModuleInPosition = function(pos)
 
 model.Ship.prototype.updateIfDifferent = function(name, value)
 {
-    if ( ! this[name])
+    if ( this[name] == undefined)
         throw "Trying to change Ship design value '" + name
             +"' that does not exist";
 
@@ -65,13 +85,11 @@ model.Ship.prototype.updateIfDifferent = function(name, value)
 
 model.Ship.prototype.updateValue = function(name, value)
 {
-    var updateObject = {};
-    updateObject[name] = value;
-
     Meteor.call(
         'ShipDesignUpdate',
         this._id,
-        updateObject,
+        name,
+        value,
         function(err, result){
             console.log('Ship ' +name + ' updated to ' + value);
         }

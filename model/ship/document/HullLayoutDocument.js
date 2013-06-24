@@ -19,7 +19,10 @@ HullLayouts.allow({
 
 Meteor.methods({
     HullLayoutInsert: function (img) {
-        console.log("hull insert");
+
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
+
         var layout = new model.HullLayout({hullImgName:img});
         delete layout._id;
         return HullLayouts.insert(layout);
@@ -27,6 +30,9 @@ Meteor.methods({
 
     HullLayoutPublish: function(id, imgName)
     {
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
+
         HullLayouts.update(
             {$and: [{'published': true}, {'hullImgName': imgName}]},
             {$set: {'published': false}}
@@ -40,9 +46,8 @@ Meteor.methods({
 
     HullLayoutUpdate: function(id, data)
     {
-        console.log('hull update');
-        console.log(id);
-        console.log(data);
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         return HullLayouts.update(
             { _id: id },
@@ -52,7 +57,8 @@ Meteor.methods({
 
     HullLayoutToggleDisabled: function(id, i)
     {
-        console.log("set i: " + i);
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         var found = HullLayouts.findOne(
             {$and: [{'_id': id}, {'disabledTiles': i}]}
@@ -82,7 +88,8 @@ Meteor.methods({
 
     HullLayoutSetTileHeight: function(id, i, height)
     {
-        console.log("set i: " + i + " height to: " + height);
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         HullLayouts.update(
             {'_id': id},

@@ -1,7 +1,6 @@
 Meteor.Router.add({
     '/': {
-        to: 'menu',
-        as: 'shipMenu'
+        to: 'shipMenu'
     },
     '/editor/hull': {
         to: 'hullEditor',

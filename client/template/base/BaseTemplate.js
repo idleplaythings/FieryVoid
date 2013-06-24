@@ -68,7 +68,16 @@ BaseTemplate = {
             var ship = ShipDesigns.findOne({_id: id});
             if (ship)
             {
+                if ( ! ship.validateVariable(name, value))
+                {
+                    jQuery(element).addClass("error");
+                    return false;
+                }
+
                 ship.updateIfDifferent(name, value);
+
+                jQuery(element).removeClass("error");
+                return true;
             }
         }
     },
@@ -81,9 +90,52 @@ BaseTemplate = {
             var ship = ShipDesigns.findOne({_id: id});
             if (ship)
             {
+                if ( ! ship.validateVariable(name, value))
+                    return false;
+
                 ship.updateIfDifferent(name, value);
+                return true;
             }
         }
+    },
+
+    toggleDetail: function(name)
+    {
+        var id = Session.get("selected_ship");
+        if (id)
+        {
+            var ship = ShipDesigns.findOne({_id: id});
+            if (ship)
+            {
+                var value = ship[name];
+                if (value !== true && value !== false)
+                    throw "Only boolean values can be toggled";
+
+                if ( ! ship.validateVariable(name, value))
+                    return false;
+
+                ship.updateIfDifferent(name, (! value));
+                return true;
+            }
+        }
+    },
+
+    myShipsContext: function()
+    {
+        return {getShips: function(){
+            return ShipDesigns.find({owner: Meteor.userId()});
+        }}
+    },
+
+    publicShipsContext: function()
+    {
+        return {getShips: function(){
+            return ShipDesigns.find(
+                {$and: [
+                    {public: true},
+                    {owner: {$not: Meteor.userId()}}
+                ]});
+        }}
     }
 };
 

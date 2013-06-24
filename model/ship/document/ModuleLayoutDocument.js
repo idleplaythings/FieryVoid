@@ -23,7 +23,10 @@ ModuleLayouts.allow({
 
 Meteor.methods({
     ModuleLayoutInsert: function (img) {
-        console.log("module layout insert");
+
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
+
         var layout = new model.ModuleLayout();
         layout.image = img;
         delete layout._id;
@@ -32,6 +35,9 @@ Meteor.methods({
 
     ModuleLayoutPublish: function(id, imgName)
     {
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
+
         ModuleLayouts.update(
             {$and: [{'published': true}, {'image': imgName}]},
             {$set: {'published': false}}
@@ -45,6 +51,9 @@ Meteor.methods({
 
     ModuleLayoutUpdate: function(id, data)
     {
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
+
         return ModuleLayouts.update(
             { _id: id },
             {$set: data}
@@ -53,7 +62,8 @@ Meteor.methods({
 
     ModuleLayoutToggleDisabled: function(id, i)
     {
-        console.log("set i: " + i);
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         var found = ModuleLayouts.findOne(
             {$and: [{'_id': id}, {'disabledTiles': i}]}
@@ -77,7 +87,8 @@ Meteor.methods({
 
     ModuleLayoutToggleOutside: function(id, i)
     {
-        console.log("set i: " + i);
+        if (! isAdminUser())
+            throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         var found = ModuleLayouts.findOne(
             {$and: [{'_id': id}, {'outsideTiles': i}]}

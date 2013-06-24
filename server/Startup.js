@@ -1,4 +1,24 @@
 Meteor.startup(function () {
+
+    //crawlResources();
+
+    var admin = Meteor.users.findOne({'isAdmin' : true});
+    if (! admin)
+    {
+        Accounts.createUser(
+            {
+                username: 'admin',
+                email: 'admin@fieryvoid.net',
+                password: 'kiiski'
+            }
+        );
+        Meteor.users.update({'username': 'admin'}, {$set: {'isAdmin': true}});
+        console.log('created admin accountpirate');
+    }
+});
+
+function crawlResources()
+{
     var fs = Npm.require('fs');
 
     var files = fs.readdirSync('public/ship');
@@ -27,7 +47,6 @@ Meteor.startup(function () {
     {
         var file = files[i];
 
-        console.log("filename: " + file);
         var name = pattern.exec(file);
         if (name)
         {
@@ -38,22 +57,7 @@ Meteor.startup(function () {
             var over = fs.existsSync('public/module/'+name+'-over.png');
             var under = fs.existsSync('public/module/'+name+'-under.png');
 
-            console.log(name);
             ModuleImageStorage.insert(name, inside, outside, hull, over, under);
         }
     }
-
-    var admin = Meteor.users.findOne({'isAdmin' : true});
-    if (! admin)
-    {
-        Accounts.createUser(
-            {
-                username: 'admin',
-                email: 'admin@fieryvoid.net',
-                password: 'kiiski'
-            }
-        );
-        Meteor.users.update({'username': 'admin'}, {$set: {'isAdmin': true}});
-        console.log('created admin accountpirate');
-    }
-});
+};

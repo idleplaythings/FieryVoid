@@ -1,6 +1,6 @@
 Template.shipListing.shipsForListing = function()
 {
-    return ShipDesigns.find({'owner': Meteor.userId()});
+    return this.getShips();
 };
 
 Template.shipListEntry.name = function()

@@ -1,5 +1,5 @@
 <head>
-  <title>FieryVoid - Hull editor</title>
+  <title>FieryVoid - Ship builder</title>
 </head>
 
 <body>
@@ -9,26 +9,4 @@
 <template name="page">
     {{> topMenu}}
     {{renderPage}}
-</template>
-
-<template name="menu">
-    {{#if currentUser}}
-        <div class="marginContainer">
-            <h2>Your ships</h2>
-            {{> shipListing}}
-
-        </div>
-    {{else}}
-        <span>Log in create your own ships</span>
-    {{/if}}
-
-    <div class="marginContainer">
-        <h2>public ships</h2>
-        {{> shipListing}}
-
-    </div>
-</template>
-
-<template name="forbidden">
-    Access denied.
 </template>

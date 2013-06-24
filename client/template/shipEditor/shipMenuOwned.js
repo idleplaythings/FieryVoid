@@ -10,20 +10,13 @@ Template.shipMenuOwned.events({
         Template.shipMenuOwned.handleInputDetailChange(event.currentTarget);
     },
     'click .publish': function(event) {
-        var hullLayoutId = Session.get("selected_hullLayout");
-        if (hullLayoutId)
-        {
-            var layout = HullLayouts.findOne({_id: hullLayoutId});
-            if (layout)
-            {
-                layout.publish();
-            }
-        }
+        console.log("clicked publish");
+        Template.hullApperanceMenu.toggleDetail('public');
     }
 });
 
 Template.shipMenuOwned.publishedClass = function()
 {
-    return Template.shipMenuOwned.getFromSelectedLayout('published')
+    return Template.shipMenuOwned.getFromSelectedLayout('public')
         ? 'active' : '';
 };

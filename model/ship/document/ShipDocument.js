@@ -11,10 +11,11 @@ ShipDesigns = new Meteor.Collection(
                 var module = ModuleLayouts.findOne(
                     {'_id': moduleAndPos.module});
 
-                module.setPosition(moduleAndPos.position);
-
-                modules.push(module);
-
+                if (module)
+                {
+                    module.setPosition(moduleAndPos.position);
+                    modules.push(module);
+                }
             });
 
             doc.modules = modules;
@@ -63,6 +64,16 @@ Meteor.methods({
         if ( ! userid)
             throw new Meteor.Error(403, "You must be logged in to edit a ship");
 
+        var ship = ShipDesigns.findOne({$and: [{'_id': shipId}, {'owner': userid}]});
+
+        if ( ! ship)
+            throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
+
+        var module = ModuleLayouts.findOne({'_id': moduleId});
+
+        if ( ! module.isValidPosition(ship, modulePosition))
+            throw new Meteor.Error(400, "Invalid module placement");
+
         ShipDesigns.update(
             {$and: [{'_id': shipId}, {'owner': userid}]},
             {$push: {'modules':
@@ -78,6 +89,11 @@ Meteor.methods({
         if ( ! userid)
             throw new Meteor.Error(403, "You must be logged in to edit a ship");
 
+        var ship = ShipDesigns.findOne({$and: [{'_id': shipId}, {'owner': userid}]});
+
+        if ( ! ship)
+            throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
+
         ShipDesigns.update(
             {$and: [{'_id': shipId}, {'owner': userid}]},
             {$pull: {'modules':
@@ -86,19 +102,27 @@ Meteor.methods({
         );
     },
 
-    ShipDesignPublish: function(id)
+    ShipDesignUpdate: function(shipId, name, value)
     {
-        ShipDesigns.update(
-            {'_id': id},
-            {$set: {'published': true}}
-        );
-    },
+        var userid = Meteor.userId();
 
-    ShipDesignUpdate: function(id, data)
-    {
+        if ( ! userid)
+            throw new Meteor.Error(403, "You must be logged in to edit a ship");
+
+        var ship = ShipDesigns.findOne({$and: [{'_id': shipId}, {'owner': userid}]});
+
+        if ( ! ship)
+            throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
+
+        if ( ! ship.validateVariable(name, value))
+            throw new Meteor.Error(400, "Invalid name/value: '" + name +": " + value +"'");
+
+        var updateObject = {};
+        updateObject[name] = value;
+
         return ShipDesigns.update(
-            { _id: id },
-            {$set: data}
+            {$and: [{'_id': shipId}, {'owner': userid}]},
+            {$set: updateObject}
         );
     },
 });

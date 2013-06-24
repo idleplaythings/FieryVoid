@@ -6,8 +6,8 @@ Meteor.publish("directory", function () {
     return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
 });
 
-Meteor.publish("ShipLayouts", function () {
-    return ShipLayouts.find(
+Meteor.publish("ShipDesigns", function () {
+    return ShipDesigns.find(
         {$or: [{"public": true}, {owner: this.userId}]});
 });
 
@@ -16,5 +16,24 @@ Meteor.publish("HullImages", function () {
 });
 
 Meteor.publish("HullLayouts", function () {
-    return HullLayouts.find({$or: [{"published": true}, {owner: this.userId}]});
+    if (isAdminUser())
+        return HullLayouts.find({});
+
+    return HullLayouts.find({"published": true});
 });
+
+Meteor.publish("ModuleImages", function () {
+    return ModuleImages.find({});
+});
+
+Meteor.publish("ModuleLayouts", function () {
+    if (isAdminUser())
+        return ModuleLayouts.find({});
+
+    return ModuleLayouts.find({"published": true});
+});
+
+function isAdminUser()
+{
+    return Meteor.users.findOne(this.userId, {fields: {isAdmin: 1}});
+}

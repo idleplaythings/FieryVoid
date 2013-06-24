@@ -9,13 +9,17 @@
         {{/with}}
 
         {{#if isMyShip}}
-            {{#if isGridView}}
-                {{> availableModuleListing}}
-            {{else}}
-                {{> hullApperanceMenu}}
-            {{/if}}
+            {{> shipEditorRightMenu}}
         {{/if}}
     </div>
+</template>
+
+<template name ="shipEditorRightMenu">
+    {{#if isGridView}}
+        {{> availableModuleListing}}
+    {{else}}
+        {{> hullApperanceMenu}}
+    {{/if}}
 </template>
 
 <template name="availableModuleListing">

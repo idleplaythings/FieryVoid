@@ -48,9 +48,14 @@ body{
     font-weight:bold;
 }
 
+.error
+{
+    color:red;
+}
+
 .button.active
 {
-    background-image: linear-gradient(to bottom, #009cff, #c8e5e7);
+    background-image: linear-gradient(to bottom, #79ad4b, #c8e5e7);
     box-shadow: inset 2px 2px 10px #000000;
     border: 2px solid black;
 }
@@ -109,6 +114,14 @@ h2
     text-shadow: 1px 1px 1px #5f5f5f;
     opacity:0.8;
     margin-bottom:10px;
+}
+
+h2 span
+{
+    font-size:14px;
+    text-transform: none;
+    text-shadow:none;
+    color:#5f5f5f;
 }
 
 h3
