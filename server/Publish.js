@@ -1,9 +1,13 @@
 Meteor.publish(null, function () {
-  return Meteor.users.find(this.userId, {fields: {isAdmin: 1}});
+  return Meteor.users.find(
+      this.userId,
+      {fields: {isAdmin: 1,emails: 1, profile: 1}});
 });
 
-Meteor.publish("directory", function () {
-    return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
+Meteor.publish(null, function () {
+    return Meteor.users.find(
+        {},
+        {fields: {emails: 1, profile: 1}});
 });
 
 Meteor.publish("ShipDesigns", function () {
@@ -16,7 +20,7 @@ Meteor.publish("HullImages", function () {
 });
 
 Meteor.publish("HullLayouts", function () {
-    if (isAdminUser())
+    if (isAdminUser(this.userId))
         return HullLayouts.find({});
 
     return HullLayouts.find({"published": true});
@@ -27,13 +31,13 @@ Meteor.publish("ModuleImages", function () {
 });
 
 Meteor.publish("ModuleLayouts", function () {
-    if (isAdminUser())
+    if (isAdminUser(this.userId))
         return ModuleLayouts.find({});
 
     return ModuleLayouts.find({"published": true});
 });
 
-function isAdminUser()
+function isAdminUser(userId)
 {
-    return Meteor.users.findOne(this.userId, {fields: {isAdmin: 1}});
+    return Meteor.users.findOne(userId, {fields: {isAdmin: 1}});
 }

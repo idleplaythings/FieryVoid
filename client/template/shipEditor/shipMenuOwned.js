@@ -11,7 +11,7 @@ Template.shipMenuOwned.events({
     },
     'click .publish': function(event) {
         console.log("clicked publish");
-        Template.hullApperanceMenu.toggleDetail('public');
+        Template.shipMenuOwned.toggleDetail('public');
     }
 });
 

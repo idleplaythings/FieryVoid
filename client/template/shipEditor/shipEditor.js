@@ -1,18 +1,54 @@
 Template.shipEditor = _.extend(Template.shipEditor, BaseTemplate);
 
+Template.shipEditor.contextObject = null;
+
 Template.shipEditor.context = function()
 {
-    return {
+    if ( ! Template.shipEditor.contextObject)
+       Template.shipEditor.contextObject =
+           Template.shipEditor.createContext();
+
+    return Template.shipEditor.contextObject;
+};
+
+Template.shipEditor.createContext = function()
+{
+    console.log("createContext");
+    return  {
         shipView: null,
         viewClass: model.ShipView,
         lastMouseOverPos: null,
         modulePlacing: null,
+        shipForMousover: null,
+        viewModeHandle: null,
+        shipHandle: null,
+
+        viewMode: function(self)
+        {
+            self.viewModeHandle = Deps.autorun(function(){
+                var viewMode = Session.get('shipEditor_viewMode');
+
+                if (self.shipView)
+                {
+                    self.shipView.setView(viewMode);
+                }
+            });
+        },
+
+        ship: function(self)
+        {
+            self.shipHandle = Deps.autorun(function(){
+                var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")});
+                console.log(ship);
+                self.shipForMousover = ship;
+                console.log("draw");
+                self.shipView.drawImages(ship);
+            });
+        },
 
         handle: function(self) {
-            self.shipView.drawImages(
-                ShipDesigns.findOne({_id: Session.get("selected_ship")}),
-                Session.get('shipEditor_viewMode')
-            );
+            self.viewMode(self);
+            self.ship(self);
         },
 
         click: function(self, containerPos)
@@ -40,7 +76,7 @@ Template.shipEditor.context = function()
 
         mousemove: function(self, containerPos)
         {
-            var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")});
+            var ship = self.shipForMousover;
             var shipView = self.shipView;
 
             if ( ! ship || ! shipView)
@@ -53,7 +89,6 @@ Template.shipEditor.context = function()
             if ( ! lastPos || pos.x != lastPos.x || pos.y != lastPos.y)
             {
                 self.lastMouseoOverPos = pos;
-
                 var moduleLayout = ModuleLayouts.findOne(
                     {'_id': Session.get('selected_module')});
 
@@ -77,64 +112,69 @@ Template.shipEditor.context = function()
     };
 };
 
+Template.shipEditor.created = function()
+{
+    console.log("shipEditor created");
+}
+
+Template.shipEditor.destroyed = function()
+{
+    if (Template.shipEditor.contextObject)
+    {
+        Template.shipEditor.contextObject.viewModeHandle.stop();
+        Template.shipEditor.contextObject.shipHandle.stop();
+        Template.shipEditor.contextObject = null;
+    }
+
+    console.log("shipEditor destroyed");
+}
+
+Template.shipEditorRightMenu = _.extend(Template.shipEditorRightMenu, BaseTemplate);
+
 Template.shipEditorRightMenu.isGridView = function()
 {
     return ! Session.get('shipEditor_viewMode');
 };
 
-Template.availableModuleListing = _.extend(Template.availableModuleListing, BaseTemplate);
-
-Template.availableModuleListing.availableModules = function()
+Template.shipEditorRightMenu.availableModules = function()
 {
     return ModuleLayouts.find({'published': true});
 };
 
-Template.availableModuleListing.events({
+Template.shipEditorRightMenu.events({
     'click .remove': function () {
         Session.set('selected_module', 'remove');
     }
 });
 
-Template.availableModuleListing.selectedClass = function()
+Template.shipEditorRightMenu.selectedClass = function()
 {
     return Session.get('selected_module') == 'remove' ? 'selected' : '';
 };
 
-
-Template.hullApperanceMenu = _.extend(Template.hullApperanceMenu, BaseTemplate);
-Template.hullApperanceMenu.rendered = function()
+Template.shipEditorRightMenu.rendered = function()
 {
-    if (! self.handle)
-    {
-        self.handle =
-            Deps.autorun(function(){
-                Template.hullApperanceMenu.initColorPicker();
-            });
-    }
-    else
-    {
-        Template.hullApperanceMenu.initColorPicker();
-    }
-};
+    if (this.colorPicker)
+        this.colorPicker.spectrum("destroy");
 
-Template.hullApperanceMenu.initColorPicker = function()
-{
-    var color = Template.hullApperanceMenu.getFromSelectedLayout('hullColor');
-    jQuery("#hullColor").spectrum({
+    var color = Template.shipEditorRightMenu.getFromSelectedLayout('hullColor');
+
+    this.colorPicker = jQuery("#hullColor");
+    this.colorPicker.spectrum({
         color: "rgb("+color+")",
         preferredFormat: "rgb",
         showButtons: false,
         showInput: true,
-        change: Template.hullApperanceMenu.hullColorChanged
+        change: Template.shipEditorRightMenu.hullColorChanged
     });
-}
+};
 
-Template.hullApperanceMenu.hullColorChanged = function(color)
+Template.shipEditorRightMenu.hullColorChanged = function(color)
 {
   console.log("change, color: " + color);
 
   var pattern = new RegExp(/^rgb\((.+)\)$/);
   var cleanColor = pattern.exec(color)[1];
 
-  Template.hullApperanceMenu.handleDetailChange('hullColor', cleanColor);
+  Template.shipEditorRightMenu.handleDetailChange('hullColor', cleanColor);
 };

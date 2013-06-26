@@ -1,0 +1,37 @@
+<template name="shipMenu">
+    {{#if currentUser}}
+    <div class="marginContainer">
+        <h2>Your ships</h2>
+
+        <a class="selectable entry" href="{{createShipPath}}">
+            <div class="img-background" style="position:relative;">
+                <img src="/misc/create_shipdesign.png" width="145" height="115"/>
+            </div>
+            <div class="label">CREATE NEW</div>
+        </a>
+
+        {{#with myShipsContext}}
+            {{> shipListing}}
+        {{/with}}
+
+    </div>
+    {{/if}}
+
+    <div class="marginContainer">
+        <h2>public ships
+            {{#unless currentUser}}
+                <span>
+                    (Log in to create your own ships)
+                </span>
+            {{/unless}}
+        </h2>
+        {{#with publicShipsContext}}
+            {{> shipListing}}
+        {{/with}}
+
+    </div>
+</template>
+
+<template name="forbidden">
+    Access denied.
+</template>

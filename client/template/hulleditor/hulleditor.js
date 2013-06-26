@@ -15,9 +15,8 @@ Template.hullEditor.context = function()
             if ( ! hullLayout)
                 return;
 
-            console.log(hullLayout);
-
-            self.shipView.drawImages({hullLayout: hullLayout});
+            self.shipView.drawImages(
+                {hullLayout: hullLayout, hullColor: hullLayout.color});
         },
 
         click: function(self, containerPos)
@@ -39,8 +38,6 @@ Template.hullEditor.context = function()
 
                 var curHeight = hullLayout.getTileHeight(pos);
 
-                console.log(height);
-                console.log(curHeight);
                 if (height == curHeight || hullLayout.isDisabledTile(pos))
                 {
                     hullLayout.toggleDisabledTile(pos);
@@ -54,7 +51,6 @@ Template.hullEditor.context = function()
         }
     };
 };
-
 
 Template.hullEditor = _.extend(Template.hullEditor, BaseTemplate);
 

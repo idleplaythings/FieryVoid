@@ -16,6 +16,10 @@ ShipDesigns = new Meteor.Collection(
                     module.setPosition(moduleAndPos.position);
                     modules.push(module);
                 }
+                else
+                {
+                    return null;
+                }
             });
 
             doc.modules = modules;
@@ -31,7 +35,7 @@ ShipDesigns.allow({
     },
 
     update: function () {
-        return true;
+        return false;
     },
 
     remove: function () {

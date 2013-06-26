@@ -5,6 +5,7 @@ Template.smallModuleImage.selectedClass = function()
 
 Template.smallModuleImage.events({
     'click .module': function () {
+        console.log("select");
         Session.set('selected_module', this._id);
     }
 });

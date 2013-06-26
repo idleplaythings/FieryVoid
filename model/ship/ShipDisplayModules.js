@@ -8,6 +8,7 @@ model.ShipDisplayModules = function ShipDisplayModules(
     this.drawingTool = window.Tools.getCanvasDrawingTool();
     this.images = null;
     this.drawnCount = 0;
+    this.drawRound = 0;
 }
 
 model.ShipDisplayModules.prototype = Object.create(model.ShipDisplay.prototype);
@@ -19,7 +20,7 @@ model.ShipDisplayModules.prototype.getImages = function(type)
     for (var i in this.ship.modules)
     {
         var module = this.ship.modules[i];
-        var image = ModuleImages.findOne({name: module.image}).getByType(type);
+        var image = module.image.getByType(type);
 
         if (image)
             images[i] = new model.CompositeImageModule(
@@ -31,6 +32,11 @@ model.ShipDisplayModules.prototype.getImages = function(type)
 
 model.ShipDisplayModules.prototype.start = function(ship)
 {
+    var self = this;
+
+    this.drawRound++;
+    var round = this.drawRound;
+
     this.ship = ship;
     this.images = this.getImages(this.type);
     this.drawnCount = 0;
@@ -44,7 +50,18 @@ model.ShipDisplayModules.prototype.start = function(ship)
     for (var i in this.images)
     {
         var image = this.images[i];
-        image.getImageDataToCallback(jQuery.proxy(this.receiveImageData, this, i));
+        image.getImageDataToCallback(jQuery.proxy(
+            function (i, data)
+            {
+                if (self.drawRound != round)
+                {
+                    console.log("discarding old image");
+                    return;
+                }
+
+                self.receiveImageData(i, data);
+            },
+            this, i));
     }
 };
 

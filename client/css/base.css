@@ -18,6 +18,11 @@ body{
     user-select: none;
 }
 
+a
+{
+    text-decoration: none;
+}
+
 .mainContainer
 {
     margin:0;

@@ -19,10 +19,11 @@ HullLayouts.allow({
 
 Meteor.methods({
     HullLayoutInsert: function (img) {
-
+        console.log("insert");
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
+        console.log("is admin, apparently");
         var layout = new model.HullLayout({hullImgName:img});
         delete layout._id;
         return HullLayouts.insert(layout);
@@ -66,7 +67,6 @@ Meteor.methods({
 
         if (found)
         {
-            console.log("found ");
             HullLayouts.update(
                 {'_id': id},
                 {$pull: {'disabledTiles': i}}

@@ -1,6 +1,6 @@
 Meteor.startup(function () {
 
-    //crawlResources();
+    crawlResources();
 
     var admin = Meteor.users.findOne({'isAdmin' : true});
     if (! admin)
@@ -13,15 +13,25 @@ Meteor.startup(function () {
             }
         );
         Meteor.users.update({'username': 'admin'}, {$set: {'isAdmin': true}});
-        console.log('created admin accountpirate');
+        console.log('created admin account');
     }
 });
 
-function crawlResources()
+function getPublicPath()
 {
     var fs = Npm.require('fs');
+    if (fs.existsSync('public/'))
+        return 'public/'
 
-    var files = fs.readdirSync('public/ship');
+    return 'static/';
+}
+
+function crawlResources()
+{
+    var pub = getPublicPath();
+    var fs = Npm.require('fs');
+
+    var files = fs.readdirSync(pub+'ship');
 
     var pattern = new RegExp(/^([a-z0-9]+)-base\.png/);
     for (var i in files)
@@ -40,7 +50,7 @@ function crawlResources()
         }
     }
 
-    files = fs.readdirSync('public/module');
+    files = fs.readdirSync(pub+'module');
 
     var pattern = new RegExp(/^([a-zA-Z0-9]+)-outside\.png/);
     for (var i in files)
@@ -51,11 +61,11 @@ function crawlResources()
         if (name)
         {
             name = name[1];
-            var inside = fs.existsSync('public/module/'+name+'-inside.png');
-            var outside = fs.existsSync('public/module/'+name+'-outside.png');
-            var hull = fs.existsSync('public/module/'+name+'-hull.png');
-            var over = fs.existsSync('public/module/'+name+'-over.png');
-            var under = fs.existsSync('public/module/'+name+'-under.png');
+            var inside = fs.existsSync(pub+'module/'+name+'-inside.png');
+            var outside = fs.existsSync(pub+'module/'+name+'-outside.png');
+            var hull = fs.existsSync(pub+'module/'+name+'-hull.png');
+            var over = fs.existsSync(pub+'module/'+name+'-over.png');
+            var under = fs.existsSync(pub+'module/'+name+'-under.png');
 
             ModuleImageStorage.insert(name, inside, outside, hull, over, under);
         }
