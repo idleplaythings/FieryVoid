@@ -14,7 +14,6 @@ describe("Ship display grid", function() {
         grid.ship = {hullLayout:{width:25, height:25, tileScale:20}};
         grid.getDimensions = function()
         {
-            console.log("hi");
             return {width:1000, height:500};
         }
 

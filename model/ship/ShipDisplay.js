@@ -161,7 +161,7 @@ model.ShipDisplay.prototype.calculateZoomForFit = function()
 
     if (zoom > 1)
         zoom = 1;
-    console.log(zoom);
+
     return zoom;
 };
 
