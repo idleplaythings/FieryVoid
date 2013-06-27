@@ -33,15 +33,20 @@ BaseTemplate = {
 
     isMyShip: function()
     {
-        var user = Meteor.user();
-        var owner = Session.get("selected_ship_owner");
-
-        return user && (user.isAdmin || (owner == user._id));
+        return isMyShip(Session.get('selected_ship'));
     },
 
     selectedShipOwnerName: function()
     {
-        return Session.get("selected_ship_owner_name");
+        var owner = ShipDesigns.findOne(
+            {_id:Session.get('selected_ship')},
+            {fields:{owner:1}}
+        )
+
+        if (! owner)
+            return '';
+
+        return displayName(Meteor.users.findOne({_id: owner}));
     },
 
     getFromSelectedLayout: function (name)
@@ -65,7 +70,7 @@ BaseTemplate = {
         var id = Session.get("selected_ship");
         if (id)
         {
-            var ship = ShipDesigns.findOne({_id: id});
+            var ship = new model.ShipDesign().load(id);
             if (ship)
             {
                 if ( ! ship.validateVariable(name, value))
@@ -87,7 +92,8 @@ BaseTemplate = {
         var id = Session.get("selected_ship");
         if (id)
         {
-            var ship = ShipDesigns.findOne({_id: id});
+            var ship = new model.ShipDesign().load(id);
+
             if (ship)
             {
                 if ( ! ship.validateVariable(name, value))
@@ -104,7 +110,7 @@ BaseTemplate = {
         var id = Session.get("selected_ship");
         if (id)
         {
-            var ship = ShipDesigns.findOne({_id: id});
+            var ship = new model.ShipDesign().load(id);
             if (ship)
             {
                 var value = ship[name];
@@ -119,24 +125,5 @@ BaseTemplate = {
             }
         }
     },
-
-    myShipsContext: function()
-    {
-        return {getShips: function(){
-            return ShipDesigns.find({owner: Meteor.userId()});
-        }}
-    },
-
-    publicShipsContext: function()
-    {
-        return {getShips: function(){
-            return ShipDesigns.find(
-                {$and: [
-                    {public: true},
-                    {owner: {$not: Meteor.userId()}}
-                ]});
-        }}
-    }
 };
-
 

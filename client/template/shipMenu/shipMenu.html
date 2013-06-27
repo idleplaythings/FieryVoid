@@ -10,9 +10,9 @@
             <div class="label">CREATE NEW</div>
         </a>
 
-        {{#with myShipsContext}}
-            {{> shipListing}}
-        {{/with}}
+        {{#each myShips}}
+            {{> shipListEntry}}
+        {{/each}}
 
     </div>
     {{/if}}
@@ -25,9 +25,9 @@
                 </span>
             {{/unless}}
         </h2>
-        {{#with publicShipsContext}}
-            {{> shipListing}}
-        {{/with}}
+        {{#each publicShips}}
+            {{> shipListEntry}}
+        {{/each}}
 
     </div>
 </template>

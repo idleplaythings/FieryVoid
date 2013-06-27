@@ -19,11 +19,11 @@ Template.shipEditor.createContext = function()
         viewClass: model.ShipView,
         lastMouseOverPos: null,
         modulePlacing: null,
-        shipForMousover: null,
+        ship: null,
         viewModeHandle: null,
         shipHandle: null,
 
-        viewMode: function(self)
+        viewModeReactivity: function(self)
         {
             self.viewModeHandle = Deps.autorun(function(){
                 var viewMode = Session.get('shipEditor_viewMode');
@@ -35,25 +35,27 @@ Template.shipEditor.createContext = function()
             });
         },
 
-        ship: function(self)
+        shipReactivity: function(self)
         {
             self.shipHandle = Deps.autorun(function(){
-                var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")});
-                console.log(ship);
-                self.shipForMousover = ship;
+                var ship = new model.ShipDesign().load(
+                    Session.get("selected_ship")
+                );
+                console.dir(ship);
+                self.ship = ship;
                 console.log("draw");
                 self.shipView.drawImages(ship);
             });
         },
 
         handle: function(self) {
-            self.viewMode(self);
-            self.ship(self);
+            self.viewModeReactivity(self);
+            self.shipReactivity(self);
         },
 
         click: function(self, containerPos)
         {
-            var ship = ShipDesigns.findOne({_id: Session.get("selected_ship")});
+            var ship = self.ship;
             var shipView = self.shipView;
 
             if ( ! ship || ! shipView)
@@ -76,7 +78,7 @@ Template.shipEditor.createContext = function()
 
         mousemove: function(self, containerPos)
         {
-            var ship = self.shipForMousover;
+            var ship = self.ship;
             var shipView = self.shipView;
 
             if ( ! ship || ! shipView)
@@ -157,11 +159,15 @@ Template.shipEditorRightMenu.rendered = function()
     if (this.colorPicker)
         this.colorPicker.spectrum("destroy");
 
-    var color = Template.shipEditorRightMenu.getFromSelectedLayout('hullColor');
+    var ship = new model.ShipDesign()
+        .load(Session.get("selected_ship"));
+
+    if ( ! ship)
+       return;
 
     this.colorPicker = jQuery("#hullColor");
     this.colorPicker.spectrum({
-        color: "rgb("+color+")",
+        color: "rgb("+ship.getColor()+")",
         preferredFormat: "rgb",
         showButtons: false,
         showInput: true,

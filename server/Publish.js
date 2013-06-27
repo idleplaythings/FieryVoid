@@ -10,27 +10,26 @@ Meteor.publish(null, function () {
         {fields: {emails: 1, profile: 1}});
 });
 
-Meteor.publish("ShipDesigns", function () {
-    return ShipDesigns.find(
-        {$or: [{"public": true}, {owner: this.userId}]});
+Meteor.publish("shipDesigns", function () {
+
+    return [
+        ShipDesigns.find({}),
+            //{$or: [{"public": true}, {owner: this.userId}]}),
+        HullImages.find({}),
+        HullLayouts.find({"published": true}),
+        ModuleImages.find({}),
+        ModuleLayouts.find({"published": true})
+    ];
 });
 
-Meteor.publish("HullImages", function () {
-    return HullImages.find({});
-});
-
-Meteor.publish("HullLayouts", function () {
+Meteor.publish("HullLayoutsAdmin", function () {
     if (isAdminUser(this.userId))
         return HullLayouts.find({});
 
     return HullLayouts.find({"published": true});
 });
 
-Meteor.publish("ModuleImages", function () {
-    return ModuleImages.find({});
-});
-
-Meteor.publish("ModuleLayouts", function () {
+Meteor.publish("ModuleLayoutsAdmin", function () {
     if (isAdminUser(this.userId))
         return ModuleLayouts.find({});
 

@@ -1,29 +1,50 @@
 Meteor.subscribe("HullImages");
 
+Template.hullEditor.contextObject = null;
+
 Template.hullEditor.context = function()
+{
+    if ( ! Template.hullEditor.contextObject)
+        Template.hullEditor.contextObject =
+            Template.hullEditor.createContext();
+
+    return Template.hullEditor.contextObject;
+};
+
+Template.hullEditor.createContext = function()
 {
     return {
         shipView: null,
         viewClass: model.ShipViewHull,
         lastMouseOverPos: null,
         modulePlacing: null,
+        hullLayout:null,
+        hullHandle: null,
+
+        hullLayoutReactivity: function(self)
+        {
+            self.hullHandle = Deps.autorun(function(){
+                var hullLayout = HullLayouts.findOne(
+                    {_id: Session.get("selected_hullLayout")});
+
+                if ( ! hullLayout)
+                    return;
+
+                self.hullLayout = hullLayout;
+
+                self.shipView.drawImages(
+                    {hullLayout: hullLayout, hullColor: hullLayout.color});
+            });
+        },
 
         handle: function(self) {
-            var hullLayout = HullLayouts.findOne(
-                {_id: Session.get("selected_hullLayout")});
-
-            if ( ! hullLayout)
-                return;
-
-            self.shipView.drawImages(
-                {hullLayout: hullLayout, hullColor: hullLayout.color});
+            self.hullLayoutReactivity(self);
         },
 
         click: function(self, containerPos)
         {
             var shipView = self.shipView;
-            var hullLayout = HullLayouts.findOne(
-                {_id: Session.get("selected_hullLayout")});
+            var hullLayout = self.hullLayout;
 
             if ( ! hullLayout)
                 return;
@@ -53,6 +74,21 @@ Template.hullEditor.context = function()
 };
 
 Template.hullEditor = _.extend(Template.hullEditor, BaseTemplate);
+
+Template.hullEditor.created = function()
+{
+    Meteor.subscribe("HullLayoutsAdmin");
+}
+
+Template.hullEditor.destroyed = function()
+{
+    if (Template.hullEditor.contextObject)
+    {
+        Template.hullEditor.contextObject.hullHandle.stop();
+        Template.hullEditor.contextObject = null;
+    }
+}
+
 
 Template.hullListing = _.extend(Template.hullListing, BaseTemplate);
 

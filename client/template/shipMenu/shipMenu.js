@@ -1,1 +1,31 @@
 Template.shipMenu = _.extend(Template.shipMenu, BaseTemplate);
+
+Template.shipMenu.myShips = function()
+{
+    var designs = ShipDesigns.find({owner: Meteor.userId()}).map(
+        function(design)
+        {
+            return new model.ShipDesign().loadWithDocument(design);
+        }
+    );
+
+    console.log(designs);
+    return designs;
+};
+
+Template.shipMenu.publicShips = function()
+{
+    var userId = Meteor.userId();
+    var designs = ShipDesigns
+        .find(
+            {$and: [{public: true}, {owner: {$not: userId}}]})
+        .map(
+            function(design)
+            {
+                return new model.ShipDesign().loadWithDocument(design);
+            }
+    );
+
+    console.log(designs);
+    return designs;
+};

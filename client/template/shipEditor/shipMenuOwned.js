@@ -12,6 +12,10 @@ Template.shipMenuOwned.events({
     'click .publish': function(event) {
         console.log("clicked publish");
         Template.shipMenuOwned.toggleDetail('public');
+    },
+    'click .testdrive': function(event) {
+        console.log("clicked publish");
+        Template.shipMenuOwned.toggleDetail('public');
     }
 });
 

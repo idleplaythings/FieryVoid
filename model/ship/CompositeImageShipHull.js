@@ -3,7 +3,7 @@ model.CompositeImageShipHull = function CompositeImageShipHull(ship)
     model.CompositeImage.call(this);
 
     this.ship = ship;
-    this.color = ship.hullColor;
+    this.color = ship.getColor();
     this.hullImgName = ship.hullLayout.hullImgName;
 
     this.base =
