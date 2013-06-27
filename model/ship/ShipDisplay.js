@@ -1,5 +1,6 @@
 model.ShipDisplay = function ShipDisplay(target, canvasClass)
 {
+    this.ship = null;
     this.target = target;
     this.canvasClass = canvasClass;
     this.canvases = [];
@@ -160,7 +161,7 @@ model.ShipDisplay.prototype.calculateZoomForFit = function()
 
     if (zoom > 1)
         zoom = 1;
-
+    console.log(zoom);
     return zoom;
 };
 
