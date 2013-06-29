@@ -39,7 +39,8 @@ model.ShipDesign.prototype.load = function(id)
 model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
 {
     //this.hullLayout = new model.HullLayout(this.hullLayout);
-    shipDesignDoc.hullLayout = HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId})
+    shipDesignDoc.hullLayout =
+        HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId})
 
     if ( ! shipDesignDoc.hullLayout)
         return this.onFailedLoad();

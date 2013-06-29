@@ -18,6 +18,11 @@ body{
     user-select: none;
 }
 
+.webglCanvas
+{
+    background-color: black;
+}
+
 a
 {
     text-decoration: none;

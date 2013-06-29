@@ -14,8 +14,18 @@ Template.shipMenuOwned.events({
         Template.shipMenuOwned.toggleDetail('public');
     },
     'click .testdrive': function(event) {
-        console.log("clicked publish");
-        Template.shipMenuOwned.toggleDetail('public');
+        console.log("Testdrive");
+        Meteor.call(
+            'TestdriveStart',
+            Session.get('selected_ship'),
+            function(err, result){
+                console.log(err);
+                console.log(result);
+                console.log("testdrive done");
+                Meteor.Router.to('/game/'+result);
+            }
+        );
+
     }
 });
 

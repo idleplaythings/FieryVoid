@@ -1,5 +1,5 @@
 Meteor.methods({
-    TestdriveStart: function (shipid) {
+    TestdriveStart: function (shipId) {
         console.log("testdrive start");
 
         var userid = Meteor.userId();
@@ -9,9 +9,9 @@ Meteor.methods({
         if ( ! shipDesign || shipDesign.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
 
-        var game = new model.GameTestdrive()
+        var game = new model.GameTestdrive();
         game.setStartingConditions(shipDesign);
-        Games.insert(game.prepareForSave());
+        return Games.insert(game.prepareForSave());
     }
 });
 
@@ -25,12 +25,13 @@ model.GameTestdrive.prototype = Object.create(model.Game.prototype);
 
 model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 {
-
     this.name = displayName(Meteor.user()) + " testdrive " + shipDesign.name;
     var ship = new model.ShipInGame({
         position:{x:0, y:0},
         controller: Meteor.userId(),
         shipDesign: shipDesign
     });
-    this.ships.push(new Ship)
+    this.ships.push(ship);
+
+    this.created =  new Date().getTime();
 };

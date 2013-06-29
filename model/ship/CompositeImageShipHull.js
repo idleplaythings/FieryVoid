@@ -1,10 +1,9 @@
-model.CompositeImageShipHull = function CompositeImageShipHull(ship)
+model.CompositeImageShipHull = function CompositeImageShipHull(shipDesign)
 {
-    model.CompositeImage.call(this);
+    model.CompositeImage.call(this, shipDesign);
 
-    this.ship = ship;
-    this.color = ship.getColor();
-    this.hullImgName = ship.hullLayout.hullImgName;
+    this.color = shipDesign.getColor();
+    this.hullImgName = shipDesign.hullLayout.hullImgName;
 
     this.base =
         this.imageLoader.loadImage(
@@ -22,21 +21,6 @@ model.CompositeImageShipHull = function CompositeImageShipHull(ship)
 model.CompositeImageShipHull.prototype =
     Object.create(model.CompositeImage.prototype);
 
-model.CompositeImageShipHull.prototype.getModuleImages = function(type)
-{
-    var images = [];
-
-    for (var i in this.ship.modules)
-    {
-        var module = this.ship.modules[i];
-        var image = module.image.getByType(type);
-
-        if (image)
-            images[i] = this.imageLoader.loadImage(image);
-    }
-
-    return images;
-};
 
 model.CompositeImageShipHull.prototype._createImage = function()
 {
@@ -68,21 +52,6 @@ model.CompositeImageShipHull.prototype._createImage = function()
     return context.getImageData(0, 0, width, height);
 };
 
-model.CompositeImageShipHull.prototype._drawModuleImages =
-    function(context, images)
-{
-    for (var i in images)
-    {
-        var image = images[i];
-        var pos = this.getCanvasPosition(this.ship.modules[i].position);
-
-        var w = image.width;
-        var h = image.height;
-
-        context.drawImage(image, pos.x, pos.y, w, h);
-    }
-};
-
 model.CompositeImageShipHull.prototype._applyColor = function(targetData, color)
 {
     color = color.split(',');
@@ -108,19 +77,7 @@ model.CompositeImageShipHull.prototype._applyColor = function(targetData, color)
     targetData.data = data;
 };
 
-model.CompositeImageShipHull.prototype. getCanvasPosition = function(pos)
+model.CompositeImage.prototype.getDimensions = function()
 {
-    return this.getCoordinateTool().convertGridToCanvas(pos);
-};
-
-model.CompositeImageShipHull.prototype.getCoordinateTool = function()
-{
-    var gridWidth = this.ship.hullLayout.width;
-    var gridHeight = this.ship.hullLayout.height;
-
-    return new model.CoordinateConverter(
-        {width: this.base.width, height: this.base.height},
-        {width: gridWidth, height: gridHeight},
-        this.ship.hullLayout.tileScale
-    );
+    return {width:this.base.width, height:this.base.height};
 };

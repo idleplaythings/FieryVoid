@@ -10,6 +10,11 @@ Meteor.publish(null, function () {
         {fields: {emails: 1, profile: 1}});
 });
 
+Meteor.publish("currentGame", function (gameId) {
+
+    return Games.find({_id: gameId});
+});
+
 Meteor.publish("shipDesigns", function () {
 
     return [

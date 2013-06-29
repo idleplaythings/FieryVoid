@@ -1,5 +1,6 @@
-model.CompositeImage = function CompositeImage()
+model.CompositeImage = function CompositeImage(shipDesign)
 {
+    this.shipDesign = shipDesign;
     this.drawingTool = window.Tools.getCanvasDrawingTool();
     this.imageLoader = new model.ImageLoader();
 
@@ -20,11 +21,37 @@ model.CompositeImage.prototype.getImageDataToCallback = function(callback)
     }
 };
 
-model.CompositeImage.prototype.setColor = function(color)
+model.CompositeImage.prototype.getModuleImages = function(type)
 {
-    this.color = color;
-    this.imageData.data = this._createImage();
-}
+    var images = [];
+
+    for (var i in this.shipDesign.modules)
+    {
+        var module = this.shipDesign.modules[i];
+        var image = module.image.getByType(type);
+
+        if (image)
+            images[i] = this.imageLoader.loadImage(image);
+    }
+
+    return images;
+};
+
+model.CompositeImage.prototype._drawModuleImages =
+    function(context, images)
+    {
+        for (var i in images)
+        {
+            var image = images[i];
+            var pos = this.getCanvasPosition(this.shipDesign.modules[i].position);
+
+            var w = image.width;
+            var h = image.height;
+
+            context.drawImage(image, pos.x, pos.y, w, h);
+        }
+    };
+
 
 model.CompositeImage.prototype._doGetImageData = function()
 {
@@ -39,4 +66,28 @@ model.CompositeImage.prototype._doGetImageData = function()
     }
 
     return this.imageData;
+};
+
+model.CompositeImage.prototype.getDimensions = function()
+{
+
+};
+
+model.CompositeImage.prototype.getCanvasPosition = function(pos)
+{
+    return this.getCoordinateTool().convertGridToCanvas(pos);
+};
+
+model.CompositeImage.prototype.getCoordinateTool = function()
+{
+    var gridWidth = this.shipDesign.hullLayout.width;
+    var gridHeight = this.shipDesign.hullLayout.height;
+
+    var dim = this.getDimensions();
+
+    return new model.CoordinateConverter(
+        {width: dim.width, height: dim.height},
+        {width: gridWidth, height: gridHeight},
+        this.shipDesign.hullLayout.tileScale
+    );
 };

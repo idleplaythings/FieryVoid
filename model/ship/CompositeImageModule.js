@@ -1,6 +1,6 @@
 model.CompositeImageModule = function CompositeImageModule(args)
 {
-    model.CompositeImage.call(this);
+    model.CompositeImage.call(this, args.shipDesign);
     this.shadow = args.shadow || false;
     this.base =
         this.imageLoader.loadImage(args.imageSrc);

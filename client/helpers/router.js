@@ -17,7 +17,7 @@ Meteor.Router.add({
     '/ship/create': {
         to: 'createShip',
     },
-    '/ship/:_id': {
+    '/game/:_id': {
         to: 'game',
         and: function(id) {
             Session.set("active_game", id);
