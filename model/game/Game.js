@@ -12,6 +12,7 @@ model.Game = function Game(args)
 
     this.name = args.name || 'unnamed';
     this.background = args.background || null;
+    this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
     this.ships = args.ships || [];
 
@@ -38,11 +39,14 @@ model.Game.prototype.play = function()
     this.zooming = new model.Zooming(container, eventDispatcher);
     this.zooming.init();
 
-    this.initGameState(eventDispatcher);
+    this.initGameState(container, eventDispatcher);
 };
 
-model.Game.prototype.initGameState = function(eventDispatcher)
+model.Game.prototype.initGameState = function(container, eventDispatcher)
 {
+    this.terrain = new model.GameTerrain().createRandom(
+        container, this.terrainSeed, this.gameScene);
+
     this.ships.forEach(
         function(ship){
             ship.subscribeToScene(this.gameScene, eventDispatcher);
@@ -92,6 +96,6 @@ model.Game.prototype.prepareForSave = function()
             return ship;
         });
 
-    console.log(this);
+    this.terrainSeed = Math.random();
     return this;
 };

@@ -16,7 +16,8 @@ model.ShipIcon = function ShipIcon(shipDesign, dispatcher)
 model.ShipIcon.prototype.create = function()
 {
     this.ThreeIconGroup = new THREE.Object3D();
-    this.ThreeIconGroup.position = new THREE.Vector3(0, 0, 0);
+    this.ThreeIconGroup.position = new THREE.Vector3(0, 0, 1);
+    this.ThreeIconGroup.renderDepth = 10;
 
     this.hull = new model.ShipSpriteHull(this.shipDesign)
     this.modules = new model.ShipSpriteModules(this.shipDesign);

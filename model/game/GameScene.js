@@ -4,11 +4,13 @@ model.GameScene = function GameScene(dispatcher){
     this.height = 800;
     this.camera = null;
     this.scene = new THREE.Scene();
+    this.terrainScene = new THREE.Scene();
     this.renderer = null,
     this.ambientLightColor = 0xffffff,
     this.light = null;
     this.zoom = 1;
     this.ambientLight = null;
+    this.animators = [];
 
     this.dispatcher = dispatcher;
 
@@ -53,15 +55,10 @@ model.GameScene.prototype.init = function(target)
         .addClass("webglCanvas").appendTo(target);
 };
 
-model.GameScene.prototype.getScene = function()
-{
-    return this.scene;
-};
-
 model.GameScene.prototype.animate = function()
 {
     requestAnimationFrame( jQuery.proxy(this.animate, this) );
-    //AnimationHandler.tick();
+    this.animators.forEach(function(a){a.animate()})
     this.render();
 
 };
@@ -69,6 +66,7 @@ model.GameScene.prototype.animate = function()
 model.GameScene.prototype.render = function()
 {
     this.renderer.clear();
+    this.renderer.render( this.terrainScene, this.camera );
     this.renderer.render( this.scene, this.camera );
 };
 

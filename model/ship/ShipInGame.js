@@ -38,7 +38,7 @@ model.ShipInGame.prototype.subscribeToScene =
 {
     console.log(gameScene);
     this.gameScene = gameScene;
-    this.gameScene.getScene().add(this.getIcon(eventDispatcher).getThreeObject());
+    this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
 
     var plane = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), new THREE.MeshNormalMaterial());
     plane.overdraw = true;
