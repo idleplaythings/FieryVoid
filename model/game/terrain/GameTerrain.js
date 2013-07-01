@@ -7,7 +7,7 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
     console.log("seed is: "+seed);
     Math.seedrandom(seed);
 
-    container.css('background-color', 'black');
+    container.css('background-color', '#050d16');
     //container.css('background-image', 'linear-gradient(to top right, #000000 0%, #1F093D 100%)');
 
     var starCount = 600 + (Math.floor(Math.random()*400)-200);
