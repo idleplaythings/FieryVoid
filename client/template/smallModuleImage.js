@@ -1,6 +1,8 @@
 Template.smallModuleImage.selectedClass = function()
 {
-    return Session.get('selected_module') == this._id ? 'selected' : '';
+    console.log("selected");
+    var selected = Session.get('selected_module') == this._id;
+    return (selected) ? 'selected' : '';
 };
 
 Template.smallModuleImage.events({
@@ -12,8 +14,8 @@ Template.smallModuleImage.events({
 
 Template.smallModuleImage.rendered = function(){
     var grid = this.find('.canvasContainer');
-    var moduleLayout = ModuleLayouts.findOne({'_id': this.data._id});
-
+    var moduleLayout = this.data;
+    console.log(moduleLayout);
     var self = this;
 
     if ( ! moduleLayout)
@@ -30,8 +32,6 @@ Template.smallModuleImage.rendered = function(){
         'moduleGrid',
         {color: 'rgba(0,40,255,0.3)', width:1}
     );
-
-
 
     moduleDisplay.start({hullLayout: moduleLayout, modules: [moduleLayout]});
     display.start({hullLayout: moduleLayout});

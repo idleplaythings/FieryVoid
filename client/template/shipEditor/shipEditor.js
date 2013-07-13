@@ -62,15 +62,24 @@ Template.shipEditor.createContext = function()
                 return;
 
             var pos = shipView.getClickedTile(containerPos);
+            var compositeId = Session.get('selected_module');
 
-            var moduleId = Session.get('selected_module');
-            var module = ModuleLayouts.findOne({'_id': moduleId});
+            if (! compositeId)
+                return;
 
-            if (moduleId == 'remove')
+            if (compositeId == 'remove')
             {
                 ship.removeModule(pos);
+                return;
             }
-            else if (module)
+
+            var moduleId = compositeId.split('-')[0];
+            var direction = parseInt(compositeId.split('-')[1], 10);
+
+            var module = ModuleLayouts.findOne({'_id': moduleId});
+            module.direction = direction;
+
+            if (module)
             {
                 ship.placeModule(module, pos);
             }
@@ -91,11 +100,20 @@ Template.shipEditor.createContext = function()
             if ( ! lastPos || pos.x != lastPos.x || pos.y != lastPos.y)
             {
                 self.lastMouseoOverPos = pos;
-                var moduleLayout = ModuleLayouts.findOne(
-                    {'_id': Session.get('selected_module')});
+
+                var compositeId = Session.get('selected_module');
+
+                if (! compositeId)
+                    return;
+
+                var mId = compositeId.split('-')[0];
+                var mDirection = parseInt(compositeId.split('-')[1], 10);
+                var moduleLayout = ModuleLayouts.findOne({'_id': mId});
 
                 if ( ! moduleLayout)
                     return;
+
+                moduleLayout.direction = mDirection;
 
                 var modulePlacing = new model.ShipDisplayPlacingModule(
                     ship, jQuery('div.displayLarge'), 'modulePlacing', moduleLayout, pos);
@@ -140,7 +158,22 @@ Template.shipEditorRightMenu.isGridView = function()
 
 Template.shipEditorRightMenu.availableModules = function()
 {
-    return ModuleLayouts.find({'published': true});
+    var modules = ModuleLayouts.find({'published': true});
+    var finalModules = [];
+    modules.forEach(
+        function(module){
+            module.getAvailableDirections().forEach(
+                function(direction){
+                    console.log("d: " + direction);
+                    var newModule = new model.ModuleLayout(module);
+                    newModule.direction = parseInt(direction, 10);
+                    newModule._id += "-" + newModule.direction;
+                    finalModules.push(newModule);
+            });
+    });
+
+    console.log(finalModules);
+    return finalModules;
 };
 
 Template.shipEditorRightMenu.events({

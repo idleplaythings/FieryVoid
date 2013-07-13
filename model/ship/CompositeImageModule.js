@@ -2,8 +2,11 @@ model.CompositeImageModule = function CompositeImageModule(args)
 {
     model.CompositeImage.call(this, args.shipDesign);
     this.shadow = args.shadow || false;
+    this.imageLoader = args.imageLoader || this.imageLoader;
     this.base =
         this.imageLoader.loadImage(args.imageSrc);
+    this.rotation = args.rotation || 0;
+    console.log("rotation: " + this.rotation);
 }
 
 model.CompositeImageModule.prototype = Object.create(model.CompositeImage.prototype);
@@ -29,7 +32,48 @@ model.CompositeImageModule.prototype._createImage = function()
 
     context.drawImage(this.base, 0, 0);
 
-    return context.getImageData(0, 0, width, height);
+    return this.rotate(this.rotation, drawingCanvas);
+    //return context.getImageData(0, 0, width, height);
+};
+
+model.CompositeImageModule.prototype.rotate = function(rotation, drawingCanvas)
+{
+    var flipDimensions = rotation == 90 || rotation == 270;
+    var w = (flipDimensions) ? this.base.height : this.base.width;
+    var h = (flipDimensions) ? this.base.width : this.base.height;
+
+    var wt = 0;
+    var ht = 0;
+
+    if (rotation == 90)
+    {
+        wt = w;
+        ht = h/w;
+    }
+    else if (rotation == 180)
+    {
+        wt = w;
+        ht = w/2;
+    }
+    else if (rotation == 270)
+    {
+        wt = w/h;
+        ht = h;
+    }
+
+    var rotationCanvas =
+        $('<canvas width="'+w+'" height="'+h+'"></canvas>').get(0);
+
+    var context = rotationCanvas.getContext("2d");
+    context.save();
+    // translate and rotate
+    context.translate(wt,ht);
+    context.rotate(rotation*Math.PI/180);
+    // draw the previows image, now rotated
+    context.drawImage(drawingCanvas, 0, 0);
+    context.restore();
+
+    return context.getImageData(0, 0, w, h);
 };
 
 

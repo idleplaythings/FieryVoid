@@ -31,8 +31,8 @@ model.ShipDisplayGrid.prototype.drawImage = function()
         height:dimensions.height
     });
 
-    var gridWidth = this.ship.hullLayout.width;
-    var gridHeight = this.ship.hullLayout.height;
+    var gridWidth = this.ship.hullLayout.getWidth();
+    var gridHeight = this.ship.hullLayout.getHeight();
     var gridSize = this.calculateGridSize();
 
     var width = gridSize * gridWidth;

@@ -47,14 +47,15 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
 
     var invalidModule = false;
     shipDesignDoc.modules = shipDesignDoc.modules.map(
-        function(moduleAndPos)
+        function(moduleDetails)
         {
             var module = ModuleLayouts.findOne(
-                {'_id': moduleAndPos.module});
+                {'_id': moduleDetails.module});
 
             if (module)
             {
-                module.setPosition(moduleAndPos.position);
+                module.setPosition(moduleDetails.position);
+                module.setDirection(moduleDetails.direction);
             }
             else
             {
@@ -108,7 +109,7 @@ model.ShipDesign.prototype.placeModule = function(module, pos)
 
     Meteor.call(
         'ShipDesignAddModule',
-        this._id, module._id, pos,
+        this._id, module._id, module.direction, pos,
         function(err, result){}
     );
 };

@@ -3,8 +3,12 @@ model.ShipDisplayPlacingModule = function ShipDisplayPlacingModule(
 {
     model.ShipDisplay.call(this, target, canvasClass);
 
+    console.log(module);
     var image = module.image.getDefault() ;
-    this.img = new model.CompositeImageModule({imageSrc: image});
+    this.img = new model.CompositeImageModule({
+        imageSrc: image,
+        rotation: module.getRotation()
+    });
 
     this.ship = ship;
     this.module = module;

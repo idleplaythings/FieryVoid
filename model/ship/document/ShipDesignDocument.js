@@ -34,7 +34,7 @@ Meteor.methods({
         return ShipDesigns.insert(ship);
     },
 
-    ShipDesignAddModule: function(shipId, moduleId, modulePosition)
+    ShipDesignAddModule: function(shipId, moduleId, direction, modulePosition)
     {
         var userid = Meteor.userId();
 
@@ -47,14 +47,18 @@ Meteor.methods({
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
 
         var module = ModuleLayouts.findOne({'_id': moduleId});
+        module.setDirection(direction);
 
         if ( ! module.isValidPosition(ship, modulePosition))
             throw new Meteor.Error(400, "Invalid module placement");
 
         ShipDesigns.update(
             {$and: [{'_id': shipId}, {'owner': userid}]},
-            {$push: {'modules':
-                {'module': moduleId, 'position': modulePosition}}
+            {$push: {'modules':{
+                'module': moduleId,
+                'position': modulePosition,
+                'direction': direction
+                }}
             }
         );
     },

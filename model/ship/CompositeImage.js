@@ -31,7 +31,14 @@ model.CompositeImage.prototype.getModuleImages = function(type)
         var image = module.image.getByType(type);
 
         if (image)
-            images[i] = this.imageLoader.loadImage(image);
+        {
+            images[i] = new model.CompositeImageModule({
+                imageSrc: image,
+                shadow: false,
+                rotation:module.getRotation(),
+                imageLoader: this.imageLoader
+            });
+        }
     }
 
     return images;
@@ -45,10 +52,20 @@ model.CompositeImage.prototype._drawModuleImages =
             var image = images[i];
             var pos = this.getCanvasPosition(this.shipDesign.modules[i].position);
 
-            var w = image.width;
-            var h = image.height;
+            image.getImageDataToCallback(
+                function(data)
+                {
+                    console.log(data);
+                    data = data.data;
 
-            context.drawImage(image, pos.x, pos.y, w, h);
+                    var canvas =
+                        $('<canvas width="'+data.width+'" height="'+data.height+'"></canvas>').get(0);
+                    var tmp = canvas.getContext("2d");
+
+                    tmp.putImageData(data, 0, 0);
+                    context.drawImage(canvas, pos.x, pos.y);
+                }
+            );
         }
     };
 

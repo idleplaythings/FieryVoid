@@ -1,29 +1,41 @@
 model.ModuleLayout = function ModuleLayout(args)
 {
-    // if (! args.image)
-    //     throw "Module layout needs image";
+    if (! args)
+        args = {};
 
-    this.image = null;
+    this.image = args.image || null;
 
-    this._id = null;
-    this.name = 'unnamed';
+    this._id = args._id || null;
+    this.name = args.name || 'unnamed';
     this.description = '';
-    this.width = 10;
-    this.height = 10;
-    this.tileScale = 30;
-    this.disabledTiles = [];
-    this.outsideTiles = [];
-    this.tileHeight = 1;
+    this.width = args.width || 10;
+    this.height = args.height || 10;
+    this.tileScale = args.tileScale || 30;
+    this.disabledTiles = args.disabledTiles || [];
+    this.outsideTiles = args.outsideTiles || [];
+    this.tileHeight = args.tileHeight || 1;
+    this.allowedDirections = args.allowedDirections || '';
+    this.direction = args.direction || 0;
 
-    this.deprecated = false;
-    this.published = false;
+    this.deprecated = args.deprecated || false;
+    this.published = args.published || false;
 
-    this.position = {x:0, y:0};
+    this.position = args.position || {x:0, y:0};
 
-    this.traits = [];
+    this.traits = args.traits || [];
 
     this.initTraits();
 };
+
+model.ModuleLayout.prototype.getWidth = function()
+{
+    return (this.direction == 2 || this.direction == 3) ? this.height : this.width;
+}
+
+model.ModuleLayout.prototype.getHeight = function()
+{
+    return (this.direction == 2 || this.direction == 3) ? this.width : this.height;
+}
 
 model.ModuleLayout.getAvailableTraits = function() {
     var traits = [];
@@ -43,6 +55,43 @@ model.ModuleLayout.prototype.initTraits = function() {
         _.extend(this, model[traitName].prototype);
     }, this);
 }
+
+model.ModuleLayout.prototype.setDirection = function(direction)
+{
+    console.log("setting direction: " + direction);
+    if (! direction || direction == '0')
+    {
+        this.direction = 0;
+        return;
+    }
+
+    if ( this.getAvailableDirections().indexOf(direction) < 0)
+    {
+        throw new Error("Invalid module direction: '"+direction+"'");
+    }
+    this.direction = direction;
+};
+
+model.ModuleLayout.prototype.getAvailableDirections = function()
+{
+    return this.allowedDirections.split(',').map(function(value){return parseInt(value)});
+};
+
+model.ModuleLayout.prototype.getRotation = function()
+{
+    console.log(this.direction);
+    switch (this.direction)
+    {
+        case 2:
+            return 270;
+        case 3:
+            return 90;
+        case 4:
+            return 180;
+        default:
+            return 0;
+    }
+};
 
 model.ModuleLayout.prototype.occupiesPosition = function(pos)
 {

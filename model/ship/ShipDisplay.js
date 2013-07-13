@@ -177,8 +177,8 @@ model.ShipDisplay.prototype.getCanvasPosition = function(pos)
 
 model.ShipDisplay.prototype.getCoordinateTool = function()
 {
-    var gridWidth = this.ship.hullLayout.width;
-    var gridHeight = this.ship.hullLayout.height;
+    var gridWidth = this.ship.hullLayout.getWidth();
+    var gridHeight = this.ship.hullLayout.getHeight();
 
     return new model.CoordinateConverter(
         this.getDimensions(),

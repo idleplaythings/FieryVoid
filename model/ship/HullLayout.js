@@ -18,6 +18,16 @@ model.HullLayout = function HullLayout(args)
     this.published = args.published || false;
 };
 
+model.HullLayout.prototype.getWidth = function()
+{
+    return this.width;
+}
+
+model.HullLayout.prototype.getHeight = function()
+{
+    return this.height;
+}
+
 model.HullLayout.prototype.publish = function()
 {
     Meteor.call(

@@ -11,7 +11,7 @@ Template.smallHullImage.rendered = function(){
             hullLayout: {
                 hullImgName: hullImgName
             },
-            hullColor: color,
+            getColor: function(){return color;},
             modules: []
         });
 
