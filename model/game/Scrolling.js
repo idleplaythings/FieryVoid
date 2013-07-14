@@ -35,7 +35,7 @@ model.Scrolling.prototype.init = function()
 
 model.Scrolling.prototype.mousedown = function(event)
 {
-    if (!event || event.which !== this.mouseRightButton)
+    if (!event)// || event.which !== this.mouseRightButton)
         return;
 
     event.stopPropagation(event);
