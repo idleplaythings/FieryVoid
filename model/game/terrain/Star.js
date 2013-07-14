@@ -27,8 +27,6 @@ model.Star.prototype.animate = function()
     else if (this.twinkleStatus <= 0)
         this.twinkleIncrement = 1;
 
-    var ts = this.twinkleStatus;
-
     this.sprite.material.opacity =
         (1 - this.twinkleVariance) + this.twinkleVariance*(this.twinkleStatus / this.twinkle);
 };

@@ -32,8 +32,10 @@ Template.hullEditor.createContext = function()
 
                 self.hullLayout = hullLayout;
 
-                self.shipView.drawImages(
-                    {hullLayout: hullLayout, hullColor: hullLayout.color});
+                self.shipView.drawImages({
+                    hullLayout: hullLayout,
+                    getColor: function(){ return hullLayout.color;}
+                });
             });
         },
 

@@ -103,7 +103,7 @@ model.ModuleLayout.prototype.occupiesPosition = function(pos)
     if (pos.x < 0 || pos.y < 0)
         return false;
 
-    if (pos.x >= this.width || pos.y >= this.height)
+    if (pos.x >= this.getWidth() || pos.y >= this.getHeight())
         return false;
 
     if (this.isDisabledTile(pos))
@@ -165,6 +165,18 @@ model.ModuleLayout.prototype.publish = function()
         this.image.name,
         function(err, result){}
     );
+};
+
+model.ModuleLayout.prototype.getTileListIndex = function(pos)
+{
+    if (! this.direction)
+    {
+        return pos.y * this.width + pos.x;
+    }
+    else if (this.direction == 2)
+    {
+        return pos.x * this.height + pos.y;
+    }
 };
 
 model.ModuleLayout.prototype.isDisabledTile = function(pos)

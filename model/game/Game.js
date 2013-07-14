@@ -89,7 +89,8 @@ model.Game.prototype.prepareForSave = function()
                     function(module){
                         return {
                             module: module._id,
-                            position: module.position
+                            position: module.position,
+                            direction: module.direction
                             };
                     });
 

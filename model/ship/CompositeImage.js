@@ -55,7 +55,6 @@ model.CompositeImage.prototype._drawModuleImages =
             image.getImageDataToCallback(
                 function(data)
                 {
-                    console.log(data);
                     data = data.data;
 
                     var canvas =

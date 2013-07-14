@@ -22,9 +22,6 @@ model.ShipDisplayModules.prototype.getImages = function(type)
         var module = this.ship.modules[i];
         var image = module.image.getByType(type);
 
-        console.log("display");
-        console.log(module);
-
         if (image)
             images[i] = new model.CompositeImageModule({
                 imageSrc: image,

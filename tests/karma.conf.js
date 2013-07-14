@@ -17,7 +17,8 @@ files = [
     'lib/CoordinateConverter.js',
     'model/ship/ShipDisplay.js',
     'model/ship/ShipDisplayGrid.js',
-    'model/ship/tools/ShipMass.js'
+    'model/ship/tools/ShipMass.js',
+    'model/ship/module/ModuleLayout.js'
 ];
 
 
