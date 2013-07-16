@@ -119,9 +119,9 @@ model.ModuleLayout.prototype.setPosition = function(pos)
 
 model.ModuleLayout.prototype.isValidPosition = function(ship, pos)
 {
-    for (var x = 0; x < this.width; x++)
+    for (var x = 0; x < this.getWidth(); x++)
     {
-        for (var y = 0; y < this.height; y++)
+        for (var y = 0; y < this.getHeight(); y++)
         {
             if ( ! this.isValidTileForPosition(ship, pos, {x:x, y:y}))
             {
@@ -169,28 +169,52 @@ model.ModuleLayout.prototype.publish = function()
 
 model.ModuleLayout.prototype.getTileListIndex = function(pos)
 {
-    if (! this.direction)
+    if ((pos.x < 0 || pos.y < 0)
+       || (pos.x >= this.getWidth() || pos.y >= this.getHeight()))
+            throw new Error("(x: " + pos.x + ",y: "
+                + pos.y+" is outside of the module" );
+
+    if (this.direction == 2)
+    {
+        console.log("direction 2");
+        var x = (this.width-1) - pos.y;
+        var y = pos.x;
+
+        console.log("x: "+ x + ",y: " + y);
+        return y * this.width + x;
+    }
+    else if (this.direction == 3)
+    {
+        console.log("direction 3");
+        var x = pos.y;
+        var y = (this.height-1) - pos.x;
+
+        console.log("x: "+ x + ",y: " + y);
+        return y * this.width + x;
+    }
+    else if (this.direction == 4)
+    {
+        console.log("direction 4");
+        var x = (this.width-1) - pos.x
+        var y = (this.height-1) - pos.y;
+
+        console.log("x: "+ x + ",y: " + y);
+        return y * this.width + x;
+    }
+    else
     {
         return pos.y * this.width + pos.x;
-    }
-    else if (this.direction == 2)
-    {
-        return pos.x * this.height + pos.y;
     }
 };
 
 model.ModuleLayout.prototype.isDisabledTile = function(pos)
 {
-    var i = pos.y * this.width + pos.x;
-
-    return this.disabledTiles.indexOf(i) >= 0;
+    return this.disabledTiles.indexOf(this.getTileListIndex(pos)) >= 0;
 };
 
 model.ModuleLayout.prototype.isOutsideTile = function(pos)
 {
-    var i = pos.y * this.width + pos.x;
-
-    return this.outsideTiles.indexOf(i) >= 0;
+    return this.outsideTiles.indexOf(this.getTileListIndex(pos)) >= 0;
 };
 
 model.ModuleLayout.prototype.getTileHeight = function(pos)

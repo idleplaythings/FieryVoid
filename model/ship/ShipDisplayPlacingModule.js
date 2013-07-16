@@ -46,9 +46,9 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
     window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(
         context, pos, data, zoom);
 
-    for (var x = 0; x < this.module.width; x++)
+    for (var x = 0; x < this.module.getWidth(); x++)
     {
-        for (var y = 0; y < this.module.height; y++)
+        for (var y = 0; y < this.module.getHeight(); y++)
         {
             if ( ! this.module.isValidTileForPosition(this.ship, this.pos, {x:x, y:y}))
             {
