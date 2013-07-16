@@ -193,7 +193,7 @@ Template.moduleMenu.traits = function()
 
     model.ModuleLayout.getAvailableTraits().every(function(traitName) {
         trait = new model[traitName]();
-        value = getFromSelectedLayout(trait.name);
+        value = getFromSelectedLayoutTrait(trait.name);
 
         if (value) {
             trait.value = value;
@@ -262,6 +262,26 @@ function getFromSelectedLayout(name)
     return '';
 }
 
+function getFromSelectedLayoutTrait(name)
+{
+    var layoutId = Session.get("selected_moduleLayout");
+    if (layoutId)
+    {
+        var layout = ModuleLayouts.findOne({_id: layoutId});
+
+        if (layout)
+        {
+            for (var i in layout.traits)
+            {
+                if ( layout.traits[i].name == name)
+                    return layout.traits[i].value;
+            }
+        }
+    }
+
+    return '';
+}
+
 function handleDetailChange(element)
 {
     var name = jQuery(element).attr('name');
@@ -273,8 +293,14 @@ function handleDetailChange(element)
         var layout = ModuleLayouts.findOne({_id: layoutId});
         if (layout)
         {
-            layout.updateIfDifferent(name, value);
+            if (jQuery(element).hasClass('trait'))
+            {
+                layout.updateTrait(name, value);
+            }
+            else
+            {
+                layout.updateIfDifferent(name, value);
+            }
         }
     }
-
 }

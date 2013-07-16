@@ -9,6 +9,8 @@ ModuleLayouts = new Meteor.Collection(
             return null;
 
         moduleLayout.image = image;
+        moduleLayout.initTraits();
+
         return moduleLayout;
     }}
 );
@@ -55,15 +57,42 @@ Meteor.methods({
         );
     },
 
-    ModuleLayoutUpdate: function(id, data)
+    ModuleLayoutUpdate: function(id, data, trait)
     {
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
-        return ModuleLayouts.update(
-            { _id: id },
-            {$set: data}
-        );
+        if (trait)
+        {
+            for (var name in data) break;
+
+            console.log("updating trait with name '" + name +"'");
+            var found = ModuleLayouts.findOne(
+                {$and: [{'_id': id}, {'traits.name': name}]}
+            );
+
+            if (found)
+            {
+                return ModuleLayouts.update(
+                    {$and: [{'_id': id}, {'traits.name': name}]},
+                    {$set: {'traits.$.value': data[name]}}
+                );
+            }
+            else
+            {
+                ModuleLayouts.update(
+                    {'_id': id},
+                    {$push: {'traits': {'name': name, 'value': data[name]}}}
+                );
+            }
+        }
+        else
+        {
+            return ModuleLayouts.update(
+                { _id: id },
+                {$set: data}
+            );
+        }
     },
 
     ModuleLayoutToggleDisabled: function(id, i)

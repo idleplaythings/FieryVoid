@@ -45,14 +45,16 @@ model.ModuleLayout.getAvailableTraits = function() {
             traits.push(modelName);
         }
     }
-
     return traits;
 }
 
 model.ModuleLayout.prototype.initTraits = function() {
-    this.traits.every(function(traitName) {
-        traitName = 'ModuleLayout' + traitName[0].toUpperCase() + traitName.slice(1) + 'Trait';
+    this.traits.every(function(trait) {
+        console.log("init trait: " + trait.name);
+        var traitName = 'ModuleLayout' + trait.name[0].toUpperCase() + trait.name.slice(1) + 'Trait';
         _.extend(this, model[traitName].prototype);
+
+        console.log("TODO: trait.value as param to trait");
     }, this);
 }
 
@@ -248,11 +250,24 @@ model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
     );
 };
 
+model.ModuleLayout.prototype.updateTrait = function(name, value)
+{
+    this.traits.forEach(function(trait)
+    {
+        if (trait.name == name && trait.value == value)
+        {
+            trait.value = value;
+        }
+    });
+
+    this.updateValue(name, value, true);
+};
+
 model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
 {
-    // if ( ! this[name])
-    //     throw "Trying to change ModuleLayout value '" + name
-    //         +"' that does not exist";
+    if ( ! this[name])
+        throw new Error("Trying to change ModuleLayout value '" + name
+            +"' that does not exist");
 
     if (this[name] != value)
     {
@@ -261,8 +276,11 @@ model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
     }
 };
 
-model.ModuleLayout.prototype.updateValue = function(name, value)
+model.ModuleLayout.prototype.updateValue = function(name, value, trait)
 {
+    if (! trait)
+        trait = false;
+
     var updateObject = {};
     updateObject[name] = value;
 
@@ -270,6 +288,7 @@ model.ModuleLayout.prototype.updateValue = function(name, value)
         'ModuleLayoutUpdate',
         this._id,
         updateObject,
+        trait,
         function(err, result){
             console.log('ModuleLayout ' +name + ' updated to ' + value);
         }
