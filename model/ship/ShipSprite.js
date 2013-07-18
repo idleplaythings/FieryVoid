@@ -5,6 +5,8 @@ model.ShipSprite = function ShipSprite(shipDesign)
     this.initialScale = null;
 };
 
+model.ShipSprite.prototype =  Object.create(model.Sprite.prototype);
+
 model.ShipSprite.prototype.getSprite = function()
 {
     this.sprite = this.createSprite();

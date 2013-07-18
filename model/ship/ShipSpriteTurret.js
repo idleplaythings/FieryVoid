@@ -21,26 +21,8 @@ model.ShipSpriteTurret.prototype.requestImageDataToCallback = function()
 
 model.ShipSpriteTurret.prototype.setPosition = function()
 {
-
-    var pos = {
-        x: this.module.position.x + (this.module.width/2),
-        y: this.module.position.y + (this.module.height/2)
-    };
-
-
-    pos = this.img.getCanvasPosition(pos);
-
-    var hullScale = this.shipDesign.hullLayout.tileScale;
-    var center = {
-        x: (this.shipDesign.hullLayout.width/2)*hullScale,
-        y: (this.shipDesign.hullLayout.height/2)*hullScale
-    };
-
-    console.log(center);
-    this.position = {
-        x: pos.x - center.x,
-        y: -pos.y + center.y
-    };
+    this.position = this.shipDesign.getPositionInIconRelativeFromCenter(
+        this.module.getCenterPosition());
 };
 
 model.ShipSpriteTurret.prototype.getSprite = function()

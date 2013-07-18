@@ -71,14 +71,22 @@ Meteor.methods({
                 {$and: [{'_id': id}, {'traits.name': name}]}
             );
 
-            if (found)
+            if (found && ! data[name])
+            {
+                console.log("remove");
+                return ModuleLayouts.update(
+                    {$and: [{'_id': id}, {'traits.name': name}]},
+                    {$pull: {'traits' :{'name': name}}}
+                );
+            }
+            else if (found)
             {
                 return ModuleLayouts.update(
                     {$and: [{'_id': id}, {'traits.name': name}]},
-                    {$set: {'traits.$.value': data[name]}}
+                    {$set: {'traits.$.name': name}}
                 );
             }
-            else
+            else if (data[name])
             {
                 ModuleLayouts.update(
                     {'_id': id},

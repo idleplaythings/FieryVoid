@@ -40,6 +40,16 @@ model.ShipIcon.prototype.create = function()
     return this;
 };
 
+model.ShipIcon.prototype.addObject = function(obj)
+{
+    this.ThreeIconGroup.add(obj);
+};
+
+model.ShipIcon.prototype.removeObject = function(obj)
+{
+    this.ThreeIconGroup.add(obj);
+};
+
 model.ShipIcon.prototype.getThreeObject = function()
 {
     console.log(this.ThreeIconGroup);

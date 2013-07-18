@@ -47,13 +47,13 @@ model.Game.prototype.initGameState = function(container, eventDispatcher)
     this.terrain = new model.GameTerrain().createRandom(
         container, this.terrainSeed, this.gameScene);
 
+
     this.ships.forEach(
         function(ship){
             ship.subscribeToScene(this.gameScene, eventDispatcher);
         }, this);
-
     this.gameScene.animate();
-}
+};
 
 model.Game.prototype.load = function(doc)
 {
@@ -65,6 +65,7 @@ model.Game.prototype.load = function(doc)
             if (! ship)
                 invalidShip = true;
 
+            window.ship = ship;
             return ship;
         });
 

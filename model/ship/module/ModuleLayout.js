@@ -22,10 +22,34 @@ model.ModuleLayout = function ModuleLayout(args)
 
     this.position = args.position || {x:0, y:0};
 
-    this.traits = args.traits || [];
+    this.animators = [];
 
+    this.ship = null;
+    this.gameScene = null;
+    this.dispatcher = null;
+
+    this.traits = args.traits || [];
     this.initTraits();
 };
+
+model.ModuleLayout.prototype.registerAnimator = function(animator)
+{
+    this.animators.push(animator);
+}
+
+model.ModuleLayout.prototype.initAnimators = function()
+{
+    this.animators.forEach(function(animator){
+        animator.init();
+    }, this);
+}
+
+model.ModuleLayout.prototype.animate = function()
+{
+    this.animators.forEach(function(animator){
+        animator.animate();
+    });
+}
 
 model.ModuleLayout.prototype.getWidth = function()
 {
@@ -41,7 +65,7 @@ model.ModuleLayout.getAvailableTraits = function() {
     var traits = [];
 
     for (modelName in model) {
-        if (modelName.match(/^ModuleLayout\D+Trait$/) !== null) {
+        if (modelName.match(/^ModuleTrait\D+$/) !== null) {
             traits.push(modelName);
         }
     }
@@ -50,12 +74,16 @@ model.ModuleLayout.getAvailableTraits = function() {
 
 model.ModuleLayout.prototype.initTraits = function() {
     this.traits.every(function(trait) {
-        console.log("init trait: " + trait.name);
-        var traitName = 'ModuleLayout' + trait.name[0].toUpperCase() + trait.name.slice(1) + 'Trait';
-        _.extend(this, model[traitName].prototype);
+        var traitName = 'ModuleTrait' + trait.name[0].toUpperCase() + trait.name.slice(1);
 
-        console.log("TODO: trait.value as param to trait");
+        if (! model[traitName])
+            return;
+
+        var trait = new model[traitName](trait.value);
+        trait.extend(this);
     }, this);
+
+    console.log(this);
 }
 
 model.ModuleLayout.prototype.setDirection = function(direction)
@@ -117,6 +145,14 @@ model.ModuleLayout.prototype.occupiesPosition = function(pos)
 model.ModuleLayout.prototype.setPosition = function(pos)
 {
     this.position = pos;
+};
+
+model.ModuleLayout.prototype.getCenterPosition = function()
+{
+    return {
+        x: this.position.x + (this.width/2),
+        y: this.position.y + (this.height/2)
+    };
 };
 
 model.ModuleLayout.prototype.isValidPosition = function(ship, pos)

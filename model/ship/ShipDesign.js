@@ -151,3 +151,37 @@ model.ShipDesign.prototype.updateValue = function(name, value)
         }
     );
 };
+
+model.ShipDesign.prototype.getPositionInIcon = function(pos)
+{
+    return this.getCoordinateTool().convertGridToCanvas(pos);
+};
+
+model.ShipDesign.prototype.getCoordinateTool = function()
+{
+    var gridWidth = this.hullLayout.width;
+    var gridHeight = this.hullLayout.height;
+    var tileScale = this.hullLayout.tileScale;
+
+    return new model.CoordinateConverter(
+        {width: gridWidth * tileScale, height: gridHeight * tileScale},
+        {width: gridWidth, height: gridHeight},
+        tileScale
+    );
+};
+
+model.ShipDesign.prototype.getPositionInIconRelativeFromCenter = function(pos)
+{
+    pos = this.getPositionInIcon(pos);
+
+    var hullScale = this.hullLayout.tileScale;
+    var center = {
+        x: (this.hullLayout.width/2)*hullScale,
+        y: (this.hullLayout.height/2)*hullScale
+    };
+
+    return {
+        x: pos.x - center.x,
+        y: -pos.y + center.y
+    };
+};

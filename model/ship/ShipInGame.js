@@ -40,7 +40,24 @@ model.ShipInGame.prototype.subscribeToScene =
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
 
-    var plane = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), new THREE.MeshNormalMaterial());
-    plane.overdraw = true;
-    //this.gameScene.getScene().add(plane);
+    this.shipDesign.modules.forEach(function(module){
+        module.ship = this;
+        module.dispatcher = eventDispatcher;
+        module.gameScene = gameScene;
+
+        if (module.animators.length > 0)
+        {
+            this.gameScene.animators.push(module);
+            module.initAnimators();
+        }
+
+
+    }, this);
 };
+
+model.ShipInGame.prototype.setAzimuth = function(azimuth)
+{
+    this.getIcon().sprites.forEach(function(sprite){
+        sprite.setAzimuth(azimuth);
+    });
+}
