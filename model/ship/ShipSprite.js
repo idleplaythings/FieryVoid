@@ -1,20 +1,20 @@
 model.ShipSprite = function ShipSprite(shipDesign)
 {
     this.shipDesign = shipDesign;
-    this.sprite = null;
+    this.object3d = null;
     this.initialScale = null;
+    this.z = 0;
 };
 
 model.ShipSprite.prototype =  Object.create(model.Sprite.prototype);
 
-model.ShipSprite.prototype.getSprite = function()
+model.ShipSprite.prototype.getObject3d = function()
 {
-    this.sprite = this.createSprite();
-    this.setZoom(1);
-
+    this.object3d = this.createObject3d();
+    this.setInitialScale();
     this.requestImageDataToCallback();
 
-    return this.sprite;
+    return this.object3d;
 };
 
 model.ShipSprite.prototype.requestImageDataToCallback = function()
@@ -24,58 +24,47 @@ model.ShipSprite.prototype.requestImageDataToCallback = function()
 
 model.ShipSprite.prototype.setZoom = function(zoom)
 {
+    return;
     var scale = this.getIconScale();
     zoom = zoom * scale;
 
-    this.sprite.scale.set(
+    this.object3d.scale.set(
         this.initialScale * zoom,
         1 * zoom,
         1);
 };
 
-model.ShipSprite.prototype.getIconScale = function()
-{
-    var hullScale = this.shipDesign.hullLayout.tileScale;
-    if (window.innerWidth > window.innerHeight)
-    {
-        return (this.shipDesign.hullLayout.height * hullScale) / window.innerHeight;
-    }
-    else
-    {
-        return (this.shipDesign.hullLayout.width * hullScale) / window.innerWidth;
-    }
-};
-
-model.ShipSprite.prototype.setInitialScale = function(sprite)
+model.ShipSprite.prototype.setInitialScale = function()
 {
     var width = this.shipDesign.hullLayout.width;
     var height = this.shipDesign.hullLayout.height;
+    var scale = this.shipDesign.hullLayout.tileScale;
 
-    this.initialScale = width/height;
-
-    sprite.scale.set(this.initialScale, 1, 1);
+    this.object3d.scale.set(width*scale, height*scale, 1);
 };
 
 model.ShipSprite.prototype.receiveImageData = function(data)
 {
-    this.sprite.material.map = this.createTexture(data);
+    this.object3d.material.map = this.createTexture(data);
 };
 
-model.ShipSprite.prototype.createSprite = function()
+model.ShipSprite.prototype.createObject3d = function()
 {
-    var material =
-        new THREE.SpriteMaterial({
-            map: null,
-            useScreenCoordinates: false,
-            scaleByViewport:false
-        } );
+    var geometry = new THREE.PlaneGeometry(1,1,1,1);
 
-    var sprite = new THREE.Sprite(material);
-    sprite.visible = true;
-    sprite.position = new THREE.Vector3(0, 0, 0);
-    this.setInitialScale(sprite);
+    var tex = new THREE.DataTexture(null, 0, 0);
+    var material = new THREE.MeshBasicMaterial(
+        {
+            map: tex,
+            transparent: true
+        });
 
-    return sprite;
+    var mesh = new THREE.Mesh(
+        geometry,
+        material);
+
+    mesh.position = new THREE.Vector3(0, 0, this.z);
+    return mesh;
 }
 
 model.ShipSprite.prototype.createTexture = function(image)

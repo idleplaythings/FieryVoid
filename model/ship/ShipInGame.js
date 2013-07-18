@@ -57,7 +57,11 @@ model.ShipInGame.prototype.subscribeToScene =
 
 model.ShipInGame.prototype.setAzimuth = function(azimuth)
 {
-    this.getIcon().sprites.forEach(function(sprite){
-        sprite.setAzimuth(azimuth);
-    });
-}
+    this.getIcon().getThreeObject().rotation.z = MathLib.degreeToRadian(MathLib.addToAzimuth(360, -azimuth));
+};
+
+model.ShipInGame.prototype.setPosition = function(pos)
+{
+    this.position = pos;
+    this.getIcon().getThreeObject().position = new THREE.Vector3(pos.x, pos.y, 0);
+};

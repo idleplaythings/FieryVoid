@@ -11,6 +11,7 @@ model.GameScene = function GameScene(dispatcher){
     this.zoom = 1;
     this.ambientLight = null;
     this.animators = [];
+    this.scale = 1;
 
     this.dispatcher = dispatcher;
 
@@ -36,7 +37,7 @@ model.GameScene.prototype.init = function(target)
     var zoom = 1;
 
     var camera = new THREE.OrthographicCamera(
-        width / (-80*zoom), width / (80*zoom), height / (80*zoom), height / (-80*zoom), 0.01, 1000 );
+        width / (-this.scale*2*zoom), width / (this.scale*2*zoom), height / (this.scale*2*zoom), height / (-this.scale*2*zoom), 0.01, 1000 );
 
     camera.position.z = 200;
 
@@ -82,10 +83,10 @@ model.GameScene.prototype.zoomCamera = function(zoom)
     var width = window.innerWidth;
     var height = window.innerHeight;
 
-    this.camera.left = width / (-80*zoom);
-    this.camera.right = width / (80*zoom);
-    this.camera.top = height / (80*zoom);
-    this.camera.bottom = height / (-80*zoom);
+    this.camera.left = width / (-this.scale*2*zoom);
+    this.camera.right = width / (this.scale*2*zoom);
+    this.camera.top = height / (this.scale*2*zoom);
+    this.camera.bottom = height / (-this.scale*2*zoom);
 
     this.camera.updateProjectionMatrix();
 };
@@ -113,13 +114,13 @@ model.GameScene.prototype.onZoom = function(event)
 
 model.GameScene.prototype.moveCamera = function(pos)
 {
-    this.camera.position.x = pos.x/40;
-    this.camera.position.y = pos.y/40;
+    this.camera.position.x = pos.x/this.scale;
+    this.camera.position.y = pos.y/this.scale;
 };
 
 model.GameScene.prototype.camPosInWindow = function()
 {
-    return {x: this.camera.position.x*40, y:this.camera.position.y*40};
+    return {x: this.camera.position.x*this.scale, y:this.camera.position.y*this.scale};
 };
 
 model.GameScene.prototype.camPosIn3d = function()

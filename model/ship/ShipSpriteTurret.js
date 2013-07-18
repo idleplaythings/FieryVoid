@@ -5,6 +5,8 @@ model.ShipSpriteTurret = function ShipSpriteTurret(module, shipDesign)
 
     model.ShipSprite.call(this, shipDesign);
 
+    this.z = 2;
+
     var image = this.module.image.getByType(this.type);
 
     this.img = new model.CompositeImageModule(
@@ -25,31 +27,29 @@ model.ShipSpriteTurret.prototype.setPosition = function()
         this.module.getCenterPosition());
 };
 
-model.ShipSpriteTurret.prototype.getSprite = function()
+model.ShipSpriteTurret.prototype.getObject3d = function()
 {
-    this.sprite = this.createSprite();
+    this.object3d = this.createObject3d();
+    this.setInitialScale();
     console.log(this.position);
 
     var x = this.position.x;
     var y = this.position.y;
 
-    this.sprite.position = //new THREE.Vector3(10, 0, 0);
-        new THREE.Vector3(x/40, y/40, 1);
-    this.setZoom(1);
+    this.object3d.position = new THREE.Vector3(x, y, this.z);
 
     this.requestImageDataToCallback();
 
-    return this.sprite;
+    return this.object3d;
 };
 
-model.ShipSpriteTurret.prototype.setInitialScale = function(sprite)
+model.ShipSpriteTurret.prototype.setInitialScale = function()
 {
     var width = this.module.width;
     var height = this.module.height;
+    var scale = this.shipDesign.hullLayout.tileScale;
 
-    this.initialScale = width/height;
-
-    sprite.scale.set(this.initialScale, 1, 1);
+    this.object3d.scale.set(width*scale, height*scale, 1);
 };
 
 model.ShipSpriteTurret.prototype.getIconScale = function()

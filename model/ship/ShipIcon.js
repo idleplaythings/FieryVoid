@@ -35,7 +35,7 @@ model.ShipIcon.prototype.create = function()
         }
     }, this);
 
-    this.sprites.forEach(function(sprite){this.ThreeIconGroup.add(sprite.getSprite());}, this);
+    this.sprites.forEach(function(sprite){this.ThreeIconGroup.add(sprite.getObject3d());}, this);
 
     return this;
 };

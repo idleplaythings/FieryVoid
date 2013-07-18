@@ -150,8 +150,8 @@ model.ModuleLayout.prototype.setPosition = function(pos)
 model.ModuleLayout.prototype.getCenterPosition = function()
 {
     return {
-        x: this.position.x + (this.width/2),
-        y: this.position.y + (this.height/2)
+        x: this.position.x + (this.getWidth()/2),
+        y: this.position.y + (this.getHeight()/2)
     };
 };
 
