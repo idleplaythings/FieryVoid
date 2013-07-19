@@ -1,12 +1,14 @@
-model.ShipIcon = function ShipIcon(shipDesign, dispatcher)
+model.ShipIcon = function ShipIcon(ship, dispatcher)
 {
-    this.shipDesign = shipDesign;
+    this.ship = ship;
+    this.shipDesign = ship.shipDesign;
     this.ThreeIconGroup = null;
     this.sprites = [];
     this.dispatcher = dispatcher;
 
     this.hull = null;
     this.modules = null;
+    this.selected = null;
 
     this.dispatcher.attach(new model.EventListener(
         "ZoomEvent",
@@ -21,8 +23,10 @@ model.ShipIcon.prototype.create = function()
 
     this.hull = new model.ShipSpriteHull(this.shipDesign)
     this.modules = new model.ShipSpriteModules(this.shipDesign);
+    this.selected = new model.ShipSpriteSelected(this.ship);
     this.sprites.push(this.hull);
     this.sprites.push(this.modules);
+    this.sprites.push(this.selected);
 
     var moduleImageType = 'over';
     this.shipDesign.modules.forEach(function(module){
@@ -52,17 +56,9 @@ model.ShipIcon.prototype.removeObject = function(obj)
 
 model.ShipIcon.prototype.getThreeObject = function()
 {
-    console.log(this.ThreeIconGroup);
     return this.ThreeIconGroup;
 };
 
 model.ShipIcon.prototype.onZoom = function(event)
 {
-    if (! event.zoom)
-        return;
-
-    this.sprites.forEach(
-        function(shipSprite){
-            shipSprite.setZoom(event.zoom)
-        });
 };

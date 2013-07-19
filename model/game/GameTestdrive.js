@@ -35,3 +35,8 @@ model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 
     this.created =  new Date().getTime();
 };
+
+model.GameTestdrive.prototype.getSelectedShip = function()
+{
+    return this.ships[0];
+};

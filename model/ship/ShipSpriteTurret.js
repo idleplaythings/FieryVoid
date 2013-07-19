@@ -31,7 +31,6 @@ model.ShipSpriteTurret.prototype.getObject3d = function()
 {
     this.object3d = this.createObject3d();
     this.setInitialScale();
-    console.log(this.position);
 
     var x = this.position.x;
     var y = this.position.y;

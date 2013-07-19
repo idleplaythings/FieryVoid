@@ -13,7 +13,6 @@ Template.shipEditor.context = function()
 
 Template.shipEditor.createContext = function()
 {
-    console.log("createContext");
     return  {
         shipView: null,
         viewClass: model.ShipView,
@@ -41,9 +40,7 @@ Template.shipEditor.createContext = function()
                 var ship = new model.ShipDesign().load(
                     Session.get("selected_ship")
                 );
-                console.dir(ship);
                 self.ship = ship;
-                console.log("draw");
                 self.shipView.drawImages(ship);
             });
         },
@@ -164,7 +161,6 @@ Template.shipEditorRightMenu.availableModules = function()
         function(module){
             module.getAvailableDirections().forEach(
                 function(direction){
-                    console.log("d: " + direction);
                     var newModule = new model.ModuleLayout(module);
                     newModule.direction = parseInt(direction, 10);
                     newModule._id += "-" + newModule.direction;
@@ -172,7 +168,6 @@ Template.shipEditorRightMenu.availableModules = function()
             });
     });
 
-    console.log(finalModules);
     return finalModules;
 };
 
@@ -210,7 +205,6 @@ Template.shipEditorRightMenu.rendered = function()
 
 Template.shipEditorRightMenu.hullColorChanged = function(color)
 {
-  console.log("change, color: " + color);
 
   var pattern = new RegExp(/^rgb\((.+)\)$/);
   var cleanColor = pattern.exec(color)[1];

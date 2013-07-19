@@ -22,7 +22,6 @@ Template.shipDisplay.rendered = function()
     if ( ! self.data.shipView || found.length == 0)
     {
         console.log("shipview create");
-        console.log(jQuery(self.find('div.displayLarge .displayTarget')));
         self.data.shipView = new self.data.viewClass(
             jQuery(self.find('div.displayLarge .displayTarget'))
         );

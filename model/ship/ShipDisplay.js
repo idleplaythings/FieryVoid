@@ -100,8 +100,6 @@ model.ShipDisplay.prototype.getContext = function()
 
 model.ShipDisplay.prototype.flushBuffer = function()
 {
-    if (this.canvasClass == 'moduleOver')
-        console.log("flush: " + this.canvasClass);
     this.canvases[this.bufferIndex].style.visibility='visible';
     this.bufferIndex = (this.bufferIndex == 0) ? 1 : 0;
     this.canvases[this.bufferIndex].style.visibility='hidden';

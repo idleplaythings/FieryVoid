@@ -1,6 +1,5 @@
 model.ModuleTraitThrusterGlow = function ModuleTraitThrusterGlow(args)
 {
-    console.log(args);
     this.name = 'thrusterGlow';
     this.label = 'Thruster glow effect';
     this.value = null;

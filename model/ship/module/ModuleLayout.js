@@ -82,13 +82,10 @@ model.ModuleLayout.prototype.initTraits = function() {
         var trait = new model[traitName](trait.value);
         trait.extend(this);
     }, this);
-
-    console.log(this);
 }
 
 model.ModuleLayout.prototype.setDirection = function(direction)
 {
-    console.log("setting direction: " + direction);
     if (! direction || direction == '0')
     {
         this.direction = 0;
@@ -109,7 +106,6 @@ model.ModuleLayout.prototype.getAvailableDirections = function()
 
 model.ModuleLayout.prototype.getRotation = function()
 {
-    console.log(this.direction);
     switch (this.direction)
     {
         case 2:
@@ -214,29 +210,23 @@ model.ModuleLayout.prototype.getTileListIndex = function(pos)
 
     if (this.direction == 2)
     {
-        console.log("direction 2");
         var x = (this.width-1) - pos.y;
         var y = pos.x;
 
-        console.log("x: "+ x + ",y: " + y);
         return y * this.width + x;
     }
     else if (this.direction == 3)
     {
-        console.log("direction 3");
         var x = pos.y;
         var y = (this.height-1) - pos.x;
 
-        console.log("x: "+ x + ",y: " + y);
         return y * this.width + x;
     }
     else if (this.direction == 4)
     {
-        console.log("direction 4");
         var x = (this.width-1) - pos.x
         var y = (this.height-1) - pos.y;
 
-        console.log("x: "+ x + ",y: " + y);
         return y * this.width + x;
     }
     else
@@ -301,10 +291,6 @@ model.ModuleLayout.prototype.updateTrait = function(name, value)
 
 model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
 {
-    if ( ! this[name])
-        throw new Error("Trying to change ModuleLayout value '" + name
-            +"' that does not exist");
-
     if (this[name] != value)
     {
         this[name] = value;

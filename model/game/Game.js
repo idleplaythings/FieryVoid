@@ -23,23 +23,45 @@ model.Game = function Game(args)
     this.gameScene = null;
     this.scrolling = null;
     this.zooming = null;
+
+    this.dispatcher = null;
 };
 
 model.Game.prototype.play = function()
 {
-    var eventDispatcher = new model.EventDispatcher();
+    this.dispatcher = new model.EventDispatcher();
 
     var container = jQuery('#gameContainer');
-    this.gameScene = new model.GameScene(eventDispatcher);
+    this.gameScene = new model.GameScene(this.dispatcher);
     this.gameScene.init(container);
 
-    this.scrolling = new model.Scrolling(container, eventDispatcher);
+    this.scrolling = new model.Scrolling(container, this.dispatcher, this.gameScene);
     this.scrolling.init();
 
-    this.zooming = new model.Zooming(container, eventDispatcher);
+    this.zooming = new model.Zooming(container, this.dispatcher);
     this.zooming.init();
 
-    this.initGameState(container, eventDispatcher);
+    this.dispatcher.attach(new model.EventListener(
+        "clickEvent",
+        jQuery.proxy(this.onClicked, this)));
+
+    this.initGameState(container, this.dispatcher);
+};
+
+model.Game.prototype.getSelectedShip = function()
+{
+
+};
+
+model.Game.prototype.onClicked = function(event)
+{
+    var pos = event.position;
+    console.log("click");
+    console.log(pos);
+
+    var ship = this.getSelectedShip();
+    console.log(ship);
+    ship.movement.setWaypoint(pos);
 };
 
 model.Game.prototype.initGameState = function(container, eventDispatcher)
@@ -84,6 +106,7 @@ model.Game.prototype.prepareForSave = function()
                 ship.shipDesign.hullLayout._id;
 
             delete ship.shipDesign.hullLayout;
+            delete ship.movement;
 
             ship.shipDesign.modules =
                 ship.shipDesign.modules.map(

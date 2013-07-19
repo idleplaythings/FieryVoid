@@ -6,7 +6,6 @@ model.CompositeImageModule = function CompositeImageModule(args)
     this.base =
         this.imageLoader.loadImage(args.imageSrc);
     this.rotation = args.rotation || 0;
-    console.log("rotation: " + this.rotation);
 }
 
 model.CompositeImageModule.prototype = Object.create(model.CompositeImage.prototype);

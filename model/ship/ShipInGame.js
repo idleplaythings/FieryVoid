@@ -9,6 +9,8 @@ model.ShipInGame = function ShipInGame(args)
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
+    this.movement = new model.Movement(this);
+
     this.icon = null;
     this.gameScene = null;
 };
@@ -28,7 +30,7 @@ model.ShipInGame.prototype.loadWithDocument = function(doc)
 model.ShipInGame.prototype.getIcon = function(eventDispatcher)
 {
     if ( ! this.icon )
-        this.icon = new model.ShipIcon(this.shipDesign, eventDispatcher).create();
+        this.icon = new model.ShipIcon(this, eventDispatcher).create();
 
     return this.icon;
 };
@@ -36,9 +38,10 @@ model.ShipInGame.prototype.getIcon = function(eventDispatcher)
 model.ShipInGame.prototype.subscribeToScene =
     function(gameScene, eventDispatcher)
 {
-    console.log(gameScene);
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
+
+    this.movement.subscribeToScene(this.gameScene);
 
     this.shipDesign.modules.forEach(function(module){
         module.ship = this;

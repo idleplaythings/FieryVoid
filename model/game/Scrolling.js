@@ -1,4 +1,4 @@
-model.Scrolling = function Scrolling(element, dispatcher)
+model.Scrolling = function Scrolling(element, dispatcher, scene)
 {
     this.scrollingstarted = 0;
     this.scrolling = false;
@@ -8,6 +8,10 @@ model.Scrolling = function Scrolling(element, dispatcher)
     this.dispatcher = dispatcher;
     this.position = {x:0, y:0};
     this.element = element;
+
+    this.distanceMoved = 0;
+    this.distanceTreshold = 10;
+    this.coordinateConverter = new model.CoordinateConverterViewPort(scene);
 
     this.dispatcher.attach(new model.EventListener(
         "ZoomEvent", $.proxy(this.onZoom, this)));
@@ -29,8 +33,6 @@ model.Scrolling.prototype.init = function()
     this.element.on("mouseup", $.proxy(this.mouseup, this));
     this.element.on("mouseout", $.proxy(this.mouseout, this));
     this.element.on("mousemove", $.proxy(this.mousemove, this));
-
-    this.scrollToWindow({x:window.innerWidth/2, y:-window.innerHeight/2});
 };
 
 model.Scrolling.prototype.mousedown = function(event)
@@ -55,11 +57,30 @@ model.Scrolling.prototype.mousedown = function(event)
 
 model.Scrolling.prototype.mouseup  = function(event)
 {
+    if (this.distanceMoved < this.distanceTreshold)
+    {
+        var offsetLeft = this.element[0].offsetLeft;
+        var offsetTop = this.element[0].offsetTop;
+
+        var x = event.pageX - offsetLeft;
+        var y = event.pageY - offsetTop;
+
+        var clickPosition = {x:x, y:y};
+
+        console.log("clicked on " +x + ","+y);
+        var pos = this.coordinateConverter.fromViewPortToGame(clickPosition);
+
+        var clickEvent = new model.Event("player", "clickEvent");
+        clickEvent.position = pos;
+        this.dispatcher.dispatch(clickEvent);
+    }
+    this.distanceMoved = 0;
     this.scrolling = false;
 };
 
 model.Scrolling.prototype.mouseout = function(event)
 {
+    this.distanceMoved = 0;
     model.Scrolling.Scrolling = false;
 };
 
@@ -82,6 +103,8 @@ model.Scrolling.prototype.mousemove = function(event)
     var dy = y - this.lastpos.y;
 
     this.scroll(dx,dy);
+
+    this.distanceMoved += MathLib.distance({x:0, y:0}, {x:dx, y:dy});
 
     this.lastpos.x = x;
     this.lastpos.y = y;
@@ -123,8 +146,8 @@ model.Scrolling.prototype.scrollToWindow = function(pos)
 
 model.Scrolling.prototype.scrollTo3d = function(pos)
 {
-    this.position.x = pos.x*40;
-    this.position.y = pos.y*40;
+    this.position.x = pos.x;
+    this.position.y = pos.y;
     //Graphics.moveCamera({x:dx*speed, y:dy*speed});
 
     this.dispatch(this.position);
