@@ -5,14 +5,8 @@ model.Star = function Star(args)
     this.opacity = args.opacity || 1.0;
     this.color = args.color || {h:0.54, s:1, l:0.8};
     this.sprite = null;
-    this.gameScene = args.gameScene || null;
     this.twinkle = args.twinkle || null;
     this.twinkleVariance = args.twinkleVariance || 0;
-
-    if (this.gameScene && this.twinkle)
-    {
-        this.gameScene.animators.push(this);
-    }
 
     this.twinkleStatus = 0;
     this.twinkleIncrement = 1;

@@ -26,19 +26,32 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
         var twinkle = Math.floor(Math.random()*20+10);
         var twinkleVariance = Math.random()*0.5;
 
-
         var star = new model.Star({
             position:{x:x, y:y},
             scale:scale,
             color: color,
-            gameScene: gameScene,
             twinkle: twinkle,
             twinkleVariance: twinkleVariance
         });
 
+        if (twinkle)
+        {
+            gameScene.animators.push(star);
+        }
+
         gameScene.terrainScene.add(star.getSprite());
     }
 
+    var asteroid = new model.Asteroid({
+        position: {
+            x: 300,
+            y: 300
+        },
+        radius: 400,
+        mass: 1
+    });
+
+    asteroid.subscribeToScene(gameScene);
 
     return this;
 }
