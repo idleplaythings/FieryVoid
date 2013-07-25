@@ -42,16 +42,55 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
         gameScene.terrainScene.add(star.getSprite());
     }
 
-    var asteroid = new model.Asteroid({
-        position: {
-            x: 300,
-            y: 300
-        },
-        radius: 400,
-        mass: 1
+    var asteroidFactory = new model.AsteroidBeltFactory({
+        asteroidCount: 100,
+        beltRadius: 1500,
+        beltWidth: 500
     });
+    var asteroids = asteroidFactory.generateAsteroids();
 
-    asteroid.subscribeToScene(gameScene);
+    asteroids.forEach(function(asteroid) { asteroid.subscribeToScene(gameScene); });
 
     return this;
+}
+
+model.AsteroidBeltFactory = function AsteroidBeltFactory(args)
+{
+    this.beltCentre = args.beltCentre || { x: 0, y: 0 };
+    this.beltRadius = args.beltRadius || 300;
+    this.beltWidth = args.beltWidth || 100;
+    this.asteroidCount = args.asteroidCount || 100;
+    this.asteroidMinRadius = args.asteroidMinRadius || 200;
+    this.asteroidMaxRadius = args.asteroidMaxRadius || 200;
+}
+
+model.AsteroidBeltFactory.prototype.generateAsteroids = function()
+{
+    var segments = 8;
+    var segmentAngle = Math.PI * 2 / segments;
+    var asteroidsPerSegment = this.asteroidCount / segments;
+
+    var asteroids = [];
+
+    for (var i=0; i<segments; i++) {
+        var startAngle = i * segmentAngle;
+
+        for (var j=0; j<asteroidsPerSegment; j++) {
+            var angle = startAngle + Math.random() * segmentAngle;
+            var distance = this.beltRadius + Math.random() * this.beltWidth;
+            var radius = this.asteroidMinRadius + Math.random() * (this.asteroidMaxRadius - this.asteroidMinRadius);
+
+            var asteroid = new model.Asteroid({
+                position: {
+                    x: this.beltCentre.x + distance * Math.cos(angle),
+                    y: this.beltCentre.y + distance * Math.sin(angle)
+                },
+                radius: radius
+            });
+
+            asteroids.push(asteroid);
+        }
+    }
+
+    return asteroids;
 }
