@@ -15,6 +15,7 @@ model.Game = function Game(args)
     this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
     this.ships = args.ships || [];
+    this.asteroids = args.asteroids || [];
 
     this.created = args.created || null;
 
@@ -45,7 +46,7 @@ model.Game.prototype.play = function()
         "clickEvent",
         jQuery.proxy(this.onClicked, this)));
 
-    this.initGameState(container, this.dispatcher);
+    this.initGameState(container);
 };
 
 model.Game.prototype.getSelectedShip = function()
@@ -64,16 +65,16 @@ model.Game.prototype.onClicked = function(event)
     ship.movement.setWaypoint(pos);
 };
 
-model.Game.prototype.initGameState = function(container, eventDispatcher)
+model.Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain().createRandom(
         container, this.terrainSeed, this.gameScene);
 
-
     this.ships.forEach(
         function(ship){
-            ship.subscribeToScene(this.gameScene, eventDispatcher);
+            ship.subscribeToScene(this.gameScene, this.dispatcher);
         }, this);
+
     this.gameScene.animate();
 };
 
