@@ -48,7 +48,6 @@ model.CompositeImageShipHull.prototype._createImage = function()
     this.drawingTool.drawAndRotate(
         context, width, height, width*2, height*2, 0, this.shadow, false);
 
-
     return context.getImageData(0, 0, width, height);
 };
 
