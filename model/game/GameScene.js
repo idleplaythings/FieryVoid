@@ -37,9 +37,9 @@ model.GameScene.prototype.init = function(target)
     var zoom = 1;
 
     var camera = new THREE.OrthographicCamera(
-        width / (-this.scale*2*zoom), width / (this.scale*2*zoom), height / (this.scale*2*zoom), height / (-this.scale*2*zoom), 0.01, 1000 );
+        width / (-this.scale*2*zoom), width / (this.scale*2*zoom), height / (this.scale*2*zoom), height / (-this.scale*2*zoom), 1, 200 );
 
-    camera.position.z = 200;
+    camera.position.z = 20;
 
     this.camera = camera;
     this.scene.add( camera );

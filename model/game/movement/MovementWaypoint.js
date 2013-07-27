@@ -10,7 +10,7 @@ model.MovementWaypoint = function MovementWaypoint(ship, start, end)
 
     this.addedToScene = false;
 
-    this.z = -1;
+    this.z = -10;
 
     this.buildRoute();
 };
@@ -59,7 +59,7 @@ model.MovementWaypoint.prototype.buildRoute = function()
 
         var iw = this.getCircle(size, r, r*0.6);
         iw.scale.set(size, size, 1);
-        iw.position = new THREE.Vector3(pos.x, pos.y, -1);
+        iw.position = new THREE.Vector3(pos.x, pos.y, -10);
         this.intermediateWaypoints.push(iw);
     }
 
@@ -68,5 +68,5 @@ model.MovementWaypoint.prototype.buildRoute = function()
 
     this.waypoint = this.getCircle(size, r, r*0.6);
     this.waypoint.scale.set(size, size, 1);
-    this.waypoint.position = new THREE.Vector3(this.end.x, this.end.y, -1);
+    this.waypoint.position = new THREE.Vector3(this.end.x, this.end.y, -10);
 };
