@@ -117,7 +117,7 @@ model.Scrolling.prototype.getScrollingSpeed = function()
 
 model.Scrolling.prototype.scroll = function (dx, dy){
     //console.log("dx: " + dx + ", dy: " + dy);
-    var speed = this.getScrollingSpeed();
+    var speed = this.getScrollingSpeed() * 4;
     var position = {x:dx*speed, y:dy*speed};
 
     this.position.x -= position.x;
@@ -135,16 +135,7 @@ model.Scrolling.prototype.scroll = function (dx, dy){
     this.dispatch(this.position);
 };
 
-model.Scrolling.prototype.scrollToWindow = function(pos)
-{
-    this.position.x = pos.x;
-    this.position.y = pos.y;
-    //Graphics.moveCamera({x:dx*speed, y:dy*speed});
-
-    this.dispatch(this.position);
-};
-
-model.Scrolling.prototype.scrollTo3d = function(pos)
+model.Scrolling.prototype.scrollTo = function(pos)
 {
     this.position.x = pos.x;
     this.position.y = pos.y;
@@ -156,7 +147,7 @@ model.Scrolling.prototype.scrollTo3d = function(pos)
 model.Scrolling.prototype.dispatch = function(pos)
 {
     var scrollEvent = new model.Event("player", "ScrollEvent");
-    scrollEvent.position = this.position;
+    scrollEvent.position = pos;
 
     this.dispatcher.dispatch(scrollEvent);
 };

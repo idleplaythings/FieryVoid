@@ -39,7 +39,12 @@ model.Game.prototype.play = function()
     this.scrolling = new model.Scrolling(container, this.dispatcher, this.gameScene);
     this.scrolling.init();
 
-    this.zooming = new model.Zooming(container, this.dispatcher);
+    this.zooming = new model.Zooming(
+        container,
+        this.dispatcher,
+        this.gameScene,
+        this.scrolling);
+
     this.zooming.init();
 
     this.dispatcher.attach(new model.EventListener(
