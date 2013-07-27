@@ -1,3 +1,5 @@
+
+/*
 model.Star = function Star(args)
 {
     this.position = args.position || {x:0, y:0};
@@ -62,3 +64,4 @@ model.Star.prototype.getIconScale = function()
     return window.innerWidth > window.innerHeight ?
         30 / window.innerHeight : 30 / window.innerWidth;
 };
+*/

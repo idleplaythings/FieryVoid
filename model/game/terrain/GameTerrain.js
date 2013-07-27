@@ -8,8 +8,13 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
     Math.seedrandom(seed);
 
     container.css('background-color', '#050d16');
-    container.css('background-image', 'url(/background/bluespace3.jpg)');
+    //container.css('background-image', 'url(/background/bluespace3.jpg)');
 
+    var starCount = 600;
+    var starField = new model.StarField(gameScene, seed, starCount);
+    starField.create();
+
+    /*
     var starCount = 600 + (Math.floor(Math.random()*400)-200);
 
     while(starCount--)
@@ -41,6 +46,7 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
 
         gameScene.terrainScene.add(star.getSprite());
     }
+    */
 
     var asteroidFactory = new model.AsteroidBeltFactory({
         asteroidCount: 500,

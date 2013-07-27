@@ -77,7 +77,7 @@ model.Game.prototype.initGameState = function(container)
 
     this.ships.forEach(
         function(ship){
-            ship.subscribeToScene(this.gameScene, this.dispatcher);
+            //ship.subscribeToScene(this.gameScene, this.dispatcher);
         }, this);
 
     this.gameScene.animate();
