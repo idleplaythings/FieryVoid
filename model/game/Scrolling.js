@@ -117,7 +117,7 @@ model.Scrolling.prototype.getScrollingSpeed = function()
 
 model.Scrolling.prototype.scroll = function (dx, dy){
     //console.log("dx: " + dx + ", dy: " + dy);
-    var speed = this.getScrollingSpeed() * 4;
+    var speed = this.getScrollingSpeed();
     var position = {x:dx*speed, y:dy*speed};
 
     this.position.x -= position.x;
