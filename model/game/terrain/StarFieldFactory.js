@@ -14,7 +14,6 @@ model.StarFieldFactory.prototype.create = function()
     this.emitter = new model.ParticleEmitter(
         this.getParticles(),
         {
-            texture: THREE.ImageUtils.loadTexture( "/terrain/star1.png" ),
             vertexShader: this.vertexShader,
             fragmentShader: this.fragmentShader,
             attributes: {
@@ -24,6 +23,9 @@ model.StarFieldFactory.prototype.create = function()
                 customColor:	{ type: 'c',  value: [] },
                 customOpacity:	{ type: 'f',  value: [] },
                 parallaxFactor: { type: 'f',  value: [] }
+            },
+            uniforms:{
+                texture: THREE.ImageUtils.loadTexture( "/terrain/star1.png" )
             }
         }
     );
