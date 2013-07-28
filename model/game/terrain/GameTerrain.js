@@ -30,15 +30,13 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene, 
         return new model.AsteroidParticle(asteroid);
     });
 
-
-    var asteroidParticleEmitter = new model.ParticleEmitter(
-        asteroids,
-        {
-            zoomLevel: gameScene.zoom,
-            texture: THREE.ImageUtils.loadTexture("/terrain/asteroid1.png")
-        }
+    var asteroidParticleEmitter = new model.AsteroidParticleEmitter(
+            asteroids,
+            {
+                zoomLevel: gameScene.zoom,
+                texture: THREE.ImageUtils.loadTexture("/terrain/asteroid_lod.png")
+            }
     );
-
     asteroidParticleEmitter.observeZoomLevelChange(dispatcher);
 
     var asteroidBelt = asteroidParticleEmitter.getObject3d();
