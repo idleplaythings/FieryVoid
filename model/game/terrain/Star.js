@@ -1,6 +1,9 @@
 model.Star = function Star(args)
 {
     model.Particle.call(this, args);
+
+    this.parallaxFactor = args.parallaxFactor || 0;
+
     this.twinkle = args.twinkle || null;
     this.twinkleVariance = args.twinkleVariance || 0;
 
@@ -9,6 +12,12 @@ model.Star = function Star(args)
 };
 
 model.Star.prototype = Object.create(model.Particle.prototype);
+
+model.Star.prototype.updateMaterial = function(particleMaterial, i)
+{
+    model.Particle.prototype.updateMaterial.call(this, particleMaterial, i);
+    particleMaterial.attributes.parallaxFactor.value[i]   = this.parallaxFactor;
+};
 
 model.Star.prototype.animate = function(dt)
 {

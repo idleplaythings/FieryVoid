@@ -16,7 +16,15 @@ model.StarFieldFactory.prototype.create = function()
         {
             texture: THREE.ImageUtils.loadTexture( "/terrain/star1.png" ),
             vertexShader: this.vertexShader,
-            fragmentShader: this.fragmentShader
+            fragmentShader: this.fragmentShader,
+            attributes: {
+                customVisible:	{ type: 'f',  value: [] },
+                customAngle:	{ type: 'f',  value: [] },
+                customSize:		{ type: 'f',  value: [] },
+                customColor:	{ type: 'c',  value: [] },
+                customOpacity:	{ type: 'f',  value: [] },
+                parallaxFactor: { type: 'f',  value: [] }
+            }
         }
     );
 
@@ -58,6 +66,7 @@ model.StarFieldFactory.prototype.getParticles = function()
             var twinkleVariance = Math.random()*0.5;
 
             var star = new model.Star({
+                parallaxFactor: Math.random() * 0.00001,
                 position: new THREE.Vector3(x,y,0),
                 size:16*scale,
                 color: color,
@@ -84,6 +93,7 @@ model.StarFieldFactory.prototype.getParticles = function()
 
 model.StarFieldFactory.prototype.vertexShader =
     [
+        "attribute float parallaxFactor;",
         "attribute vec3  customColor;",
         "attribute float customOpacity;",
         "attribute float customSize;",
@@ -99,7 +109,7 @@ model.StarFieldFactory.prototype.vertexShader =
         "vColor = vec4(0.0, 0.0, 0.0, 0.0);", 		//     make particle invisible.
 
         "vAngle = customAngle;",
-        "vec4 modPos = vec4( position.x - (cameraPosition.x * 0.000001), position.y - (cameraPosition.y * 0.000001), position.z, 1.0 );",
+        "vec4 modPos = vec4( position.x - (cameraPosition.x * parallaxFactor), position.y - (cameraPosition.y * parallaxFactor), position.z, 1.0 );",
         "gl_PointSize = customSize;",
         //"gl_Position = vec4( position, 1.0 );",
         "gl_Position = modPos;",
