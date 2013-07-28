@@ -10,8 +10,7 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
     container.css('background-color', 'black');
     container.css('background-image', 'url(/background/bluespace3.jpg)');
 
-    var starCount = 600;
-    var starField = new model.StarFieldFactory(gameScene, starCount);
+    var starField = new model.StarFieldFactory(gameScene, 1000);
     starField.create();
 
     gameScene.animators.push(starField);

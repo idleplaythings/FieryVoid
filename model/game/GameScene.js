@@ -49,7 +49,7 @@ model.GameScene.prototype.init = function(target)
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize( width, height );
-    this.renderer.autoClear = false;
+    //this.renderer.autoClear = false;
 
     $(this.renderer.domElement)
         .on('contextmenu', function(e){e.stopPropagation(); return false; })
@@ -66,8 +66,8 @@ model.GameScene.prototype.animate = function()
 
 model.GameScene.prototype.render = function()
 {
-    this.renderer.clear();
-    this.renderer.render( this.terrainScene, this.camera );
+    //this.renderer.clear();
+    //this.renderer.render( this.terrainScene, this.camera );
     this.renderer.render( this.scene, this.camera );
 };
 
