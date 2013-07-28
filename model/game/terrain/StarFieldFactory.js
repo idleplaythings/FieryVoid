@@ -25,7 +25,9 @@ model.StarFieldFactory.prototype.create = function()
                 parallaxFactor: { type: 'f',  value: [] }
             },
             uniforms:{
-                texture: THREE.ImageUtils.loadTexture( "/terrain/star1.png" )
+                texture: {
+                    type: 't', value: THREE.ImageUtils.loadTexture( "/terrain/star1.png" )
+                }
             }
         }
     );
