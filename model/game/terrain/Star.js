@@ -15,7 +15,10 @@ model.Star.prototype = Object.create(model.Particle.prototype);
 
 model.Star.prototype.updateMaterial = function(particleMaterial, i)
 {
-    model.Particle.prototype.updateMaterial.call(this, particleMaterial, i);
+    particleMaterial.attributes.customVisible.value[i] = this.alive;
+    particleMaterial.attributes.customColor.value[i]   = this.color;
+    particleMaterial.attributes.customOpacity.value[i] = this.opacity;
+    particleMaterial.attributes.customSize.value[i]    = this.size;
     particleMaterial.attributes.parallaxFactor.value[i]   = this.parallaxFactor;
 };
 
