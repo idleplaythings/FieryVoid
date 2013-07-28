@@ -13,18 +13,36 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
     var starField = new model.StarFieldFactory(gameScene, 1000);
     starField.create();
 
+
     gameScene.animators.push(starField);
 
+
     var asteroidFactory = new model.AsteroidBeltFactory({
-        asteroidCount: 500,
+        asteroidCount: 10000,
         minAsteroidRadius: 400,
         maxAsteroidRadius: 1000,
-        beltRadius: 50000,
-        beltWidth: 20000
+        beltRadius: 1,
+        beltWidth: 500
     });
     var asteroids = asteroidFactory.generateAsteroids();
 
-    asteroids.forEach(function(asteroid) { asteroid.subscribeToScene(gameScene); });
+    asteroids = asteroids.map(function(asteroid) {
+        return new model.AsteroidParticle(asteroid);
+    });
+
+
+    var asteroidParticleEmitter = new model.ParticleEmitter(
+        asteroids,
+        {
+            texture: THREE.ImageUtils.loadTexture("/terrain/asteroid1.png")
+        }
+    );
+
+    console.log(asteroidParticleEmitter)
+
+    var asteroidBelt = asteroidParticleEmitter.getObject3d();
+    asteroidBelt.position = new THREE.Vector3(0, 0, 0);
+    gameScene.scene.add(asteroidBelt);
 
     return this;
 }

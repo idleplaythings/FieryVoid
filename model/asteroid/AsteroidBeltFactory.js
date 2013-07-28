@@ -62,7 +62,9 @@ model.AsteroidBeltFactory.prototype._getRandomAsteroidForSegment = function(segm
 model.AsteroidBeltFactory.prototype._getRandomPositionForSegment = function(segment)
 {
     var angle = segment.startAngle + Math.random() * this._segmentAngle;
-    var distance = this.beltRadius + Math.random() * this.beltWidth;
+    var rand = (Math.random() * 2 - 1) + (Math.random() * 2 - 1) + (Math.random() * 2 - 1);
+        rand = rand * 0.1 + 0.5;
+    var distance = this.beltRadius + rand * this.beltWidth;
 
     return {
         x: this.beltCentre.x + distance * Math.cos(angle),
@@ -77,15 +79,15 @@ model.AsteroidBeltFactory.prototype._getRandomAsteroidRadius = function()
 
 model.AsteroidBeltFactory.prototype._addAsteroid = function(newAsteroid)
 {
-    this._asteroids.forEach(function(existingAsteroid) {
-        var diffX = Math.abs(newAsteroid.position.x - existingAsteroid.position.x);
-        var diffY = Math.abs(newAsteroid.position.y - existingAsteroid.position.y);
-        var distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-
-        if (distance < newAsteroid.radius + existingAsteroid.radius) {
-            throw "Asteroid belt collision detected";
-        }
-    });
+//    this._asteroids.forEach(function(existingAsteroid) {
+//        var diffX = Math.abs(newAsteroid.position.x - existingAsteroid.position.x);
+//        var diffY = Math.abs(newAsteroid.position.y - existingAsteroid.position.y);
+//        var distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+//
+//        if (distance < newAsteroid.radius + existingAsteroid.radius) {
+//            throw "Asteroid belt collision detected";
+//        }
+//    });
 
     this._asteroids.push(newAsteroid);
 }

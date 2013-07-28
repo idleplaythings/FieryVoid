@@ -58,7 +58,8 @@ model.GameScene.prototype.init = function(target)
 
 model.GameScene.prototype.animate = function()
 {
-    requestAnimationFrame( jQuery.proxy(this.animate, this) );
+//    requestAnimationFrame( jQuery.proxy(this.animate, this) );
+    requestAnimationFrame( this.animate.bind(this) );
     this.animators.forEach(function(a){a.animate()})
     this.render();
 
