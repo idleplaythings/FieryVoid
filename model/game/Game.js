@@ -73,7 +73,7 @@ model.Game.prototype.onClicked = function(event)
 model.Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain().createRandom(
-        container, this.terrainSeed, this.gameScene);
+        container, this.terrainSeed, this.gameScene, this.dispatcher);
 
     this.ships.forEach(
         function(ship){

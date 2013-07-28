@@ -2,7 +2,7 @@ model.GameTerrain = function GameTerrain()
 {
 };
 
-model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
+model.GameTerrain.prototype.createRandom = function(container, seed, gameScene, dispatcher)
 {
     console.log("seed is: "+seed);
     Math.seedrandom(seed);
@@ -19,10 +19,10 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
 
     var asteroidFactory = new model.AsteroidBeltFactory({
         asteroidCount: 10000,
-        minAsteroidRadius: 400,
-        maxAsteroidRadius: 1000,
-        beltRadius: 1,
-        beltWidth: 500
+        minAsteroidRadius: 30,
+        maxAsteroidRadius: 100,
+        beltRadius: 20000,
+        beltWidth: 50000
     });
     var asteroids = asteroidFactory.generateAsteroids();
 
@@ -34,15 +34,17 @@ model.GameTerrain.prototype.createRandom = function(container, seed, gameScene)
     var asteroidParticleEmitter = new model.ParticleEmitter(
         asteroids,
         {
+            zoomLevel: gameScene.zoom,
             texture: THREE.ImageUtils.loadTexture("/terrain/asteroid1.png")
         }
     );
 
-    console.log(asteroidParticleEmitter)
+    asteroidParticleEmitter.observeZoomLevelChange(dispatcher);
 
     var asteroidBelt = asteroidParticleEmitter.getObject3d();
     asteroidBelt.position = new THREE.Vector3(0, 0, 0);
     gameScene.scene.add(asteroidBelt);
+    gameScene.animators.push(asteroidParticleEmitter);
 
     return this;
 }
