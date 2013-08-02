@@ -23,10 +23,10 @@ model.ShipIcon.prototype.create = function()
 
     this.hull = new model.ShipSpriteHull(this.shipDesign)
     this.modules = new model.ShipSpriteModules(this.shipDesign);
-//    this.selected = new model.ShipSpriteSelected(this.ship);
+    this.selected = new model.ShipSpriteSelected(this.ship);
     this.sprites.push(this.hull);
     this.sprites.push(this.modules);
-//    this.sprites.push(this.selected);
+    this.sprites.push(this.selected);
 
     var moduleImageType = 'over';
     this.shipDesign.modules.forEach(function(module){

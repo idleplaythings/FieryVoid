@@ -4,15 +4,38 @@ model.ShipInGame = function ShipInGame(args)
         args = [];
 
     this._id = args._id || null;
-    this.position = args.position || null;
     this.detectionStatus = args.detectionStatus || null;
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
-    this.movement = new model.Movement(this);
+    var position = args.position || null;
+    this.movement = new model.Movement();
+    if ( position )
+        this.movement.setStartPosition(position);
 
     this.icon = null;
     this.gameScene = null;
+};
+
+model.ShipInGame.prototype.prepareForSave = function()
+{
+    this.shipDesign.hullLayoutId =
+        this.shipDesign.hullLayout._id;
+
+    delete this.shipDesign.hullLayout;
+
+    this.movement = this.movement.serialize();
+
+    this.shipDesign.modules =
+        this.shipDesign.modules.map(
+            function(module){
+                return {
+                    module: module._id,
+                    position: module.position,
+                    direction: module.direction
+                };
+            });
+
 };
 
 model.ShipInGame.prototype.loadWithDocument = function(doc)
@@ -22,6 +45,8 @@ model.ShipInGame.prototype.loadWithDocument = function(doc)
 
     if ( ! doc.shipDesign)
         return null;
+
+    doc.movement = this.movement.unserialize(doc.movement);
 
     _.extend(this, doc);
     return this;
@@ -41,7 +66,7 @@ model.ShipInGame.prototype.subscribeToScene =
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
 
-    this.movement.subscribeToScene(this.gameScene);
+    this.movement.subscribeToScene(this.gameScene.scene);
 
     this.shipDesign.modules.forEach(function(module){
         module.ship = this;

@@ -108,22 +108,7 @@ model.Game.prototype.prepareForSave = function()
 {
     this.ships = this.ships.map(
         function(ship){
-            ship.shipDesign.hullLayoutId =
-                ship.shipDesign.hullLayout._id;
-
-            delete ship.shipDesign.hullLayout;
-            delete ship.movement;
-
-            ship.shipDesign.modules =
-                ship.shipDesign.modules.map(
-                    function(module){
-                        return {
-                            module: module._id,
-                            position: module.position,
-                            direction: module.direction
-                            };
-                    });
-
+            ship.prepareForSave();
             return ship;
         });
 

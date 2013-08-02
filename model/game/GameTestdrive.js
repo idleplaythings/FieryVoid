@@ -27,10 +27,16 @@ model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 {
     this.name = displayName(Meteor.user()) + " testdrive " + shipDesign.name;
     var ship = new model.ShipInGame({
-        position:{x:0, y:0},
         controller: Meteor.userId(),
         shipDesign: shipDesign
     });
+
+    ship.movement.addStartPosition(new model.MovementWaypoint({
+        position: {x:0, y:0},
+        velocity: {x:500, y:0},
+        facing: 0
+    }));
+
     this.ships.push(ship);
 
     this.created =  new Date().getTime();
