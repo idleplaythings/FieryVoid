@@ -88,3 +88,60 @@ model.Movement.prototype.getRoute3d = function()
 
     return this.route3d;
 };
+
+model.Movement.prototype.getFacing = function(time)
+{
+    if (gametime % 1 === 0)
+    {
+        if ( ! this.route[gametime])
+            return this.route[this.route.length -1].facing;
+
+        return this.route[gametime].facing;
+    }
+    else
+    {
+        var p1 = this.route[Math.floor(gametime)];
+        var p2 = this.route[Math.ceil(gametime)];
+
+        var perc = gametime % 1;
+
+        console.log("TODO: facing between waypoints");
+        return p1.facing;
+    }
+};
+
+model.Movement.prototype.getModuleThrustVector = function(module, facing)
+{
+    var vector = module.getThrustForceVector();
+    var length = vector.length();
+
+    facing = new Vector2(
+        Math.cos(facing),
+        Math.sin(facing)
+    );
+
+    return vector.clone().normalize().add(facing).normalize().multiplyScalar(length);
+};
+
+model.Movement.prototype.getModulePositionRelativeToMassCenter = function(module, massCenter)
+{
+    var pos = module.getCenterPosition();
+    pos.x = pos.x - massCenter.x;
+    pos.y = pos.y - massCenter.y;
+
+    return pos;
+};
+
+model.Movement.prototype.getThrustMoment = function(module, massCenter)
+{
+    var thrustVector = module.getThrustForceVector();
+    var pos = this.getModulePositionRelativeToMassCenter(module, massCenter);
+    var moment = (pos.x * thrustVector.y) - (pos.y * thrustVector.x);
+
+    return moment;
+};
+
+model.Movement.prototype.getMovementAndRotation = function(module)
+{
+    return {movement: {x:0, y:0}, rotation: 0};
+};
