@@ -22,6 +22,8 @@ model.ModuleLayout = function ModuleLayout(args)
 
     this.position = args.position || {x:0, y:0};
 
+    this.mass = args.mass || 1;
+
     this.animators = [];
 
     this.ship = null;
@@ -315,4 +317,29 @@ model.ModuleLayout.prototype.updateValue = function(name, value, trait)
             console.log('ModuleLayout ' +name + ' updated to ' + value);
         }
     );
+};
+
+
+model.ModuleLayout.prototype.updateValue = function(name, value, trait)
+{
+    if (! trait)
+        trait = false;
+
+    var updateObject = {};
+    updateObject[name] = value;
+
+    Meteor.call(
+        'ModuleLayoutUpdate',
+        this._id,
+        updateObject,
+        trait,
+        function(err, result){
+            console.log('ModuleLayout ' +name + ' updated to ' + value);
+        }
+    );
+};
+
+model.ModuleLayout.prototype.getMass = function()
+{
+    return parseInt(this.mass);
 };
