@@ -3,7 +3,6 @@ model.ShipDisplayPlacingModule = function ShipDisplayPlacingModule(
 {
     model.ShipDisplay.call(this, target, canvasClass);
 
-    console.log(module);
     var image = module.image.getDefault() ;
     this.img = new model.CompositeImageModule({
         imageSrc: image,
@@ -40,20 +39,24 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
 
     var zoom = this.calculateZoomForFit({width:width, height:height});
 
+
     var pos = this.getCanvasPosition(this.pos);
 
     //this.context.putImageData(data, 0, 0);
     window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(
         context, pos, data, zoom);
 
+    console.log(this.pos);
+    console.log("hi");
     for (var x = 0; x < this.module.getWidth(); x++)
     {
         for (var y = 0; y < this.module.getHeight(); y++)
         {
-            if ( ! this.module.isValidTileForPosition(this.ship, this.pos, {x:x, y:y}))
-            {
+            console.log((this.pos.x+x) + "," + (this.pos.y-y));
+            //if ( ! this.module.isValidTileForPosition(this.ship, this.pos, {x:x, y:y}))
+            //{
                 var currentPos = this.getCanvasPosition(
-                    {x: this.pos.x + x, y: this.pos.y + y});
+                    {x: this.pos.x + x, y: this.pos.y - y});
 
                 context.strokeStyle = "rgba(255,0,0,0.5)";
                 context.fillStyle = "rgba(255,0,0,0.5)";
@@ -61,7 +64,7 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
                     context, currentPos.x, currentPos.y, gridSize, true
                 );
 
-            }
+            //}
         }
     }
 

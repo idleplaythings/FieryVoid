@@ -78,6 +78,7 @@ Template.shipEditor.createContext = function()
 
             if (module)
             {
+                self.getModuleOffset(module, pos);
                 ship.placeModule(module, pos);
             }
         },
@@ -112,6 +113,8 @@ Template.shipEditor.createContext = function()
 
                 moduleLayout.direction = mDirection;
 
+                self.getModuleOffset(moduleLayout, pos);
+
                 var modulePlacing = new model.ShipDisplayPlacingModule(
                     ship, jQuery('div.displayLarge'), 'modulePlacing', moduleLayout, pos);
 
@@ -125,6 +128,12 @@ Template.shipEditor.createContext = function()
         {
             if (this.modulePlacing)
                 this.modulePlacing.clear();
+        },
+
+        getModuleOffset: function(module, pos)
+        {
+            pos.x -= Math.floor(module.getWidth()/2);
+            pos.y += Math.floor(module.getHeight()/2);
         }
     };
 };

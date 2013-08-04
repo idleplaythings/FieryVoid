@@ -50,6 +50,7 @@ model.CompositeImage.prototype._drawModuleImages =
         for (var i in images)
         {
             var image = images[i];
+
             var pos = this.getCanvasPosition(this.shipDesign.modules[i].position);
 
             image.getImageDataToCallback(

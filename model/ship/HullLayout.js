@@ -72,6 +72,7 @@ model.HullLayout.prototype.getTileHeight = function(pos)
 
 model.HullLayout.prototype.toggleDisabledTile = function(pos)
 {
+    console.log(pos);
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(

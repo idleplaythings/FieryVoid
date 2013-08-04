@@ -32,7 +32,7 @@ Template.moduleEditor.createContext = function()
                     return;
 
                 self.moduleLayout = module;
-
+                module.position = module.getTopLeftPosition();
                 self.shipView.drawImages({hullLayout: module, modules: [module]});
             });
         },
@@ -169,6 +169,11 @@ Template.moduleMenu.tileGridWidth = function()
 Template.moduleMenu.tileGridHeight = function()
 {
     return getFromSelectedLayout('height');
+};
+
+Template.moduleMenu.mass = function()
+{
+    return getFromSelectedLayout('mass');
 };
 
 Template.moduleMenu.tileScale = function()

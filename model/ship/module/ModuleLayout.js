@@ -17,6 +17,8 @@ model.ModuleLayout = function ModuleLayout(args)
     this.allowedDirections = args.allowedDirections || '';
     this.direction = args.direction || 0;
 
+    this.mass = args.mass || 1;
+
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
 
@@ -53,12 +55,14 @@ model.ModuleLayout.prototype.animate = function()
 
 model.ModuleLayout.prototype.getWidth = function()
 {
-    return (this.direction == 2 || this.direction == 3) ? this.height : this.width;
+    var r = (this.direction == 2 || this.direction == 3) ? this.height : this.width;
+    return parseInt(r, 10);
 }
 
 model.ModuleLayout.prototype.getHeight = function()
 {
-    return (this.direction == 2 || this.direction == 3) ? this.width : this.height;
+    var r =  (this.direction == 2 || this.direction == 3) ? this.width : this.height;
+    return parseInt(r, 10);
 }
 
 model.ModuleLayout.getAvailableTraits = function() {
@@ -143,6 +147,14 @@ model.ModuleLayout.prototype.setPosition = function(pos)
     this.position = pos;
 };
 
+model.ModuleLayout.prototype.getTopLeftPosition = function()
+{
+    return {
+        x: this.position.x,
+        y: this.position.y + this.getHeight()
+    };
+};
+
 model.ModuleLayout.prototype.getCenterPosition = function()
 {
     return {
@@ -171,7 +183,7 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
     ship, pos, tilePos)
 {
     var hullLayout = ship.hullLayout;
-    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y + tilePos.y};
+    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y - tilePos.y};
 
     if (this.isDisabledTile(tilePos))
         return true;
@@ -315,4 +327,9 @@ model.ModuleLayout.prototype.updateValue = function(name, value, trait)
             console.log('ModuleLayout ' +name + ' updated to ' + value);
         }
     );
+};
+
+model.ModuleLayout.prototype.getMass = function()
+{
+    return parseInt(this.mass);
 };

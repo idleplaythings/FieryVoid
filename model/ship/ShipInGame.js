@@ -8,10 +8,7 @@ model.ShipInGame = function ShipInGame(args)
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
-    var position = args.position || null;
     this.movement = new model.Movement();
-    if ( position )
-        this.movement.setStartPosition(position);
 
     this.icon = null;
     this.gameScene = null;

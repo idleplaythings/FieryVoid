@@ -18,6 +18,8 @@ Template.smallModuleImage.rendered = function(){
     if ( ! moduleLayout)
         return;
 
+    moduleLayout.position = moduleLayout.getTopLeftPosition();
+
     var moduleDisplay = new model.ShipDisplayModules(
         jQuery(grid),
         'moduleImgCanvas',

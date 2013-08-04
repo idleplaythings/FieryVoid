@@ -68,6 +68,7 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
         return this.onFailedLoad();
 
     _.extend(this, shipDesignDoc);
+
     return this;
 };
 
@@ -104,6 +105,8 @@ model.ShipDesign.prototype.removeModule = function(pos)
 
 model.ShipDesign.prototype.placeModule = function(module, pos)
 {
+    console.log("module pos:");
+    console.log(pos);
     if (! module.isValidPosition(this, pos))
         return false;
 
@@ -185,3 +188,51 @@ model.ShipDesign.prototype.getPositionInIconRelativeFromCenter = function(pos)
         y: -pos.y + center.y
     };
 };
+
+model.ShipDesign.prototype.getMass = function()
+{
+    var mass = 0;
+    this.modules.forEach(
+        function(module){mass += module.getMass();}
+    );
+
+    return mass;
+};
+
+model.ShipDesign.prototype.calculateCenterOfMass = function()
+{
+    var totalMass = this.getMass();
+    var x = 0;
+    var y = 0;
+
+    this.modules.forEach(
+        function(module)
+        {
+            var pos = module.getCenterPosition();
+            var mass = module.mass;
+
+            x += mass * pos.x;
+            y += mass * pos.y;
+        }
+    );
+
+    return {x: x / totalMass, y: y / totalMass};
+};
+
+model.ShipDesign.prototype.calculateMomentOfIntertia = function()
+{
+    var massCenter = this.calculateCenterOfMass();
+    var moment = 0;
+
+    this.modules.forEach(
+        function(module)
+        {
+            var distance = MathLib.distance(massCenter, module.getCenterPosition())
+            var mass = module.mass;
+
+            moment += mass * Math.pow(distance, 2);
+        }
+    );
+
+    return moment;
+}
