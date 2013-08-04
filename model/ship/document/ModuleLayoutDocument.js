@@ -62,6 +62,8 @@ Meteor.methods({
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
+        console.log(data);
+
         if (trait)
         {
             for (var name in data) break;
@@ -71,23 +73,18 @@ Meteor.methods({
                 {$and: [{'_id': id}, {'traits.name': name}]}
             );
 
-            if (found && ! data[name])
+            if (found)
             {
                 console.log("remove");
-                return ModuleLayouts.update(
+                ModuleLayouts.update(
                     {$and: [{'_id': id}, {'traits.name': name}]},
                     {$pull: {'traits' :{'name': name}}}
                 );
             }
-            else if (found)
+
+            if (data[name])
             {
-                return ModuleLayouts.update(
-                    {$and: [{'_id': id}, {'traits.name': name}]},
-                    {$set: {'traits.$.name': name}}
-                );
-            }
-            else if (data[name])
-            {
+                console.log("add");
                 ModuleLayouts.update(
                     {'_id': id},
                     {$push: {'traits': {'name': name, 'value': data[name]}}}
