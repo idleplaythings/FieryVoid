@@ -181,6 +181,11 @@ Template.moduleMenu.tileHeight = function()
     return getFromSelectedLayout('tileHeight');
 };
 
+Template.moduleMenu.mass = function()
+{
+    return getFromSelectedLayout('mass');
+};
+
 Template.moduleMenu.allowedDirections = function()
 {
     return getFromSelectedLayout('allowedDirections');
