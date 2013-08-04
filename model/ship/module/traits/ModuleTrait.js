@@ -29,5 +29,12 @@ model.ModuleTrait.prototype.getArgsAsInt = function(args)
 
 model.ModuleTrait.prototype.getArgsAsJson = function(args)
 {
-    return JSON.parse(args);
+    try
+    {
+        return JSON.parse(args);
+    }
+    catch(err)
+    {
+        return {};
+    }
 }
