@@ -68,6 +68,7 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
         return this.onFailedLoad();
 
     _.extend(this, shipDesignDoc);
+
     return this;
 };
 
@@ -185,7 +186,6 @@ model.ShipDesign.prototype.getPositionInIconRelativeFromCenter = function(pos)
         y: -pos.y + center.y
     };
 };
-
 
 model.ShipDesign.prototype.getMass = function()
 {

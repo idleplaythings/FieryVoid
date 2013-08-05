@@ -3,7 +3,6 @@ model.ShipDisplayPlacingModule = function ShipDisplayPlacingModule(
 {
     model.ShipDisplay.call(this, target, canvasClass);
 
-    console.log(module);
     var image = module.image.getDefault() ;
     this.img = new model.CompositeImageModule({
         imageSrc: image,
@@ -40,11 +39,14 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
 
     var zoom = this.calculateZoomForFit({width:width, height:height});
 
+
+    var moduleDrawPos = this.getCanvasPosition(
+        {x:this.pos.x, y:this.pos.y + this.module.getHeight()});
+
     var pos = this.getCanvasPosition(this.pos);
 
-    //this.context.putImageData(data, 0, 0);
     window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(
-        context, pos, data, zoom);
+        context, moduleDrawPos, data, zoom);
 
     for (var x = 0; x < this.module.getWidth(); x++)
     {

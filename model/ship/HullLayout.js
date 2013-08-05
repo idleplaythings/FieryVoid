@@ -47,13 +47,18 @@ model.HullLayout.prototype.isDisabledTile = function(pos)
 
 model.HullLayout.prototype.isUnavailableTile = function(pos)
 {
-    if (pos.x < 0 || pos.x > this.width || pos.y < 0 || pos.y > this.height-1)
+    if (this.isOutOfBounds(pos))
         return true;
 
     if (this.isDisabledTile(pos))
         return true;
 
     return false;
+};
+
+model.HullLayout.prototype.isOutOfBounds = function(pos)
+{
+    return (pos.x < 0 || pos.x >= this.getWidth() || pos.y < 0 || pos.y >= this.getHeight())
 };
 
 model.HullLayout.prototype.getTileHeight = function(pos)
@@ -72,6 +77,9 @@ model.HullLayout.prototype.getTileHeight = function(pos)
 
 model.HullLayout.prototype.toggleDisabledTile = function(pos)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(
@@ -84,6 +92,9 @@ model.HullLayout.prototype.toggleDisabledTile = function(pos)
 
 model.HullLayout.prototype.setTileHeight = function(pos, height)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(

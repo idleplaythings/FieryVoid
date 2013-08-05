@@ -26,8 +26,8 @@ model.ModuleTraitThruster.prototype.getBaseThrustVector = function()
     switch(this.direction)
     {
         case 1: return Vector2(-1, 0);
-        case 2: return Vector2(0, -1);
-        case 3: return Vector2(0, 1);
+        case 2: return Vector2(0, 1);
+        case 3: return Vector2(0, -1);
         case 4: return Vector2(1, 0);
     }
 };

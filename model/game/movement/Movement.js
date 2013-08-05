@@ -143,5 +143,6 @@ model.Movement.prototype.getThrustMoment = function(module, massCenter)
 
 model.Movement.prototype.getMovementAndRotation = function(module)
 {
+
     return {movement: {x:0, y:0}, rotation: 0};
 };

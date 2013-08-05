@@ -76,7 +76,7 @@ model.SpriteEffectThrusterGlow.prototype.createObject3d = function(z, color, fil
     var material = new THREE.MeshBasicMaterial(
         {
             map: map,
-            transparent: true,
+            transparent: true
         });
 
     material.color.setRGB(color.r, color.g, color.b);

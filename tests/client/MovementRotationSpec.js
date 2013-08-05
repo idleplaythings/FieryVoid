@@ -31,7 +31,7 @@ describe("Ship movement", function() {
      it("Thrust moment, thrustinc directly towards mass center", function() {
      var movement = getMovement({x:3, y:3})
 
-     var moment = movement.getThrustMoment(getModule({x:-3, y:3}), {x:0, y:0})
+     var moment = movement.getThrustMoment(getModule({x:-3, y:-3}), {x:0, y:0})
      expect(moment).toEqual(0);
      });
 

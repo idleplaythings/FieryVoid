@@ -77,7 +77,7 @@ model.ShipDisplayGrid.prototype.drawImage = function()
                 context.fillStyle = this.fillColor;
             }
             this.drawingTool.drawBox(
-                context, x*gridSize + pos.x + offset, y*gridSize + pos.y + offset, gridSize-lineWidth, true
+                context, (x*gridSize + pos.x + offset), ((gridHeight-y)*gridSize + pos.y + offset), gridSize-lineWidth, true
             );
         }
     }

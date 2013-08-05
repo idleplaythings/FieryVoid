@@ -17,12 +17,12 @@ model.ModuleLayout = function ModuleLayout(args)
     this.allowedDirections = args.allowedDirections || '';
     this.direction = args.direction || 0;
 
+    this.mass = args.mass || 1;
+
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
 
     this.position = args.position || {x:0, y:0};
-
-    this.mass = args.mass || 1;
 
     this.animators = [];
 
@@ -55,12 +55,14 @@ model.ModuleLayout.prototype.animate = function()
 
 model.ModuleLayout.prototype.getWidth = function()
 {
-    return (this.direction == 2 || this.direction == 3) ? this.height : this.width;
+    var r = (this.direction == 2 || this.direction == 3) ? this.height : this.width;
+    return parseInt(r, 10);
 }
 
 model.ModuleLayout.prototype.getHeight = function()
 {
-    return (this.direction == 2 || this.direction == 3) ? this.width : this.height;
+    var r =  (this.direction == 2 || this.direction == 3) ? this.width : this.height;
+    return parseInt(r, 10);
 }
 
 model.ModuleLayout.getAvailableTraits = function() {
@@ -145,6 +147,14 @@ model.ModuleLayout.prototype.setPosition = function(pos)
     this.position = pos;
 };
 
+model.ModuleLayout.prototype.getTopLeftPosition = function()
+{
+    return {
+        x: this.position.x,
+        y: this.position.y + this.getHeight()
+    };
+};
+
 model.ModuleLayout.prototype.getCenterPosition = function()
 {
     return {
@@ -203,10 +213,14 @@ model.ModuleLayout.prototype.publish = function()
     );
 };
 
+model.ModuleLayout.prototype.isOutOfBounds = function(pos)
+{
+    return pos.x < 0 || pos.y < 0 || pos.x >= this.getWidth() || pos.y >= this.getHeight();
+};
+
 model.ModuleLayout.prototype.getTileListIndex = function(pos)
 {
-    if ((pos.x < 0 || pos.y < 0)
-       || (pos.x >= this.getWidth() || pos.y >= this.getHeight()))
+    if (this.isOutOfBounds(pos))
             throw new Error("(x: " + pos.x + ",y: "
                 + pos.y+" is outside of the module" );
 
@@ -256,6 +270,9 @@ model.ModuleLayout.prototype.getTileHeight = function(pos)
 
 model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(
@@ -268,6 +285,9 @@ model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 
 model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(
@@ -299,26 +319,6 @@ model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
         this.updateValue(name, value);
     }
 };
-
-model.ModuleLayout.prototype.updateValue = function(name, value, trait)
-{
-    if (! trait)
-        trait = false;
-
-    var updateObject = {};
-    updateObject[name] = value;
-
-    Meteor.call(
-        'ModuleLayoutUpdate',
-        this._id,
-        updateObject,
-        trait,
-        function(err, result){
-            console.log('ModuleLayout ' +name + ' updated to ' + value);
-        }
-    );
-};
-
 
 model.ModuleLayout.prototype.updateValue = function(name, value, trait)
 {
