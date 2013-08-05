@@ -105,8 +105,6 @@ model.ShipDesign.prototype.removeModule = function(pos)
 
 model.ShipDesign.prototype.placeModule = function(module, pos)
 {
-    console.log("module pos:");
-    console.log(pos);
     if (! module.isValidPosition(this, pos))
         return false;
 

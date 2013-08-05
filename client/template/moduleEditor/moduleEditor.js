@@ -32,7 +32,6 @@ Template.moduleEditor.createContext = function()
                     return;
 
                 self.moduleLayout = module;
-                module.position = module.getTopLeftPosition();
                 self.shipView.drawImages({hullLayout: module, modules: [module]});
             });
         },

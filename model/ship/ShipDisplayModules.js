@@ -84,7 +84,7 @@ model.ShipDisplayModules.prototype.drawImage = function(image, i)
     var height = data.height;
 
     var zoom = this.calculateZoomForFit({width:width, height:height});
-    var pos = this.getCanvasPosition(this.ship.modules[i].position);
+    var pos = this.getCanvasPosition(this.ship.modules[i].getTopLeftPosition());
 
     //this.context.putImageData(data, 0, 0);
     window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(

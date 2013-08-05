@@ -40,23 +40,22 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
     var zoom = this.calculateZoomForFit({width:width, height:height});
 
 
+    var moduleDrawPos = this.getCanvasPosition(
+        {x:this.pos.x, y:this.pos.y + this.module.getHeight()});
+
     var pos = this.getCanvasPosition(this.pos);
 
-    //this.context.putImageData(data, 0, 0);
     window.Tools.getCanvasDrawingTool().resizeImageDataAndDraw(
-        context, pos, data, zoom);
+        context, moduleDrawPos, data, zoom);
 
-    console.log(this.pos);
-    console.log("hi");
     for (var x = 0; x < this.module.getWidth(); x++)
     {
         for (var y = 0; y < this.module.getHeight(); y++)
         {
-            console.log((this.pos.x+x) + "," + (this.pos.y-y));
-            //if ( ! this.module.isValidTileForPosition(this.ship, this.pos, {x:x, y:y}))
-            //{
+            if ( ! this.module.isValidTileForPosition(this.ship, this.pos, {x:x, y:y}))
+            {
                 var currentPos = this.getCanvasPosition(
-                    {x: this.pos.x + x, y: this.pos.y - y});
+                    {x: this.pos.x + x, y: this.pos.y + y});
 
                 context.strokeStyle = "rgba(255,0,0,0.5)";
                 context.fillStyle = "rgba(255,0,0,0.5)";
@@ -64,7 +63,7 @@ model.ShipDisplayPlacingModule.prototype.drawImage = function()
                     context, currentPos.x, currentPos.y, gridSize, true
                 );
 
-            //}
+            }
         }
     }
 

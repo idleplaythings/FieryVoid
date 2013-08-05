@@ -183,7 +183,7 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
     ship, pos, tilePos)
 {
     var hullLayout = ship.hullLayout;
-    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y - tilePos.y};
+    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y + tilePos.y};
 
     if (this.isDisabledTile(tilePos))
         return true;
@@ -213,10 +213,14 @@ model.ModuleLayout.prototype.publish = function()
     );
 };
 
+model.ModuleLayout.prototype.isOutOfBounds = function(pos)
+{
+    return pos.x < 0 || pos.y < 0 || pos.x >= this.getWidth() || pos.y >= this.getHeight();
+};
+
 model.ModuleLayout.prototype.getTileListIndex = function(pos)
 {
-    if ((pos.x < 0 || pos.y < 0)
-       || (pos.x >= this.getWidth() || pos.y >= this.getHeight()))
+    if (this.isOutOfBounds(pos))
             throw new Error("(x: " + pos.x + ",y: "
                 + pos.y+" is outside of the module" );
 
@@ -266,6 +270,9 @@ model.ModuleLayout.prototype.getTileHeight = function(pos)
 
 model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(
@@ -278,6 +285,9 @@ model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
 
 model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
 {
+    if (this.isOutOfBounds(pos))
+        return;
+
     var i = pos.y * this.width + pos.x;
 
     Meteor.call(

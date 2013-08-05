@@ -51,7 +51,7 @@ model.CompositeImage.prototype._drawModuleImages =
         {
             var image = images[i];
 
-            var pos = this.getCanvasPosition(this.shipDesign.modules[i].position);
+            var pos = this.getCanvasPosition(this.shipDesign.modules[i].getTopLeftPosition());
 
             image.getImageDataToCallback(
                 function(data)

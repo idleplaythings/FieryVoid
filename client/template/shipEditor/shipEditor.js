@@ -112,7 +112,6 @@ Template.shipEditor.createContext = function()
                     return;
 
                 moduleLayout.direction = mDirection;
-
                 self.getModuleOffset(moduleLayout, pos);
 
                 var modulePlacing = new model.ShipDisplayPlacingModule(
@@ -132,8 +131,8 @@ Template.shipEditor.createContext = function()
 
         getModuleOffset: function(module, pos)
         {
-            pos.x -= Math.floor(module.getWidth()/2);
-            pos.y += Math.floor(module.getHeight()/2);
+            pos.x -= Math.round(module.getWidth()/2);
+            pos.y -= Math.round(module.getHeight()/2);
         }
     };
 };
