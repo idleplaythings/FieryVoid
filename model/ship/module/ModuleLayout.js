@@ -226,15 +226,15 @@ model.ModuleLayout.prototype.getTileListIndex = function(pos)
 
     if (this.direction == 2)
     {
-        var x = (this.width-1) - pos.y;
-        var y = pos.x;
+        var x = pos.y;
+        var y = (this.height-1) - pos.x;
 
         return y * this.width + x;
     }
     else if (this.direction == 3)
     {
-        var x = pos.y;
-        var y = (this.height-1) - pos.x;
+        var x = (this.width-1) - pos.y;
+        var y = pos.x;
 
         return y * this.width + x;
     }
