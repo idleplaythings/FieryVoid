@@ -1,11 +1,8 @@
-model.StarFieldFactory = function StarFieldFactory(gameScene, count)
+model.StarFieldFactory = function StarFieldFactory(args)
 {
-    this.gameScene = gameScene;
-    this.count = count;
-
+    this.starCount = args.starCount || 100;
     this.particles = [];
     this.emitter = null;
-
     this.starField = null;
 };
 
@@ -34,7 +31,8 @@ model.StarFieldFactory.prototype.create = function()
 
     this.starField = this.emitter.getObject3d();
     this.starField.position = new THREE.Vector3(0,0, -10);
-    this.gameScene.scene.add(this.starField);
+
+    return this;
 };
 
 model.StarFieldFactory.prototype.animate = function()
@@ -46,7 +44,7 @@ model.StarFieldFactory.prototype.getParticles = function()
 {
     if (this.particles.length == 0)
     {
-        var starCount = this.count + (Math.floor(Math.random()*(this.count/2))-(this.count/4));
+        var starCount = this.starCount + (Math.floor(Math.random()*(this.starCount/2))-(this.starCount/4));
         while(starCount--)
         {
             var color = new THREE.Color();

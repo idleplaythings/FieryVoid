@@ -20,7 +20,7 @@ model.AsteroidBeltFactory.prototype.create = function()
         }
     }
 
-    return new model.AsteroidBelt(asteroids);
+    return new model.AsteroidBelt(asteroids).create();
 }
 
 model.AsteroidBeltFactory.prototype.createRandomAsteroid = function()
@@ -28,8 +28,8 @@ model.AsteroidBeltFactory.prototype.createRandomAsteroid = function()
     return new model.Asteroid({
         position: this.getRandomPosition(),
         radius: this.getRandomRadius(),
-        rotation: this.getRandomAngle(),
-        angleVelocity: this.getRandomAngleVelocity()
+        rotationCoefficient: this.getRandomRotationCoefficient(),
+        rotationOffset: this.getRandomAngle()
     });
 }
 
@@ -56,7 +56,8 @@ model.AsteroidBeltFactory.prototype.getRandomAngle = function()
     return Math.random() * Math.PI * 2;
 }
 
-model.AsteroidBeltFactory.prototype.getRandomAngleVelocity = function()
+model.AsteroidBeltFactory.prototype.getRandomRotationCoefficient = function()
 {
-    return Math.random() * 0.5;
+    return Math.random() * 2 - 1;
 }
+
