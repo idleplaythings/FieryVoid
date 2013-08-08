@@ -136,13 +136,75 @@ model.Movement.prototype.getThrustMoment = function(module, massCenter)
 {
     var thrustVector = module.getThrustForceVector();
     var pos = this.getModulePositionRelativeToMassCenter(module, massCenter);
-    var moment = (pos.x * thrustVector.y) - (pos.y * thrustVector.x);
+    var moment = (pos.x * -thrustVector.y) - (pos.y * -thrustVector.x);
 
     return moment;
 };
 
-model.Movement.prototype.getMovementAndRotation = function(module)
+model.Movement.prototype.getRotationAcceleration = function(
+    module, massCenter, momentOfInertia)
+{
+    var thrustMoment = this.getThrustMoment(module, massCenter);
+    return thrustMoment / momentOfInertia;
+};
+
+model.Movement.prototype.getAcceleration = function(module, mass, facing)
+{
+    return forceVector.divideScalar(this.getModuleThrustVector(module, facing));
+};
+
+model.Movement.prototype.resolveNextLocation = function(shipDesign, time)
+{
+    var currentWaypoint = this.route[time];
+    var targetWaypoint = this.getNextTarget(time);
+    var timeToTarget = targetWaypoint.time - currentWaypoint.time;
+
+    var massCenter = shipDesign.calculateCenterOfMass();
+    var momentOfInertia = shipDesign.calculateMomentOfIntertia();
+    var mass = shipDesign.getMass();
+    var facing = currentWaypoint.facing;
+
+    var availableThrusters = this.getAvailableThrusters(
+        shipDesign, time, massCenter, mass, momentOfInertia, facing);
+};
+
+model.Movement.prototype.getNextTarget = function(time)
+{
+    return null;
+};
+
+model.Movement.prototype.getAvailableThrusters = function(
+    shipDesign, time, massCenter, mass, momentOfInertia, facing)
+{
+    var thrusters = [];
+    shipDesign.modules.forEach(function(module){
+        if ( ! module.thruster)
+            return;
+
+        var thruster = new model.ThrusterForMovement(
+            this.getAcceleration(module, mass, facing),
+            this.getRotationAcceleration(module, massCenter, momentOfInertia),
+            module.thruster.getMaxChannel()
+        );
+
+        thrusters.push(thruster);
+    }, this);
+
+    return thrusters;
+};
+
+
+model.Movement.prototype.getToNextWaypoint =
+    function(thrusters, start, end)
 {
 
-    return {movement: {x:0, y:0}, rotation: 0};
+};
+
+
+model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, module)
+{
+    this.acceleration = acc;
+    this.rotationAcceleration = rotation;
+    this.max = max;
+    this.module = module;
 };
