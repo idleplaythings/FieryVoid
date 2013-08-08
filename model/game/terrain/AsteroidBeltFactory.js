@@ -8,37 +8,34 @@ model.AsteroidBeltFactory = function AsteroidBeltFactory(args)
     this.maxAsteroidRadius = args.maxAsteroidRadius || 200;
 }
 
-model.AsteroidBeltFactory.prototype._reset = function()
+model.AsteroidBeltFactory.prototype.create = function()
 {
-    this._asteroids = [];
-}
+    var asteroids = [];
 
-model.AsteroidBeltFactory.prototype.generateAsteroids = function()
-{
-    this._reset();
-
-    while (this._asteroids.length < this.asteroidCount) {
+    while (asteroids.length < this.asteroidCount) {
         try {
-            this._addAsteroid(this._getRandomAsteroid());
+            asteroids.push(this.createRandomAsteroid());
         } catch (e) {
             continue;
         }
     }
 
-    return this._asteroids;
+    return new model.AsteroidBelt(asteroids).create();
 }
 
-model.AsteroidBeltFactory.prototype._getRandomAsteroid = function()
+model.AsteroidBeltFactory.prototype.createRandomAsteroid = function()
 {
     return new model.Asteroid({
-        position: this._getRandomPosition(),
-        radius: this._getRandomAsteroidRadius()
+        position: this.getRandomPosition(),
+        radius: this.getRandomRadius(),
+        rotationCoefficient: this.getRandomRotationCoefficient(),
+        rotationOffset: this.getRandomAngle()
     });
 }
 
-model.AsteroidBeltFactory.prototype._getRandomPosition = function()
+model.AsteroidBeltFactory.prototype.getRandomPosition = function()
 {
-    var angle = Math.random() * Math.PI * 2;
+    var angle = this.getRandomAngle();;
     var rand = (Math.random() * 2 - 1) + (Math.random() * 2 - 1) + (Math.random() * 2 - 1);
         rand = rand * 0.1 + 0.5;
     var distance = this.beltRadius + rand * this.beltWidth;
@@ -49,13 +46,18 @@ model.AsteroidBeltFactory.prototype._getRandomPosition = function()
     };
 }
 
-model.AsteroidBeltFactory.prototype._getRandomAsteroidRadius = function()
+model.AsteroidBeltFactory.prototype.getRandomRadius = function()
 {
     return this.minAsteroidRadius + Math.random() * (this.maxAsteroidRadius - this.minAsteroidRadius);
 }
 
-model.AsteroidBeltFactory.prototype._addAsteroid = function(newAsteroid)
+model.AsteroidBeltFactory.prototype.getRandomAngle = function()
 {
-    this._asteroids.push(newAsteroid);
+    return Math.random() * Math.PI * 2;
+}
+
+model.AsteroidBeltFactory.prototype.getRandomRotationCoefficient = function()
+{
+    return Math.random() * 2 - 1;
 }
 
