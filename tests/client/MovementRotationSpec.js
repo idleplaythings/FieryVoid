@@ -58,7 +58,7 @@ describe("Ship movement", function() {
 
     function getMovement(pos)
     {
-        var movement = new model.Movement();
+        var movement = new model.MovementResolver();
 
         movement.getModulePositionRelativeToMassCenter = function()
         {

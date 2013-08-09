@@ -18,7 +18,8 @@ files = [
     'model/ship/ShipDisplay.js',
     'model/ship/ShipDisplayGrid.js',
     'model/ship/module/ModuleLayout.js',
-    'model/game/movement/Movement.js'
+    'model/game/movement/Movement.js',
+    'model/game/movement/MovementResolver.js'
 ];
 
 
