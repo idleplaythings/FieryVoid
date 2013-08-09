@@ -14,12 +14,16 @@ files = [
     'tests/**/*Mock.js',
     'tests/mocks/jquery.min.js',
     'lib/model/model.js',
+    'lib/math/Vector2.js',
+    'lib/MathLib.js',
     'lib/CoordinateConverter.js',
     'model/ship/ShipDisplay.js',
     'model/ship/ShipDisplayGrid.js',
     'model/ship/module/ModuleLayout.js',
     'model/game/movement/Movement.js',
-    'model/game/movement/MovementResolver.js'
+    'model/game/movement/MovementResolver.js',
+    'model/game/movement/ThrusterResolver.js',
+    'model/game/movement/ThrusterForMovement.js'
 ];
 
 
