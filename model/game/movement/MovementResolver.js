@@ -4,7 +4,7 @@ model.MovementResolver = function MovementResolver()
 
 model.MovementResolver.prototype.getModuleThrustVector = function(module, facing)
 {
-    var vector = module.getThrustForceVector();
+    var vector = module.thruster.getThrustForceVector();
     var length = vector.length();
 
     facing = new Vector2(
@@ -45,10 +45,14 @@ model.MovementResolver.prototype.getAcceleration = function(module, mass, facing
     return this.getModuleThrustVector(module, facing).divideScalar(mass);
 };
 
-model.MovementResolver.prototype.resolveNextLocation = function(shipDesign, time, route)
+model.MovementResolver.prototype.resolveRoute = function(shipDesign, time, route, waypoints)
 {
     var currentWaypoint = route[time];
-    var targetWaypoint = this.getNextTarget(time, route);
+    var targetWaypoint = this.getNextTarget(time, waypoints);
+
+    if (! targetWaypoint)
+        return route;
+
     var timeToTarget = targetWaypoint.time - currentWaypoint.time;
 
     var massCenter = shipDesign.calculateCenterOfMass();
@@ -59,12 +63,18 @@ model.MovementResolver.prototype.resolveNextLocation = function(shipDesign, time
     var availableThrusters = this.getAvailableThrusters(
         shipDesign, time, massCenter, mass, momentOfInertia, facing);
 
-    this.getToNextWaypoint(
-        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget);
+    route.concat(this.getToNextWaypoint(
+        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget));
+
+    return route;
 };
 
-model.MovementResolver.prototype.getNextTarget = function(time, route)
+model.MovementResolver.prototype.getNextTarget = function(time, waypoints)
 {
+    var i = Math.ceil(time / 10) * 10;
+    if (waypoints[i])
+        return waypoints[i];
+
     return null;
 };
 
@@ -92,5 +102,5 @@ model.MovementResolver.prototype.getAvailableThrusters = function(
 model.MovementResolver.prototype.getToNextWaypoint = function(
     thrusters, start, end, timeToTarget)
 {
-
+    return [];
 };

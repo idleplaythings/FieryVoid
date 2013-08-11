@@ -1,5 +1,6 @@
 model.Movement = function Movement(shipDesign)
 {
+    this.shipDesign = shipDesign;
     this.route = [];
     this.waypoints = [];
     this.currentGameTime = 0;
@@ -12,8 +13,9 @@ model.Movement.prototype.serialize = function ()
     return this.route;
 };
 
-model.Movement.prototype.unserialize = function(route)
+model.Movement.prototype.unserialize = function(route, shipDesign)
 {
+    this.shipDesign = shipDesign;
     this.route = route;
     return this;
 };
@@ -44,19 +46,22 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
 
 model.Movement.prototype.subscribeToScene = function(scene)
 {
-    this.extrapolateCourseForNext(10);
+    //this.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene).displayRoute(this.route);
 };
 
 model.Movement.prototype.setWaypoint = function(pos)
 {
-    this.waypoints.push({type:turn, position: pos});
+    var i = Math.ceil(this.waypoints.length / 10) * 10;
+
+    this.waypoints[i] = pos;
     this.recalculateRoute();
 };
 
 model.Movement.prototype.recalculateRoute = function()
 {
-    var startIndex = this.currentGameTime();
+    this.resolver.resolveRoute(
+        this.shipDesign, this.currentGameTime, this.route, this.waypoints);
 };
 
 model.Movement.prototype.getCurrentPosition = function(gametime)

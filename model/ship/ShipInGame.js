@@ -8,7 +8,7 @@ model.ShipInGame = function ShipInGame(args)
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
-    this.movement = new model.Movement();
+    this.movement = new model.Movement(this.shipDesign);
 
     this.icon = null;
     this.gameScene = null;
@@ -43,8 +43,7 @@ model.ShipInGame.prototype.loadWithDocument = function(doc)
     if ( ! doc.shipDesign)
         return null;
 
-    doc.movement = this.movement.unserialize(doc.movement);
-
+    doc.movement = this.movement.unserialize(doc.movement, doc.shipDesign);
     _.extend(this, doc);
     return this;
 };

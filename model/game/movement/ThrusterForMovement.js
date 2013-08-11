@@ -6,6 +6,7 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
     this.module = module;
 
     this.assignedThrust = 0;
+    this.assignedRotationThrust = 0;
 };
 
 model.ThrusterForMovement.prototype.getVectorActiveComponent = function()
@@ -26,9 +27,14 @@ model.ThrusterForMovement.prototype.assignThrust = function(thrust)
     this.assignedThrust += thrust;
 };
 
+model.ThrusterForMovement.prototype.assignRotationThrust = function(thrust)
+{
+    this.assignedRotationThrust += thrust;
+};
+
 model.ThrusterForMovement.prototype.canBeUsed = function()
 {
-    return this.assignedThrust < this.max;
+    return this.assignedThrust + this.assignedRotationThrust < this.max;
 };
 
 model.ThrusterForMovement.prototype.getCurrentVector = function()
