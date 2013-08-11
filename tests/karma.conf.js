@@ -23,7 +23,8 @@ files = [
     'model/game/movement/Movement.js',
     'model/game/movement/MovementResolver.js',
     'model/game/movement/ThrusterResolver.js',
-    'model/game/movement/ThrusterForMovement.js'
+    'model/game/movement/ThrusterForMovement.js',
+    'model/game/movement/ThrusterGroup.js'
 ];
 
 

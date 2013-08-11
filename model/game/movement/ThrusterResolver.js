@@ -1,85 +1,95 @@
-model.ThrusterResolver = function ThrusterResolver()
+model.ThrusterResolver = function ThrusterResolver(
+    thrusterGroup, targetVector, targetRotation, engineoutput)
 {
+    this.thrusterGroup = thrusterGroup;
+    this.targetVector = targetVector;
+    this.targetRotation = targetRotation;
+    this.engineoutput = engineoutput;
+
+    this.usedEngineOutput = 0;
+    this.currentTargetVector = targetVector.clone();
+    this.currentVector = new Vector2(0,0);
+
+    this.currentTargetRotation = targetRotation;
+    this.currentRotation = 0;
+
+    this.step = engineoutput/100;
 };
 
 model.ThrusterResolver.prototype.resolveThrusterUse =
-    function(thrusters, targetVector, targetRotation, engineoutput)
+    function()
 {
 
-    var cTargetVector = targetVector.clone();
-    var cVector = Vector2(0,0);
-
-    var cTRotation = targetRotation;
-    var cRotation = 0;
-
-    while(engineoutput)
+    while(this.usedEngineOutput < this.engineoutput)
     {
-        if (cVector.length() < cTargetVector.length)
-        {
-            var step = 0.1;
-            var thruster = this.assignStepTowards(thrusters, cTargetVector, cTRotation, step);
-            engineoutput -= step;
-            cRotation += thruster.getResultRotation(step);
-            cVector.add(thruster.getResultVector(step));
-            cTargetVector.sub(cVector);
-        }
+        console.log("start round");
+        console.log("pos: " + this.currentVector.x +", " + this.currentVector.y + " r: " + this.currentRotation);
+        console.log("target: " + this.currentTargetVector.x +", " + this.currentTargetVector.y + " r: " + this.currentTargetRotation);
 
-    }
-};
-
-model.ThrusterResolver.prototype.assignStepTowards =
-    function(thrusters, targetVector, targetRotation, step)
-{
-    var usable =
-        thrusters.filter(
-            function(thruster){
-                if ( ! thruster.canBeUsed())
-                    return false;
-
-                //var angleDifference =
-                //    MathLib.compareAngles(targetVector.angle, thruster.acceleration.angle);
-
-                //if (angleDifference > 45)
-                //    return false;
-            });
-
-    usable = this.sortThrusters(usable, target, targetRotation, step);
-    return usable[0];
-};
-
-model.ThrusterResolver.prototype.sortThrusters =
-    function(thrusters, target, targetRotation, step)
-{
-    var self = this;
-    thrusters.sort(function(a,b)
-    {
-        return self.thrusterSort(a, b, target, targetRotation, step);
-    });
-
-    return thrusters;
-};
-
-model.ThrusterResolver.prototype.thrusterSort =
-    function(a,b, targetVector, targetRotation, step)
-{
-    var vectorA = a.getResultVector(step);
-    var vectorB = b.getResultVector(step);
-
-    var angleA = MathLib.distanceBetweenAngles(targetVector.angle(), vectorA.angle());
-    var angleB = MathLib.distanceBetweenAngles(targetVector.angle(), vectorB.angle());
-
-    var rotationA = Math.abs(targetRotation - a.getResultRotation(step));
-    var rotationB = Math.abs(targetRotation - b.getResultRotation(step));
-
-    //console.log(angleA + " vs " + angleB);
-    if (angleA === angleB)
-    {
-        console.log(rotationA + " vs " + rotationB);
-        if (rotationA === rotationB)
-            return vectorA.length - vectorB.length;
-
-        return rotationA - rotationB;
+        //var r =this.fixRotation();
+        this.applyThruster(this.getThrusterForward(new Vector2(this.currentTargetVector.x, 0)));
+        this.applyThruster(this.getThrusterForward(new Vector2(0, this.currentTargetVector.y)));
     }
 
-    return angleA - angleB;
+
+    return this.thrusterGroup;
+};
+
+model.ThrusterResolver.prototype.getThrusterForward = function(vector)
+{
+    if (vector.x === 0 && vector.y === 0)
+        return 0;
+
+    var thrusters = this.thrusterGroup.getThrustersSortedForMovement(
+        vector, this.currentTargetRotation);
+
+    if (thrusters.length === 0)
+        return 0;
+
+    var thruster = thrusters[0];
+
+    var step = thruster.getThrustRequirementToMeetVector(vector);
+
+    if (step > this.step)
+        step = this.step;
+
+    return {thruster:thruster, step:step};
+};
+
+model.ThrusterResolver.prototype.fixRotation = function()
+{
+    if (this.currentTargetRotation === 0)
+        return 0;
+
+    var thruster = this.thrusterGroup.getBestRotator(this.currentTargetRotation);
+    if (! thruster)
+        return 0;
+
+    var step = thruster.getThrustRequirementToMeetRotation(this.currentTargetRotation);
+
+    if (step > this.step)
+        step = this.step;
+
+    return {thruster:thruster, step:step};
+};
+
+model.ThrusterResolver.prototype.applyThruster = function(thrusterAndstep)
+{
+    if (! thrusterAndstep)
+        return;
+
+    var thruster = thrusterAndstep.thruster;
+    var step = thrusterAndstep.step;
+    
+    thruster.assignThrust(step);
+    var result = thruster.getResultVector(step);
+
+    this.usedEngineOutput -= step;
+    this.currentVector = this.currentVector.add(result);
+    this.currentTargetVector.sub(result);
+
+    this.currentRotation += thruster.getResultRotation(step);
+    this.currentTargetRotation = this.targetRotation - this.currentRotation;
+
+    console.log("Using thruster '" + thruster.module + " for " +result.x + ","+ result.y + " and rotation " + thruster.getResultRotation(step));
 };

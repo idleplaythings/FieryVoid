@@ -8,6 +8,19 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
     this.assignedThrust = 0;
 };
 
+model.ThrusterForMovement.prototype.getVectorActiveComponent = function()
+{
+    return this.acceleration.x !== 0 ? this.acceleration.x : this.acceleration.y;
+};
+
+model.ThrusterForMovement.prototype.getThrustRequirementToMeetVector = function(vector)
+{
+    var target = vector.x !== 0 ? vector.x : vector.y;
+    var acc = this.getVectorActiveComponent();
+
+    return target / acc;
+};
+
 model.ThrusterForMovement.prototype.assignThrust = function(thrust)
 {
     this.assignedThrust += thrust;
@@ -31,4 +44,9 @@ model.ThrusterForMovement.prototype.getResultVector = function(step)
 model.ThrusterForMovement.prototype.getResultRotation = function(step)
 {
     return this.rotationAcceleration * step;
+};
+
+model.ThrusterForMovement.prototype.getThrustRequirementToMeetRotation = function(rotation)
+{
+   return rotation/this.rotationAcceleration;
 };
