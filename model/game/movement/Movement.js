@@ -16,7 +16,7 @@ model.Movement.prototype.serialize = function ()
 model.Movement.prototype.unserialize = function(route, shipDesign)
 {
     this.shipDesign = shipDesign;
-    this.route = route;
+    this.route = route.map(function(w){return new model.MovementWaypoint(w)});
     return this;
 };
 
@@ -52,9 +52,13 @@ model.Movement.prototype.subscribeToScene = function(scene)
 
 model.Movement.prototype.setWaypoint = function(pos)
 {
-    var i = Math.ceil(this.waypoints.length / 10) * 10;
 
-    this.waypoints[i] = pos;
+    //var i = this.route.length + 10;
+    var i = Math.ceil((this.route.length+1) / 10) * 10;
+
+    console.log("setting waypoint for time " + i);
+
+    this.waypoints[i] = new model.MovementWaypoint({position:pos, facing:0, time:i});
     this.recalculateRoute();
 };
 

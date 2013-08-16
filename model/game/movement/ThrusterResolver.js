@@ -18,34 +18,30 @@ model.ThrusterResolver = function ThrusterResolver(
     this.didSomething = true;
 };
 
-model.ThrusterResolver.prototype.resolveThrusterUse =
-    function()
+model.ThrusterResolver.prototype.resolveThrusterUse = function()
 {
 
     while(this.usedEngineOutput < this.engineoutput && this.didSomething)
     {
         this.didSomething = false;
-        console.log("start round");
-        console.log("pos: " + this.currentVector.x +", " + this.currentVector.y + " r: " + this.currentRotation);
-        console.log("target: " + this.currentTargetVector.x +", " + this.currentTargetVector.y + " r: " + this.currentTargetRotation);
+        //console.log("start round");
+        //console.log("pos: " + this.currentVector.x +", " + this.currentVector.y + " r: " + this.currentRotation);
+        //console.log("target: " + this.currentTargetVector.x +", " + this.currentTargetVector.y + " r: " + this.currentTargetRotation);
 
         this.applyThruster(this.fixRotation());
         this.applyThruster(this.getThrusterForward(new Vector2(this.currentTargetVector.x, 0)));
         this.applyThruster(this.getThrusterForward(new Vector2(0, this.currentTargetVector.y)));
     }
-
-
-    return this.thrusterGroup;
 };
 
 model.ThrusterResolver.prototype.canCounterRotation = function(thruster, rotation)
 {
     if (thruster.getThrustRequirementToMeetRotation(this.currentTargetRotation) < 0)
     {
-        console.log("rotating wrong");
+        //console.log("rotating wrong");
         if (this.thrusterGroup.getBestRotator(this.currentTargetRotation + rotation) === null)
         {
-            console.log("no more counter rotators")
+            //console.log("no more counter rotators")
             return false;
         }
     }
@@ -61,7 +57,7 @@ model.ThrusterResolver.prototype.isMovingRightDirection = function(thruster, vec
 
     if (newDistance > currentDistance)
     {
-        console.log("moving wrong")
+        //console.log("moving wrong")
         return false;
     }
 
@@ -130,12 +126,12 @@ model.ThrusterResolver.prototype.applyThruster = function(thrusterAndstep)
         thruster.assignThrust(step);
         this.currentVector = this.currentVector.add(result);
         this.currentTargetVector.sub(result);
-        console.log("Using thruster '" + thruster.module + " for " +result.x + ","+ result.y + " and rotation " + thruster.getResultRotation(step));
+        //console.log("Using thruster '" + thruster.module + " for " +result.x + ","+ result.y + " and rotation " + thruster.getResultRotation(step));
 
     }
     else
     {
-        console.log("Using thruster '" + thruster.module + " for rotation ONLY " + thruster.getResultRotation(step));
+        //console.log("Using thruster '" + thruster.module + " for rotation ONLY " + thruster.getResultRotation(step));
 
         thruster.assignRotationThrust(step);
     }

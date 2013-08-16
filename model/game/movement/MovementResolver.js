@@ -4,6 +4,8 @@ model.MovementResolver = function MovementResolver()
 
 model.MovementResolver.prototype.getModuleThrustVector = function(module, facing)
 {
+    return module.thruster.getThrustForceVector();
+    /*
     var vector = module.thruster.getThrustForceVector();
     var length = vector.length();
 
@@ -13,6 +15,40 @@ model.MovementResolver.prototype.getModuleThrustVector = function(module, facing
     );
 
     return vector.clone().normalize().add(facing).normalize().multiplyScalar(length);
+    */
+};
+
+model.MovementResolver.prototype.convertVectorToShipCentered = function(a, shipPos, facing)
+{
+    var length = a.length();
+
+    facing = new Vector2(
+        Math.cos(facing),
+        Math.sin(facing)
+    );
+
+    return a.clone().normalize().add(facing).normalize().multiplyScalar(length).sub(shipPos);
+};
+
+model.MovementResolver.prototype.convertVectorToSpace = function(a, shipPos, facing)
+{
+    var length = a.length();
+
+    facing = new Vector2(
+        Math.acos(facing),
+        Math.asin(facing)
+    );
+
+    return a.clone().normalize().add(facing).normalize().multiplyScalar(length).add(shipPos);
+};
+
+model.MovementResolver.prototype.getEnginePower = function(module, massCenter)
+{
+    var pos = module.getCenterPosition();
+    pos.x = pos.x - massCenter.x;
+    pos.y = pos.y - massCenter.y;
+
+    return pos;
 };
 
 model.MovementResolver.prototype.getModulePositionRelativeToMassCenter = function(module, massCenter)
@@ -26,7 +62,7 @@ model.MovementResolver.prototype.getModulePositionRelativeToMassCenter = functio
 
 model.MovementResolver.prototype.getThrustMoment = function(module, massCenter)
 {
-    var thrustVector = module.getThrustForceVector();
+    var thrustVector = module.thruster.getThrustForceVector();
     var pos = this.getModulePositionRelativeToMassCenter(module, massCenter);
     var moment = (pos.x * -thrustVector.y) - (pos.y * -thrustVector.x);
 
@@ -58,6 +94,7 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, time, route
     var massCenter = shipDesign.calculateCenterOfMass();
     var momentOfInertia = shipDesign.calculateMomentOfIntertia();
     var mass = shipDesign.getMass();
+    var enginePower = this.getEnginePower(shipDesign);
     var facing = currentWaypoint.facing;
 
     var availableThrusters = this.getAvailableThrusters(
@@ -71,11 +108,14 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, time, route
 
 model.MovementResolver.prototype.getNextTarget = function(time, waypoints)
 {
-    var i = Math.ceil(time / 10) * 10;
-    if (waypoints[i])
-        return waypoints[i];
+    var wp = null;
+    for(var i = time; i<waypoints.length; i++)
+    {
+        if (waypoints[i])
+            wp = waypoints[i];
+    }
 
-    return null;
+    return wp;
 };
 
 model.MovementResolver.prototype.getAvailableThrusters = function(
@@ -102,5 +142,31 @@ model.MovementResolver.prototype.getAvailableThrusters = function(
 model.MovementResolver.prototype.getToNextWaypoint = function(
     thrusters, start, end, timeToTarget)
 {
-    return [];
+    var route = [];
+    var current = start;
+
+    while(timeToTarget--)
+    {
+        var currentVector = current.position;
+        var currentRotation = current.facing();
+        var time = timeToTarget+1;
+        var targetVector = end.position.clone().sub(currentVector).divideScalar(time);
+        console.log(targetVector);
+        console.log(time);
+
+        var targetRotation = this.getRotationStep(currentRotation, end.facing, time);
+
+
+
+        currentVector.clone().add(targetVector);
+        currentRotation += targetRotation;
+    }
+
+    return route;
 };
+
+model.MovementResolver.prototype.getRotationStep =
+    function(current, target, timeToTarget)
+{
+    return MathLib.distanceBetweenAngles(current, target)/timeToTarget;
+}

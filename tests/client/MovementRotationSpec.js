@@ -70,6 +70,6 @@ describe("Ship movement", function() {
 
     function getModule(force)
     {
-        return {getThrustForceVector: function(){return force;}};
+        return {thruster: {getThrustForceVector: function(){return force;}}};
     }
 });

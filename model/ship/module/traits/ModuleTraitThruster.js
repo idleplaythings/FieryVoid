@@ -17,18 +17,19 @@ model.ModuleTraitThruster.prototype = Object.create(model.ModuleTrait.prototype)
 model.ModuleTraitThruster.prototype.extend = function(obj)
 {
     obj.thruster = this;
+    this.module = obj;
     this.effect = new model.SpriteEffectThrusterGlow(obj);
     obj.registerAnimator(this.effect);
 };
 
 model.ModuleTraitThruster.prototype.getBaseThrustVector = function()
 {
-    switch(this.direction)
+    switch(this.module.direction)
     {
-        case 1: return Vector2(-1, 0);
-        case 2: return Vector2(0, 1);
-        case 3: return Vector2(0, -1);
-        case 4: return Vector2(1, 0);
+        case 1: return new Vector2(-1, 0);
+        case 2: return new Vector2(0, 1);
+        case 3: return new Vector2(0, -1);
+        case 4: return new Vector2(1, 0);
     }
 };
 
@@ -40,7 +41,7 @@ model.ModuleTraitThruster.prototype.getMaxChannel = function()
 model.ModuleTraitThruster.prototype.getThrustEfficiency = function()
 {
     //If the truster is damaged, modify efficiency here
-    return this.thruster.efficiency;
+    return this.efficiency * 10;
 };
 
 model.ModuleTraitThruster.prototype.getThrustForceVector = function()
