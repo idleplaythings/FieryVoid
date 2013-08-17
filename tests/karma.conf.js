@@ -24,7 +24,8 @@ files = [
     'model/game/movement/MovementResolver.js',
     'model/game/movement/ThrusterResolver.js',
     'model/game/movement/ThrusterForMovement.js',
-    'model/game/movement/ThrusterGroup.js'
+    'model/game/movement/ThrusterGroup.js',
+    'client/three.min.js'
 ];
 
 

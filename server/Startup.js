@@ -20,7 +20,7 @@ Meteor.startup(function () {
 function getPublicPath()
 {
     var fs = Npm.require('fs');
-    if (fs.existsSync('public/'))
+    if (fs.exists('public/'))
         return 'public/'
 
     return 'static/';
@@ -31,7 +31,7 @@ function crawlResources()
     var pub = getPublicPath();
     var fs = Npm.require('fs');
 
-    var files = fs.readdirSync(pub+'ship');
+    var files = fs.readdir(pub+'ship');
 
     var pattern = new RegExp(/^([a-z0-9]+)-base\.png/);
     for (var i in files)
@@ -50,7 +50,7 @@ function crawlResources()
         }
     }
 
-    files = fs.readdirSync(pub+'module');
+    files = fs.readdir(pub+'module');
 
     var pattern = new RegExp(/^([a-zA-Z0-9]+)-outside\.png/);
     for (var i in files)
