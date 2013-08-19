@@ -64,8 +64,9 @@ model.Movement.prototype.setWaypoint = function(pos)
 
 model.Movement.prototype.recalculateRoute = function()
 {
-    this.resolver.resolveRoute(
-        this.shipDesign, this.currentGameTime, this.route, this.waypoints);
+    this.route = this.resolver.resolveRoute(
+        this.shipDesign, this.route, this.waypoints);
+    this.getRoute3d().displayRoute(this.route);
 };
 
 model.Movement.prototype.getCurrentPosition = function(gametime)

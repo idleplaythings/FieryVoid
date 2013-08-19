@@ -15,5 +15,5 @@ model.MovementDisplayWaypoint.prototype =  Object.create(model.Particle.prototyp
 
 model.MovementDisplayWaypoint.prototype.setFromWaypoint = function(waypoint)
 {
-    this.setPosition(waypoint.position).activate();
+    this.setPosition(waypoint.position).setAngle(waypoint.facing).activate();
 };

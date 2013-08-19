@@ -18,10 +18,10 @@ model.MovementResolver.prototype.getModuleThrustVector = function(module, facing
     */
 };
 
-model.MovementResolver.prototype.convertVectorToShipCentered = function(a, shipPos, facing)
+model.MovementResolver.prototype.convertVectorToShipCentered = function(a, facing)
 {
     facing *= -1;
-    a = a.clone().sub(shipPos);
+    a = a.clone();
     facing = MathLib.degreeToRadian(facing);
     var vector = new THREE.Vector3(a.x, a.y, 0);
     var axis = new THREE.Vector3(0, 0, 1);
@@ -44,16 +44,16 @@ model.MovementResolver.prototype.convertVectorToShipCentered = function(a, shipP
     */
 };
 
-model.MovementResolver.prototype.convertVectorToSpace = function(a, shipPos, facing)
+model.MovementResolver.prototype.convertVectorToSpace = function(a, facing)
 {
-    a = a.clone(); //.add(shipPos);
+    a = a.clone();
     facing = MathLib.degreeToRadian(facing);
     var vector = new THREE.Vector3(a.x, a.y, 0);
     var axis = new THREE.Vector3(0, 0, 1);
     var matrix = new THREE.Matrix4().makeRotationAxis(axis, -1 * facing);
     var rotatedVector = vector.applyMatrix4(matrix);
 
-    return new Vector2(rotatedVector.x, rotatedVector.y).add(shipPos);
+    return new Vector2(rotatedVector.x, rotatedVector.y);
     /*
     var length = a.length();
 
@@ -66,13 +66,9 @@ model.MovementResolver.prototype.convertVectorToSpace = function(a, shipPos, fac
     */
 };
 
-model.MovementResolver.prototype.getEnginePower = function(module, massCenter)
+model.MovementResolver.prototype.getEnginePower = function(shipDesign)
 {
-    var pos = module.getCenterPosition();
-    pos.x = pos.x - massCenter.x;
-    pos.y = pos.y - massCenter.y;
-
-    return pos;
+    return 10;
 };
 
 model.MovementResolver.prototype.getModulePositionRelativeToMassCenter = function(module, massCenter)
@@ -105,10 +101,10 @@ model.MovementResolver.prototype.getAcceleration = function(module, mass, facing
     return this.getModuleThrustVector(module, facing).divideScalar(mass);
 };
 
-model.MovementResolver.prototype.resolveRoute = function(shipDesign, time, route, waypoints)
+model.MovementResolver.prototype.resolveRoute = function(shipDesign, route, waypoints)
 {
-    var currentWaypoint = route[time];
-    var targetWaypoint = this.getNextTarget(time, waypoints);
+    var currentWaypoint = this.getCurrentWaypoint(route);
+    var targetWaypoint = this.getNextTarget(waypoints);
 
     if (! targetWaypoint)
         return route;
@@ -122,24 +118,33 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, time, route
     var facing = currentWaypoint.facing;
 
     var availableThrusters = this.getAvailableThrusters(
-        shipDesign, time, massCenter, mass, momentOfInertia, facing);
+        shipDesign, currentWaypoint.time, massCenter, mass, momentOfInertia, facing);
 
-    route.concat(this.getToNextWaypoint(
-        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget));
+    var newRoute = this.getToNextWaypoint(
+        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
 
+    targetWaypoint.routeResolved = true;
+    route = route.concat(newRoute);
     return route;
 };
 
-model.MovementResolver.prototype.getNextTarget = function(time, waypoints)
+model.MovementResolver.prototype.getCurrentWaypoint = function(route)
 {
-    var wp = null;
-    for(var i = time; i<waypoints.length; i++)
-    {
-        if (waypoints[i])
-            wp = waypoints[i];
-    }
-
+    var wp = route[route.length-1];
     return wp;
+};
+
+model.MovementResolver.prototype.getNextTarget = function(waypoints)
+{
+    for(var i in waypoints)
+    {
+        var wp = waypoints[i];
+        if (! wp.routeResolved)
+        {
+            return wp;
+        }
+    }
+    return null;
 };
 
 model.MovementResolver.prototype.getAvailableThrusters = function(
@@ -159,53 +164,83 @@ model.MovementResolver.prototype.getAvailableThrusters = function(
         thrusters.push(thruster);
     }, this);
 
-    return thrusters;
+    return new model.ThrusterGroup(thrusters);
 };
 
 
 model.MovementResolver.prototype.getToNextWaypoint = function(
-    thrusters, start, end, timeToTarget)
+    thrusters, start, end, timeToTarget, enginePower)
 {
     var route = [];
     var current = start;
+    var startTime = start.time;
+    var totalTime = timeToTarget;
 
     while(timeToTarget--)
     {
-        var currentVector = current.position;
-        var currentVelocity = current.velocity;
-        var currentRotation = current.facing();
+        var currentPosition = current.position.clone();
+        var currentVelocity = current.velocity.clone();
+        var currentFacing = current.facing;
         var currentRotationVelocity = current.rotationVelocity;
 
         var time = timeToTarget+1;
-        var targetVector = end.position.clone().sub(currentVector.clone()).divideScalar(time).sub(currentVelocity);
-        console.log(targetVector);
-        console.log(time);
+
+        var targetMovement = end.position.clone().sub(currentPosition.clone()).divideScalar(time);
+        var targetVector = targetMovement.clone().sub(currentVelocity);
 
         var targetRotation = this.getRotationStep(
-            currentRotation + currentRotationVelocity, end.facing, time);
+            currentFacing, currentRotationVelocity, targetMovement.angle(), time);
 
-        current.velocity = targetVector;
-        current.rotationVelocity = targetRotation;
+        var thrusterResolver = new model.ThrusterResolver(
+            thrusters,
+            this.convertVectorToShipCentered(targetVector, current.facing),
+            targetRotation,
+            enginePower);
 
-        var resultVelocity = targetVector;
-        var resultRotation = targetRotation;
+        thrusterResolver.resolveThrusterUse();
 
-        current = new module.MovementWaypoint({
-            position: currentVector.clone().add(resultVelocity.clone().add(currentVelocity)),
-            facing: currentRotation + resultRotation,
-            velocity: resultVelocity,
-            rotationVelocity: resultRotation
+        var resultVelocity =
+            this.convertVectorToSpace(thrusterResolver.currentVector, current.facing)
+                .add(currentVelocity);
+
+        var resultRotation = currentRotationVelocity + thrusterResolver.getResultRotation();
+
+        current.velocity = resultVelocity;
+        current.rotationVelocity = resultRotation;
+
+
+        current = new model.MovementWaypoint({
+            position: currentPosition.clone().add(resultVelocity).round(),
+            facing: MathLib.addToAzimuth(currentFacing, resultRotation),
+            velocity: resultVelocity.round(),
+            rotationVelocity: resultRotation,
+            time: startTime + totalTime - timeToTarget
         });
+
+        thrusters.refreshThrusterUsage();
 
         route.push(current);
     }
-
-    console.log(route);
     return route;
 };
 
 model.MovementResolver.prototype.getRotationStep =
-    function(current, target, timeToTarget)
+    function(current, currentVelocity, target, timeToTarget)
 {
-    return MathLib.distanceBetweenAngles(current, target)/timeToTarget;
+    var d = MathLib.distanceBetweenAngles(current, target);
+    d = d.cw < d.ccw ? d.cw : d.ccw;
+    d = d/timeToTarget;
+
+    var c = d - currentVelocity;
+
+    console.log("current: "+current+" velocity: "+currentVelocity+" target: "  +target+ " result: " + d + " diffrence: " + c);
+    /*
+    if (d > 18)
+        d = 18;
+
+    if (d < -18)
+        d = -18;
+    */
+
+    return c;
 }

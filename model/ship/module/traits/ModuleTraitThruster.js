@@ -41,7 +41,7 @@ model.ModuleTraitThruster.prototype.getMaxChannel = function()
 model.ModuleTraitThruster.prototype.getThrustEfficiency = function()
 {
     //If the truster is damaged, modify efficiency here
-    return this.efficiency * 10;
+    return this.efficiency * 20;
 };
 
 model.ModuleTraitThruster.prototype.getThrustForceVector = function()

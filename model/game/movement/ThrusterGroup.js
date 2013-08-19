@@ -7,8 +7,17 @@ model.ThrusterGroup = function ThrusterGroup(thrusters)
     this._xNegative = [];
     this._yPositive = [];
     this._yNegative = [];
+
     this._rPositive = [];
     this._rNegative = [];
+};
+
+model.ThrusterGroup.prototype.refreshThrusterUsage = function()
+{
+    this.thrusters.forEach(function(t){
+        t.assignedThrust = 0;
+        t.assignedRotationThrust = 0;
+    });
 };
 
 model.ThrusterGroup.prototype.getThrustersByMovementDirection = function(vector)

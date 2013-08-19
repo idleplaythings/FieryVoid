@@ -2,7 +2,7 @@ model.MovementDisplayRoute = function Movement()
 {
     this.route = [];
     this.gameScene = null;
-    this.particleCount = 100;
+    this.particleCount = 1000;
 
     this.texture = null;
     this.particleEmitter = new model.ParticleEmitter(
@@ -26,7 +26,8 @@ model.MovementDisplayRoute.prototype.getWaypointTexture = function()
         context.strokeStyle = "rgba(255,255,255,1)";
         context.fillStyle = "rgba(200,200,200,1)";
 
-        drawingTool.drawCircleAndFill(context, 32, 32, 30);
+        drawingTool.drawCircleAndFill(context, 32, 32, 20);
+        drawingTool.drawArrowHeadOnCircle(context, 32, 32, 20, 28, 45);
 
         this.texture = drawingTool.createTexture(
             {data:context.getImageData(0, 0, size, size)});
@@ -37,6 +38,7 @@ model.MovementDisplayRoute.prototype.getWaypointTexture = function()
 
 model.MovementDisplayRoute.prototype.displayRoute = function(route)
 {
+    console.log(route);
     for (var i = 1; i<route.length; i++ )
     {
         var waypoint = route[i];

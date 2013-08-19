@@ -5,6 +5,7 @@ model.ThrusterResolver = function ThrusterResolver(
     this.targetVector = targetVector;
     this.targetRotation = targetRotation;
     this.engineoutput = engineoutput;
+    console.log("targetRotation: " + targetRotation);
 
     this.usedEngineOutput = 0;
     this.currentTargetVector = targetVector.clone();
@@ -18,11 +19,19 @@ model.ThrusterResolver = function ThrusterResolver(
     this.didSomething = true;
 };
 
+model.ThrusterResolver.prototype.getResultRotation = function()
+{
+    console.log("result rotation: " + this.currentRotation);
+    return this.currentRotation;
+};
+
 model.ThrusterResolver.prototype.resolveThrusterUse = function()
 {
 
+    var rounds = 0;
     while(this.usedEngineOutput < this.engineoutput && this.didSomething)
     {
+        rounds++;
         this.didSomething = false;
         //console.log("start round");
         //console.log("pos: " + this.currentVector.x +", " + this.currentVector.y + " r: " + this.currentRotation);
@@ -31,6 +40,12 @@ model.ThrusterResolver.prototype.resolveThrusterUse = function()
         this.applyThruster(this.fixRotation());
         this.applyThruster(this.getThrusterForward(new Vector2(this.currentTargetVector.x, 0)));
         this.applyThruster(this.getThrusterForward(new Vector2(0, this.currentTargetVector.y)));
+
+        if (rounds>1000)
+        {
+            console.log("kamoon, 1000 kertaa eikä vieläkään!");
+            break;
+        }
     }
 };
 
@@ -115,6 +130,10 @@ model.ThrusterResolver.prototype.applyThruster = function(thrusterAndstep)
 
     var thruster = thrusterAndstep.thruster;
     var step = thrusterAndstep.step;
+    //console.log(step);
+    //if (step < 0.01)
+    //    return;
+
     var ignoreVector = thrusterAndstep.ignoreVector || false;
 
     var result = thruster.getResultVector(step);

@@ -1,3 +1,4 @@
 .idea
 *.tgz
 packages
+.DS_Store
