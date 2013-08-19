@@ -4,7 +4,7 @@ describe("Sorting thrusters for moving ship", function() {
 
         var v = new Vector2(1,1);
 
-        expect(v.angle()).toEqual(45);
+        expect(v.angle()).toEqual(315);
     });
 
 
