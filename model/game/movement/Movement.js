@@ -44,10 +44,10 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
     }
 };
 
-model.Movement.prototype.subscribeToScene = function(scene)
+model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher)
 {
     //this.extrapolateCourseForNext(10);
-    this.getRoute3d().subscribeToScene(scene).displayRoute(this.route);
+    this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
 model.Movement.prototype.setWaypoint = function(pos)
@@ -69,22 +69,22 @@ model.Movement.prototype.recalculateRoute = function()
     this.getRoute3d().displayRoute(this.route);
 };
 
-model.Movement.prototype.getCurrentPosition = function(gametime)
+model.Movement.prototype.getCurrentPosition = function(gameTime)
 {
-    if (gametime % 1 === 0)
+    var gameTime = gameTime / 1000;
+    if (gameTime % 1 === 0)
     {
-        if ( ! this.route[gametime])
+        if ( ! this.route[gameTime])
             return null;
 
-        return this.route[gametime].position;
+        return this.route[gameTime].position;
     }
     else
     {
-        var p1 = this.route[Math.floor(gametime)];
-        var p2 = this.route[Math.ceil(gametime)];
+        var p1 = this.route[Math.floor(gameTime)].position;
+        var p2 = this.route[Math.ceil(gameTime)].position;
 
-        var perc = gametime % 1;
-
+        var perc = gameTime % 1;
         return MathLib.getPointBetween(p1, p2, perc);
     }
 };
@@ -99,24 +99,21 @@ model.Movement.prototype.getRoute3d = function()
     return this.route3d;
 };
 
-model.Movement.prototype.getFacing = function(time)
+model.Movement.prototype.getFacing = function(gameTime)
 {
-    if (gametime % 1 === 0)
+    gameTime = gameTime / 1000;
+    if (gameTime % 1 === 0)
     {
-        if ( ! this.route[gametime])
+        if ( ! this.route[gameTime])
             return this.route[this.route.length -1].facing;
 
-        return this.route[gametime].facing;
+        return this.route[gameTime].facing;
     }
     else
     {
-        var p1 = this.route[Math.floor(gametime)];
-        var p2 = this.route[Math.ceil(gametime)];
-
-        var perc = gametime % 1;
-
-        console.log("TODO: facing between waypoints");
-        return p1.facing;
+        var p1 = this.route[Math.floor(gameTime)];
+        var perc = gameTime % 1;
+        return MathLib.addToAzimuth(p1.facing, p1.rotationVelocity * perc);
     }
 };
 

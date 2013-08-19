@@ -62,9 +62,19 @@ model.MovementDisplayRoute.prototype.getWaypointParticles = function()
     return particles;
 };
 
-model.MovementDisplayRoute.prototype.subscribeToScene = function(scene)
+model.MovementDisplayRoute.prototype.subscribeToScene = function(scene, eventDispatcher)
 {
     scene.add(this.particleEmitter.getObject3d());
+    this.particleEmitter.observeZoomLevelChange(
+        eventDispatcher,
+        function(event)
+        {
+            var zoom = event.zoom * 10;
+            if (zoom > 1)
+                zoom = 1;
+
+            return zoom;
+        });
     return this;
 };
 

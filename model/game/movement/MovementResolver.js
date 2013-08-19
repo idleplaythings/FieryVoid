@@ -191,13 +191,8 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
         var targetRotation = this.getRotationStep(
             currentFacing, currentRotationVelocity, targetMovement.angle(), time);
 
-        var thrusterResolver = new model.ThrusterResolver(
-            thrusters,
-            this.convertVectorToShipCentered(targetVector, current.facing),
-            targetRotation,
-            enginePower);
-
-        thrusterResolver.resolveThrusterUse();
+        var thrusterResolver = this.resolveThrusterUse(
+            thrusters, targetVector, currentFacing, targetRotation, enginePower);
 
         var resultVelocity =
             this.convertVectorToSpace(thrusterResolver.currentVector, current.facing)
@@ -222,6 +217,20 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
         route.push(current);
     }
     return route;
+};
+
+model.MovementResolver.prototype.resolveThrusterUse = function(
+    thrusters, targetVector, facing, targetRotation, enginePower)
+{
+    var thrusterResolver = new model.ThrusterResolver(
+        thrusters,
+        this.convertVectorToShipCentered(targetVector, facing),
+        targetRotation,
+        enginePower);
+
+    thrusterResolver.resolveThrusterUse();
+
+    return thrusterResolver;
 };
 
 model.MovementResolver.prototype.getRotationStep =

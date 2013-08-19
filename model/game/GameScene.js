@@ -13,6 +13,8 @@ model.GameScene = function GameScene(dispatcher){
     this.animators = [];
     this.scale = 1;
 
+    this.gameTime = 0;
+
     this.dispatcher = dispatcher;
 
     this.dispatcher.attach(new model.EventListener(
@@ -24,6 +26,7 @@ model.GameScene = function GameScene(dispatcher){
         jQuery.proxy(this.onZoom, this)));
 
     jQuery(window).resize(jQuery.proxy(this.resize, this));
+    window.gameScene = this;
 };
 
 model.GameScene.prototype.constructor = model.GameScene;
@@ -58,11 +61,42 @@ model.GameScene.prototype.init = function(target)
 
 model.GameScene.prototype.animate = function()
 {
+    var self = this;
 //    requestAnimationFrame( jQuery.proxy(this.animate, this) );
     requestAnimationFrame( this.animate.bind(this) );
-    this.animators.forEach(function(a){a.animate()})
+    this.animators.forEach(function(a){a.animate(self.gameTime)})
     this.render();
 
+};
+
+model.GameScene.prototype.advanceGameTime = function(timeLeft, step, lastTime)
+{
+    if ( ! step )
+        step = 1;
+
+    var now =  (new Date()).getTime();
+    var end = false;
+
+    if (lastTime)
+    {
+        var elapsed = (now - lastTime);
+        if (timeLeft < elapsed)
+        {
+            end = true;
+            elapsed = timeLeft;
+        }
+
+
+        this.gameTime += elapsed * step;
+        timeLeft -= elapsed;
+    }
+
+    lastTime = now;
+    //console.log(this.gameTime);
+
+    if ( ! end)
+        requestAnimationFrame(
+            this.advanceGameTime.bind(this, timeLeft, step, lastTime));
 };
 
 model.GameScene.prototype.render = function()

@@ -62,7 +62,7 @@ model.ShipInGame.prototype.subscribeToScene =
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
 
-    this.movement.subscribeToScene(this.gameScene.scene);
+    this.movement.subscribeToScene(this.gameScene.scene, eventDispatcher);
 
     this.shipDesign.modules.forEach(function(module){
         module.ship = this;
@@ -77,6 +77,14 @@ model.ShipInGame.prototype.subscribeToScene =
 
 
     }, this);
+
+    this.gameScene.animators.push(this);
+};
+
+model.ShipInGame.prototype.animate = function(gameTime)
+{
+    this.setPosition(this.movement.getCurrentPosition(gameTime));
+    this.setAzimuth(this.movement.getFacing(gameTime));
 };
 
 model.ShipInGame.prototype.setAzimuth = function(azimuth)

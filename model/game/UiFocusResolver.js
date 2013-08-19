@@ -1,0 +1,4 @@
+model.UiFocusResolver = function UiFocusResolver()
+{
+
+}
