@@ -237,19 +237,10 @@ model.MovementResolver.prototype.getRotationStep =
     function(current, currentVelocity, target, timeToTarget)
 {
     var d = MathLib.distanceBetweenAngles(current, target);
-    d = d.cw < d.ccw ? d.cw : d.ccw;
+    d = Math.abs(d.cw) < Math.abs(d.ccw) ? d.cw : d.ccw;
     d = d/timeToTarget;
-
     var c = d - currentVelocity;
-
-    console.log("current: "+current+" velocity: "+currentVelocity+" target: "  +target+ " result: " + d + " diffrence: " + c);
-    /*
-    if (d > 18)
-        d = 18;
-
-    if (d < -18)
-        d = -18;
-    */
+    //console.log("current: "+current+" velocity: "+currentVelocity+" target: "  +target+ " result: " + d + " diffrence: " + c);
 
     return c;
 }
