@@ -69,10 +69,9 @@ model.GameScene.prototype.animate = function()
 
 };
 
-model.GameScene.prototype.advanceGameTime = function(timeLeft, step, lastTime)
+model.GameScene.prototype.advanceGameTime = function(timeLeft, lastTime)
 {
-    if ( ! step )
-        step = 1;
+    var step = (timeLeft < 0 ) ? -1 : 1;
 
     var now =  (new Date()).getTime();
     var end = false;
@@ -80,23 +79,21 @@ model.GameScene.prototype.advanceGameTime = function(timeLeft, step, lastTime)
     if (lastTime)
     {
         var elapsed = (now - lastTime);
-        if (timeLeft < elapsed)
+        if (Math.abs(timeLeft) < elapsed)
         {
             end = true;
-            elapsed = timeLeft;
+            elapsed = timeLeft * step;
         }
 
-
         this.gameTime += elapsed * step;
-        timeLeft -= elapsed;
+        timeLeft -= elapsed * step;
     }
 
     lastTime = now;
-    //console.log(this.gameTime);
 
     if ( ! end)
         requestAnimationFrame(
-            this.advanceGameTime.bind(this, timeLeft, step, lastTime));
+            this.advanceGameTime.bind(this, timeLeft, lastTime));
 };
 
 model.GameScene.prototype.render = function()
