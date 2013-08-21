@@ -9,8 +9,8 @@ model.Scrolling = function Scrolling(element, dispatcher, scene)
     this.position = {x:0, y:0};
     this.element = element;
 
-    this.distanceMoved = 0;
-    this.distanceTreshold = 10;
+    this.distanceDragged = 0;
+    this.draggingDistanceTreshold = 10;
     this.coordinateConverter = new model.CoordinateConverterViewPort(scene);
 
     this.dispatcher.attach(new model.EventListener(
@@ -57,7 +57,7 @@ model.Scrolling.prototype.mousedown = function(event)
 
 model.Scrolling.prototype.mouseup  = function(event)
 {
-    if (this.distanceMoved < this.distanceTreshold)
+    if (this.distanceDragged < this.draggingDistanceTreshold)
     {
         var offsetLeft = this.element[0].offsetLeft;
         var offsetTop = this.element[0].offsetTop;
@@ -74,13 +74,13 @@ model.Scrolling.prototype.mouseup  = function(event)
         clickEvent.position = pos;
         this.dispatcher.dispatch(clickEvent);
     }
-    this.distanceMoved = 0;
+    this.distanceDragged = 0;
     this.scrolling = false;
 };
 
 model.Scrolling.prototype.mouseout = function(event)
 {
-    this.distanceMoved = 0;
+    this.distanceDragged = 0;
     model.Scrolling.Scrolling = false;
 };
 
@@ -104,7 +104,7 @@ model.Scrolling.prototype.mousemove = function(event)
 
     this.scroll(dx,dy);
 
-    this.distanceMoved += MathLib.distance({x:0, y:0}, {x:dx, y:dy});
+    this.distanceDragged += MathLib.distance({x:0, y:0}, {x:dx, y:dy});
 
     this.lastpos.x = x;
     this.lastpos.y = y;

@@ -5,7 +5,6 @@ model.ThrusterResolver = function ThrusterResolver(
     this.targetVector = targetVector;
     this.targetRotation = targetRotation;
     this.engineoutput = engineoutput;
-    console.log("targetRotation: " + targetRotation);
 
     this.usedEngineOutput = 0;
     this.currentTargetVector = targetVector.clone();

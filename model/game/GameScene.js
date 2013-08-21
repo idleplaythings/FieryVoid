@@ -63,7 +63,7 @@ model.GameScene.prototype.animate = function()
 {
     var self = this;
 //    requestAnimationFrame( jQuery.proxy(this.animate, this) );
-    requestAnimationFrame( this.animate.bind(this) );
+    requestAnimationFrame( this.animate.bind(this, self.gameTime) );
     this.animators.forEach(function(a){a.animate(self.gameTime)})
     this.render();
 
