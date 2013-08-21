@@ -1,25 +1,21 @@
-model.Scrolling = function Scrolling(element, dispatcher, scene)
+model.Scrolling = function Scrolling(dispatcher)
 {
-    this.scrollingstarted = 0;
-    this.scrolling = false;
-    this.lastpos = {x:0, y:0};
-    this.scrollingSpeed = 1;
-    this.mouseRightButton = 3;
     this.dispatcher = dispatcher;
     this.position = {x:0, y:0};
-    this.element = element;
-
-    this.distanceDragged = 0;
-    this.draggingDistanceTreshold = 10;
-    this.coordinateConverter = new model.CoordinateConverterViewPort(scene);
 
     this.dispatcher.attach(new model.EventListener(
         "ZoomEvent", $.proxy(this.onZoom, this)));
 
+    this.scrollingSpeed = 1;
     this.zoom = 1;
 };
 
 model.Scrolling.prototype.constructor = model.Scrolling;
+
+model.Scrolling.prototype.registerTo = function(uiEventRegister)
+{
+    uiEventRegister.registerListener(this.scroll.bind(this), 0, 'drag');
+};
 
 model.Scrolling.prototype.onZoom = function(event)
 {
@@ -27,111 +23,21 @@ model.Scrolling.prototype.onZoom = function(event)
         this.zoom = event.zoom;
 };
 
-model.Scrolling.prototype.init = function()
-{
-    this.element.on("mousedown", $.proxy(this.mousedown, this));
-    this.element.on("mouseup", $.proxy(this.mouseup, this));
-    this.element.on("mouseout", $.proxy(this.mouseout, this));
-    this.element.on("mousemove", $.proxy(this.mousemove, this));
-};
-
-model.Scrolling.prototype.mousedown = function(event)
-{
-    if (!event)// || event.which !== this.mouseRightButton)
-        return;
-
-    event.stopPropagation(event);
-
-    var offsetLeft = this.element[0].offsetLeft;
-    var offsetTop = this.element[0].offsetTop;
-
-    this.scrolling = true;
-    this.scrollingstarted = ((new Date()).getTime());
-
-    var x = event.pageX - offsetLeft;
-    var y = event.pageY - offsetTop;
-
-    this.lastpos.x = x;
-    this.lastpos.y = y;
-};
-
-model.Scrolling.prototype.mouseup  = function(event)
-{
-    if (this.distanceDragged < this.draggingDistanceTreshold)
-    {
-        var offsetLeft = this.element[0].offsetLeft;
-        var offsetTop = this.element[0].offsetTop;
-
-        var x = event.pageX - offsetLeft;
-        var y = event.pageY - offsetTop;
-
-        var clickPosition = {x:x, y:y};
-
-        console.log("clicked on " +x + ","+y);
-        var pos = this.coordinateConverter.fromViewPortToGame(clickPosition);
-
-        var clickEvent = new model.Event("player", "clickEvent");
-        clickEvent.position = pos;
-        this.dispatcher.dispatch(clickEvent);
-    }
-    this.distanceDragged = 0;
-    this.scrolling = false;
-};
-
-model.Scrolling.prototype.mouseout = function(event)
-{
-    this.distanceDragged = 0;
-    model.Scrolling.Scrolling = false;
-};
-
-model.Scrolling.prototype.mousemove = function(event)
-{
-	event.stopPropagation(event);
-
-    if (this.scrolling === false)
-    {
-        return;
-    }
-
-    var offsetLeft = this.element[0].offsetLeft;
-    var offsetTop = this.element[0].offsetTop;
-
-    var x = event.pageX - offsetLeft;
-    var y = event.pageY - offsetTop;
-
-    var dx = x - this.lastpos.x;
-    var dy = y - this.lastpos.y;
-
-    this.scroll(dx,dy);
-
-    this.distanceDragged += MathLib.distance({x:0, y:0}, {x:dx, y:dy});
-
-    this.lastpos.x = x;
-    this.lastpos.y = y;
-};
-
 model.Scrolling.prototype.getScrollingSpeed = function()
 {
     return this.scrollingSpeed*(1/this.zoom);
 };
 
-model.Scrolling.prototype.scroll = function (dx, dy){
+model.Scrolling.prototype.scroll = function (payload)
+{
+    var dx = payload.current.view.x - payload.previous.view.x;
+    var dy = payload.current.view.y - payload.previous.view.y;
     //console.log("dx: " + dx + ", dy: " + dy);
     var speed = this.getScrollingSpeed();
     var position = {x:dx*speed, y:dy*speed};
 
     this.position.x -= position.x;
     this.position.y += position.y;
-
-    /*
-    if (this.position.x < 0 )
-        this.position.x = 0;
-
-    if (this.position.y > 0 )
-        this.position.y = 0;
-        */
-
-    //Graphics.moveCamera({x:dx*speed, y:dy*speed});
     this.dispatch(this.position);
 };
 

@@ -26,6 +26,7 @@ model.Game = function Game(args)
     this.zooming = null;
 
     this.dispatcher = null;
+    this.uiEventResolver = null;
 };
 
 model.Game.prototype.play = function()
@@ -36,20 +37,22 @@ model.Game.prototype.play = function()
     this.gameScene = new model.GameScene(this.dispatcher);
     this.gameScene.init(container);
 
-    this.scrolling = new model.Scrolling(container, this.dispatcher, this.gameScene);
-    this.scrolling.init();
+    var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
+    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter);
+    this.uiEventResolver.observeDomElement(container);
+
+    this.scrolling = new model.Scrolling(this.dispatcher);
+    this.scrolling.registerTo(this.uiEventResolver);
 
     this.zooming = new model.Zooming(
         container,
         this.dispatcher,
-        this.gameScene,
-        this.scrolling);
+        this.scrolling,
+        coordinateConverter);
 
     this.zooming.init();
 
-    this.dispatcher.attach(new model.EventListener(
-        "clickEvent",
-        jQuery.proxy(this.onClicked, this)));
+    this.uiEventResolver.registerListener(this.onClicked.bind(this), 0, 'click');
 
     this.initGameState(container);
 };
@@ -59,9 +62,9 @@ model.Game.prototype.getSelectedShip = function()
 
 };
 
-model.Game.prototype.onClicked = function(event)
+model.Game.prototype.onClicked = function(payload)
 {
-    var pos = event.position;
+    var pos = payload.game;
     console.log("click");
     console.log(pos);
 

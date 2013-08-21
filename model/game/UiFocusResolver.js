@@ -72,7 +72,7 @@ model.UiFocusResolver.prototype.mouseUp = function(event)
         this.click(event);
 
     this.distanceDragged = 0;
-    this.scrolling = false;
+    this.dragging = false;
 };
 
 model.UiFocusResolver.prototype.mouseOut = function(e)
@@ -105,10 +105,9 @@ model.UiFocusResolver.prototype.drag = function(event)
         current: current
     };
 
-    this.fireEvent(payload, this.listeners.drag);
-
     this.distanceDragged += MathLib.distance({x:0, y:0}, delta);
     this.lastDraggingPosition = current;
+    this.fireEvent(payload, this.listeners.drag);
 };
 
 model.UiFocusResolver.prototype.click = function(event)

@@ -1,4 +1,4 @@
-model.Zooming = function Zooming(element, dispatcher, scene, scrolling)
+model.Zooming = function Zooming(element, dispatcher, scrolling, converter)
 {
     this.wheeltimer = null;
     this.wheelzoom = 0;
@@ -7,8 +7,7 @@ model.Zooming = function Zooming(element, dispatcher, scene, scrolling)
     this.dispatcher = dispatcher;
     this.zoomTarget = null;
     this.zoomPositionTarget = null;
-    this.coordinateConverter =
-        new model.CoordinateConverterViewPort(scene);
+    this.coordinateConverter = converter;
     this.scrolling = scrolling;
 
     this.element = element;
