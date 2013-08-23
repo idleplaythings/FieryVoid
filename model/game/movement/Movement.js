@@ -3,7 +3,6 @@ model.Movement = function Movement(shipDesign)
     this.shipDesign = shipDesign;
     this.route = [];
     this.waypoints = [];
-    this.currentGameTime = 0;
     this.route3d = null;
     this.resolver = new model.MovementResolver();
 };
@@ -44,11 +43,70 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
     }
 };
 
-model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher)
+model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
 {
+    uiResolver.registerListener(this.onDrag.bind(this), 1, 'drag');
     //this.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
+
+model.Movement.prototype.onDrag = function(payload)
+{
+    if (payload.release)
+    {
+        return;
+    }
+
+    if (payload.capture)
+    {
+        var wp = this.getRoute3d().getWaypointInPosition(
+            payload.start.game, this.route);
+
+        if (wp)
+        {
+            var self = this;
+            payload.capture(function(payload)
+            {
+                self.drag.call(self, self.waypoints[wp.time], payload);
+            });
+        }
+    }
+};
+
+model.Movement.prototype.drag = function(wp, payload)
+{
+    if (payload.release)
+    {
+        return;
+    }
+
+    wp.position.x += payload.delta.game.x;
+    wp.position.y -= payload.delta.game.y;
+    wp.routeResolved = false;
+    this.deleteRouteFrom(wp.time-9);
+    this.unresolveRouteAfter(wp.time);
+    this.recalculateRoute();
+
+};
+
+model.Movement.prototype.deleteRouteFrom = function(time)
+{
+    var amount = this.route.length - time;
+    //console.log("deleting route from time " + time + " amount: " + amount);
+    this.route.splice(time, amount);
+    //console.log(this.route);
+};
+
+model.Movement.prototype.unresolveRouteAfter = function(time)
+{
+    for (var i in this.waypoints)
+    {
+        var wp = this.waypoints[i];
+        if (wp.time > time)
+            wp.routeResolved = false;
+    }
+};
+
 
 model.Movement.prototype.setWaypoint = function(pos)
 {

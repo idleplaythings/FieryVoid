@@ -87,8 +87,8 @@ model.Zooming.prototype.changeZoom = function(zoom)
     if (newzoom < 0.01)
         newzoom = 0.01;
 
-    if (newzoom > 2)
-        newzoom = 2;
+    if (newzoom > 1)
+        newzoom = 1;
 
     //newzoom = parseFloat(newzoom.toFixed(2));
     //console.log("zoom to: " + newzoom);

@@ -1,8 +1,11 @@
 model.MovementDisplayRoute = function Movement()
 {
-    this.route = [];
+    this.zoom = 1;
     this.gameScene = null;
     this.particleCount = 1000;
+
+    this.turnWaypointSize = 128;
+    this.intermediateWaypointSize = 64;
 
     this.texture = null;
     this.particleEmitter = new model.ParticleEmitter(
@@ -36,9 +39,27 @@ model.MovementDisplayRoute.prototype.getWaypointTexture = function()
     return this.texture;
 };
 
+model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route)
+{
+    for (var i in route)
+    {
+        var wp = route[i];
+        if (wp.time % 10 !== 0)
+            continue;
+
+        var size = this.turnWaypointSize*0.5*this.getWaypointZoom(this.zoom);
+        console.log(this.zoom);
+        console.log("waypoint radius: " + size );
+
+        if (MathLib.distance(wp.position, pos) < size)
+            return wp;
+    }
+
+    return null;
+};
+
 model.MovementDisplayRoute.prototype.displayRoute = function(route)
 {
-    console.log(route);
     for (var i = 1; i<route.length; i++ )
     {
         var waypoint = route[i];
@@ -55,25 +76,34 @@ model.MovementDisplayRoute.prototype.getWaypointParticles = function()
 
     for (var i = 0; i<this.particleCount; i++)
     {
-        var size = i === 0 || i % 10 == 0 ? 64 : 32;
+        var size = i === 0 || i % 10 == 0 ? this.turnWaypointSize : this.intermediateWaypointSize;
         particles.push(new model.MovementDisplayWaypoint(size));
     }
 
     return particles;
 };
 
+model.MovementDisplayRoute.prototype.getWaypointZoom = function(zoom)
+{
+    if (zoom > 1)
+        return 1;
+
+    if (zoom < 0.2)
+        return 0.2;
+
+    return zoom;
+};
+
 model.MovementDisplayRoute.prototype.subscribeToScene = function(scene, eventDispatcher)
 {
+    var self = this;
     scene.add(this.particleEmitter.getObject3d());
     this.particleEmitter.observeZoomLevelChange(
         eventDispatcher,
         function(event)
         {
-            var zoom = event.zoom * 10;
-            if (zoom > 1)
-                zoom = 1;
-
-            return zoom;
+            self.zoom = event.zoom;
+            return self.getWaypointZoom(event.zoom);
         });
     return this;
 };

@@ -30,14 +30,22 @@ model.Scrolling.prototype.getScrollingSpeed = function()
 
 model.Scrolling.prototype.scroll = function (payload)
 {
-    var dx = payload.current.view.x - payload.previous.view.x;
-    var dy = payload.current.view.y - payload.previous.view.y;
-    //console.log("dx: " + dx + ", dy: " + dy);
-    var speed = this.getScrollingSpeed();
-    var position = {x:dx*speed, y:dy*speed};
+    if (payload.capture)
+    {
+        payload.capture(this.scroll.bind(this));
+        return;
+    }
 
-    this.position.x -= position.x;
-    this.position.y += position.y;
+    if (payload.release)
+        return;
+
+    //var dx = payload.current.view.x - payload.previous.view.x;
+    //var dy = payload.current.view.y - payload.previous.view.y;
+    //console.log("dx: " + dx + ", dy: " + dy);
+    //var speed = this.getScrollingSpeed();
+
+    this.position.x -= payload.delta.game.x;
+    this.position.y += payload.delta.game.y;
     this.dispatch(this.position);
 };
 

@@ -36,7 +36,7 @@ describe("UiFocusResolver", function() {
     it("should consider a mouseUp a click if moved less than threshold", function() {
 
         var threshold = 10;
-        var resolver = new model.UiFocusResolver(coordinateConverter, threshold);
+        var resolver = new model.UiFocusResolver(coordinateConverter, null,  threshold);
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:105, y:105}, {x:106, y:106}];
@@ -54,13 +54,13 @@ describe("UiFocusResolver", function() {
         resolver.mouseMove(null);
         resolver.mouseUp(null);
 
-        expect(actual.view).toEqual({ x : 106, y : 106 });
+        expect(actual.view).toEqual({ x : 105, y : 105 });
     });
 
     it("should consider mouseUp a drag when moved more than threshold", function() {
 
         var threshold = 10;
-        var resolver = new model.UiFocusResolver(coordinateConverter, threshold);
+        var resolver = new model.UiFocusResolver(coordinateConverter, null, threshold);
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:120, y:120}];
@@ -72,14 +72,23 @@ describe("UiFocusResolver", function() {
         var actual = null;
         var notActual = null;
 
+
+        var listener = function(payload){
+            if (! payload.release)
+                actual = payload;
+        };
+
         resolver.registerListener(function(payload){notActual = payload;}, 1, 'click');
-        resolver.registerListener(function(payload){actual = payload;}, 0, 'drag');
+        resolver.registerListener(function(payload){
+            if (payload.capture)
+                payload.capture(listener);
+        }, 0, 'drag');
 
         resolver.mouseDown(null);
         resolver.mouseMove(null);
         resolver.mouseUp(null);
 
-        expect(actual.start.view).toEqual({ x : 100, y : 100 });
+        expect(actual.current.view).toEqual({ x : 120, y : 120 });
         expect(notActual).toBe(null);
     });
 });

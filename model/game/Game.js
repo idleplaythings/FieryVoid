@@ -38,7 +38,7 @@ model.Game.prototype.play = function()
     this.gameScene.init(container);
 
     var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
-    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter);
+    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter, this.dispatcher);
     this.uiEventResolver.observeDomElement(container);
 
     this.scrolling = new model.Scrolling(this.dispatcher);
@@ -79,7 +79,7 @@ model.Game.prototype.initGameState = function(container)
 
     this.ships.forEach(
         function(ship){
-            ship.subscribeToScene(this.gameScene, this.dispatcher);
+            ship.subscribeToScene(this.gameScene, this.dispatcher, this.uiEventResolver);
         }, this);
 
     this.gameScene.animate();

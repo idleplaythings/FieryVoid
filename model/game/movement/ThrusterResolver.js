@@ -20,7 +20,6 @@ model.ThrusterResolver = function ThrusterResolver(
 
 model.ThrusterResolver.prototype.getResultRotation = function()
 {
-    console.log("result rotation: " + this.currentRotation);
     return this.currentRotation;
 };
 

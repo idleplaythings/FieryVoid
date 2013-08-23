@@ -1,9 +1,15 @@
-model.UiFocusResolver = function UiFocusResolver(coordinateConverter, threshold)
+model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher, threshold)
 {
     this.listeners = {
         click: [],
         drag: []
     };
+
+    this.zoom = 1;
+
+    if (dispatcher)
+        dispatcher.attach(new model.EventListener(
+            "ZoomEvent",this.onZoom.bind(this)));
 
     this.observedElement = null;
 
@@ -16,13 +22,18 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, threshold)
     this.coordinateConverter = coordinateConverter;
 };
 
+model.UiFocusResolver.prototype.onZoom = function(event)
+{
+    this.zoom = event.zoom;
+};
+
 model.UiFocusResolver.prototype.getViewPortAndGameObject = function(v, g)
 {
     return {
         view:v,
         game:g
     };
-}
+};
 
 model.UiFocusResolver.prototype.registerListener = function(callback, z, type)
 {
@@ -63,13 +74,23 @@ model.UiFocusResolver.prototype.mouseDown = function(event)
     this.draggingStartPosition = this.getViewPortAndGameObject(pos, gamePos);
     this.lastDraggingPosition = this.getViewPortAndGameObject(pos, gamePos);
 
-    this.dragging = true;
+    var self = this;
+    var payload = {
+        start: this.draggingStartPosition,
+        capture: function(callback){
+            self.dragging = callback;
+            payload.stopped = true;
+        }
+    };
+    this.fireEvent(payload, this.listeners.drag);
 };
 
 model.UiFocusResolver.prototype.mouseUp = function(event)
 {
     if (this.distanceDragged < this.draggingDistanceTreshold)
         this.click(event);
+    else if (this.dragging)
+        this.dragging({release:true});
 
     this.distanceDragged = 0;
     this.dragging = false;
@@ -77,6 +98,9 @@ model.UiFocusResolver.prototype.mouseUp = function(event)
 
 model.UiFocusResolver.prototype.mouseOut = function(e)
 {
+    if (this.dragging)
+        this.fireEvent({release:true}, this.listeners.drag);
+
     this.distanceDragged = 0;
     this.dragging = false;
 };
@@ -94,20 +118,25 @@ model.UiFocusResolver.prototype.drag = function(event)
     var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
     var current = this.getViewPortAndGameObject(pos, gamePos);
 
-    var delta = {
+    var deltaView = {
         x: pos.x - this.lastDraggingPosition.view.x,
         y: pos.y - this.lastDraggingPosition.view.y
-    }
-
-    var payload = {
-        start: this.draggingStartPosition,
-        previous: this.lastDraggingPosition,
-        current: current
     };
 
-    this.distanceDragged += MathLib.distance({x:0, y:0}, delta);
+    var deltaGame = {
+        x: (pos.x - this.lastDraggingPosition.view.x) * (1/this.zoom),
+        y: (pos.y - this.lastDraggingPosition.view.y) * (1/this.zoom)
+    };
+
+    var payload = {
+        previous: this.lastDraggingPosition,
+        current: current,
+        delta: this.getViewPortAndGameObject(deltaView, deltaGame)
+    };
+
+    this.distanceDragged += MathLib.distance({x:0, y:0}, deltaView);
     this.lastDraggingPosition = current;
-    this.fireEvent(payload, this.listeners.drag);
+    this.dragging(payload);
 };
 
 model.UiFocusResolver.prototype.click = function(event)
@@ -123,12 +152,15 @@ model.UiFocusResolver.prototype.click = function(event)
 
 model.UiFocusResolver.prototype.fireEvent = function(payload, listeners)
 {
+    payload.stopped = false;
+    payload.stop = function(){this.stopped = true;};
+
     for (var i in listeners)
     {
         var listener = listeners[i];
         listener.callback(payload);
 
-        if (payload.stop)
+        if (payload.stopped)
             return;
     }
 };

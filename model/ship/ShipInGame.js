@@ -57,12 +57,12 @@ model.ShipInGame.prototype.getIcon = function(eventDispatcher)
 };
 
 model.ShipInGame.prototype.subscribeToScene =
-    function(gameScene, eventDispatcher)
+    function(gameScene, eventDispatcher, uiResolver)
 {
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
 
-    this.movement.subscribeToScene(this.gameScene.scene, eventDispatcher);
+    this.movement.subscribeToScene(this.gameScene.scene, eventDispatcher, uiResolver);
 
     this.shipDesign.modules.forEach(function(module){
         module.ship = this;

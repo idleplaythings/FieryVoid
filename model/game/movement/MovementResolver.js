@@ -103,28 +103,31 @@ model.MovementResolver.prototype.getAcceleration = function(module, mass, facing
 
 model.MovementResolver.prototype.resolveRoute = function(shipDesign, route, waypoints)
 {
-    var currentWaypoint = this.getCurrentWaypoint(route);
-    var targetWaypoint = this.getNextTarget(waypoints);
+    while(true)
+    {
+        var currentWaypoint = this.getCurrentWaypoint(route);
+        var targetWaypoint = this.getNextTarget(waypoints);
 
-    if (! targetWaypoint)
-        return route;
+        if (! targetWaypoint)
+            return route;
 
-    var timeToTarget = targetWaypoint.time - currentWaypoint.time;
+        var timeToTarget = targetWaypoint.time - currentWaypoint.time;
 
-    var massCenter = shipDesign.calculateCenterOfMass();
-    var momentOfInertia = shipDesign.calculateMomentOfIntertia();
-    var mass = shipDesign.getMass();
-    var enginePower = this.getEnginePower(shipDesign);
-    var facing = currentWaypoint.facing;
+        var massCenter = shipDesign.calculateCenterOfMass();
+        var momentOfInertia = shipDesign.calculateMomentOfIntertia();
+        var mass = shipDesign.getMass();
+        var enginePower = this.getEnginePower(shipDesign);
+        var facing = currentWaypoint.facing;
 
-    var availableThrusters = this.getAvailableThrusters(
-        shipDesign, currentWaypoint.time, massCenter, mass, momentOfInertia, facing);
+        var availableThrusters = this.getAvailableThrusters(
+            shipDesign, currentWaypoint.time, massCenter, mass, momentOfInertia, facing);
 
-    var newRoute = this.getToNextWaypoint(
-        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
+        var newRoute = this.getToNextWaypoint(
+            availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
 
-    targetWaypoint.routeResolved = true;
-    route = route.concat(newRoute);
+        targetWaypoint.routeResolved = true;
+        route = route.concat(newRoute);
+    }
     return route;
 };
 
@@ -200,8 +203,8 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
 
         var resultRotation = currentRotationVelocity + thrusterResolver.getResultRotation();
 
-        current.velocity = resultVelocity;
-        current.rotationVelocity = resultRotation;
+        //current.velocity = resultVelocity;
+        //current.rotationVelocity = resultRotation;
 
 
         current = new model.MovementWaypoint({
