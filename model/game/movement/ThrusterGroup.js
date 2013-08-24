@@ -125,3 +125,10 @@ model.ThrusterGroup.prototype.resolveFasterRotationDirection = function(directio
     //TODO: resolve which direction is faster to rotate to
     return Math.abs(directions.cw) < Math.abs(directions.ccw) ? directions.cw : directions.ccw;
 };
+
+model.ThrusterGroup.prototype.commitThrusterUsage = function(time)
+{
+    this.thrusters.forEach(function(t){
+        t.commitThrusterUsage(time);
+    })
+};

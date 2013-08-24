@@ -154,18 +154,22 @@ model.MovementResolver.prototype.getAvailableThrusters = function(
     shipDesign, time, massCenter, mass, momentOfInertia, facing)
 {
     var thrusters = [];
-    shipDesign.modules.forEach(function(module){
+    for (var i in shipDesign.modules)
+    {
+        var module = shipDesign.modules[i];
+
         if ( ! module.thruster)
-            return;
+            continue;
 
         var thruster = new model.ThrusterForMovement(
             this.getAcceleration(module, mass, facing),
             this.getRotationAcceleration(module, massCenter, momentOfInertia),
-            module.thruster.getMaxChannel()
+            module.thruster.getMaxChannel(),
+            module
         );
 
         thrusters.push(thruster);
-    }, this);
+    }
 
     return new model.ThrusterGroup(thrusters);
 };
@@ -213,7 +217,6 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
         //current.velocity = resultVelocity;
         //current.rotationVelocity = resultRotation;
 
-
         current = new model.MovementWaypoint({
             position: currentPosition.clone().add(resultVelocity).round(),
             facing: MathLib.addToAzimuth(currentFacing, resultRotation),
@@ -222,6 +225,7 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
             time: startTime + totalTime - timeToTarget
         });
 
+        thrusters.commitThrusterUsage(startTime + totalTime - timeToTarget);
         thrusters.refreshThrusterUsage();
 
         route.push(current);

@@ -19,10 +19,28 @@ model.SpriteEffectThrusterGlow = function SpriteEffectThrusterGlow(module)
 model.SpriteEffectThrusterGlow.prototype.init = function()
 {
     this.module.ship.getIcon().addObject(this.getObject3d());
+    console.log(this.module.getCenterPosition());
 };
 
-model.SpriteEffectThrusterGlow.prototype.animate = function()
+model.SpriteEffectThrusterGlow.prototype.animate = function(gameTime)
 {
+    var gameTime = gameTime / 1000;
+    var last = this.module.thruster.getTotalThrusterUsageAtTime(Math.floor(gameTime))
+    var next = this.module.thruster.getTotalThrusterUsageAtTime(Math.ceil(gameTime))
+
+    if (last == 0 && next == 0)
+    {
+        this.sprite1.visible = false;
+        this.sprite2.visible = false;
+    }
+    else
+    {
+        this.sprite1.visible = true;
+        this.sprite2.visible = true;
+    }
+
+    var perc = gameTime % 1;
+
     if (this.animationTick >= 20 || this.animationTick <= 0)
     {
         this.animationStep *= -1;
@@ -30,8 +48,10 @@ model.SpriteEffectThrusterGlow.prototype.animate = function()
 
     this.animationTick += this.animationStep;
 
+    var w = this.width;
+    w *= this.module.thruster.maxChannel / (((next * perc) + (last * (1-perc)))/2);
     var v =  this.width/200;
-    var w =  this.width + this.animationTick*v;
+    w += this.animationTick*v;
 
     this.sprite1.material.opacity = 0.5;
     this.sprite1.position.x = w/2 + this.offset;

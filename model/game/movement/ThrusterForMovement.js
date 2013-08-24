@@ -4,9 +4,23 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
     this.rotationAcceleration = rotation;
     this.max = max;
     this.module = module;
+    console.log(module._id);
 
     this.assignedThrust = 0;
     this.assignedRotationThrust = 0;
+};
+
+model.ThrusterForMovement.prototype.commitThrusterUsage = function(time)
+{
+    this.module.removeFromTimeLineByName(time, 'thrusterUsage');
+    this.module.addToTimeLine(
+        time,
+        {
+            name: 'thrusterUsage',
+            normal: this.assignedThrust,
+            rotation: this.assignedRotationThrust
+        }
+    );
 };
 
 model.ThrusterForMovement.prototype.getVectorActiveComponent = function()

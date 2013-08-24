@@ -14,6 +14,17 @@ model.ModuleTraitThruster = function ModuleTraitThruster(args)
 
 model.ModuleTraitThruster.prototype = Object.create(model.ModuleTrait.prototype);
 
+
+model.ModuleTraitThruster.prototype.getTotalThrusterUsageAtTime = function(time)
+{
+    var usage = this.module.getFromTimelineByName(time, 'thrusterUsage');
+    if (! usage)
+        return 0;
+
+    return usage.normal + (usage.rotation * 0.5);
+};
+
+
 model.ModuleTraitThruster.prototype.extend = function(obj)
 {
     obj.thruster = this;
