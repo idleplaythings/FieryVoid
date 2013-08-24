@@ -47,8 +47,7 @@ model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route
         if (wp.time % 10 !== 0)
             continue;
 
-        var size = this.turnWaypointSize*0.5*this.getWaypointZoom(this.zoom);
-        console.log(this.zoom);
+        var size = this.turnWaypointSize * 0.5 * (1 / this.getWaypointZoom(this.zoom));
         console.log("waypoint radius: " + size );
 
         if (MathLib.distance(wp.position, pos) < size)
