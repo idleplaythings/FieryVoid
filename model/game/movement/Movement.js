@@ -46,7 +46,7 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
 model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
 {
     uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
-    //this.extrapolateCourseForNext(10);
+    this.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
@@ -73,6 +73,12 @@ model.Movement.prototype.onDrag = function(eventPayload)
                     self.drag.call(self, self.waypoints[wp.time], payload);
                 }
             });
+
+            if (eventPayload.ctrlKey) {
+                self.getRoute3d().setRotating(wp.time);
+            } else {
+                self.getRoute3d().setDragging(wp.time);
+            }
         }
     }
 };
@@ -81,6 +87,7 @@ model.Movement.prototype.drag = function(wp, payload)
 {
     if (payload.release)
     {
+        this.getRoute3d().setNormal(wp.time);
         return;
     }
 
@@ -95,7 +102,24 @@ model.Movement.prototype.drag = function(wp, payload)
 
 model.Movement.prototype.ctrlDrag = function(wp, payload)
 {
-    console.log('ctrlDrag')
+    if (payload.release)
+    {
+        this.getRoute3d().setNormal(wp.time);
+        return;
+    }
+
+    var vector = new Vector2(
+        payload.current.view.x - payload.start.view.x,
+        payload.start.view.y - payload.current.view.y //viewport y goes opposite direction compared to game
+    );
+    var angle = vector.angle();
+
+    wp.facingTarget = angle;
+    wp.routeResolved = false;
+    this.deleteRouteFrom(wp.time-9);
+    this.unresolveRouteAfter(wp.time);
+    this.recalculateRoute();
+
 };
 
 model.Movement.prototype.deleteRouteFrom = function(time)
@@ -105,6 +129,12 @@ model.Movement.prototype.deleteRouteFrom = function(time)
     this.route.splice(time, amount);
     //console.log(this.route);
 };
+
+model.Movement.prototype.removeExtrapolation = function()
+{
+    this.route = this.route.filter(function(wp){return wp.extrapolation !== true});
+};
+
 
 model.Movement.prototype.unresolveRouteAfter = function(time)
 {
@@ -120,6 +150,7 @@ model.Movement.prototype.unresolveRouteAfter = function(time)
 model.Movement.prototype.setWaypoint = function(pos)
 {
 
+    this.removeExtrapolation();
     //var i = this.route.length + 10;
     var i = Math.ceil((this.route.length+1) / 10) * 10;
 
@@ -133,6 +164,8 @@ model.Movement.prototype.recalculateRoute = function()
 {
     this.route = this.resolver.resolveRoute(
         this.shipDesign, this.route, this.waypoints);
+
+    this.extrapolateCourseForNext(10);
     this.getRoute3d().displayRoute(this.route);
 };
 
@@ -179,8 +212,9 @@ model.Movement.prototype.getFacing = function(gameTime)
     else
     {
         var p1 = this.route[Math.floor(gameTime)];
+        var p2 = this.route[Math.ceil(gameTime)];
         var perc = gameTime % 1;
-        return MathLib.addToAzimuth(p1.facing, p1.rotationVelocity * perc);
+        return MathLib.addToAzimuth(p1.facing, p2.rotationVelocity * perc);
     }
 };
 

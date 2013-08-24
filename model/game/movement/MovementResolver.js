@@ -191,8 +191,15 @@ model.MovementResolver.prototype.getToNextWaypoint = function(
         var targetMovement = end.position.clone().sub(currentPosition.clone()).divideScalar(time);
         var targetVector = targetMovement.clone().sub(currentVelocity);
 
+        var facingTarget = targetMovement.angle();
+
+        if (end.facingTarget !== null)
+        {
+            facingTarget = end.facingTarget;
+        }
+
         var targetRotation = this.getRotationStep(
-            currentFacing, currentRotationVelocity, targetMovement.angle(), time);
+            currentFacing, currentRotationVelocity, facingTarget, time, thrusters);
 
         var thrusterResolver = this.resolveThrusterUse(
             thrusters, targetVector, currentFacing, targetRotation, enginePower);
@@ -237,10 +244,10 @@ model.MovementResolver.prototype.resolveThrusterUse = function(
 };
 
 model.MovementResolver.prototype.getRotationStep =
-    function(current, currentVelocity, target, timeToTarget)
+    function(current, currentVelocity, target, timeToTarget, thrusters)
 {
     var d = MathLib.distanceBetweenAngles(current, target);
-    d = Math.abs(d.cw) < Math.abs(d.ccw) ? d.cw : d.ccw;
+    d = thrusters.resolveFasterRotationDirection(d);
     d = d/timeToTarget;
     var c = d - currentVelocity;
     //console.log("current: "+current+" velocity: "+currentVelocity+" target: "  +target+ " result: " + d + " diffrence: " + c);

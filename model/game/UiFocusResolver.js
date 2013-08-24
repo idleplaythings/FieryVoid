@@ -76,8 +76,6 @@ model.UiFocusResolver.prototype.mouseDown = function(event)
     this.draggingStartPosition = this.getViewPortAndGameObject(pos, gamePos);
     this.lastDraggingPosition = this.getViewPortAndGameObject(pos, gamePos);
 
-    console.log(event)
-
     var self = this;
     var payload = {
         start: this.draggingStartPosition,
@@ -97,7 +95,8 @@ model.UiFocusResolver.prototype.mouseUp = function(event)
 {
     if (this.distanceDragged < this.draggingDistanceTreshold)
         this.click(event);
-    else if (this.dragging)
+
+    if (this.dragging)
         this.dragging({release:true});
 
     this.distanceDragged = 0;
@@ -137,6 +136,7 @@ model.UiFocusResolver.prototype.drag = function(event)
     };
 
     var payload = {
+        start: this.draggingStartPosition,
         previous: this.lastDraggingPosition,
         current: current,
         delta: this.getViewPortAndGameObject(deltaView, deltaGame)

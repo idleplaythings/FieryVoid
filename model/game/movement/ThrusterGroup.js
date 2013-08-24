@@ -119,3 +119,9 @@ model.ThrusterGroup.prototype.sortThrustersForMovement =
 
     return b.getVectorActiveComponent() - a.getVectorActiveComponent();
 };
+
+model.ThrusterGroup.prototype.resolveFasterRotationDirection = function(directions)
+{
+    //TODO: resolve which direction is faster to rotate to
+    return Math.abs(directions.cw) < Math.abs(directions.ccw) ? directions.cw : directions.ccw;
+};

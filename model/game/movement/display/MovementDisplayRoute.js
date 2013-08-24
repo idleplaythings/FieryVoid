@@ -27,7 +27,7 @@ model.MovementDisplayRoute.prototype.getWaypointTexture = function()
 
         var context = drawingCanvas.getContext("2d");
         context.strokeStyle = "rgba(255,255,255,1)";
-        context.fillStyle = "rgba(200,200,200,1)";
+        context.fillStyle = "rgba(255,255,255,0.5)";
 
         drawingTool.drawCircleAndFill(context, 32, 32, 20);
         drawingTool.drawArrowHeadOnCircle(context, 32, 32, 20, 28, 45);
@@ -44,12 +44,10 @@ model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route
     for (var i in route)
     {
         var wp = route[i];
-        if (wp.time % 10 !== 0)
+        if (wp.time % 10 !== 0 || wp.extrapolation)
             continue;
 
         var size = this.turnWaypointSize * 0.5 * (1 / this.getWaypointZoom(this.zoom));
-        console.log("waypoint radius: " + size );
-
         if (MathLib.distance(wp.position, pos) < size)
             return wp;
     }
@@ -104,4 +102,26 @@ model.MovementDisplayRoute.prototype._zoomLevelChangeCallback = function(event)
 {
     this.zoom = event.zoom;
     return this.getWaypointZoom(event.zoom);
-}
+};
+
+model.MovementDisplayRoute.prototype.setRotating = function(time)
+{
+    console.log("rotate: "  + time);
+    this.particleEmitter.particles[time].rotating = true;
+    this.particleEmitter.animate();
+};
+
+model.MovementDisplayRoute.prototype.setDragging = function(time)
+{
+    console.log("drag: "  + time);
+    this.particleEmitter.particles[time].dragging = true;
+    this.particleEmitter.animate();
+};
+
+model.MovementDisplayRoute.prototype.setNormal = function(time)
+{
+    console.log("normal: "  + time);
+    this.particleEmitter.particles[time].dragging = false;
+    this.particleEmitter.particles[time].rotating = false;
+    this.particleEmitter.animate();
+};
