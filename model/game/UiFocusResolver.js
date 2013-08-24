@@ -76,9 +76,15 @@ model.UiFocusResolver.prototype.mouseDown = function(event)
     this.draggingStartPosition = this.getViewPortAndGameObject(pos, gamePos);
     this.lastDraggingPosition = this.getViewPortAndGameObject(pos, gamePos);
 
+    console.log(event)
+
     var self = this;
     var payload = {
         start: this.draggingStartPosition,
+        ctrlKey: event.ctrlKey,
+        altKey: event.altKey,
+        shiftKey: event.shiftKey,
+        metaKey: event.metaKey,
         capture: function(callback){
             self.dragging = callback;
             payload.stopped = true;

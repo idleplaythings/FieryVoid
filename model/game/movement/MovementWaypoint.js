@@ -15,4 +15,5 @@ model.MovementWaypoint = function MovementWaypoint(args)
 
     this.thrusterUsage = null;
     this.routeResolved = false;
+    this.facingTarget = null;
 };

@@ -45,29 +45,33 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
 
 model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
 {
-    uiResolver.registerListener(this.onDrag.bind(this), 1, 'drag');
+    uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
     //this.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
-model.Movement.prototype.onDrag = function(payload)
+model.Movement.prototype.onDrag = function(eventPayload)
 {
-    if (payload.release)
+    if (eventPayload.release)
     {
         return;
     }
 
-    if (payload.capture)
+    if (eventPayload.capture)
     {
         var wp = this.getRoute3d().getWaypointInPosition(
-            payload.start.game, this.route);
+            eventPayload.start.game, this.route);
 
         if (wp)
         {
             var self = this;
-            payload.capture(function(payload)
+            eventPayload.capture(function(payload)
             {
-                self.drag.call(self, self.waypoints[wp.time], payload);
+                if (eventPayload.ctrlKey) {
+                    self.ctrlDrag.call(self, self.waypoints[wp.time], payload);
+                } else {
+                    self.drag.call(self, self.waypoints[wp.time], payload);
+                }
             });
         }
     }
@@ -87,6 +91,11 @@ model.Movement.prototype.drag = function(wp, payload)
     this.unresolveRouteAfter(wp.time);
     this.recalculateRoute();
 
+};
+
+model.Movement.prototype.ctrlDrag = function(wp, payload)
+{
+    console.log('ctrlDrag')
 };
 
 model.Movement.prototype.deleteRouteFrom = function(time)
