@@ -3,8 +3,7 @@ model.Scrolling = function Scrolling(dispatcher)
     this.dispatcher = dispatcher;
     this.position = {x:0, y:0};
 
-    this.dispatcher.attach(new model.EventListener(
-        "ZoomEvent", $.proxy(this.onZoom, this)));
+    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 
     this.scrollingSpeed = 1;
     this.zoom = 1;
@@ -14,7 +13,7 @@ model.Scrolling.prototype.constructor = model.Scrolling;
 
 model.Scrolling.prototype.registerTo = function(uiEventRegister)
 {
-    uiEventRegister.registerListener(this.scroll.bind(this), 0, 'drag');
+    uiEventRegister.registerListener('drag', this.scroll.bind(this), 0);
 };
 
 model.Scrolling.prototype.onZoom = function(event)
@@ -60,9 +59,9 @@ model.Scrolling.prototype.scrollTo = function(pos)
 
 model.Scrolling.prototype.dispatch = function(pos)
 {
-    var scrollEvent = new model.Event("player", "ScrollEvent");
-    scrollEvent.position = pos;
-
-    this.dispatcher.dispatch(scrollEvent);
+    this.dispatcher.dispatch({
+        name: "ScrollEvent",
+        position: pos
+    });
 };
 

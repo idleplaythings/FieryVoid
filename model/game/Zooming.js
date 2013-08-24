@@ -97,11 +97,12 @@ model.Zooming.prototype.changeZoom = function(zoom)
 
 model.Zooming.prototype.dispatchZoom = function(zoom)
 {
-    var zoomEvent = new model.Event("player", "ZoomEvent");
-    zoomEvent.zoom = zoom;
     this.zoom = zoom;
 
-    this.dispatcher.dispatch(zoomEvent);
+    this.dispatcher.dispatch({
+        name: "ZoomEvent",
+        zoom: zoom
+    });
 };
 
 model.Zooming.prototype.bindEvent = function(element)

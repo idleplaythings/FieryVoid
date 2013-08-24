@@ -17,13 +17,8 @@ model.GameScene = function GameScene(dispatcher){
 
     this.dispatcher = dispatcher;
 
-    this.dispatcher.attach(new model.EventListener(
-        "ScrollEvent",
-        jQuery.proxy(this.onScroll, this)));
-
-    this.dispatcher.attach(new model.EventListener(
-        "ZoomEvent",
-        jQuery.proxy(this.onZoom, this)));
+    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
+    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 
     jQuery(window).resize(jQuery.proxy(this.resize, this));
     window.gameScene = this;

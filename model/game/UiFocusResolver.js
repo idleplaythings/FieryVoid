@@ -1,4 +1,4 @@
-model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher, threshold)
+model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher, externalDispatcher)
 {
     this.listeners = {
         click: [],
@@ -7,9 +7,7 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher
 
     this.zoom = 1;
 
-    if (dispatcher)
-        dispatcher.attach(new model.EventListener(
-            "ZoomEvent",this.onZoom.bind(this)));
+    externalDispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 
     this.observedElement = null;
 
@@ -17,7 +15,7 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher
     this.draggingStartPosition = null;
     this.lastDraggingPosition = null;
     this.distanceDragged = 0;
-    this.draggingDistanceTreshold = threshold || 10;
+    this.draggingDistanceTreshold = 10;
 
     this.coordinateConverter = coordinateConverter;
 };
@@ -30,24 +28,28 @@ model.UiFocusResolver.prototype.onZoom = function(event)
 model.UiFocusResolver.prototype.getViewPortAndGameObject = function(v, g)
 {
     return {
-        view:v,
-        game:g
+        view: v,
+        game: g
     };
 };
 
-model.UiFocusResolver.prototype.registerListener = function(callback, z, type)
+model.UiFocusResolver.prototype.registerListener = function(event, callback, priority)
 {
-    if (! this.listeners[type])
-        throw Error("Unrecognized type for UiFocusResolver '" + type + "'");
+    if (! this.listeners[event])
+        throw Error("Unrecognized event '" + event + "'");
 
-    this.listeners[type].push({
+    this.listeners[event].push({
         callback:callback,
-        z:z
+        priority: priority
     })
 
-    this.listeners[type] =
-        this.listeners[type].sort(function(a,b){return b.z - a.z;});
+    this.listeners[event] = this.listeners[event].sort(this.__sortByListenerPriority);
 };
+
+model.UiFocusResolver.prototype.__sortByListenerPriority = function(a,b)
+{
+    return b.priority - a.priority;
+}
 
 model.UiFocusResolver.prototype.observeDomElement = function(element)
 {

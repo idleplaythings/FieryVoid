@@ -38,7 +38,7 @@ model.Game.prototype.play = function()
     this.gameScene.init(container);
 
     var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
-    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter, this.dispatcher);
+    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter, new model.EventDispatcher(), this.dispatcher);
     this.uiEventResolver.observeDomElement(container);
 
     this.scrolling = new model.Scrolling(this.dispatcher);
@@ -52,7 +52,7 @@ model.Game.prototype.play = function()
 
     this.zooming.init();
 
-    this.uiEventResolver.registerListener(this.onClicked.bind(this), 0, 'click');
+    this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
 
     this.initGameState(container);
 };

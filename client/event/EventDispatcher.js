@@ -1,86 +1,62 @@
 model.EventDispatcher = function EventDispatcher()
 {
-    this.listeners = Array();
-    this.events = Array();
+    this.listeners = {};
 };
 
-model.EventDispatcher.prototype.attach = function(listener, name)
+model.EventDispatcher.prototype.attach = function(eventName, listener, priority)
 {
-    if (name instanceof Array)
-    {
-        for (var i in name)
-        {
-            this._attachListener(listener, name[i]);
+    if (typeof priority === 'undefined') {
+        priority = 0;
+    }
+
+    listener.__priority = priority;
+    this._attachListener(eventName, listener);
+};
+
+model.EventDispatcher.prototype._attachListener = function(eventName, listener)
+{
+    this._initListenersArray(eventName);
+    this._addListener(eventName, listener);
+    this._sortListeners(eventName);
+};
+
+model.EventDispatcher.prototype._initListenersArray = function(eventName)
+{
+    if (typeof this.listeners[eventName] === 'undefined') {
+        this.listeners[eventName] = [];
+    }
+}
+
+model.EventDispatcher.prototype._addListener = function(eventName, listener)
+{
+    this.listeners[eventName].push(listener);
+}
+
+model.EventDispatcher.prototype._sortListeners = function(eventName)
+{
+    this.listeners[eventName].sort(function(a, b) {
+        return b.__priority - a.__priority;
+    })
+}
+
+/**
+ *
+ * @param event must have property called name
+ */
+model.EventDispatcher.prototype.dispatch = function(event)
+{
+    this._initListenersArray(event.name);
+    this.listeners[event.name].every(this._dispatchEvent(event));
+};
+
+model.EventDispatcher.prototype._dispatchEvent = function(event) {
+    return function(listener) {
+        listener(event);
+
+        if (event.stopped) {
+            return false;
         }
+
+        return true;
     }
-    else
-    {
-        if ( ! name)
-        {
-            name = listener.eventName;
-        }
-
-        if ( ! name)
-            throw "Could not resolve event name for attaching Event listener.";
-
-        this._attachListener(listener, name);
-    }
-};
-
-model.EventDispatcher.prototype._attachListener = function(listener, name)
-{
-    if (! this.listeners[name])
-    {
-        this.listeners[name] = Array(listener);
-    }
-    else
-    {
-        this.listeners[name].push(listener);
-    }
-};
-
-model.EventDispatcher.prototype.dispatch = function(event, revert)
-{
-    var handleFunction = revert ? "revert" : "handle";
-
-    if (! revert)
-    {
-        var eventid = this.events.length;
-        event.setId(eventid);
-        this.events[eventid] = event;
-    }
-    //console.log("event "+handleFunction+": " + event.id +":"+ event.name);
-
-    if (! this.listeners[event.name])
-        return;
-
-    for (var i in this.listeners[event.name])
-    {
-        this.listeners[event.name][i][handleFunction](event);
-
-        if (event.stopped)
-        {
-            break;
-        }
-    }
-};
-
-model.EventDispatcher.prototype.revertEverythingAfter = function(event)
-{
-    var eventid = event.id;
-
-    for (var i = this.events.length-1; i > eventid; i--)
-    {
-        var victim = this.events[i];
-        if (victim.origin !== "player")
-            continue;
-
-        this.revertEvent(victim);
-    }
-};
-
-model.EventDispatcher.prototype.revertEvent = function(event)
-{
-    this.dispatch(event, true);
-    this.events.splice(event.id, 1);
-};
+}

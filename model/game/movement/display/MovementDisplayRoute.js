@@ -96,16 +96,13 @@ model.MovementDisplayRoute.prototype.getWaypointZoom = function(zoom)
 
 model.MovementDisplayRoute.prototype.subscribeToScene = function(scene, eventDispatcher)
 {
-    var self = this;
     scene.add(this.particleEmitter.getObject3d());
-    this.particleEmitter.observeZoomLevelChange(
-        eventDispatcher,
-        function(event)
-        {
-            self.zoom = event.zoom;
-            return self.getWaypointZoom(event.zoom);
-        });
+    this.particleEmitter.observeZoomLevelChange(eventDispatcher, this._zoomLevelChangeCallback.bind(this));
     return this;
 };
 
-
+model.MovementDisplayRoute.prototype._zoomLevelChangeCallback = function(event)
+{
+    this.zoom = event.zoom;
+    return this.getWaypointZoom(event.zoom);
+}

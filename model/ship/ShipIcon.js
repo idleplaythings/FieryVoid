@@ -10,9 +10,7 @@ model.ShipIcon = function ShipIcon(ship, dispatcher)
     this.modules = null;
     this.selected = null;
 
-    this.dispatcher.attach(new model.EventListener(
-        "ZoomEvent",
-        jQuery.proxy(this.onZoom, this)));
+    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
 model.ShipIcon.prototype.create = function()
