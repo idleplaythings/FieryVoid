@@ -32,12 +32,15 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
     {
         this.route.push(new model.MovementWaypoint(
             {
-                position: {
-                    x: start.position.x + (start.velocity.x * i),
-                    y: start.position.y + (start.velocity.y * i)},
+                position: new Vector2(
+                    start.position.x + (start.velocity.x * i),
+                    start.position.y + (start.velocity.y * i)
+                ),
                 velocity: start.velocity,
-                facing: start.facing,
-                extrapolation: true
+                facing: MathLib.addToAzimuth(start.facing, start.rotationVelocity * i),
+                rotationVelocity: start.rotationVelocity,
+                extrapolation: true,
+                time: start.time + i
             }
         ));
     }
@@ -175,19 +178,75 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
     if (gameTime % 1 === 0)
     {
         if ( ! this.route[gameTime])
-            return null;
+            return this.getExtrapolatedPosition(gameTime);
 
         return this.route[gameTime].position;
     }
     else
     {
-        var p1 = this.route[Math.floor(gameTime)].position;
-        var p2 = this.route[Math.ceil(gameTime)].position;
 
-        var perc = gameTime % 1;
-        return MathLib.getPointBetween(p1, p2, perc);
+        var p1 = this.route[Math.floor(gameTime)];
+        var p2 = this.route[Math.ceil(gameTime)];
+
+        if (p1 && p2)
+        {
+            p1 = p1.position;
+            p2 = p2.position;
+
+            var perc = gameTime % 1;
+            
+            //return p1.velocity.clone().multiplyScalar(time).add(p1.velocity.clone().sub(p2.velocity).multiplyScalar(0.5)).multiplyScalar(Math.pow(perc, 2));
+
+            return MathLib.getPointBetween(p1, p2, perc);
+        }
+        else
+        {
+            return this.getExtrapolatedPosition(gameTime);
+        }
     }
 };
+
+model.Movement.prototype.getExtrapolatedPosition = function(gameTime)
+{
+    var p = this.route[this.route.length-1];
+    var deltaTime = gameTime - p.time;
+    return p.position.clone().add(p.velocity.clone().multiplyScalar(deltaTime));
+};
+
+model.Movement.prototype.getFacing = function(gameTime)
+{
+    gameTime = gameTime / 1000;
+    if (gameTime % 1 === 0)
+    {
+        if ( ! this.route[gameTime])
+            return this.getExtrapolatedFacing(gameTime);
+
+        return this.route[gameTime].facing;
+    }
+    else
+    {
+        var p1 = this.route[Math.floor(gameTime)];
+        var p2 = this.route[Math.ceil(gameTime)];
+        var perc = gameTime % 1;
+
+        if (p1 && p2)
+        {
+            return MathLib.addToAzimuth(p1.facing, p2.rotationVelocity * perc);
+        }
+        else
+        {
+            return this.getExtrapolatedFacing(gameTime);
+        }
+    }
+};
+
+model.Movement.prototype.getExtrapolatedFacing = function(gameTime)
+{
+    var p = this.route[this.route.length-1];
+    var deltaTime = gameTime - p.time;
+    return MathLib.addToAzimuth(p.facing, p.rotationVelocity * deltaTime);
+};
+
 
 model.Movement.prototype.getRoute3d = function()
 {
@@ -197,25 +256,6 @@ model.Movement.prototype.getRoute3d = function()
     }
 
     return this.route3d;
-};
-
-model.Movement.prototype.getFacing = function(gameTime)
-{
-    gameTime = gameTime / 1000;
-    if (gameTime % 1 === 0)
-    {
-        if ( ! this.route[gameTime])
-            return this.route[this.route.length -1].facing;
-
-        return this.route[gameTime].facing;
-    }
-    else
-    {
-        var p1 = this.route[Math.floor(gameTime)];
-        var p2 = this.route[Math.ceil(gameTime)];
-        var perc = gameTime % 1;
-        return MathLib.addToAzimuth(p1.facing, p2.rotationVelocity * perc);
-    }
 };
 
 

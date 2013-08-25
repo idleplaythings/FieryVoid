@@ -9,7 +9,7 @@ model.SpriteEffectThrusterGlow = function SpriteEffectThrusterGlow(module)
     this.sprite2 = null;
     this.animationTick = 1;
     this.animationStep = 1;
-    this.width = 100;
+    this.width = 200;
     this.height = 0;
 };
 
@@ -61,7 +61,7 @@ model.SpriteEffectThrusterGlow.prototype.animate = function(gameTime)
     this.sprite1.scale.x = w;
     this.sprite1.scale.y = this.height*2;
 
-    w = w*0.4;
+    w =     w*0.4;
     this.sprite2.position.x = w/2 + this.offset;
     this.sprite2.scale.x = w;
     this.sprite2.scale.y = this.height*0.6;
