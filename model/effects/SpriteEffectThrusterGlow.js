@@ -49,8 +49,11 @@ model.SpriteEffectThrusterGlow.prototype.animate = function(gameTime)
     this.animationTick += this.animationStep;
 
     var w = this.width;
-    w *= this.module.thruster.maxChannel / (((next * perc) + (last * (1-perc)))/2);
-    var v =  this.width/200;
+    //for lasers!
+    //w *= this.module.thruster.maxChannel / (((next * perc) + (last * (1-perc)))/2);
+    w *= (((next * perc) + (last * (1-perc)))/2);
+
+    var v = this.width/200;
     w += this.animationTick*v;
 
     this.sprite1.material.opacity = 0.5;
