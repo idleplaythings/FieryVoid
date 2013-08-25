@@ -10,15 +10,7 @@ model.Game = function Game(args)
     if ( ! args)
         args = [];
 
-    this.name = args.name || 'unnamed';
-    this.background = args.background || null;
-    this.terrainSeed = args.terrainSeed || null;
-    this.terrain = args.terrain || [];
-    this.ships = args.ships || [];
-    this.asteroids = args.asteroids || [];
-
-    this.created = args.created || null;
-
+    this.setState(args);
     this.type = 'Game';
 
     this.gameScene = null;
@@ -27,6 +19,23 @@ model.Game = function Game(args)
 
     this.dispatcher = null;
     this.uiEventResolver = null;
+    this.gameState = new model.GameState(0);
+    this.replayUI = null;
+};
+
+model.Game.prototype.setState = function(args)
+{
+    if ( ! args)
+        args = [];
+
+    this.name = args.name || 'unnamed';
+    this.background = args.background || null;
+    this.terrainSeed = args.terrainSeed || null;
+    this.terrain = args.terrain || [];
+    this.ships = args.ships || [];
+    this.asteroids = args.asteroids || [];
+
+    this.created = args.created || null;
 };
 
 model.Game.prototype.play = function()
@@ -34,7 +43,7 @@ model.Game.prototype.play = function()
     this.dispatcher = new model.EventDispatcher();
 
     var container = jQuery('#gameContainer');
-    this.gameScene = new model.GameScene(this.dispatcher);
+    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.gameScene.init(container);
 
     var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
@@ -53,6 +62,10 @@ model.Game.prototype.play = function()
     this.zooming.init();
 
     this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
+
+
+    this.replayUI = new model.ReplayUI(this.gameState);
+    this.replayUI.create();
 
     this.initGameState(container);
 };
@@ -102,7 +115,7 @@ model.Game.prototype.load = function(doc)
     if (invalidShip)
         return null;
 
-    _.extend(this, doc);
+    this.setState(doc);
     return this;
 };
 

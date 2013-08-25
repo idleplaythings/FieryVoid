@@ -1,5 +1,6 @@
-model.GameScene = function GameScene(dispatcher){
+model.GameScene = function GameScene(dispatcher, gameState){
 
+    this.gameState = gameState;
     this.width = 1000;
     this.height = 800;
     this.camera = null;
@@ -58,37 +59,9 @@ model.GameScene.prototype.animate = function()
 {
     var self = this;
 //    requestAnimationFrame( jQuery.proxy(this.animate, this) );
-    requestAnimationFrame( this.animate.bind(this, self.gameTime) );
-    this.animators.forEach(function(a){a.animate(self.gameTime)})
+    requestAnimationFrame( this.animate.bind(this) );
+    this.animators.forEach(function(a){a.animate(self.gameState.currentDisplayGameTime)})
     this.render();
-
-};
-
-model.GameScene.prototype.advanceGameTime = function(timeLeft, lastTime)
-{
-    var step = (timeLeft < 0 ) ? -1 : 1;
-
-    var now =  (new Date()).getTime();
-    var end = false;
-
-    if (lastTime)
-    {
-        var elapsed = (now - lastTime);
-        if (Math.abs(timeLeft) < elapsed)
-        {
-            end = true;
-            elapsed = timeLeft * step;
-        }
-
-        this.gameTime += elapsed * step;
-        timeLeft -= elapsed * step;
-    }
-
-    lastTime = now;
-
-    if ( ! end)
-        requestAnimationFrame(
-            this.advanceGameTime.bind(this, timeLeft, lastTime));
 };
 
 model.GameScene.prototype.render = function()

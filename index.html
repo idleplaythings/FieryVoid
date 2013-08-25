@@ -7,6 +7,8 @@
 </body>
 
 <template name="page">
-    {{> topMenu}}
+    {{#isolate}}
+        {{> topMenu}}
+    {{/isolate}}
     {{renderPage}}
 </template>

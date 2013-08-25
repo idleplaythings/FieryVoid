@@ -21,6 +21,7 @@ Template.game.created = function()
 
 Template.game.destroyed = function()
 {
+    Session.set('active_game', null);
     console.log("game destroyed");
     Template.game.activeGameObject = null;
 }

@@ -74,8 +74,6 @@ model.ShipInGame.prototype.subscribeToScene =
             this.gameScene.animators.push(module);
             module.initAnimators();
         }
-
-
     }, this);
 
     this.gameScene.animators.push(this);
