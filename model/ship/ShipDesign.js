@@ -69,7 +69,6 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
 
     _.extend(this, shipDesignDoc);
 
-    console.log(this.calculateCenterOfMass());
     return this;
 };
 

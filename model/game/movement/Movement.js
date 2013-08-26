@@ -184,7 +184,6 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
     }
     else
     {
-
         var p1 = this.route[Math.floor(gameTime)];
         var p2 = this.route[Math.ceil(gameTime)];
 
@@ -194,7 +193,7 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
             p2 = p2.position;
 
             var perc = gameTime % 1;
-            
+
             //return p1.velocity.clone().multiplyScalar(time).add(p1.velocity.clone().sub(p2.velocity).multiplyScalar(0.5)).multiplyScalar(Math.pow(perc, 2));
 
             return MathLib.getPointBetween(p1, p2, perc);

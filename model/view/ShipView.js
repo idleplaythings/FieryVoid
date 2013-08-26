@@ -11,6 +11,8 @@ model.ShipView = function ShipView(target)
     this.modulesUnder = null;
     this.view = null;
 
+    this.massCenter = null;
+
     this.create();
 };
 
@@ -28,6 +30,8 @@ model.ShipView.prototype.create = function()
     this.outerHull =
         new model.ShipDisplayOuterHull(this.target, 'outerhull');
 
+    this.massCenter = new model.ShipDisplayMassCenter(this.target, 'massCenter');
+
     this.hullView();
 };
 
@@ -41,6 +45,7 @@ model.ShipView.prototype.drawImages = function(ship)
     this.modulesOutside.start(ship);
     this.outerHull.start(ship);
     this.modulesOver.start(ship);
+    this.massCenter.start(ship);
 };
 
 model.ShipView.prototype.setView = function(mode)
@@ -60,6 +65,7 @@ model.ShipView.prototype.gridView = function()
     this.outerHull.setZIndex(1).setOpacity(0.3);
     this.hullGrid.setZIndex(2).setOpacity(1);
     this.modulesInside.setZIndex(3).setOpacity(1);
+    this.massCenter.setZIndex(4).setOpacity(1);
     this.modulesOutside.setOpacity(0);
 
     this.view = 'grid'
@@ -75,6 +81,7 @@ model.ShipView.prototype.hullView = function()
     this.hullGrid.setOpacity(0);
     this.modulesInside.setOpacity(0);
     this.modulesOutside.setZIndex(1).setOpacity(1);
+    this.massCenter.setOpacity(0);
 
     this.view = 'hull'
 };
