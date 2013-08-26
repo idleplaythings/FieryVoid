@@ -2,10 +2,10 @@
 forever stop /var/nodewww/bundle/main.js || echo "forever not running, ignored"
 cd /var/nodewww
 rm -rf /var/nodewww/bundle
-tar xvfz shipbuilder.tgz
-#cd /var/nodewww/bundle/server/node_modules/
-#rm -r fibers || echo "fibers not found, not deleting"
-#npm install fibers@1.0.0
+tar xfz shipbuilder.tgz
+cd /var/nodewww/bundle/programs/server/node_modules
+npm uninstall fibers || echo "fibers not found, not deleting"
+npm install fibers
 cd /var/nodewww/bundle
-PORT=3000 ROOT_URL=www.fieryvoid.net MONGO_URL=mongodb://localhost:27017/shipbuilder forever start /var/nodewww/bundle/main.js
+PORT=3000 ROOT_URL="http://www.fieryvoid.net/" MONGO_URL=mongodb://localhost:27017/shipbuilder forever start /var/nodewww/bundle/main.js
 echo All done, should be running
