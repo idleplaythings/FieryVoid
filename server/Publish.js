@@ -23,7 +23,7 @@ Meteor.publish("shipDesigns", function () {
         HullImages.find({}),
         HullLayouts.find({"published": true}),
         ModuleImages.find({}),
-        ModuleLayouts.find({"published": true})
+        ModuleLayouts.find({})
     ];
 });
 
