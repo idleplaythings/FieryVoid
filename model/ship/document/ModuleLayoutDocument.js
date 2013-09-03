@@ -46,6 +46,8 @@ Meteor.methods({
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
+        var current = ModuleLayouts.findOne({'_id': id}).published;
+
         ModuleLayouts.update(
             {$and: [{'published': true}, {'image': imgName}]},
             {$set: {'published': false}}
@@ -53,7 +55,7 @@ Meteor.methods({
 
         ModuleLayouts.update(
             {'_id': id},
-            {$set: {'published': true}}
+            {$set: {'published': ! current}}
         );
     },
 
