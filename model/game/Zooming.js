@@ -51,7 +51,6 @@ model.Zooming.prototype.animate = function()
 
 model.Zooming.prototype.mouseWheel = function(e)
 {
-    console.log("wheel");
     e = e ? e : window.event;
     var wheelData = e.detail ? e.detail * -1 : e.wheelDelta / 40;
 

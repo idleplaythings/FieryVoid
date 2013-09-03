@@ -8,7 +8,7 @@ model.ModuleTraitThruster = function ModuleTraitThruster(args)
     this.efficiency = args.efficiency || 0;
     this.maxChannel = args.max || 0;
     this.maxOverThrust = args.over || 0;
-    this.effect = null;
+    this.effect = args.effect || null;
     this.module = null;
 };
 
@@ -29,7 +29,7 @@ model.ModuleTraitThruster.prototype.extend = function(obj)
 {
     obj.thruster = this;
     this.module = obj;
-    this.effect = new model.SpriteEffectThrusterGlow(obj);
+    this.effect = new model.SpriteEffectThrusterGlow(obj, this.effect);
     obj.registerAnimator(this.effect);
 };
 

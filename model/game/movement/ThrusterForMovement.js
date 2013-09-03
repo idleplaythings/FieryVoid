@@ -4,7 +4,6 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
     this.rotationAcceleration = rotation;
     this.max = max;
     this.module = module;
-    console.log(module._id);
 
     this.assignedThrust = 0;
     this.assignedRotationThrust = 0;

@@ -1,9 +1,12 @@
-model.SpriteEffectThrusterGlow = function SpriteEffectThrusterGlow(module)
+model.SpriteEffectThrusterGlow = function SpriteEffectThrusterGlow(module, args)
 {
+    if ( ! args)
+        args = {};
+
     this.module = module;
     this.object3d = null;
-    this.z = 10;
-    this.offset = 13;
+    this.z = args.z || 10;
+    this.offset = args.offset || 13;
     this.position = {x:0, y:0};
     this.sprite1 = null;
     this.sprite2 = null;
@@ -19,7 +22,6 @@ model.SpriteEffectThrusterGlow = function SpriteEffectThrusterGlow(module)
 model.SpriteEffectThrusterGlow.prototype.init = function()
 {
     this.module.ship.getIcon().addObject(this.getObject3d());
-    console.log(this.module.getCenterPosition());
 };
 
 model.SpriteEffectThrusterGlow.prototype.animate = function(gameTime)
@@ -61,7 +63,7 @@ model.SpriteEffectThrusterGlow.prototype.animate = function(gameTime)
     this.sprite1.scale.x = w;
     this.sprite1.scale.y = this.height*2;
 
-    w =     w*0.4;
+    w = w*0.4;
     this.sprite2.position.x = w/2 + this.offset;
     this.sprite2.scale.x = w;
     this.sprite2.scale.y = this.height*0.6;
@@ -80,7 +82,7 @@ model.SpriteEffectThrusterGlow.prototype.getObject3d = function()
         this.position = this.module.ship.shipDesign.getPositionInIconRelativeFromCenter(
             this.module.getCenterPosition());
 
-        this.object3d.position = new THREE.Vector3(this.position.x, this.position.y, 1);
+        this.object3d.position = new THREE.Vector3(this.position.x, this.position.y, this.z);
 
         this.height = this.module.height * this.module.ship.shipDesign.hullLayout.tileScale;
 
