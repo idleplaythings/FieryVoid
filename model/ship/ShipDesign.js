@@ -56,6 +56,9 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
             {
                 module.setPosition(moduleDetails.position);
                 module.setDirection(moduleDetails.direction);
+                module.timeline =
+                    new model.ModuleTimeline()
+                        .deserialize(moduleDetails.serializedTimeline);
             }
             else
             {

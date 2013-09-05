@@ -17,7 +17,7 @@ model.ModuleTraitThruster.prototype = Object.create(model.ModuleTrait.prototype)
 
 model.ModuleTraitThruster.prototype.getTotalThrusterUsageAtTime = function(time)
 {
-    var usage = this.module.getFromTimelineByName(time, 'thrusterUsage');
+    var usage = this.module.timeline.getByName(time, 'thrusterUsage');
     if (! usage)
         return 0;
 

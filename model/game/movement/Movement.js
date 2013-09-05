@@ -12,7 +12,7 @@ model.Movement.prototype.serialize = function ()
     return this.route;
 };
 
-model.Movement.prototype.unserialize = function(route, shipDesign)
+model.Movement.prototype.deserialize = function(route, shipDesign)
 {
     this.shipDesign = shipDesign;
     this.route = route.map(function(w){return new model.MovementWaypoint(w)});
@@ -49,8 +49,21 @@ model.Movement.prototype.extrapolateCourseForNext = function(time)
 model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
 {
     uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
+    uiResolver.registerListener('click', this.onClick.bind(this), 1);
     this.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
+};
+
+model.Movement.prototype.onClick = function(eventPayload)
+{
+    var wp = this.getRoute3d().getWaypointInPosition(
+        eventPayload.game, this.route);
+
+    if (wp)
+    {
+        eventPayload.stop();
+
+    }
 };
 
 model.Movement.prototype.onDrag = function(eventPayload)
@@ -161,6 +174,7 @@ model.Movement.prototype.setWaypoint = function(pos)
 
     this.waypoints[i] = new model.MovementWaypoint({position:pos, facing:0, time:i});
     this.recalculateRoute();
+
 };
 
 model.Movement.prototype.recalculateRoute = function()
@@ -246,7 +260,6 @@ model.Movement.prototype.getExtrapolatedFacing = function(gameTime)
     return MathLib.addToAzimuth(p.facing, p.rotationVelocity * deltaTime);
 };
 
-
 model.Movement.prototype.getRoute3d = function()
 {
     if ( ! this.route3d)
@@ -257,4 +270,21 @@ model.Movement.prototype.getRoute3d = function()
     return this.route3d;
 };
 
+model.Movement.prototype.persistRoute = function()
+{
+    if ( ! this.route3d)
+    {
+        this.route3d = new model.MovementDisplayRoute();
+    }
+
+    return this.route3d;
+};
+
+model.Movement.prototype.getWaypointsAfter = function(time)
+{
+    return this.waypoints.filter(
+        function(waypoint) {
+            return waypoint.time >= time;
+        });
+};
 

@@ -30,66 +30,12 @@ model.ModuleLayout = function ModuleLayout(args)
     this.gameScene = null;
     this.dispatcher = null;
 
-    this.timeline = [];
+    this.timeline = null;
 
     this.traits = args.traits || [];
     this.initTraits();
 };
 
-model.ModuleLayout.prototype.getFromTimelineByName = function(time, name)
-{
-    if ( ! this.timeline[time])
-        return null;
-
-    for (var i in this.timeline[time])
-    {
-        var entry = this.timeline[time][i];
-        if (entry.name === name)
-            return entry;
-    }
-
-    return null;
-};
-
-model.ModuleLayout.prototype.addToTimeLine = function(time, object)
-{
-    if ( ! this.timeline[time])
-        this.timeline[time] = [object];
-    else
-        this.timeline[time].push(object);
-};
-
-model.ModuleLayout.prototype.removeFromTimeLine = function(time, object)
-{
-    if ( ! this.timeline[time])
-        return;
-
-    for (var i in this.timeline[time])
-    {
-        var removee = this.timeline[time][i];
-        if (removee === object)
-        {
-            this.timeline[time].splice(i, 1);
-            return;
-        }
-    }
-};
-
-model.ModuleLayout.prototype.removeFromTimeLineByName = function(time, name)
-{
-    if ( ! this.timeline[time])
-        return;
-
-    for (var i in this.timeline[time])
-    {
-        var removee = this.timeline[time][i];
-        if (removee.name == name)
-        {
-            this.timeline[time].splice(i, 1);
-            return;
-        }
-    }
-};
 
 model.ModuleLayout.prototype.registerAnimator = function(animator)
 {

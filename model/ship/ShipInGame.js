@@ -43,7 +43,7 @@ model.ShipInGame.prototype.loadWithDocument = function(doc)
     if ( ! doc.shipDesign)
         return null;
 
-    doc.movement = this.movement.unserialize(doc.movement, doc.shipDesign);
+    doc.movement = this.movement.deserialize(doc.movement, doc.shipDesign);
     _.extend(this, doc);
     return this;
 };

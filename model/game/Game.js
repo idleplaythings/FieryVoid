@@ -32,7 +32,7 @@ model.Game.prototype.setState = function(args)
     this.background = args.background || null;
     this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
-    this.ships = args.ships || [];
+    this.ships = args.ships || {};
     this.asteroids = args.asteroids || [];
 
     this.created = args.created || null;
@@ -73,6 +73,14 @@ model.Game.prototype.play = function()
 model.Game.prototype.getSelectedShip = function()
 {
 
+};
+
+model.Game.prototype.getShipById = function(id)
+{
+    if ( ! this.ships[id])
+        return null;
+
+    return this.ships[id];
 };
 
 model.Game.prototype.onClicked = function(payload)
@@ -126,7 +134,5 @@ model.Game.prototype.prepareForSave = function()
             ship.prepareForSave();
             return ship;
         });
-
-    this.terrainSeed = Math.random();
     return this;
 };

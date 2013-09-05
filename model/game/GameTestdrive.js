@@ -27,6 +27,7 @@ model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 {
     this.name = displayName(Meteor.user()) + " testdrive " + shipDesign.name;
     var ship = new model.ShipInGame({
+        _id: 1,
         controller: Meteor.userId(),
         shipDesign: shipDesign
     });
@@ -37,9 +38,10 @@ model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
         facing: 0
     }));
 
-    this.ships.push(ship);
+    this.ships[1] = ship;
 
     this.created =  new Date().getTime();
+    this.terrainSeed = Math.random();
 };
 
 model.GameTestdrive.prototype.getSelectedShip = function()
