@@ -32,7 +32,7 @@ model.Game.prototype.setState = function(args)
     this.background = args.background || null;
     this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
-    this.ships = args.ships || {};
+    this.ships = args.ships || [];
     this.asteroids = args.asteroids || [];
 
     this.created = args.created || null;
@@ -77,10 +77,15 @@ model.Game.prototype.getSelectedShip = function()
 
 model.Game.prototype.getShipById = function(id)
 {
-    if ( ! this.ships[id])
-        return null;
+    var ships = this.ships.filter(function(ship) {
+        return ship._id == id;
+    });
 
-    return this.ships[id];
+    if (ships.length) {
+        return ships[0];
+    }
+
+    return null;
 };
 
 model.Game.prototype.onClicked = function(payload)

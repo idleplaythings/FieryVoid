@@ -38,7 +38,7 @@ model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
         facing: 0
     }));
 
-    this.ships[1] = ship;
+    this.ships.push(ship);
 
     this.created =  new Date().getTime();
     this.terrainSeed = Math.random();
