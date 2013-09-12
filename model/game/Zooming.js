@@ -63,8 +63,8 @@ model.Zooming.prototype.mouseWheel = function(e)
     var offsetLeft = this.element[0].offsetLeft;
     var offsetTop = this.element[0].offsetTop;
 
-    var x = event.pageX - offsetLeft;
-    var y = event.pageY - offsetTop;
+    var x = e.pageX - offsetLeft;
+    var y = e.pageY - offsetTop;
 
     this.zoomPositionTarget = this.coordinateConverter.fromViewPortToGame({x:x, y:y});
     this.changeZoom(step);
