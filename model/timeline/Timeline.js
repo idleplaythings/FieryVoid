@@ -1,14 +1,17 @@
-model.ModuleTimeline = function ModuleTimeline()
+model.Timeline = function Timeline(id, gamestate, storage)
 {
+    this.gameState = gamestate;
+    this._id = id;
     this._timeline = {};
+    this.storage = storage;
 };
 
-model.ModuleTimeline.prototype.serialize = function()
+model.Timeline.prototype.serialize = function()
 {
     return this._timeline;
 };
 
-model.ModuleTimeline.prototype.deserialize = function(timeline)
+model.Timeline.prototype.deserialize = function(timeline)
 {
     if ( ! timeline)
         this._timeline = {};
@@ -18,7 +21,7 @@ model.ModuleTimeline.prototype.deserialize = function(timeline)
     return this;
 };
 
-model.ModuleTimeline.prototype.getByName = function(time, name)
+model.Timeline.prototype.getByName = function(time, name)
 {
     if ( ! this._timeline[time])
         return null;
@@ -33,7 +36,7 @@ model.ModuleTimeline.prototype.getByName = function(time, name)
     return null;
 };
 
-model.ModuleTimeline.prototype.add = function(time, object)
+model.Timeline.prototype.add = function(time, object)
 {
     if ( ! this._timeline[time])
         this._timeline[time] = [object];
@@ -41,7 +44,7 @@ model.ModuleTimeline.prototype.add = function(time, object)
         this._timeline[time].push(object);
 };
 
-model.ModuleTimeline.prototype.remove = function(time, object)
+model.Timeline.prototype.remove = function(time, object)
 {
     if ( ! this._timeline[time])
         return;
@@ -57,7 +60,7 @@ model.ModuleTimeline.prototype.remove = function(time, object)
     }
 };
 
-model.ModuleTimeline.prototype.removeByName = function(time, name)
+model.Timeline.prototype.removeByName = function(time, name)
 {
     if ( ! this._timeline[time])
         return;
