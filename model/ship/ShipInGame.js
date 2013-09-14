@@ -4,17 +4,22 @@ model.ShipInGame = function ShipInGame(args)
         args = [];
 
     this._id = args._id || null;
-    this.detectionStatus = args.detectionStatus || null;
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
-    this.movement = new model.Movement(this.shipDesign);
+    this.movement = args.movement;
+    this.movement.setShip(this);
 
     this.icon = null;
     this.gameScene = null;
 };
 
-model.ShipInGame.prototype.prepareForSave = function()
+model.ShipInGame.prototype.createTimelines = function(timelineFactory)
+{
+    this.shipDesign.createTimelines(timelineFactory);
+};
+
+model.ShipInGame.prototype.serialize = function()
 {
     this.shipDesign.hullLayoutId =
         this.shipDesign.hullLayout._id;
@@ -26,25 +31,9 @@ model.ShipInGame.prototype.prepareForSave = function()
     this.shipDesign.modules =
         this.shipDesign.modules.map(
             function(module){
-                return {
-                    module: module._id,
-                    position: module.position,
-                    direction: module.direction
-                };
+                return module.serialize();
             });
 
-};
-
-model.ShipInGame.prototype.loadWithDocument = function(doc)
-{
-    doc.shipDesign =
-        new model.ShipDesignInGame().loadWithDocument(doc.shipDesign);
-
-    if ( ! doc.shipDesign)
-        return null;
-
-    doc.movement = this.movement.deserialize(doc.movement, doc.shipDesign);
-    _.extend(this, doc);
     return this;
 };
 

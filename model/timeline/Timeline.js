@@ -1,77 +1,147 @@
-model.Timeline = function Timeline(id, gamestate, storage)
+model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future)
 {
-    this.gameState = gamestate;
+    this._gameid = gameid;
+    this._gameState = gamestate;
     this._id = id;
-    this._timeline = {};
-    this.storage = storage;
+
+    this._past = past || [];
+    this._future = future || [];
+    this._storage = storage;
 };
 
-model.Timeline.prototype.serialize = function()
+model.Timeline.prototype.getId = function()
 {
-    return this._timeline;
+    return this._id;
 };
 
-model.Timeline.prototype.deserialize = function(timeline)
+model.Timeline.prototype.persist = function()
 {
-    if ( ! timeline)
-        this._timeline = {};
+    if (Meteor.isClient)
+    {
+        if (this._future.length == 0)
+            return this;
+
+        console.log('persist timeline future');
+        this._storage.persistFuture(this._future, this._id);
+    }
     else
-        this._timeline = timeline;
+    {
+        if (this._past.length == 0)
+            return this;
+
+        console.log('persist timeline past');
+        this._storage.persistPast(this._past, this._id);
+    }
 
     return this;
 };
 
-model.Timeline.prototype.getByName = function(time, name)
+model.Timeline.prototype.getAt = function(time, list)
 {
-    if ( ! this._timeline[time])
-        return null;
+    if (! list)
+        list = this._past.concat(this._future);
 
-    for (var i in this._timeline[time])
-    {
-        var entry = this._timeline[time][i];
-        if (entry.name === name)
-            return entry;
-    }
+    var entry = list.filter(function(entry){
+        return entry.time == time
+    });
+
+    if (entry.length > 0)
+        return entry[0];
 
     return null;
 };
 
-model.Timeline.prototype.add = function(time, object)
+model.Timeline.prototype.getByName = function(time, name, list)
 {
-    if ( ! this._timeline[time])
-        this._timeline[time] = [object];
+    if (! list)
+        list = this._past.concat(this._future);
+
+    var candidates = list.filter(function(entry){
+        return (entry.name == name && entry.time == time);
+    });
+
+    if (candidates.length > 0)
+        return candidates[0];
+
+    return null;
+};
+
+model.Timeline.prototype.add = function(time, name, object)
+{
+    if (Meteor.isClient)
+    {
+        this._future.push({time: time, name: name, entry: object});
+    }
     else
-        this._timeline[time].push(object);
-};
-
-model.Timeline.prototype.remove = function(time, object)
-{
-    if ( ! this._timeline[time])
-        return;
-
-    for (var i in this._timeline[time])
     {
-        var removee = this._timeline[time][i];
-        if (removee === object)
-        {
-            this._timeline[time].splice(i, 1);
-            return;
-        }
+        this._past.push({time: time, name: name, entry: object});
     }
 };
 
-model.Timeline.prototype.removeByName = function(time, name)
+model.Timeline.prototype.update = function(time, name, object)
 {
-    if ( ! this._timeline[time])
-        return;
-
-    for (var i in this._timeline[time])
+    var entry = null;
+    if (Meteor.isClient)
     {
-        var removee = this._timeline[time][i];
-        if (removee.name == name)
+        entry = this.getByName(time, name, this._future);
+    }
+    else
+    {
+        entry = this.getByName(time, name, this._past);
+    }
+
+    if (entry)
+        entry.entry = object;
+};
+
+model.Timeline.prototype.clear = function(time, name)
+{
+    if (Meteor.isClient)
+    {
+        this._future = [];
+    }
+    else
+    {
+        this._past = [];
+    }
+};
+
+model.Timeline.prototype.remove = function(time, name)
+{
+    if (Meteor.isClient)
+    {
+        this._future = this._removeFrom(time, name, this._future);
+    }
+    else
+    {
+        this._past = this._removeFrom(time, name, this._past);
+    }
+};
+
+model.Timeline.prototype._removeFrom = function(time, name, list)
+{
+    for (var i = list.length-1; i >= 0; i--)
+    {
+        var removee = list[i];
+        if (removee.name == name && removee.time == time)
         {
-            this._timeline[time].splice(i, 1);
-            return;
+            list.splice(i, 1);
         }
     }
+
+    return list;
+};
+
+model.Timeline.prototype.removeAllByName = function(name)
+{
+};
+
+model.Timeline.prototype.map = function(callback, context)
+{
+    return this._past.concat(this._future).map(callback, context);
+};
+
+model.Timeline.prototype.filter = function(callback, context)
+{
+    return this._past.concat(this._future).filter(callback, context);
 };

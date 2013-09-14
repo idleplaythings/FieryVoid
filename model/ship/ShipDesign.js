@@ -36,7 +36,7 @@ model.ShipDesign.prototype.load = function(id)
     return this.loadWithDocument(design);
 };
 
-model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
+model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc, timelineFactory)
 {
     //this.hullLayout = new model.HullLayout(this.hullLayout);
     shipDesignDoc.hullLayout =
@@ -56,9 +56,9 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc)
             {
                 module.setPosition(moduleDetails.position);
                 module.setDirection(moduleDetails.direction);
-                module.timeline =
-                    new model.ModuleTimeline()
-                        .deserialize(moduleDetails.serializedTimeline);
+
+                if (timelineFactory)
+                    module.setTimeline(timelineFactory.getTimeline(moduleDetails.timelineId));
             }
             else
             {

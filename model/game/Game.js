@@ -1,5 +1,6 @@
 getGame = function(gameId)
 {
+    console.log("getting game with id " + gameId);
     var gameDoc = Games.findOne({_id: gameId});
     var game = new model[gameDoc.type];
     return game.load(gameDoc);
@@ -10,7 +11,6 @@ model.Game = function Game(args)
     if ( ! args)
         args = [];
 
-    this.setState(args);
     this.type = 'Game';
 
     this.gameScene = null;
@@ -19,8 +19,10 @@ model.Game = function Game(args)
 
     this.dispatcher = null;
     this.uiEventResolver = null;
-    this.gameState = new model.GameState(0);
     this.replayUI = null;
+    this.movementFactory = null;
+
+    this.setState(args);
 };
 
 model.Game.prototype.setState = function(args)
@@ -28,12 +30,23 @@ model.Game.prototype.setState = function(args)
     if ( ! args)
         args = [];
 
+    this._id = args._id;
     this.name = args.name || 'unnamed';
     this.background = args.background || null;
     this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
     this.ships = args.ships || [];
     this.asteroids = args.asteroids || [];
+
+    this.gameState = new model.GameState(args.currentGameTime || 0);
+
+    this.timelineFactory = new model.TimelineFactory(
+        this.gameState, this._id, new model.TimelineStorage());
+
+    this.movementFactory = new model.MovementFactory(this.timelineFactory);
+
+    this.shipStorage = new model.ShipStorage(
+        this._id, this.movementFactory, this.timelineFactory);
 
     this.created = args.created || null;
 };
@@ -62,7 +75,6 @@ model.Game.prototype.play = function()
     this.zooming.init();
 
     this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
-
 
     this.replayUI = new model.ReplayUI(this.gameState);
     this.replayUI.create();
@@ -113,31 +125,19 @@ model.Game.prototype.initGameState = function(container)
 
 model.Game.prototype.load = function(doc)
 {
-    var invalidShip = false;
-    doc.ships = doc.ships.map(
-        function(shipDoc)
-        {
-            var ship = new model.ShipInGame().loadWithDocument(shipDoc)
-            if (! ship)
-                invalidShip = true;
-
-            window.ship = ship;
-            return ship;
-        });
-
-    if (invalidShip)
-        return null;
-
     this.setState(doc);
+    this.ships = this.shipStorage.getShipsInGame();
+    console.log(this);
     return this;
 };
 
-model.Game.prototype.prepareForSave = function()
+model.Game.prototype.getInitialInsert = function()
 {
-    this.ships = this.ships.map(
-        function(ship){
-            ship.prepareForSave();
-            return ship;
-        });
-    return this;
+    return {
+        _id: this._id,
+        type: this.type,
+        name: this.name,
+        terrainSeed: this.terrainSeed,
+        created: this.created
+    };
 };

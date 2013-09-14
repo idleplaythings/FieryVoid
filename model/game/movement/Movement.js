@@ -1,56 +1,40 @@
-model.Movement = function Movement(shipDesign)
+model.Movement = function Movement(timeline)
 {
-    this.shipDesign = shipDesign;
-    this.route = [];
-    this.waypoints = [];
+    this.ship = null;
     this.route3d = null;
     this.resolver = new model.MovementResolver();
+
+    this.route = new model.MovementRoute(timeline, 'route');
+    this.waypoints = new model.MovementRoute(timeline, 'waypoint');
+    this._timeline = timeline;
 };
 
-model.Movement.prototype.serialize = function ()
+model.Movement.prototype.setShip = function(ship)
 {
-    return this.route;
-};
-
-model.Movement.prototype.deserialize = function(route, shipDesign)
-{
-    this.shipDesign = shipDesign;
-    this.route = route.map(function(w){return new model.MovementWaypoint(w)});
-    return this;
+    this.ship = ship;
 };
 
 model.Movement.prototype.addStartPosition = function(waypoint)
 {
-    this.route.unshift(waypoint);
+    this.route.add(waypoint);
+    this.route.persist();
 };
 
-model.Movement.prototype.extrapolateCourseForNext = function(time)
+model.Movement.prototype.setTimeline = function(timeline)
 {
-    var start = this.route[this.route.length-1];
+    this._timeline = timeline;
+};
 
-    for (var i = 1; i <= time; i++)
-    {
-        this.route.push(new model.MovementWaypoint(
-            {
-                position: new Vector2(
-                    start.position.x + (start.velocity.x * i),
-                    start.position.y + (start.velocity.y * i)
-                ),
-                velocity: start.velocity,
-                facing: MathLib.addToAzimuth(start.facing, start.rotationVelocity * i),
-                rotationVelocity: start.rotationVelocity,
-                extrapolation: true,
-                time: start.time + i
-            }
-        ));
-    }
+model.Movement.prototype.serialize = function ()
+{
+    return this._timeline.getId();
 };
 
 model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
 {
     uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
     uiResolver.registerListener('click', this.onClick.bind(this), 1);
-    this.extrapolateCourseForNext(10);
+    this.route.extrapolateCourseForNext(10);
     this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
@@ -76,7 +60,7 @@ model.Movement.prototype.onDrag = function(eventPayload)
     if (eventPayload.capture)
     {
         var wp = this.getRoute3d().getWaypointInPosition(
-            eventPayload.start.game, this.route);
+            eventPayload.start.game, this.route.getRoute());
 
         if (wp)
         {
@@ -84,9 +68,9 @@ model.Movement.prototype.onDrag = function(eventPayload)
             eventPayload.capture(function(payload)
             {
                 if (eventPayload.ctrlKey) {
-                    self.ctrlDrag.call(self, self.waypoints[wp.time], payload);
+                    self.ctrlDrag.call(self, self.waypoints.getAt(wp.time), payload);
                 } else {
-                    self.drag.call(self, self.waypoints[wp.time], payload);
+                    self.drag.call(self, self.waypoints.getAt(wp.time), payload);
                 }
             });
 
@@ -104,6 +88,7 @@ model.Movement.prototype.drag = function(wp, payload)
     if (payload.release)
     {
         this.getRoute3d().setNormal(wp.time);
+        this.persist();
         return;
     }
 
@@ -113,7 +98,6 @@ model.Movement.prototype.drag = function(wp, payload)
     this.deleteRouteFrom(wp.time-9);
     this.unresolveRouteAfter(wp.time);
     this.recalculateRoute();
-
 };
 
 model.Movement.prototype.ctrlDrag = function(wp, payload)
@@ -121,6 +105,7 @@ model.Movement.prototype.ctrlDrag = function(wp, payload)
     if (payload.release)
     {
         this.getRoute3d().setNormal(wp.time);
+        this.persist();
         return;
     }
 
@@ -135,54 +120,46 @@ model.Movement.prototype.ctrlDrag = function(wp, payload)
     this.deleteRouteFrom(wp.time-9);
     this.unresolveRouteAfter(wp.time);
     this.recalculateRoute();
-
 };
 
 model.Movement.prototype.deleteRouteFrom = function(time)
 {
-    var amount = this.route.length - time;
-    //console.log("deleting route from time " + time + " amount: " + amount);
-    this.route.splice(time, amount);
-    //console.log(this.route);
+    this.route.delete(time);
 };
-
-model.Movement.prototype.removeExtrapolation = function()
-{
-    this.route = this.route.filter(function(wp){return wp.extrapolation !== true});
-};
-
 
 model.Movement.prototype.unresolveRouteAfter = function(time)
 {
-    for (var i in this.waypoints)
-    {
-        var wp = this.waypoints[i];
-        if (wp.time > time)
-            wp.routeResolved = false;
-    }
+    this.waypoints.setUnresolvedAfter(time);
 };
-
 
 model.Movement.prototype.setWaypoint = function(pos)
 {
-
-    this.removeExtrapolation();
+    this.route.removeExtrapolation();
     //var i = this.route.length + 10;
-    var i = Math.ceil((this.route.length+1) / 10) * 10;
+    var i = Math.ceil((this.route.getLength()+1) / 10) * 10;
 
-    console.log("setting waypoint for time " + i);
+    //console.log("setting waypoint for time " + i);
 
-    this.waypoints[i] = new model.MovementWaypoint({position:pos, facing:0, time:i});
+    this.waypoints.add(new model.MovementWaypoint({position:pos, facing:0, time:i}));
     this.recalculateRoute();
+    this.persist();
+};
 
+model.Movement.prototype.persist = function()
+{
+    this.route.persist();
+    this.waypoints.persist();
 };
 
 model.Movement.prototype.recalculateRoute = function()
 {
-    this.route = this.resolver.resolveRoute(
-        this.shipDesign, this.route, this.waypoints);
+    if (! this.ship)
+        throw Error("Movement ship is not set");
 
-    this.extrapolateCourseForNext(10);
+    this.resolver.resolveRoute(
+        this.ship.shipDesign, this.route, this.waypoints);
+
+    this.route.extrapolateCourseForNext(10);
     this.getRoute3d().displayRoute(this.route);
 };
 
@@ -191,15 +168,15 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
     var gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
     {
-        if ( ! this.route[gameTime])
+        if ( ! this.route.getAt(gameTime))
             return this.getExtrapolatedPosition(gameTime);
 
-        return this.route[gameTime].position;
+        return this.route.getAt(gameTime).position;
     }
     else
     {
-        var p1 = this.route[Math.floor(gameTime)];
-        var p2 = this.route[Math.ceil(gameTime)];
+        var p1 = this.route.getAt(Math.floor(gameTime));
+        var p2 = this.route.getAt(Math.ceil(gameTime));
 
         if (p1 && p2)
         {
@@ -221,7 +198,7 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
 
 model.Movement.prototype.getExtrapolatedPosition = function(gameTime)
 {
-    var p = this.route[this.route.length-1];
+    var p = this.route.getLast();
     var deltaTime = gameTime - p.time;
     return p.position.clone().add(p.velocity.clone().multiplyScalar(deltaTime));
 };
@@ -231,15 +208,15 @@ model.Movement.prototype.getFacing = function(gameTime)
     gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
     {
-        if ( ! this.route[gameTime])
+        if ( ! this.route.getAt(gameTime))
             return this.getExtrapolatedFacing(gameTime);
 
-        return this.route[gameTime].facing;
+        return this.route.getAt(gameTime).facing;
     }
     else
     {
-        var p1 = this.route[Math.floor(gameTime)];
-        var p2 = this.route[Math.ceil(gameTime)];
+        var p1 = this.route.getAt(Math.floor(gameTime));
+        var p2 = this.route.getAt(Math.ceil(gameTime));
         var perc = gameTime % 1;
 
         if (p1 && p2)
@@ -255,7 +232,7 @@ model.Movement.prototype.getFacing = function(gameTime)
 
 model.Movement.prototype.getExtrapolatedFacing = function(gameTime)
 {
-    var p = this.route[this.route.length-1];
+    var p = this.route.getLast();
     var deltaTime = gameTime - p.time;
     return MathLib.addToAzimuth(p.facing, p.rotationVelocity * deltaTime);
 };
@@ -269,22 +246,3 @@ model.Movement.prototype.getRoute3d = function()
 
     return this.route3d;
 };
-
-model.Movement.prototype.persistRoute = function()
-{
-    if ( ! this.route3d)
-    {
-        this.route3d = new model.MovementDisplayRoute();
-    }
-
-    return this.route3d;
-};
-
-model.Movement.prototype.getWaypointsAfter = function(time)
-{
-    return this.waypoints.filter(
-        function(waypoint) {
-            return waypoint.time >= time;
-        });
-};
-

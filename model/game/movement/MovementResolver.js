@@ -2,20 +2,9 @@ model.MovementResolver = function MovementResolver()
 {
 };
 
-model.MovementResolver.prototype.getModuleThrustVector = function(module, facing)
+model.MovementResolver.prototype.getModuleThrustVector = function(module)
 {
     return module.thruster.getThrustForceVector();
-    /*
-    var vector = module.thruster.getThrustForceVector();
-    var length = vector.length();
-
-    facing = new Vector2(
-        Math.cos(facing),
-        Math.sin(facing)
-    );
-
-    return vector.clone().normalize().add(facing).normalize().multiplyScalar(length);
-    */
 };
 
 model.MovementResolver.prototype.convertVectorToShipCentered = function(a, facing)
@@ -29,19 +18,6 @@ model.MovementResolver.prototype.convertVectorToShipCentered = function(a, facin
     var rotatedVector = vector.applyMatrix4(matrix);
 
     return new Vector2(rotatedVector.x, rotatedVector.y);
-
-    /*
-    var a = a.clone().sub(shipPos);
-    var facing = MathLib.degreeToRadian(facing);
-    var length = a.length();
-
-    facing = new Vector2(
-        Math.cos(facing),
-        Math.sin(facing)
-    );
-
-    return a.normalize().add(facing).normalize().multiplyScalar(length);
-    */
 };
 
 model.MovementResolver.prototype.convertVectorToSpace = function(a, facing)
@@ -54,16 +30,6 @@ model.MovementResolver.prototype.convertVectorToSpace = function(a, facing)
     var rotatedVector = vector.applyMatrix4(matrix);
 
     return new Vector2(rotatedVector.x, rotatedVector.y);
-    /*
-    var length = a.length();
-
-    facing = new Vector2(
-        Math.acos(facing),
-        Math.asin(facing)
-    );
-
-    return a.clone().normalize().add(facing).normalize().multiplyScalar(length).add(shipPos);
-    */
 };
 
 model.MovementResolver.prototype.getEnginePower = function(shipDesign)
@@ -109,7 +75,7 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, route, wayp
         var targetWaypoint = this.getNextTarget(waypoints);
 
         if (! targetWaypoint)
-            return route;
+            return;
 
         var timeToTarget = targetWaypoint.time - currentWaypoint.time;
 
@@ -126,28 +92,18 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, route, wayp
             availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
 
         targetWaypoint.routeResolved = true;
-        route = route.concat(newRoute);
+        route.add(newRoute);
     }
-    return route;
 };
 
 model.MovementResolver.prototype.getCurrentWaypoint = function(route)
 {
-    var wp = route[route.length-1];
-    return wp;
+    return route.getLast();
 };
 
 model.MovementResolver.prototype.getNextTarget = function(waypoints)
 {
-    for(var i in waypoints)
-    {
-        var wp = waypoints[i];
-        if (! wp.routeResolved)
-        {
-            return wp;
-        }
-    }
-    return null;
+    return waypoints.getNextUnresolved();
 };
 
 model.MovementResolver.prototype.getAvailableThrusters = function(

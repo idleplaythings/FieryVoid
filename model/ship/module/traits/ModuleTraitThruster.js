@@ -21,7 +21,7 @@ model.ModuleTraitThruster.prototype.getTotalThrusterUsageAtTime = function(time)
     if (! usage)
         return 0;
 
-    return usage.normal + (usage.rotation * 0.5);
+    return usage.entry.normal + (usage.entry.rotation * 0.5);
 };
 
 

@@ -19,9 +19,6 @@ Template.shipMenuOwned.events({
             'TestdriveStart',
             Session.get('selected_ship'),
             function(err, result){
-                console.log(err);
-                console.log(result);
-                console.log("testdrive done");
                 Meteor.Router.to('/game/'+result);
             }
         );

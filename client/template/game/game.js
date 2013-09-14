@@ -1,6 +1,5 @@
 Template.game.created = function()
 {
-    console.log("game created");
     var gameId = Session.get('active_game');
 
     var subscription = Meteor.subscribe("currentGame", gameId);

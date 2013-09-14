@@ -11,11 +11,11 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
 
 model.ThrusterForMovement.prototype.commitThrusterUsage = function(time)
 {
-    this.module.timeline.removeByName(time, 'thrusterUsage');
+    this.module.timeline.remove(time, 'thrusterUsage');
     this.module.timeline.add(
         time,
+        'thrusterUsage',
         {
-            name: 'thrusterUsage',
             normal: this.assignedThrust,
             rotation: this.assignedRotationThrust
         }

@@ -13,7 +13,20 @@ model.MovementWaypoint = function MovementWaypoint(args)
 
     this.extrapolation = args.extrapolation || false;
 
-    this.thrusterUsage = null;
-    this.routeResolved = false;
-    this.facingTarget = null;
+    this.thrusterUsage = args.thrusterUsage || null;
+    this.routeResolved = args.routeResolved || false;
+    this.facingTarget = args.facingTarget || null;
 };
+
+model.MovementWaypoint.prototype.serialize = function()
+{
+    return {
+        position: {x: this.position.x, y: this.position.y},
+        facing: this.facing,
+        time: this.time,
+        rotationVelocity: this.rotationVelocity,
+        velocity: this.velocity,
+        routeResolved: this.routeResolved,
+        facingTarget: this.facingTarget
+    }
+}

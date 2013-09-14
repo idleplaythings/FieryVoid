@@ -1,16 +1,13 @@
 ModuleLayouts = new Meteor.Collection(
     "ModuleLayouts",
     {transform: function (doc) {
-        var moduleLayout = new model.ModuleLayout();
-        _.extend(moduleLayout, doc);
+        var moduleLayout = new model.ModuleLayout(doc);
 
         var image = ModuleImages.findOne({name: moduleLayout.image})
         if (! image)
             return null;
 
         moduleLayout.image = image;
-        moduleLayout.initTraits();
-
         return moduleLayout;
     }}
 );

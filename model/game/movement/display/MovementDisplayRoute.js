@@ -57,9 +57,9 @@ model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route
 
 model.MovementDisplayRoute.prototype.displayRoute = function(route)
 {
-    for (var i = 1; i<route.length; i++ )
+    for (var i in route.getRoute())
     {
-        var waypoint = route[i];
+        var waypoint = route.getRoute()[i];
         var particle = this.particleEmitter.particles[i];
         particle.setFromWaypoint(waypoint);
     }

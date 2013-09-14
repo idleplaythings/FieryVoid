@@ -6,6 +6,16 @@ model.GameState = function GameState(currentTime)
     this.currentDisplayTarget = currentTime;
 };
 
+model.GameState.prototype.getCurrentGameTime = function()
+{
+    return this.currentGametime;
+};
+
+model.GameState.prototype.getCurrentGameTimeInSeconds = function()
+{
+    return this.currentGametime / 1000;
+};
+
 model.GameState.prototype.advanceGameTimeTo = function(target)
 {
     this.currentDisplayTarget = target;

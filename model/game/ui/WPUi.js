@@ -9,10 +9,23 @@ model.WaypointUi.prototype.getUi = function()
     {
         this.createUiElement();
     }
+
+    return this.uiElement;
 };
 
 model.WaypointUi.prototype.createUiElement = function()
 {
+    var container = jQuery('#waypointUi');
+    if (container.length === 0)
+    {
+        var container = jQuery('<div id="waypointUi"></div>');
+        container.appedTo("body");
+        this.uiElement = container;
+    }
+    else
+    {
+        this.uiElement = container;
+    }
 
 };
 
