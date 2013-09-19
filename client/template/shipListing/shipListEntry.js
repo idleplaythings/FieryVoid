@@ -13,6 +13,6 @@ Template.shipListEntry.username = function()
 
 Template.shipListEntry.events({
     'click .selectable': function () {
-      Meteor.Router.to('shipEditor', this);
+      Router.go('shipEditor', {_id:  this._id });
     }
 });

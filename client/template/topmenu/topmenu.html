@@ -1,12 +1,12 @@
 <template name="topMenu">
     <div class="menubar top">
         <ul>
-          <li><a class="button outside" href="{{shipMenuPath}}">Ships</a></li>
+          <li><a class="button outside" href="{{urlFor 'shipMenu'}}">Ships</a></li>
         </ul>
         {{#if isAdmin}}
         <ul>
-          <li><a class="button outside" href="{{hullEditorPath}}">Hull Editor</a></li>
-          <li><a class="button outside" href="{{moduleEditorPath}}">Module Editor</a></li>
+          <li><a class="button outside" href="{{urlFor 'hullEditor'}}">Hull Editor</a></li>
+          <li><a class="button outside" href="{{urlFor 'moduleEditor'}}">Module Editor</a></li>
         </ul>
         {{/if}}
         <div id="gameBar">

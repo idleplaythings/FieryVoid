@@ -18,8 +18,13 @@ Template.shipMenuOwned.events({
         Meteor.call(
             'TestdriveStart',
             Session.get('selected_ship'),
-            function(err, result){
-                Meteor.Router.to('/game/'+result);
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                    return false;
+                }
+
+                Router.go('existingGame', { _id: result });
             }
         );
 
