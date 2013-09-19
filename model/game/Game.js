@@ -1,9 +1,49 @@
+Meteor.methods({
+    GameStart: function (player1Id, player2Id) {
+        console.log("game start");
+
+        console.log(player1Id, player2Id);
+
+        var game = new model.Game({
+            _id: new Meteor.Collection.ObjectID().toHexString()
+        });
+
+        var ship1 = game.getRandomShipForPlayer(player1Id);
+        var ship2 = game.getRandomShipForPlayer(player2Id);
+
+        if (!ship1 || !ship2) {
+            throw "Ships not found"
+        }
+
+        game.setStartingConditions();
+        game.ships.push(ship1);
+        game.ships.push(ship2);
+        game.shipStorage.addShip(ship1);
+        game.shipStorage.addShip(ship2);
+
+        Games.insert(game.getInitialInsert());
+
+        return game._id;
+    }
+});
+
 getGame = function(gameId)
 {
     console.log("getting game with id " + gameId);
     var gameDoc = Games.findOne({_id: gameId});
-    var game = new model[gameDoc.type];
+    var game = new model[gameDoc.type]();
     return game.load(gameDoc);
+};
+
+getRandomShipDesignIdForPlayer = function(playerId) {
+    var shipDesigns = ShipDesigns.find({ owner: playerId }).fetch();
+
+    if (shipDesigns.length === 0) {
+        return null;
+    }
+
+    var randomIndex = Math.floor(Math.random() * shipDesigns.length);
+    return shipDesigns[randomIndex]._id;
 };
 
 model.Game = function Game(args)
@@ -23,6 +63,42 @@ model.Game = function Game(args)
     this.movementFactory = null;
 
     this.setState(args);
+};
+
+model.Game.prototype.getRandomShipForPlayer = function(playerId) {
+    var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
+
+    if (!shipDesignId) {
+        return false;
+    }
+
+    var shipDesign = new model.ShipDesignInGame().load(shipDesignId);
+
+    var ship = new model.ShipInGame({
+        _id: Math.ceil(Math.random() * 1000),
+        controller: playerId,
+        shipDesign: shipDesign,
+        movement: this.movementFactory.createMovement()
+    });
+
+    ship.createTimelines(this.timelineFactory);
+
+    ship.movement.addStartPosition(new model.MovementWaypoint({
+        time: 0,
+        position: {x:Math.ceil(Math.random() * 200) - 100, y:Math.ceil(Math.random() * 200) - 100},
+        velocity: {x:500, y:0},
+        facing: 0
+    }));
+
+    return ship;
+};
+
+
+model.Game.prototype.setStartingConditions = function()
+{
+    this.name = "a game";
+    this.created =  new Date().getTime();
+    this.terrainSeed = Math.random();
 };
 
 model.Game.prototype.setState = function(args)
@@ -49,6 +125,28 @@ model.Game.prototype.setState = function(args)
         this._id, this.movementFactory, this.timelineFactory);
 
     this.created = args.created || null;
+};
+
+model.Game.prototype.addShip = function(shipDesign)
+{
+    var ship = new model.ShipInGame({
+        _id: 1,
+        controller: Meteor.userId(),
+        shipDesign: shipDesign,
+        movement: this.movementFactory.createMovement()
+    });
+
+    ship.createTimelines(this.timelineFactory);
+
+    ship.movement.addStartPosition(new model.MovementWaypoint({
+        time: 0,
+        position: {x:0, y:0},
+        velocity: {x:500, y:0},
+        facing: 0
+    }));
+
+    this.ships.push(ship);
+    this.shipStorage.addShip(ship);
 };
 
 model.Game.prototype.play = function()
@@ -140,4 +238,9 @@ model.Game.prototype.getInitialInsert = function()
         terrainSeed: this.terrainSeed,
         created: this.created
     };
+};
+
+model.Game.prototype.getSelectedShip = function()
+{
+    return this.ships[0];
 };

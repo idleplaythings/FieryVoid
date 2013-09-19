@@ -1,14 +1,17 @@
 model.ShipInGame = function ShipInGame(args)
 {
     if ( ! args)
-        args = [];
+        args = {};
 
     this._id = args._id || null;
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
 
     this.movement = args.movement;
-    this.movement.setShip(this);
+
+    if (this.movement && typeof this.movement.setShip === 'function') {
+        this.movement.setShip(this);
+    }
 
     this.icon = null;
     this.gameScene = null;
