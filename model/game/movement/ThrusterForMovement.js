@@ -12,6 +12,10 @@ model.ThrusterForMovement = function ThrusterForMovement(acc, rotation, max, mod
 model.ThrusterForMovement.prototype.commitThrusterUsage = function(time)
 {
     this.module.timeline.remove(time, 'thrusterUsage');
+
+    if (this.assignedThrust == 0 && this.assignedRotationThrust == 0)
+        return;
+
     this.module.timeline.add(
         time,
         'thrusterUsage',

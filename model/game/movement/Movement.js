@@ -149,6 +149,12 @@ model.Movement.prototype.persist = function()
 {
     this.route.persist();
     this.waypoints.persist();
+    this.ship.shipDesign.modules.forEach(function(m){
+        if (m.thruster)
+        {
+            m.timeline.persist();
+        }
+    });
 };
 
 model.Movement.prototype.recalculateRoute = function()
