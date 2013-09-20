@@ -6,12 +6,12 @@ model.ReplayUI = function ReplayUI(gameState)
 
 model.ReplayUI.prototype.create = function()
 {
-    var back = jQuery('<li><a class="button outside" href="">-</a></li>')
+    var back = jQuery('<li><div class="button outside" href="">-</div></li>')
     back.on('click', this.back.bind(this));
 
     var current = jQuery('<li> 10s </li>');
 
-    var forward = jQuery('<li><a class="button outside" href="">+</a></li>')
+    var forward = jQuery('<li><div class="button outside" href="">+</div></li>')
     forward.on('click', this.forward.bind(this));
 
     var container = jQuery('<ul></ul>');
