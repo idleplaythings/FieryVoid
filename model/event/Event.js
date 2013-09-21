@@ -8,8 +8,6 @@ model.Event = function(origin, name)
     this.name = name;
 };
 
-model.Event.prototype.constructor =  Event;
-
 model.Event.prototype.setId = function(id)
 {
     this.id = id;

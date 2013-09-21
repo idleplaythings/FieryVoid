@@ -108,4 +108,44 @@ describe("Viewport Coordinate converter spec", function() {
             var pos = converter.fromViewPortToGame(clickPosition);
             expect(pos).toEqual({x:50, y:-100});
         });
+
+    it("should return game position as viewport position with no zoom or scroll",
+        function()
+        {
+            //Zoom 1 is 400 from camera, so this is 800. 500- 800 is -300
+            var cameraPos = {x:500, y:-500};
+            var zoom = 1;
+
+            window.innerWidth  = 1000;
+            window.innerHeight = 1000;
+
+            var gamePosition = {x:100, y:-100};
+
+            var converter = new model.CoordinateConverterViewPort(
+                {camera: {position: cameraPos}, zoom: zoom}
+            );
+
+            var pos = converter.fromGameToViewPort(gamePosition);
+            expect(pos).toEqual({x:100, y:100});
+        });
+
+    it("should return game position as viewport position with 0.5 zoom or scroll",
+        function()
+        {
+            //Zoom 1 is 400 from camera, so this is 800. 500- 800 is -300
+            var cameraPos = {x:500, y:-500};
+            var zoom = 0.5;
+
+            window.innerWidth  = 1000;
+            window.innerHeight = 1000;
+
+            var gamePosition = {x:100, y:-100};
+
+            var converter = new model.CoordinateConverterViewPort(
+                {camera: {position: cameraPos}, zoom: zoom}
+            );
+
+            var pos = converter.fromGameToViewPort(gamePosition);
+            expect(pos).toEqual({x:300, y:300});
+        });
 });

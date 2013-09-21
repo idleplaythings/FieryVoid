@@ -29,6 +29,9 @@ model.Scrolling.prototype.getScrollingSpeed = function()
 
 model.Scrolling.prototype.scroll = function (payload)
 {
+    if (payload.stopped)
+        return;
+
     if (payload.capture)
     {
         payload.capture(this.scroll.bind(this));

@@ -21,7 +21,6 @@ model.Timeline.prototype.persist = function()
         if (this._future.length == 0)
             return this;
 
-        console.log('persist timeline future');
         this._storage.persistFuture(this._future, this._id);
     }
     else
@@ -29,7 +28,6 @@ model.Timeline.prototype.persist = function()
         if (this._past.length == 0)
             return this;
 
-        console.log('persist timeline past');
         this._storage.persistPast(this._past, this._id);
     }
 
@@ -118,22 +116,32 @@ model.Timeline.prototype.remove = function(time, name)
     }
 };
 
-model.Timeline.prototype._removeFrom = function(time, name, list)
+model.Timeline.prototype._removeFrom = function(time, name, list, after)
 {
     for (var i = list.length-1; i >= 0; i--)
     {
         var removee = list[i];
-        if (removee.name == name && removee.time == time)
+
+        if (removee.name == name)
         {
-            list.splice(i, 1);
+            if (removee.time == time || (after && removee.time > time))
+                list.splice(i, 1);
         }
     }
 
     return list;
 };
 
-model.Timeline.prototype.removeAllByName = function(name)
+model.Timeline.prototype.removeAfter = function(time, name)
 {
+    if (Meteor.isClient)
+    {
+        this._future = this._removeFrom(time, name, this._future, true);
+    }
+    else
+    {
+        this._past = this._removeFrom(time, name, this._past, true);
+    }
 };
 
 model.Timeline.prototype.map = function(callback, context)

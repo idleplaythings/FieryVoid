@@ -64,6 +64,12 @@ model.MovementDisplayRoute.prototype.displayRoute = function(route)
         particle.setFromWaypoint(waypoint);
     }
 
+
+    for (i++;i<this.particleEmitter.particles.length; i++)
+    {
+        this.particleEmitter.particles[i].deactivate();
+    }
+
     this.particleEmitter.animate();
 };
 
@@ -106,21 +112,18 @@ model.MovementDisplayRoute.prototype._zoomLevelChangeCallback = function(event)
 
 model.MovementDisplayRoute.prototype.setRotating = function(time)
 {
-    console.log("rotate: "  + time);
     this.particleEmitter.particles[time].rotating = true;
     this.particleEmitter.animate();
 };
 
 model.MovementDisplayRoute.prototype.setDragging = function(time)
 {
-    console.log("drag: "  + time);
     this.particleEmitter.particles[time].dragging = true;
     this.particleEmitter.animate();
 };
 
 model.MovementDisplayRoute.prototype.setNormal = function(time)
 {
-    console.log("normal: "  + time);
     this.particleEmitter.particles[time].dragging = false;
     this.particleEmitter.particles[time].rotating = false;
     this.particleEmitter.animate();

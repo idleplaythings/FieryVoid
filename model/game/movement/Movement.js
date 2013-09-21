@@ -1,5 +1,6 @@
-model.Movement = function Movement(timeline)
+model.Movement = function Movement(timeline, waypointUi)
 {
+    this.waypointUi = waypointUi;
     this.ship = null;
     this.route3d = null;
     this.resolver = new model.MovementResolver();
@@ -40,18 +41,24 @@ model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiR
 
 model.Movement.prototype.onClick = function(eventPayload)
 {
+    if (eventPayload.stopped)
+        return;
+
     var wp = this.getRoute3d().getWaypointInPosition(
-        eventPayload.game, this.route);
+        eventPayload.game, this.route.getRoute());
 
     if (wp)
     {
         eventPayload.stop();
-
+        this.waypointUi.show(this, wp);
     }
 };
 
 model.Movement.prototype.onDrag = function(eventPayload)
 {
+    if (eventPayload.stopped)
+        return;
+
     if (eventPayload.release)
     {
         return;
@@ -85,6 +92,9 @@ model.Movement.prototype.onDrag = function(eventPayload)
 
 model.Movement.prototype.drag = function(wp, payload)
 {
+    if (payload.stopped)
+        return;
+
     if (payload.release)
     {
         this.getRoute3d().setNormal(wp.time);
@@ -102,6 +112,9 @@ model.Movement.prototype.drag = function(wp, payload)
 
 model.Movement.prototype.ctrlDrag = function(wp, payload)
 {
+    if (payload.stopped)
+        return;
+
     if (payload.release)
     {
         this.getRoute3d().setNormal(wp.time);
@@ -120,6 +133,23 @@ model.Movement.prototype.ctrlDrag = function(wp, payload)
     this.deleteRouteFrom(wp.time-9);
     this.unresolveRouteAfter(wp.time);
     this.recalculateRoute();
+};
+
+model.Movement.prototype.deleteWaypoint = function(time)
+{
+    this.route.delete(time);
+    this.waypoints.delete(time);
+
+    this.ship.shipDesign.modules.forEach(function(m){
+        if (m.thruster)
+        {
+            m.thruster.deleteThrusterUsage(time);
+        }
+    });
+
+    this.route.extrapolateCourseForNext(10);
+    this.getRoute3d().displayRoute(this.route);
+    this.persist();
 };
 
 model.Movement.prototype.deleteRouteFrom = function(time)

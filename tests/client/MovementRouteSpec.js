@@ -5,7 +5,10 @@ describe("Movement route", function() {
         var t = getTimeline();
         var m = new model.MovementRoute(t, 'route');
 
-        expect(m.getRoute().map(function(wp){return wp.time})).toEqual([0, 10, 20, 30]);
+        expect(m.getRoute()
+            .filter(function(wp){return wp})
+            .map(function(wp){return wp.time}))
+            .toEqual([0, 10, 20, 30]);
     });
 
     it("should return last", function() {
@@ -39,7 +42,7 @@ describe("Movement route", function() {
             {time:0, name:'route', entry:getWaypoitObject(0, true)},
             {time:30, name:'route', entry:getWaypoitObject(30, false)},
             {time:10, name:'route', entry:getWaypoitObject(10, false)},
-        ]);
+        ], []);
     }
 
     function getWaypoitObject(time, resolved)

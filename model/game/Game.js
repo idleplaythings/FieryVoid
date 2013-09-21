@@ -116,10 +116,18 @@ model.Game.prototype.setState = function(args)
 
     this.gameState = new model.GameState(args.currentGameTime || 0);
 
+    this.dispatcher = new model.EventDispatcher();
+    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
+
+    this.uiEventResolver = new model.UiFocusResolver(
+        this.coordinateConverter, new model.EventDispatcher(), this.dispatcher);
+
     this.timelineFactory = new model.TimelineFactory(
         this.gameState, this._id, new model.TimelineStorage());
 
-    this.movementFactory = new model.MovementFactory(this.timelineFactory);
+    this.movementFactory = new model.MovementFactory(
+        this.timelineFactory, this.coordinateConverter, this.dispatcher, this.uiEventResolver);
 
     this.shipStorage = new model.ShipStorage(
         this._id, this.movementFactory, this.timelineFactory);
@@ -151,14 +159,9 @@ model.Game.prototype.addShip = function(shipDesign)
 
 model.Game.prototype.play = function()
 {
-    this.dispatcher = new model.EventDispatcher();
-
     var container = jQuery('#gameContainer');
-    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.gameScene.init(container);
 
-    var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
-    this.uiEventResolver = new model.UiFocusResolver(coordinateConverter, new model.EventDispatcher(), this.dispatcher);
     this.uiEventResolver.observeDomElement(container);
 
     this.scrolling = new model.Scrolling(this.dispatcher);
@@ -168,7 +171,7 @@ model.Game.prototype.play = function()
         container,
         this.dispatcher,
         this.scrolling,
-        coordinateConverter);
+        this.coordinateConverter);
 
     this.zooming.init();
 
@@ -200,6 +203,9 @@ model.Game.prototype.getShipById = function(id)
 
 model.Game.prototype.onClicked = function(payload)
 {
+    if (payload.stopped)
+        return;
+
     var pos = payload.game;
     console.log("click");
     console.log(pos);

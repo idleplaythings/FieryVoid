@@ -167,8 +167,5 @@ model.UiFocusResolver.prototype.fireEvent = function(payload, listeners)
     {
         var listener = listeners[i];
         listener.callback(payload);
-
-        if (payload.stopped)
-            return;
     }
 };

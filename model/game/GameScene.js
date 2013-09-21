@@ -4,8 +4,7 @@ model.GameScene = function GameScene(dispatcher, gameState){
     this.width = 1000;
     this.height = 800;
     this.camera = null;
-    this.scene = new THREE.Scene();
-    this.terrainScene = new THREE.Scene();
+    this.scene = null;
     this.renderer = null,
     this.ambientLightColor = 0xffffff,
     this.light = null;
@@ -17,18 +16,16 @@ model.GameScene = function GameScene(dispatcher, gameState){
     this.gameTime = 0;
 
     this.dispatcher = dispatcher;
-
-    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
-    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
-
-    jQuery(window).resize(jQuery.proxy(this.resize, this));
-    window.gameScene = this;
 };
 
 model.GameScene.prototype.constructor = model.GameScene;
 
 model.GameScene.prototype.init = function(target)
 {
+    jQuery(window).resize(jQuery.proxy(this.resize, this));
+    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
+    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+
     var width = window.innerWidth;
     var height = window.innerHeight;
     this.width = width;
@@ -41,6 +38,7 @@ model.GameScene.prototype.init = function(target)
     camera.position.z = 20;
 
     this.camera = camera;
+    this.scene = new THREE.Scene();
     this.scene.add( camera );
 
     this.ambientLight = new THREE.AmbientLight(this.ambientLightColor);

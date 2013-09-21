@@ -24,6 +24,11 @@ model.ModuleTraitThruster.prototype.getTotalThrusterUsageAtTime = function(time)
     return usage.entry.normal + (usage.entry.rotation * 0.5);
 };
 
+model.ModuleTraitThruster.prototype.deleteThrusterUsage = function(time)
+{
+    this.module.timeline.removeAfter(time, 'thrusterUsage');
+};
+
 
 model.ModuleTraitThruster.prototype.extend = function(obj)
 {
