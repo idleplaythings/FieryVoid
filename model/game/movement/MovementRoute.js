@@ -23,6 +23,30 @@ model.MovementRoute.prototype._pushToTimeline = function()
     }, this);
 };
 
+model.MovementRoute.prototype.getBefore = function(time)
+{
+    var route = this.getRoute();
+    for (var i = time; i>=time-10; i--)
+    {
+        if (route[i])
+            return route[i];
+    }
+
+    return null;
+};
+
+model.MovementRoute.prototype.getAfter = function(time)
+{
+    var route = this.getRoute();
+    for (var i = time; i<=time+10; i--)
+    {
+        if (route[i])
+            return route[i];
+    }
+
+    return null;
+};
+
 model.MovementRoute.prototype.getLast = function()
 {
     var route = this.getRoute();
@@ -94,6 +118,10 @@ model.MovementRoute.prototype.getLength = function()
 model.MovementRoute.prototype.extrapolateCourseForNext = function(time)
 {
     var start = this.getLast();
+
+    if (start.jumpOut)
+        return;
+
     var extrapolation = [];
 
     for (var i = 1; i <= time; i++)
@@ -161,4 +189,19 @@ model.MovementRoute.prototype._buildCache = function(route)
         var waypoint = route[i];
         this._cached[waypoint.time] = waypoint;
     }
+};
+
+model.MovementRoute.prototype.isJumping = function(gameTime)
+{
+    var gameTime = Math.floor(gameTime / 1000);
+
+    var p = this.getAt(gameTime);
+    if (p && p.jumpOut)
+        return true;
+
+    var p2 = this.getBefore(gameTime);
+    if (!p && p2.jumpOut)
+        return true;
+
+    return false;
 };

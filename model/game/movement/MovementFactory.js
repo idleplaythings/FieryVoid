@@ -36,13 +36,11 @@ model.MovementFactory.prototype.createWaypointUiButtons = function()
         new model.WaypointMenuButton('ᐅ',
             function(movement, waypoint)
             {
-                console.log("should show remove");
-                console.log("JUMP");
+                movement.jump(waypoint);
             },
             function(movement, waypoint)
             {
-                console.log("should show jump");
-                return waypoint.time > 20;
+                return movement.canJump(waypoint);
             }
         )
     ];

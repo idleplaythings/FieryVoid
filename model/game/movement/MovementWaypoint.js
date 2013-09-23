@@ -16,6 +16,9 @@ model.MovementWaypoint = function MovementWaypoint(args)
     this.thrusterUsage = args.thrusterUsage || null;
     this.routeResolved = args.routeResolved || false;
     this.facingTarget = args.facingTarget || null;
+
+    this.jumpOut = args.jumpOut || false;
+    this.jumpIn = args.jumpIn || false;
 };
 
 model.MovementWaypoint.prototype.serialize = function()
@@ -27,6 +30,8 @@ model.MovementWaypoint.prototype.serialize = function()
         rotationVelocity: this.rotationVelocity,
         velocity: this.velocity,
         routeResolved: this.routeResolved,
-        facingTarget: this.facingTarget
+        facingTarget: this.facingTarget,
+        jumpOut: this.jumpOut,
+        jumpIn: this.jumpIn
     }
 }

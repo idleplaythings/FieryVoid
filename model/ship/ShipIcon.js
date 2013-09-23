@@ -4,13 +4,12 @@ model.ShipIcon = function ShipIcon(ship, dispatcher)
     this.shipDesign = ship.shipDesign;
     this.ThreeIconGroup = null;
     this.sprites = [];
-    this.dispatcher = dispatcher;
 
     this.hull = null;
     this.modules = null;
     this.selected = null;
 
-    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+    this.hidden = true;
 };
 
 model.ShipIcon.prototype.create = function()
@@ -57,6 +56,28 @@ model.ShipIcon.prototype.getThreeObject = function()
     return this.ThreeIconGroup;
 };
 
-model.ShipIcon.prototype.onZoom = function(event)
+model.ShipIcon.prototype.hide = function()
 {
+    this.ThreeIconGroup.traverse(function (object){
+        object.visible = false;
+    });
+    
+    this.hidden = true;
+};
+
+model.ShipIcon.prototype.show = function()
+{
+    this.ThreeIconGroup.traverse(function (object){
+        object.visible = true;
+    });
+
+    this.hidden = false;
+};
+
+model.ShipIcon.prototype.setPosition = function(pos)
+{
+    this.getThreeObject().position = new THREE.Vector3(pos.x, pos.y, 0);
+
+    if (this.hidden)
+        this.show();
 };

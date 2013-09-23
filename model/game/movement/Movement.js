@@ -102,8 +102,12 @@ model.Movement.prototype.drag = function(wp, payload)
         return;
     }
 
-    wp.position.x += payload.delta.game.x;
-    wp.position.y -= payload.delta.game.y;
+    //wp.position.x += payload.delta.game.x;
+    //wp.position.y -= payload.delta.game.y;
+
+    wp.position.x = payload.current.game.x;
+    wp.position.y = payload.current.game.y;
+
     wp.routeResolved = false;
     this.deleteRouteFrom(wp.time-9);
     this.unresolveRouteAfter(wp.time);
@@ -165,12 +169,11 @@ model.Movement.prototype.unresolveRouteAfter = function(time)
 model.Movement.prototype.setWaypoint = function(pos)
 {
     this.route.removeExtrapolation();
-    //var i = this.route.length + 10;
-    var i = Math.ceil((this.route.getLength()+1) / 10) * 10;
+    var last = this.route.getLast();
+    var i = Math.ceil((last.time+1) / 10) * 10;
+    console.log("setting waypoint for time " + i);
 
-    //console.log("setting waypoint for time " + i);
-
-    this.waypoints.add(new model.MovementWaypoint({position:pos, facing:0, time:i}));
+    this.waypoints.add(new model.MovementWaypoint({position:pos, facing:0, time:i, jumpIn: last.jumpOut}));
     this.recalculateRoute();
     this.persist();
 };
@@ -281,4 +284,28 @@ model.Movement.prototype.getRoute3d = function()
     }
 
     return this.route3d;
+};
+
+model.Movement.prototype.canJump = function(waypoint)
+{
+    return true;
+};
+
+model.Movement.prototype.jump = function(waypoint)
+{
+    waypoint.jumpOut = true;
+    this.deleteWaypoint(waypoint.time + 1);
+};
+
+model.Movement.prototype.animate = function(gameTime)
+{
+    if (this.route.isJumping(gameTime))
+    {
+        this.ship.setPosition(null);
+    }
+    else
+    {
+        this.ship.setPosition(this.getCurrentPosition(gameTime));
+        this.ship.setAzimuth(this.getFacing(gameTime));
+    }
 };

@@ -77,23 +77,46 @@ model.MovementResolver.prototype.resolveRoute = function(shipDesign, route, wayp
         if (! targetWaypoint)
             return;
 
-        var timeToTarget = targetWaypoint.time - currentWaypoint.time;
+        if (currentWaypoint.jumpOut && targetWaypoint.jumpIn)
+        {
+            this.resolveFtlJump(shipDesign, route, currentWaypoint, targetWaypoint);
+        }
+        else
+        {
+            this.resolveNormalMove(
+                shipDesign, route, currentWaypoint, targetWaypoint);
+        }
 
-        var massCenter = shipDesign.calculateCenterOfMass();
-        var momentOfInertia = shipDesign.calculateMomentOfIntertia();
-        var mass = shipDesign.getMass();
-        var enginePower = this.getEnginePower(shipDesign);
-        var facing = currentWaypoint.facing;
-
-        var availableThrusters = this.getAvailableThrusters(
-            shipDesign, currentWaypoint.time, massCenter, mass, momentOfInertia, facing);
-
-        var newRoute = this.getToNextWaypoint(
-            availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
-
-        targetWaypoint.routeResolved = true;
-        route.add(newRoute);
     }
+};
+
+model.MovementResolver.prototype.resolveFtlJump = function(
+    shipDesign, route, currentWaypoint, targetWaypoint)
+{
+    console.log("Resolving jump");
+    targetWaypoint.routeResolved = true;
+    route.add(targetWaypoint);
+};
+
+model.MovementResolver.prototype.resolveNormalMove = function(
+    shipDesign, route, currentWaypoint, targetWaypoint)
+{
+    var timeToTarget = targetWaypoint.time - currentWaypoint.time;
+
+    var massCenter = shipDesign.calculateCenterOfMass();
+    var momentOfInertia = shipDesign.calculateMomentOfIntertia();
+    var mass = shipDesign.getMass();
+    var enginePower = this.getEnginePower(shipDesign);
+    var facing = currentWaypoint.facing;
+
+    var availableThrusters = this.getAvailableThrusters(
+        shipDesign, currentWaypoint.time, massCenter, mass, momentOfInertia, facing);
+
+    var newRoute = this.getToNextWaypoint(
+        availableThrusters, currentWaypoint, targetWaypoint, timeToTarget, enginePower);
+
+    targetWaypoint.routeResolved = true;
+    route.add(newRoute);
 };
 
 model.MovementResolver.prototype.getCurrentWaypoint = function(route)

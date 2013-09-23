@@ -73,8 +73,7 @@ model.ShipInGame.prototype.subscribeToScene =
 
 model.ShipInGame.prototype.animate = function(gameTime)
 {
-    this.setPosition(this.movement.getCurrentPosition(gameTime));
-    this.setAzimuth(this.movement.getFacing(gameTime));
+    this.movement.animate(gameTime);
 };
 
 model.ShipInGame.prototype.setAzimuth = function(azimuth)
@@ -84,6 +83,8 @@ model.ShipInGame.prototype.setAzimuth = function(azimuth)
 
 model.ShipInGame.prototype.setPosition = function(pos)
 {
-    this.position = pos;
-    this.getIcon().getThreeObject().position = new THREE.Vector3(pos.x, pos.y, 0);
+    if (!pos)
+        this.getIcon().hide();
+    else
+        this.getIcon().setPosition(pos);
 };
