@@ -200,7 +200,7 @@ model.MovementRoute.prototype.isJumping = function(gameTime)
         return true;
 
     var p2 = this.getBefore(gameTime);
-    if (!p && p2.jumpOut)
+    if (!p && p2 && p2.jumpOut)
         return true;
 
     return false;

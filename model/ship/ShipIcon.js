@@ -61,7 +61,7 @@ model.ShipIcon.prototype.hide = function()
     this.ThreeIconGroup.traverse(function (object){
         object.visible = false;
     });
-    
+
     this.hidden = true;
 };
 
