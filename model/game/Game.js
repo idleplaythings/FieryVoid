@@ -21,19 +21,13 @@ Meteor.methods({
         game.shipStorage.addShip(ship1);
         game.shipStorage.addShip(ship2);
 
-        Games.insert(game.getInitialInsert());
+        game.addPlayer([player1Id, player2Id]);
+
+        new model.GameStorage().insert(Games.insert(game.getInitialInsert()));
 
         return game._id;
     }
 });
-
-getGame = function(gameId)
-{
-    console.log("getting game with id " + gameId);
-    var gameDoc = Games.findOne({_id: gameId});
-    var game = new model[gameDoc.type]();
-    return game.load(gameDoc);
-};
 
 getRandomShipDesignIdForPlayer = function(playerId) {
     var shipDesigns = ShipDesigns.find({ owner: playerId }).fetch();
@@ -59,7 +53,6 @@ model.Game = function Game(args)
 
     this.dispatcher = null;
     this.uiEventResolver = null;
-    this.replayUI = null;
     this.movementFactory = null;
 
     this.setState(args);
@@ -114,6 +107,8 @@ model.Game.prototype.setState = function(args)
     this.ships = args.ships || [];
     this.asteroids = args.asteroids || [];
 
+    this.players = args.players || [];
+
     this.gameState = new model.GameState(args.currentGameTime || 0);
 
     this.dispatcher = new model.EventDispatcher();
@@ -133,6 +128,26 @@ model.Game.prototype.setState = function(args)
         this._id, this.movementFactory, this.timelineFactory);
 
     this.created = args.created || null;
+};
+
+model.Game.prototype.addPlayer = function(id)
+{
+    var players = [].concat(id).map(function(id){
+        return {id:id, orderTime:0}
+    });
+    this.players = this.players.concat(players);
+};
+
+model.Game.prototype.getPlayer = function(id)
+{
+    var players = this.players.filter(function(player){
+        return player.id == id;
+    });
+
+    if (players[0])
+        return players[0];
+
+    return null;
 };
 
 model.Game.prototype.addShip = function(shipDesign)
@@ -177,8 +192,8 @@ model.Game.prototype.play = function()
 
     this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
 
-    this.replayUI = new model.ReplayUI(this.gameState);
-    this.replayUI.create();
+    new model.ReplayUI(this.gameState).create();
+    new model.TurnUi(this._id, this.gameState).create();
 
     this.initGameState(container);
 };
@@ -242,7 +257,9 @@ model.Game.prototype.getInitialInsert = function()
         type: this.type,
         name: this.name,
         terrainSeed: this.terrainSeed,
-        created: this.created
+        created: this.created,
+        currentGameTime: this.gameState.currentGametime,
+        players: this.players
     };
 };
 

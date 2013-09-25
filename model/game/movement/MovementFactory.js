@@ -3,6 +3,7 @@ model.MovementFactory = function MovementFactory(
 {
     this.timelineFactory = timelineFactory;
     this.waypointUi = new model.RadialMenu(
+        'waypointUi',
         this.createWaypointUiButtons(),
         coordinateConverter,
         dispatcher,

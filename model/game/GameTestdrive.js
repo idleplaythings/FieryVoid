@@ -12,7 +12,9 @@ Meteor.methods({
         var game = new model.GameTestdrive(
             {_id: new Meteor.Collection.ObjectID().toHexString()});
         game.setStartingConditions(shipDesign);
-        Games.insert(game.getInitialInsert());
+        game.addPlayer(userid);
+
+        new model.GameStorage().insert(Games.insert(game.getInitialInsert()));
         game.addTestDriveShip(shipDesign);
         return game._id;
     }

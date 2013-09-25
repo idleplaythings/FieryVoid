@@ -11,7 +11,7 @@ Template.game.created = function()
 
         if (subscription.ready())
         {
-            var game = getGame(gameId);
+            var game = new model.GameStorage().getGame(gameId);
             game.play();
             Template.game.activeGameObject = game;
         }

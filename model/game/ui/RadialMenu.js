@@ -1,6 +1,7 @@
 model.RadialMenu = function RadialMenu(
-    buttons, coordinateConverter, dispatcher, uiResolver, settings)
+    id, buttons, coordinateConverter, dispatcher, uiResolver, settings)
 {
+    this.id = id;
     this.coordinateConverter = coordinateConverter;
     this.uiElement = null;
     this.size = 150;
@@ -77,11 +78,11 @@ model.RadialMenu.prototype.placeButton = function(button, angle)
 
 model.RadialMenu.prototype.createUiElement = function()
 {
-    var container = jQuery('#waypointUi');
+    var container = jQuery('#'+this.id);
     if (container.length === 0)
     {
         var container = jQuery('' +
-            '<div id="waypointUi" style="z-index:100;width:'+this.size+';height:'+this.size+'"></div>');
+            '<div id="'+this.id+'" class="radialMenu" style="position:absolute;z-index:100;width:'+this.size+';height:'+this.size+'"></div>');
 
         var drawingTool = Tools.getCanvasDrawingTool();
         var drawingCanvas =
@@ -102,7 +103,7 @@ model.RadialMenu.prototype.createUiElement = function()
         this.buttons.forEach(function(button){
             if (this.hideAfterClick)
                 button.get().on('click', this.hide.bind(this));
-            
+
             button.get().appendTo(container);
         }, this)
 

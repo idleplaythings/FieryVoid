@@ -1,11 +1,5 @@
-#waypointUi
+button
 {
-    position:absolute;
-}
-
-#waypointUi button
-{
-    position:absolute;
     vertical-align:bottom;
     width:30px;
     height:30px;
@@ -33,14 +27,19 @@
     font-weight:bold;
 }
 
-#waypointUi button:active
+.radialMenu button
 {
-    box-shadow: 0px 0px 5px #000000;
+    position:absolute;
+}
+
+button:active
+{
+    box-shadow: 0px 0px 5px #000000, inset 0px 0px 5px #000000, inset 0px 0px 3px #000000;
     background-position: 100% 0%;
     border-color: #6c6c6c;
 }
 
-#waypointUi button:hover
+button:hover
 {
     background-image: linear-gradient(to bottom, #2f3648, #CADFEB);
     background-position:100% 0%;
