@@ -1,5 +1,3 @@
-//shipDesigns = Meteor.subscribe("shipDesigns");
-
 Router.map(function() {
     this.route('shipMenu', {
         path: '/'
@@ -19,35 +17,6 @@ Router.map(function() {
     });
     this.route('createShip', {
         path: '/ship/create'
-    });
-    this.route('newGame', {
-        path: '/game/',
-        template: 'game',
-        waitOn: function() {
-            return [
-                HullLayouts,
-                shipDesigns
-            ];
-        }
-    }, function() {
-        var onGameCreated = function(error, gameId) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-
-            Router.go('existingGame', { _id: gameId });
-        };
-
-        Meteor.call('GameStart', Meteor.userId(), Meteor.userId(), onGameCreated);
-    });
-    this.route('existingGame', {
-        path: '/game/:_id',
-        template: 'game'
-    }, function() {
-        Session.set("active_game", this.params._id);
-
-        this.render();
     });
 });
 

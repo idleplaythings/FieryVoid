@@ -1,45 +1,3 @@
-Meteor.methods({
-    GameStart: function (player1Id, player2Id) {
-        console.log("game start");
-
-        console.log(player1Id, player2Id);
-
-        var game = new model.Game({
-            _id: new Meteor.Collection.ObjectID().toHexString()
-        });
-
-        var ship1 = game.getRandomShipForPlayer(player1Id);
-        var ship2 = game.getRandomShipForPlayer(player2Id);
-
-        if (!ship1 || !ship2) {
-            throw "Ships not found"
-        }
-
-        game.setStartingConditions();
-        game.ships.push(ship1);
-        game.ships.push(ship2);
-        game.shipStorage.addShip(ship1);
-        game.shipStorage.addShip(ship2);
-
-        game.addPlayer([player1Id, player2Id]);
-
-        new model.GameStorage().insert(Games.insert(game.getInitialInsert()));
-
-        return game._id;
-    }
-});
-
-getRandomShipDesignIdForPlayer = function(playerId) {
-    var shipDesigns = ShipDesigns.find({ owner: playerId }).fetch();
-
-    if (shipDesigns.length === 0) {
-        return null;
-    }
-
-    var randomIndex = Math.floor(Math.random() * shipDesigns.length);
-    return shipDesigns[randomIndex]._id;
-};
-
 model.Game = function Game(args)
 {
     if ( ! args)
@@ -174,7 +132,7 @@ model.Game.prototype.addShip = function(shipDesign)
 
 model.Game.prototype.play = function()
 {
-    var container = jQuery('#gameContainer');
+    var container = $('#gameContainer');
     this.gameScene.init(container);
 
     this.uiEventResolver.observeDomElement(container);
