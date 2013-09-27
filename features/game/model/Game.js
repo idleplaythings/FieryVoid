@@ -91,7 +91,7 @@ model.Game.prototype.setState = function(args)
 model.Game.prototype.addPlayer = function(id)
 {
     var players = [].concat(id).map(function(id){
-        return {id:id, orderTime:0}
+        return {id:id, orderTime:-1}
     });
     this.players = this.players.concat(players);
 };
@@ -180,11 +180,7 @@ model.Game.prototype.onClicked = function(payload)
         return;
 
     var pos = payload.game;
-    console.log("click");
-    console.log(pos);
-
     var ship = this.getSelectedShip();
-    console.log(ship);
     ship.movement.setWaypoint(pos);
 };
 
@@ -204,7 +200,6 @@ model.Game.prototype.load = function(doc)
 {
     this.setState(doc);
     this.ships = this.shipStorage.getShipsInGame();
-    console.log(this);
     return this;
 };
 
@@ -226,7 +221,20 @@ model.Game.prototype.getSelectedShip = function()
     return this.ships[0];
 };
 
-model.Game.prototype.updated = function()
+model.Game.prototype.updated = function(doc)
 {
-    console.log('game updated');
-}
+    console.log('game updated', doc.currentGameTime);
+
+    if (this.gameState.currentGametime < doc.currentGameTime)
+    {
+        this._changeTurn(doc.currentGameTime);
+    }
+};
+
+model.Game.prototype._changeTurn = function(time)
+{
+    console.log('CHANGE TURN');
+    console.log(this);
+    this.gameState.currentGametime = time;
+    this.timelineFactory.reloadTimelines();
+};

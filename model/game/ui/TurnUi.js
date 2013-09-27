@@ -15,8 +15,10 @@ model.TurnUi.prototype.create = function()
 model.TurnUi.prototype.changeTurn = function()
 {
     Meteor.call(
-        'ChangeTurn',
-        this.gameid,
-        function(err, result){}
+        'submitTurn',
+        this._gameid,
+        function(err, result){
+            console.log(err, result);
+        }
     );
 };

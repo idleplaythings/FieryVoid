@@ -1,10 +1,22 @@
-model.MovementRoute = function MovementRoute(timeline, name)
+model.MovementRoute = function MovementRoute(timeline, name, onReloadCallback)
 {
     this._name = name;
     this._timeline = timeline;
+
+    timeline.observeReload(this.onReload.bind(this));
+
     this._gameState = timeline._gameState;
     this._cached = null;
 
+    this._onReloadCallback = onReloadCallback || null;
+};
+
+model.MovementRoute.prototype.onReload = function()
+{
+    this._cached = null;
+
+    if (this._onReloadCallback)
+        this._onReloadCallback();
 };
 
 model.MovementRoute.prototype.persist = function()
@@ -204,4 +216,18 @@ model.MovementRoute.prototype.isJumping = function(gameTime)
         return true;
 
     return false;
+};
+
+model.MovementRoute.prototype.acceptToPast = function(waypoint)
+{
+    if (Meteor.isClient)
+        return;
+
+    this._timeline.removeFromFuture(waypoint.time, this._name);
+    this._timeline.addToPast(waypoint.time, this._name, waypoint.serialize());
+};
+
+model.MovementRoute.prototype.canBeManipulated = function(waypoint)
+{
+    return waypoint.time > (this._gameState.currentGametime / 1000);
 };

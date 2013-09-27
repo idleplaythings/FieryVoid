@@ -7,11 +7,26 @@ model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future)
     this._past = past || [];
     this._future = future || [];
     this._storage = storage;
+
+    this.dispatcher = new model.EventDispatcher();
 };
 
 model.Timeline.prototype.getId = function()
 {
     return this._id;
+};
+
+model.Timeline.prototype.reload = function(past, future)
+{
+    this._past = past || [];
+    this._future = future || [];
+
+    this.dispatcher.dispatch({name:'timelineReload'});
+};
+
+model.Timeline.prototype.observeReload = function(callback)
+{
+    this.dispatcher.attach('timelineReload', callback);
 };
 
 model.Timeline.prototype.persist = function()
@@ -25,10 +40,11 @@ model.Timeline.prototype.persist = function()
     }
     else
     {
-        if (this._past.length == 0)
-            return this;
+        if (this._past.length > 0)
+            this._storage.persistPast(this._past, this._id);
 
-        this._storage.persistPast(this._past, this._id);
+        if (this._future.length > 0)
+            this._storage.persistFuture(this._future, this._id);
     }
 
     return this;
@@ -62,6 +78,14 @@ model.Timeline.prototype.getByName = function(time, name, list)
         return candidates[0];
 
     return null;
+};
+
+model.Timeline.prototype.addToPast = function(time, name, object)
+{
+    if (Meteor.isClient)
+        return;
+
+    this._past.push({time: time, name: name, entry: object});
 };
 
 model.Timeline.prototype.add = function(time, name, object)
@@ -108,15 +132,31 @@ model.Timeline.prototype.remove = function(time, name)
 {
     if (Meteor.isClient)
     {
-        this._future = this._removeFrom(time, name, this._future);
+        this._future = this._removeFrom(time, false, name, this._future);
     }
     else
     {
-        this._past = this._removeFrom(time, name, this._past);
+        this._past = this._removeFrom(time, false, name, this._past);
     }
 };
 
-model.Timeline.prototype._removeFrom = function(time, name, list, after)
+model.Timeline.prototype.removeFromFuture = function(time, name)
+{
+    if (Meteor.isClient)
+        return;
+
+    this._future = this._removeFrom(time, false, name, this._future);
+};
+
+model.Timeline.prototype.removeFromPast = function(time, name)
+{
+    if (Meteor.isClient)
+        return;
+
+    this._future = this._removeFrom(time, false, name, this._past);
+};
+
+model.Timeline.prototype._removeFrom = function(startTime, endTime, name, list)
 {
     for (var i = list.length-1; i >= 0; i--)
     {
@@ -124,8 +164,15 @@ model.Timeline.prototype._removeFrom = function(time, name, list, after)
 
         if (removee.name == name)
         {
-            if (removee.time == time || (after && removee.time > time))
-                list.splice(i, 1);
+            if (removee.time >= startTime)
+            {
+                if (! endTime && removee.time == startTime)
+                    list.splice(i, 1);
+                else if (endTime === true)
+                    list.splice(i, 1);
+                else if (removee.time <= endTime)
+                    list.splice(i, 1);
+            }
         }
     }
 
@@ -136,11 +183,11 @@ model.Timeline.prototype.removeAfter = function(time, name)
 {
     if (Meteor.isClient)
     {
-        this._future = this._removeFrom(time, name, this._future, true);
+        this._future = this._removeFrom(time, true, name, this._future);
     }
     else
     {
-        this._past = this._removeFrom(time, name, this._past, true);
+        this._past = this._removeFrom(time, true, name, this._past);
     }
 };
 

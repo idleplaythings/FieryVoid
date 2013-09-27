@@ -2,15 +2,14 @@ Meteor.methods({
     submitTurn: function (gameid)
     {
         var userid = Meteor.userId();
-        var game = getGame(gameid);
-        return new Turn(game).submitTurn(userid);
+        return new Turn(gameid).submitTurn(userid);
     }
 });
 
-Turn = function Turn(game)
+Turn = function Turn(gameid)
 {
-    this._game = game;
     this._gameStorage = new model.GameStorage();
+    this._game = this._gameStorage.getGame(gameid);
 };
 
 Turn.prototype.submitTurn = function(userid)
@@ -20,6 +19,9 @@ Turn.prototype.submitTurn = function(userid)
 
     if ( ! player)
         throw new Error("Player not in game trying to submit turn");
+
+    console.log(player);
+    console.log(currentGametime);
 
     if (player.orderTime >= currentGametime)
         throw new Error("Player trying to submit turn again");
@@ -46,7 +48,21 @@ Turn.prototype.isAllSubmitted = function()
 
 Turn.prototype.processTurn = function()
 {
-    this._game.gameState.currentGametime += this.getTurnLength();
+    console.log('processTurn');
+
+    var oldGametime = this._game.gameState.currentGametime;
+    var newGametime = this._game.gameState.currentGametime + this.getTurnLength();
+
+    var movementProcessor = new MovementProcessor();
+
+    this._game.ships.forEach(function(ship){
+        movementProcessor.processMovement(ship, oldGametime, newGametime);
+    });
+
+    this._game.timelineFactory.persistAll();
+    this._game.gameState.currentGametime = newGametime;
+    this._gameStorage.updateCurrentGameTime(
+        this._game._id, newGametime);
 };
 
 Turn.prototype.getTurnLength = function()

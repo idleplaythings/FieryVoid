@@ -5,9 +5,15 @@ model.Movement = function Movement(timeline, waypointUi)
     this.route3d = null;
     this.resolver = new model.MovementResolver();
 
-    this.route = new model.MovementRoute(timeline, 'route');
+    this.route = new model.MovementRoute(
+        timeline, 'route', this.onTurnChanged.bind(this));
     this.waypoints = new model.MovementRoute(timeline, 'waypoint');
     this._timeline = timeline;
+};
+
+model.Movement.prototype.onTurnChanged = function()
+{
+    console.log("MOVEMENT updated");
 };
 
 model.Movement.prototype.setShip = function(ship)
@@ -49,6 +55,9 @@ model.Movement.prototype.onClick = function(eventPayload)
 
     if (wp)
     {
+        if (! this.route.canBeManipulated(wp))
+            return;
+
         eventPayload.stop();
         this.waypointUi.show(this, wp);
     }
@@ -71,6 +80,9 @@ model.Movement.prototype.onDrag = function(eventPayload)
 
         if (wp)
         {
+            if (! this.route.canBeManipulated(wp))
+                return;
+
             var self = this;
             eventPayload.capture(function(payload)
             {
@@ -169,9 +181,9 @@ model.Movement.prototype.unresolveRouteAfter = function(time)
 model.Movement.prototype.setWaypoint = function(pos)
 {
     this.route.removeExtrapolation();
-    var last = this.route.getLast();
+    var last = this.route.getLast();//TODO: Ask from waypoints what would be the correct time for next waypoint.
     var i = Math.ceil((last.time+1) / 10) * 10;
-    console.log("setting waypoint for time " + i);
+    //console.log("setting waypoint for time " + i);
 
     this.waypoints.add(new model.MovementWaypoint({position:pos, facing:0, time:i, jumpIn: last.jumpOut}));
     this.recalculateRoute();

@@ -15,10 +15,14 @@ model.GameStorage.prototype.getGame = function(gameId)
     var game = new model[gameDoc.type]();
     game.load(gameDoc);
 
-    Deps.autorun(function() {
-        Games.findOne({_id: gameId});
-        game.updated();
-    });
+    if (Meteor.isClient)
+    {
+        Deps.autorun(function() {
+            var updated = Games.findOne({_id: gameId});
+            game.updated(updated);
+        });
+    }
+
 
     return game;
 };
