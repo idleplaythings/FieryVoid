@@ -33,11 +33,14 @@ Router.map(function() {
 });
 
 LoadGameController = RouteController.extend({
+    getGameId: function() {
+        return this.params._id;
+    },
     waitOn: function() {
-        return Meteor.subscribe('currentGame', this.params._id);
+        return Meteor.subscribe('currentGame', this.getGameId());
     },
     run: function() {
-        Session.set("active_game", this.params._id);
+        Session.set("active_game", this.getGameId());
         this.render();
     }
 });

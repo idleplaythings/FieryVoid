@@ -1,7 +1,7 @@
 model.Game = function Game(args)
 {
     if ( ! args)
-        args = [];
+        args = {};
 
     this.type = 'Game';
 
@@ -55,7 +55,7 @@ model.Game.prototype.setStartingConditions = function()
 model.Game.prototype.setState = function(args)
 {
     if ( ! args)
-        args = [];
+        args = {};
 
     this._id = args._id;
     this.name = args.name || 'unnamed';
@@ -225,3 +225,8 @@ model.Game.prototype.getSelectedShip = function()
 {
     return this.ships[0];
 };
+
+model.Game.prototype.updated = function()
+{
+    console.log('game updated');
+}
