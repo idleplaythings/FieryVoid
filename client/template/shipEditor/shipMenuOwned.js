@@ -23,8 +23,7 @@ Template.shipMenuOwned.events({
                     console.log(err);
                     return false;
                 }
-
-                Router.go('existingGame', { _id: result });
+                Router.go('loadGame', { _id: result });
             }
         );
 

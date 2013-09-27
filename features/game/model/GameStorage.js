@@ -2,17 +2,25 @@ model.GameStorage = function GameStorage()
 {
 };
 
-model.GameStorage.prototype.insert = function(game)
+model.GameStorage.prototype.insert = function(payload)
 {
-    Games.insert(game);
+    Games.insert(payload);
 };
 
 model.GameStorage.prototype.getGame = function(gameId)
 {
+    console.log("getting game with id " + gameId);
+
     var gameDoc = Games.findOne({_id: gameId});
-    console.log(gameDoc)
     var game = new model[gameDoc.type]();
-    return game.load(gameDoc);
+    game.load(gameDoc);
+
+    Deps.autorun(function() {
+        Games.findOne({_id: gameId});
+        game.updated();
+    });
+
+    return game;
 };
 
 model.GameStorage.prototype.updatePlayerOrderTime = function(gameid, userid, time)
