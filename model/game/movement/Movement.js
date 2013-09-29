@@ -13,7 +13,8 @@ model.Movement = function Movement(timeline, waypointUi)
 
 model.Movement.prototype.onTurnChanged = function()
 {
-    console.log("MOVEMENT updated");
+    this.route.extrapolateCourseForNext(10);
+    this.getRoute3d().displayRoute(this.route);
 };
 
 model.Movement.prototype.setShip = function(ship)
@@ -181,13 +182,24 @@ model.Movement.prototype.unresolveRouteAfter = function(time)
 model.Movement.prototype.setWaypoint = function(pos)
 {
     this.route.removeExtrapolation();
-    var last = this.route.getLast();//TODO: Ask from waypoints what would be the correct time for next waypoint.
-    var i = Math.ceil((last.time+1) / 10) * 10;
-    //console.log("setting waypoint for time " + i);
+    var lastTime = this.getTimeForNextWaypoint();
+    var last = this.route.getLast();
+    var i = Math.ceil((lastTime+1) / 10) * 10;
+    console.log("setting waypoint for time " + i);
 
-    this.waypoints.add(new model.MovementWaypoint({position:pos, facing:0, time:i, jumpIn: last.jumpOut}));
+    this.waypoints.add(new model.MovementWaypoint(
+        {position:pos, facing:0, time:i, jumpIn: last.jumpOut}));
     this.recalculateRoute();
     this.persist();
+};
+
+model.Movement.prototype.getTimeForNextWaypoint = function()
+{
+    var route = this.route.getLastTime();
+    var waypoint = this.waypoints.getLastTime();
+
+    console.log(route, waypoint);
+    return (route > waypoint) ? route : waypoint;
 };
 
 model.Movement.prototype.persist = function()
@@ -220,7 +232,7 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
     if (gameTime % 1 === 0)
     {
         if ( ! this.route.getAt(gameTime))
-            return this.getExtrapolatedPosition(gameTime);
+            return this.route.getExtrapolatedPosition(gameTime);
 
         return this.route.getAt(gameTime).position;
     }
@@ -242,16 +254,9 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
         }
         else
         {
-            return this.getExtrapolatedPosition(gameTime);
+            return this.route.getExtrapolatedPosition(gameTime);
         }
     }
-};
-
-model.Movement.prototype.getExtrapolatedPosition = function(gameTime)
-{
-    var p = this.route.getLast();
-    var deltaTime = gameTime - p.time;
-    return p.position.clone().add(p.velocity.clone().multiplyScalar(deltaTime));
 };
 
 model.Movement.prototype.getFacing = function(gameTime)
@@ -260,7 +265,7 @@ model.Movement.prototype.getFacing = function(gameTime)
     if (gameTime % 1 === 0)
     {
         if ( ! this.route.getAt(gameTime))
-            return this.getExtrapolatedFacing(gameTime);
+            return this.route.getExtrapolatedFacing(gameTime);
 
         return this.route.getAt(gameTime).facing;
     }
@@ -276,16 +281,9 @@ model.Movement.prototype.getFacing = function(gameTime)
         }
         else
         {
-            return this.getExtrapolatedFacing(gameTime);
+            return this.route.getExtrapolatedFacing(gameTime);
         }
     }
-};
-
-model.Movement.prototype.getExtrapolatedFacing = function(gameTime)
-{
-    var p = this.route.getLast();
-    var deltaTime = gameTime - p.time;
-    return MathLib.addToAzimuth(p.facing, p.rotationVelocity * deltaTime);
 };
 
 model.Movement.prototype.getRoute3d = function()

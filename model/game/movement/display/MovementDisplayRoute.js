@@ -60,6 +60,13 @@ model.MovementDisplayRoute.prototype.displayRoute = function(route)
     for (var i in route.getRoute())
     {
         var waypoint = route.getRoute()[i];
+
+        if (route.isInPast(waypoint))
+        {
+            this.particleEmitter.particles[i].deactivate();
+            continue;
+        }
+
         var particle = this.particleEmitter.particles[i];
         particle.setFromWaypoint(waypoint);
     }

@@ -38,7 +38,7 @@ model.MovementRoute.prototype._pushToTimeline = function()
 model.MovementRoute.prototype.getBefore = function(time)
 {
     var route = this.getRoute();
-    for (var i = time; i>=time-10; i--)
+    for (var i = time; i>=0; i--)
     {
         if (route[i])
             return route[i];
@@ -66,6 +66,48 @@ model.MovementRoute.prototype.getLast = function()
         return null;
 
     return route[route.length-1];
+};
+
+model.MovementRoute.prototype.getLastOrCurrent = function()
+{
+    var last = this.getLast();
+    var gameTime = this._gameState.currentGametime / 1000;
+
+    if (last.time < gameTime)
+    {
+        var time = gameTime - last.time;
+        last = new model.MovementWaypoint(
+            {
+                position: new Vector2(
+                    last.position.x + (last.velocity.x * time),
+                    last.position.y + (last.velocity.y * time)
+                ),
+                velocity: last.velocity,
+                facing: MathLib.addToAzimuth(
+                    last.facing, last.rotationVelocity * time),
+                rotationVelocity: last.rotationVelocity,
+                extrapolation: true,
+                time: last.time + time
+            }
+        )
+    }
+
+    return last;
+};
+
+model.MovementRoute.prototype.getLastTime = function()
+{
+    var last = this.getLast();
+    var gameTime = this._gameState.currentGametime / 1000;
+    console.log(last);
+
+    if (last)
+        console.log(last.time, gameTime);
+
+    if (! last || last.time < gameTime)
+        return gameTime;
+
+    return last.time;
 };
 
 model.MovementRoute.prototype.getFirst = function()
@@ -105,10 +147,12 @@ model.MovementRoute.prototype.removeExtrapolation = function()
 
 model.MovementRoute.prototype.getNextUnresolved = function()
 {
+    var gameTime = this._gameState.currentGametime / 1000;
+
     for (var i in this.getRoute())
     {
         var wp = this.getRoute()[i];
-        if ( ! wp.routeResolved)
+        if ( ! wp.routeResolved && wp.time > gameTime)
             return wp;
     }
 };
@@ -230,4 +274,23 @@ model.MovementRoute.prototype.acceptToPast = function(waypoint)
 model.MovementRoute.prototype.canBeManipulated = function(waypoint)
 {
     return waypoint.time > (this._gameState.currentGametime / 1000);
+};
+
+model.MovementRoute.prototype.isInPast = function(waypoint)
+{
+    return waypoint.time <= (this._gameState.currentGametime / 1000);
+};
+
+model.MovementRoute.prototype.getExtrapolatedPosition = function(gameTime)
+{
+    var p = this.getBefore(Math.floor(gameTime));
+    var deltaTime = gameTime - p.time;
+    return p.position.clone().add(p.velocity.clone().multiplyScalar(deltaTime));
+};
+
+model.MovementRoute.prototype.getExtrapolatedFacing = function(gameTime)
+{
+    var p = this.getBefore(Math.floor(gameTime));
+    var deltaTime = gameTime - p.time;
+    return MathLib.addToAzimuth(p.facing, p.rotationVelocity * deltaTime);
 };

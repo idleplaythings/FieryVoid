@@ -121,7 +121,7 @@ model.MovementResolver.prototype.resolveNormalMove = function(
 
 model.MovementResolver.prototype.getCurrentWaypoint = function(route)
 {
-    return route.getLast();
+    return route.getLastOrCurrent();
 };
 
 model.MovementResolver.prototype.getNextTarget = function(waypoints)
