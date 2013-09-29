@@ -10,9 +10,12 @@ model.ShipSprite.prototype =  Object.create(model.Sprite.prototype);
 
 model.ShipSprite.prototype.getObject3d = function()
 {
-    this.object3d = this.createObject3d();
-    this.setInitialScale();
-    this.requestImageDataToCallback();
+    if (! this.object3d )
+    {
+        this.object3d = this.createObject3d();
+        this.setInitialScale();
+        this.requestImageDataToCallback();
+    }
 
     return this.object3d;
 };
@@ -20,6 +23,20 @@ model.ShipSprite.prototype.getObject3d = function()
 model.ShipSprite.prototype.requestImageDataToCallback = function()
 {
 
+};
+
+model.ShipSprite.prototype.hide = function()
+{
+    this.getObject3d().traverse(function (object){
+        object.visible = false;
+    });
+};
+
+model.ShipSprite.prototype.show = function()
+{
+    this.getObject3d().traverse(function (object){
+        object.visible = true;
+    });
 };
 
 model.ShipSprite.prototype.setInitialScale = function()

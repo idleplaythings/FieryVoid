@@ -1,6 +1,7 @@
 model.MovementDisplayRoute = function Movement()
 {
     this.zoom = 1;
+    this.hidden = false;
     this.gameScene = null;
     this.particleCount = 1000;
 
@@ -112,8 +113,33 @@ model.MovementDisplayRoute.prototype.subscribeToScene = function(scene, eventDis
 model.MovementDisplayRoute.prototype._zoomLevelChangeCallback = function(event)
 {
     this.zoom = event.zoom;
+
+    if (this.zoom > 1)
+        this.hide();
+    if (this.zoom <= 1)
+        this.show();
+
     return this.getWaypointZoom(event.zoom);
 };
+
+model.MovementDisplayRoute.prototype.hide = function()
+{
+    if (! this.hidden)
+    {
+        this.particleEmitter.getObject3d().visible = false;
+        this.hidden = true;
+    }
+};
+
+model.MovementDisplayRoute.prototype.show = function()
+{
+    if (this.hidden)
+    {
+        this.particleEmitter.getObject3d().visible = true;
+        this.hidden = false;
+    }
+};
+
 
 model.MovementDisplayRoute.prototype.getParticle = function(time)
 {

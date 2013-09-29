@@ -10,6 +10,9 @@ model.ShipIcon = function ShipIcon(ship, dispatcher)
     this.selected = null;
 
     this.hidden = true;
+    this.hullHidden = false;
+
+    dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
 model.ShipIcon.prototype.create = function()
@@ -54,6 +57,25 @@ model.ShipIcon.prototype.removeObject = function(obj)
 model.ShipIcon.prototype.getThreeObject = function()
 {
     return this.ThreeIconGroup;
+};
+
+model.ShipIcon.prototype.onZoom = function(event)
+{
+    var zoom = event.zoom;
+
+    if (! this.hullHidden && zoom > 1)
+    {
+        this.hull.hide();
+        this.selected.hide();
+        this.hullHidden = true;
+    }
+    else if (this.hullHidden && zoom <= 1)
+    {
+        this.hull.show();
+        this.selected.show();
+        this.hullHidden = false;
+    }
+
 };
 
 model.ShipIcon.prototype.hide = function()
