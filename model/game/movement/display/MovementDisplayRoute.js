@@ -4,9 +4,6 @@ model.MovementDisplayRoute = function Movement()
     this.gameScene = null;
     this.particleCount = 1000;
 
-    this.turnWaypointSize = 128;
-    this.intermediateWaypointSize = 64;
-
     this.texture = null;
     this.particleEmitter = new model.ParticleEmitter(
         this.getWaypointParticles(),
@@ -47,8 +44,10 @@ model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route
         if (wp.time % 10 !== 0 || wp.extrapolation)
             continue;
 
-        var size = this.turnWaypointSize * 0.5 * (1 / this.getWaypointZoom(this.zoom));
-        if (MathLib.distance(wp.position, pos) < size)
+        var size = 128 * 0.5 * this.getWaypointZoom(this.zoom);
+        var distance = MathLib.distance(wp.position, pos) * this.zoom;
+
+        if ( distance < size)
             return wp;
     }
 
@@ -57,24 +56,24 @@ model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route
 
 model.MovementDisplayRoute.prototype.displayRoute = function(route)
 {
+    var p = 0;
     for (var i in route.getRoute())
     {
         var waypoint = route.getRoute()[i];
 
         if (route.isInPast(waypoint))
         {
-            this.particleEmitter.particles[i].deactivate();
             continue;
         }
 
-        var particle = this.particleEmitter.particles[i];
+        var particle = this.particleEmitter.particles[p];
+        p++;
         particle.setFromWaypoint(waypoint);
     }
 
-
-    for (i++;i<this.particleEmitter.particles.length; i++)
+    for (;p<this.particleEmitter.particles.length; p++)
     {
-        this.particleEmitter.particles[i].deactivate();
+        this.particleEmitter.particles[p].deactivate();
     }
 
     this.particleEmitter.animate();
@@ -86,8 +85,7 @@ model.MovementDisplayRoute.prototype.getWaypointParticles = function()
 
     for (var i = 0; i<this.particleCount; i++)
     {
-        var size = i === 0 || i % 10 == 0 ? this.turnWaypointSize : this.intermediateWaypointSize;
-        particles.push(new model.MovementDisplayWaypoint(size));
+        particles.push(new model.MovementDisplayWaypoint());
     }
 
     return particles;
@@ -117,21 +115,45 @@ model.MovementDisplayRoute.prototype._zoomLevelChangeCallback = function(event)
     return this.getWaypointZoom(event.zoom);
 };
 
+model.MovementDisplayRoute.prototype.getParticle = function(time)
+{
+    for (var i in this.particleEmitter.particles)
+    {
+        var p = this.particleEmitter.particles[i];
+        if (p.time == time)
+            return p;
+    }
+
+    return null;
+};
+
 model.MovementDisplayRoute.prototype.setRotating = function(time)
 {
-    this.particleEmitter.particles[time].rotating = true;
+    var p = this.getParticle(time);
+    if (! p)
+        return;
+
+    p.rotating = true;
     this.particleEmitter.animate();
 };
 
 model.MovementDisplayRoute.prototype.setDragging = function(time)
 {
-    this.particleEmitter.particles[time].dragging = true;
+    var p = this.getParticle(time);
+    if (! p)
+        return;
+
+    p.dragging = true;
     this.particleEmitter.animate();
 };
 
 model.MovementDisplayRoute.prototype.setNormal = function(time)
 {
-    this.particleEmitter.particles[time].dragging = false;
-    this.particleEmitter.particles[time].rotating = false;
+    var p = this.getParticle(time);
+    if (! p)
+        return;
+
+    p.dragging = false;
+    p.rotating = false;
     this.particleEmitter.animate();
 };

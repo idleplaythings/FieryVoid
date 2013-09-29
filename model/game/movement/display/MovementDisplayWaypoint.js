@@ -1,14 +1,18 @@
-model.MovementDisplayWaypoint = function MovementWaypoint(size)
+model.MovementDisplayWaypoint = function MovementWaypoint()
 {
     model.Particle.call(
         this,
         {
             alive: 0,
             position: new THREE.Vector3(0, 0, 0),
-            size: size,
+            size: 64,
             opacity: 1
         }
     );
+
+    this.time = 0;
+    this.turnWaypointSize = 128;
+    this.intermediateWaypointSize = 64;
 
     this.dragging = false;
     this.rotating = false;
@@ -20,7 +24,14 @@ model.MovementDisplayWaypoint.prototype =  Object.create(model.Particle.prototyp
 
 model.MovementDisplayWaypoint.prototype.setFromWaypoint = function(waypoint)
 {
-    this.setPosition(waypoint.position).setAngle(waypoint.facing).activate();
+    var size = waypoint.time % 10 == 0 ? this.turnWaypointSize : this.intermediateWaypointSize;
+
+    this.setSize(size)
+        .setPosition(waypoint.position)
+        .setAngle(waypoint.facing)
+        .activate();
+
+    this.time = waypoint.time;
     this.extrapolation = waypoint.extrapolation;
 };
 

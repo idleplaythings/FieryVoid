@@ -33,18 +33,12 @@ model.Timeline.prototype.persist = function()
 {
     if (Meteor.isClient)
     {
-        if (this._future.length == 0)
-            return this;
-
         this._storage.persistFuture(this._future, this._id);
     }
     else
     {
-        if (this._past.length > 0)
-            this._storage.persistPast(this._past, this._id);
-
-        if (this._future.length > 0)
-            this._storage.persistFuture(this._future, this._id);
+        this._storage.persistPast(this._past, this._id);
+        this._storage.persistFuture(this._future, this._id);
     }
 
     return this;

@@ -99,10 +99,6 @@ model.MovementRoute.prototype.getLastTime = function()
 {
     var last = this.getLast();
     var gameTime = this._gameState.currentGametime / 1000;
-    console.log(last);
-
-    if (last)
-        console.log(last.time, gameTime);
 
     if (! last || last.time < gameTime)
         return gameTime;

@@ -18,6 +18,10 @@ body{
     user-select: none;
 }
 
+.progress
+{
+    cursor:progress;
+}
 
 a
 {
