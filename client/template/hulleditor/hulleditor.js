@@ -1,93 +1,27 @@
-Meteor.subscribe("HullImages");
 
-Template.hullEditor.contextObject = null;
-
-Template.hullEditor.context = function()
-{
-    if ( ! Template.hullEditor.contextObject)
-        Template.hullEditor.contextObject =
-            Template.hullEditor.createContext();
-
-    return Template.hullEditor.contextObject;
-};
-
-Template.hullEditor.createContext = function()
-{
-    return {
-        shipView: null,
-        viewClass: model.ShipViewHull,
-        lastMouseOverPos: null,
-        modulePlacing: null,
-        hullLayout:null,
-        hullHandle: null,
-
-        hullLayoutReactivity: function(self)
-        {
-            self.hullHandle = Deps.autorun(function(){
-                var hullLayout = HullLayouts.findOne(
-                    {_id: Session.get("selected_hullLayout")});
-
-                if ( ! hullLayout)
-                    return;
-
-                self.hullLayout = hullLayout;
-
-                self.shipView.drawImages({
-                    hullLayout: hullLayout,
-                    getColor: function(){ return hullLayout.color;}
-                });
-            });
-        },
-
-        handle: function(self) {
-            self.hullLayoutReactivity(self);
-        },
-
-        click: function(self, containerPos)
-        {
-            var shipView = self.shipView;
-            var hullLayout = self.hullLayout;
-
-            if ( ! hullLayout)
-                return;
-
-            var pos = shipView.getClickedTile(containerPos);
-
-            if (pos)
-            {
-                var height = Session.get('hullEditor_tileHeight');
-                if ( ! height)
-                    height = 1;
-
-                var curHeight = hullLayout.getTileHeight(pos);
-
-                if (height == curHeight || hullLayout.isDisabledTile(pos))
-                {
-                    hullLayout.toggleDisabledTile(pos);
-                }
-                else
-                {
-                    hullLayout.setTileHeight(pos, height);
-                }
-            }
-
-        }
-    };
-};
-
-Template.hullEditor = _.extend(Template.hullEditor, BaseTemplate);
 
 Template.hullEditor.created = function()
 {
+    Meteor.subscribe("HullImages");
     Meteor.subscribe("HullLayoutsAdmin");
+}
+
+Template.hullEditor.rendered = function()
+{
+    if ( ! Template.hullEditor.controller)
+    {
+        var shipview = jQuery('div.displayLarge');
+
+        Template.hullEditor.controller =
+            new model.HullEditor(shipview);
+    }
 }
 
 Template.hullEditor.destroyed = function()
 {
-    if (Template.hullEditor.contextObject)
+    if (Template.hullEditor.controller)
     {
-        Template.hullEditor.contextObject.hullHandle.stop();
-        Template.hullEditor.contextObject = null;
+        Template.hullEditor.controller.destroy();
     }
 }
 
@@ -98,8 +32,6 @@ Template.hullListing.hullImages = function () {
     var hulls = HullImages.find({});
     return hulls;
 };
-
-
 
 
 Template.hullImage.isSelected = function(){
@@ -154,6 +86,7 @@ Template.hullLayout.selected = function()
 
 Template.hullLayout.events({
     'click .hullLayout': function () {
+        console.log("selecting");
         Session.set('selected_hullLayout', this._id);
     }
 });
@@ -176,9 +109,9 @@ Template.hullmenu.tileHeight = function()
     return getFromSelectedLayout('height');
 };
 
-Template.hullmenu.tileScale = function()
+Template.hullmenu.hullScale = function()
 {
-    return getFromSelectedLayout('tileScale');
+    return getFromSelectedLayout('hullScale');
 };
 
 Template.hullmenu.color = function()

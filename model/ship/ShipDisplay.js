@@ -153,7 +153,7 @@ model.ShipDisplay.prototype.calculateGridSize = function()
 model.ShipDisplay.prototype.calculateZoomForFit = function()
 {
     var size = this.calculateGridSize();
-    var nativeGridSize = this.ship.hullLayout.tileScale;
+    var nativeGridSize = 30;
 
     var zoom = size/nativeGridSize;
 

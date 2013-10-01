@@ -1,18 +1,21 @@
 <template name="shipEditor">
-    <div class="mainContainer" style="height:{{height}};">
-        <div class="sidemenu left shipmenu" style="height:{{height}}px;">
+    <div class="mainContainer" style="height:calc(100% - 46px)">
+        <div class="sidemenu left shipmenu" style="height:100%;">
             {{> shipMenuOwned}}
         </div>
 
-        {{#with context}}
-            {{> shipDisplay}}
-        {{/with}}
+        <div class="displayLarge" style="width:calc(100% - 410px);height:100%;">
+            <div class="buttoncontainer"></div>
+        </div>
 
-        {{#isolate}}
-        {{#if isMyShip}}
-            {{> shipEditorRightMenu}}
-        {{/if}}
-        {{/isolate}}
+        <div class="sidemenu right" style="height:100%;text-align:justify;">
+            <div class="modulelist"></div>
+            <div class="shipapperance">
+                <h3>Hull color</h3>
+                <input id="hullColor" type="text" name="hullColor"/>
+            </div>
+        </div>
+
     </div>
 </template>
 

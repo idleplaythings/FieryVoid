@@ -1,19 +1,17 @@
 <template name="moduleEditor">
-    <div class="mainContainer" style="height:{{height}};">
+    <div class="mainContainer" style="height:calc(100% - 37px)">
         {{> moduleMenu}}
-        {{#if hasSelectedModuleLayout}}
-            {{#with context}}
-                {{> shipDisplay}}
-            {{/with}}
-        {{else}}
-            <div class="centered info">SELECT A HULL →</div>
-        {{/if}}
+
+        <div class="displayLarge" style="width:calc(100% - 400px);height:100%;">
+        </div>
+    
         {{> moduleListing}}
     </div>
+
 </template>
 
 <template name="moduleMenu">
-    <div class="sidemenu left moduleMenu" style="height:{{height}}px;">
+    <div class="sidemenu left moduleMenu" style="height:100%">
         <div>Module name:</div>
         <input type="text" name="name" value="{{moduleName}}"/>
         <div>Width:</div>
@@ -21,7 +19,7 @@
         <div>Height:</div>
         <input type="text" name="height" value="{{tileGridHeight}}"/>
         <div>Scale:</div>
-        <input type="text" name="tileScale" value="{{tileScale}}"/>
+        <input type="text" name="scale" value="{{scale}}"/>
         <div>Tile height:</div>
         <input type="text" name="tileHeight" value="{{tileHeight}}"/>
         <div>Allowed directions:</div>
@@ -43,7 +41,7 @@
 </template>
 
 <template name="moduleListing">
-    <div class="sidemenu right" style="height:{{height}}px;">
+    <div class="sidemenu right" style="height:100%;">
         {{#each moduleImages}}
             {{> moduleImage}}
         {{/each}}

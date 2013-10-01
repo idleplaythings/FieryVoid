@@ -40,10 +40,10 @@ model.ShipInGame.prototype.serialize = function()
     return this;
 };
 
-model.ShipInGame.prototype.getIcon = function(eventDispatcher)
+model.ShipInGame.prototype.getIcon = function()
 {
     if ( ! this.icon )
-        this.icon = new model.ShipIcon(this, eventDispatcher).create();
+        this.icon = new model.ShipIcon().create(this.shipDesign);
 
     return this.icon;
 };
@@ -52,7 +52,7 @@ model.ShipInGame.prototype.subscribeToScene =
     function(gameScene, eventDispatcher, uiResolver)
 {
     this.gameScene = gameScene;
-    this.gameScene.scene.add(this.getIcon(eventDispatcher).getThreeObject());
+    this.gameScene.scene.add(this.getIcon().getThreeObject());
 
     this.movement.subscribeToScene(this.gameScene.scene, eventDispatcher, uiResolver);
 

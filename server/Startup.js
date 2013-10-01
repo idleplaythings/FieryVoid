@@ -61,8 +61,11 @@ function crawlResources()
             var hull = fs.existsSync(pub+'module/'+name+'-hull.png');
             var over = fs.existsSync(pub+'module/'+name+'-over.png');
             var under = fs.existsSync(pub+'module/'+name+'-under.png');
+            var hullbump = fs.existsSync(pub+'module/'+name+'-hullbump.png');
+            var outsidebump = fs.existsSync(pub+'module/'+name+'-outsidebump.png');
+            var overbump = fs.existsSync(pub+'module/'+name+'-overbump.png');
 
-            ModuleImageStorage.insert(name, inside, outside, hull, over, under);
+            ModuleImageStorage.insert(name, inside, outside, hull, over, under, hullbump, outsidebump, overbump);
         }
     }
 };

@@ -1,0 +1,22 @@
+.buttoncontainer
+{
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+
+.buttoncontainer button
+{
+    display:inline-block;
+    margin:10px;
+}
+
+.displayLarge
+{
+	box-shadow: inset 0px 0px 400px #000000;
+}
+
+.displayLarge.remove
+{
+    cursor:url('/misc/x.gif'), no-drop;
+}

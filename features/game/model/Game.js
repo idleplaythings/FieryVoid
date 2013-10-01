@@ -138,6 +138,7 @@ Game.prototype.addShip = function(shipDesign)
 Game.prototype.play = function()
 {
     var container = $('#gameContainer');
+    //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
 
     this.uiEventResolver.observeDomElement(container);

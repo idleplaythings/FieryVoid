@@ -2,7 +2,10 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDi
 {
     this.listeners = {
         click: [],
-        drag: []
+        mousemove: [],
+        mouseout: [],
+        drag: [],
+        keyup: []
     };
 
     this.zoom = 1;
@@ -56,16 +59,32 @@ model.UiFocusResolver.prototype.observeDomElement = function(element)
     element.on("mousedown",  this.mouseDown.bind(this));
     element.on("mouseup",    this.mouseUp.bind(this));
     element.on("mouseout",   this.mouseOut.bind(this));
+    element.on("mouseover",   this.mouseOver.bind(this));
     element.on("mousemove",  this.mouseMove.bind(this));
+    jQuery(document).on("keyup",   this.keyup.bind(this));
+    jQuery('input').on('keyup', function(e){e.originalEvent.fromUi = true;});
     this.observedElement = element;
+
+    return this;
 };
 
 model.UiFocusResolver.prototype.getMousePositionInObservedElement = function(event)
 {
     return {
-        x: event.pageX - this.observedElement[0].offsetLeft,
-        y: event.pageY - this.observedElement[0].offsetTop
+        x: event.pageX - this.observedElement.offset().left,
+        y: event.pageY - this.observedElement.offset().top
     };
+};
+
+model.UiFocusResolver.prototype.keyup = function(event)
+{
+    if (event.originalEvent.fromUi)
+        return;
+
+    this.fireEvent(
+        {keyCode: event.keyCode},
+        this.listeners.keyup
+    );
 };
 
 model.UiFocusResolver.prototype.mouseDown = function(event)
@@ -105,17 +124,38 @@ model.UiFocusResolver.prototype.mouseUp = function(event)
 
 model.UiFocusResolver.prototype.mouseOut = function(e)
 {
+
     if (this.dragging)
         this.fireEvent({release:true}, this.listeners.drag);
+    else
+        this.fireEvent({}, this.listeners.mouseout);
 
     this.distanceDragged = 0;
     this.dragging = false;
+};
+
+model.UiFocusResolver.prototype.mouseOver = function(e)
+{
+
 };
 
 model.UiFocusResolver.prototype.mouseMove = function(event)
 {
     if (this.dragging)
         this.drag(event);
+    else
+        this.doMouseMove(event);
+};
+
+model.UiFocusResolver.prototype.doMouseMove = function(event)
+{
+    var pos = this.getMousePositionInObservedElement(event);
+    var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
+
+    this.fireEvent(
+        this.getViewPortAndGameObject(pos, gamePos),
+        this.listeners.mousemove
+    );
 
 };
 

@@ -14,6 +14,7 @@ model.GameScene = function GameScene(dispatcher)
 
     this.gameTime = 0;
 
+    this.target = null;
     this.dispatcher = dispatcher;
 };
 
@@ -21,12 +22,13 @@ model.GameScene.prototype.constructor = model.GameScene;
 
 model.GameScene.prototype.init = function(target)
 {
-    jQuery(window).resize(jQuery.proxy(this.resize, this));
+    this.target = target;
+    jQuery(window).resize(this.resize.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 
-    var width = window.innerWidth;
-    var height = window.innerHeight;
+    var width = this.target.innerWidth();
+    var height = this.target.innerHeight();
     this.width = width;
     this.height = height;
     var zoom = 1;
@@ -40,6 +42,10 @@ model.GameScene.prototype.init = function(target)
     this.scene = new THREE.Scene();
     this.scene.add( camera );
 
+    this.light = new THREE.DirectionalLight(0xffffff, 10);
+    this.light.position.set( 50000, 50000, -1 );
+    this.scene.add( this.light );
+
     this.ambientLight = new THREE.AmbientLight(this.ambientLightColor);
     this.scene.add(this.ambientLight);
 
@@ -49,7 +55,9 @@ model.GameScene.prototype.init = function(target)
 
     $(this.renderer.domElement)
         .on('contextmenu', function(e){e.stopPropagation(); return false; })
-        .addClass("webglCanvas").appendTo(target);
+        .addClass("webglCanvas").appendTo(this.target);
+
+    return this;
 };
 
 model.GameScene.prototype.animate = function(displayTime)
@@ -63,22 +71,23 @@ model.GameScene.prototype.animate = function(displayTime)
 
 model.GameScene.prototype.render = function()
 {
-    //this.renderer.clear();
-    //this.renderer.render( this.terrainScene, this.camera );
     this.renderer.render( this.scene, this.camera );
 };
 
 model.GameScene.prototype.resize = function()
 {
     this.zoomCamera(this.zoom);
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    this.width = this.target.innerWidth();
+    this.height = this.target.innerHeight();
+
+    this.renderer.setSize(this.width, this.height);
 };
 
 model.GameScene.prototype.zoomCamera = function(zoom)
 {
     this.zoom = zoom;
-    var width = window.innerWidth;
-    var height = window.innerHeight;
+    var width = this.width;
+    var height = this.height;
 
     this.camera.left = width / (-this.scale*2*zoom);
     this.camera.right = width / (this.scale*2*zoom);
@@ -92,9 +101,6 @@ model.GameScene.prototype.moveCameraToPosition = function(pos)
 {
     this.camera.position.x = pos.x;
     this.camera.position.y = -pos.y;
-
-    WaterLayer.light.position.x = this.camera.position.x;
-    WaterLayer.light.position.y = this.camera.position.y;
 };
 
 model.GameScene.prototype.onScroll = function(event)

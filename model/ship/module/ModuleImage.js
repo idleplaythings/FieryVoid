@@ -6,6 +6,9 @@ model.ModuleImage = function ModuleImage(args)
     this.hull = args.hull || false;
     this.over = args.over || false;
     this.under = args.under || false;
+    this.hullbump = args.hullbump || false;
+    this.outsidebump = args.outsidebump || false;
+    this.overbump = args.overbump || false;
 };
 
 model.ModuleImage.prototype.getImageInside = function(){
@@ -26,11 +29,32 @@ model.ModuleImage.prototype.getImageHull = function(){
     return '/module/' +this.name+ '-hull.png';
 };
 
+model.ModuleImage.prototype.getImageHullBump = function(){
+    if ( ! this.hullbump)
+        return null;
+
+    return '/module/' +this.name+ '-hullbump.png';
+};
+
+model.ModuleImage.prototype.getImageOutsideBump = function(){
+    if ( ! this.outsidebump)
+        return null;
+
+    return '/module/' +this.name+ '-outsidebump.png';
+};
+
 model.ModuleImage.prototype.getImageOver = function(){
     if ( ! this.over)
         return null;
 
     return '/module/' +this.name+ '-over.png';
+};
+
+model.ModuleImage.prototype.getImageOverBump = function(){
+    if ( ! this.overbump)
+        return null;
+
+    return '/module/' +this.name+ '-overbump.png';
 };
 
 model.ModuleImage.prototype.getDefault = function(){
@@ -49,6 +73,15 @@ model.ModuleImage.prototype.getByType = function(type){
 
     if (type == 'hull')
         return this.getImageHull();
+
+    if (type == 'hullbump')
+        return this.getImageHullBump();
+
+    if (type == 'outsidebump')
+        return this.getImageOutsideBump();
+
+    if (type == 'overbump')
+        return this.getImageOverBump();
 
     if (type == 'over')
         return this.getImageOver();

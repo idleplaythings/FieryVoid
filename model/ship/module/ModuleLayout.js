@@ -10,12 +10,13 @@ model.ModuleLayout = function ModuleLayout(args)
     this.description = '';
     this.width = args.width || 10;
     this.height = args.height || 10;
-    this.tileScale = args.tileScale || 30;
+    this.scale = args.scale || 1;
     this.disabledTiles = args.disabledTiles || [];
     this.outsideTiles = args.outsideTiles || [];
     this.tileHeight = args.tileHeight || 1;
-    this.allowedDirections = args.allowedDirections || '';
-    this.direction = args.direction || 0;
+    this.allowedDirections = this.parseAvailableDirections(args.allowedDirections);
+    this.direction = 1;
+    this.setDirection(args.direction);
 
     this.mass = args.mass || 1;
 
@@ -107,22 +108,47 @@ model.ModuleLayout.prototype.initTraits = function() {
 
 model.ModuleLayout.prototype.setDirection = function(direction)
 {
-    if (! direction || direction == '0')
+    if (! direction)
     {
-        this.direction = 0;
+        this.direction = this.allowedDirections[0];
         return;
     }
 
-    if ( this.getAvailableDirections().indexOf(direction) < 0)
+    direction = parseInt(direction, 10);
+
+    if (typeof direction !== 'number' || direction % 1 != 0)
     {
-        throw new Error("Invalid module direction: '"+direction+"'");
+        this.direction = this.allowedDirections[0];
+        return;
+    }
+
+    if (! this.allowedDirections.some(function(v){return v === direction}))
+    {
+        //TODO: set module to invalid state so that player can fix it.
     }
     this.direction = direction;
 };
 
-model.ModuleLayout.prototype.getAvailableDirections = function()
+model.ModuleLayout.prototype.parseAvailableDirections = function(allowed)
 {
-    return this.allowedDirections.split(',').map(function(value){return parseInt(value)});
+    if ( ! allowed)
+        return [1];
+
+    if ( ! Array.isArray(allowed))
+        allowed = allowed.split(',');
+
+    allowed = allowed.map(function(value){return parseInt(value)});
+
+    allowed = allowed.filter(function(value, i){
+            return allowed.indexOf(value) == i && typeof value === 'number' && value % 1 == 0 && value > 0 && value <= 4;
+        })
+        .sort();
+        
+
+    if (allowed.length === 0)
+        return [1];
+
+    return allowed;
 };
 
 model.ModuleLayout.prototype.getRotation = function()
@@ -330,6 +356,9 @@ model.ModuleLayout.prototype.updateTrait = function(name, value)
 
 model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
 {
+    if (name == 'allowedDirections')
+        value = this.parseAvailableDirections(value);
+
     if (this[name] != value)
     {
         this[name] = value;

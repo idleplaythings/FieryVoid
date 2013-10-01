@@ -22,11 +22,11 @@ Template.shipDisplay.rendered = function()
     if ( ! self.data.shipView || found.length == 0)
     {
         console.log("shipview create");
-        self.data.shipView = new self.data.viewClass(
-            jQuery(self.find('div.displayLarge .displayTarget'))
-        );
+        var shipDisplay = new model.ShipDisplay2(null);
+        shipDisplay.renderOn(jQuery('div.displayLarge .displayTarget'));
+        self.data.shipView = shipDisplay;
 
-        self.data.handle(self.data);
+        //self.data.handle(self.data);
     }
 };
 

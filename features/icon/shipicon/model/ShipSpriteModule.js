@@ -1,7 +1,7 @@
-model.ShipSpriteTurret = function ShipSpriteTurret(module, shipDesign)
+model.ShipSpriteModule = function ShipSpriteModule(module, shipDesign, type)
 {
     this.module = module;
-    this.type = "over";
+    this.type = type;
 
     model.ShipSprite.call(this, shipDesign);
 
@@ -14,20 +14,20 @@ model.ShipSpriteTurret = function ShipSpriteTurret(module, shipDesign)
     this.setPosition();
 };
 
-model.ShipSpriteTurret.prototype =  Object.create(model.ShipSprite.prototype);
+model.ShipSpriteModule.prototype =  Object.create(model.ShipSprite.prototype);
 
-model.ShipSpriteTurret.prototype.requestImageDataToCallback = function()
+model.ShipSpriteModule.prototype.requestImageDataToCallback = function()
 {
     this.img.getImageDataToCallback(jQuery.proxy(this.receiveImageData, this));
 };
 
-model.ShipSpriteTurret.prototype.setPosition = function()
+model.ShipSpriteModule.prototype.setPosition = function()
 {
     this.position = this.shipDesign.getPositionInIconRelativeFromCenter(
         this.module.getCenterPosition());
 };
 
-model.ShipSpriteTurret.prototype.getObject3d = function()
+model.ShipSpriteModule.prototype.getObject3d = function()
 {
     this.object3d = this.createObject3d();
     this.setInitialScale();
@@ -42,7 +42,7 @@ model.ShipSpriteTurret.prototype.getObject3d = function()
     return this.object3d;
 };
 
-model.ShipSpriteTurret.prototype.setInitialScale = function()
+model.ShipSpriteModule.prototype.setInitialScale = function()
 {
     var width = this.module.width;
     var height = this.module.height;
@@ -51,7 +51,7 @@ model.ShipSpriteTurret.prototype.setInitialScale = function()
     this.object3d.scale.set(width*scale, height*scale, 1);
 };
 
-model.ShipSpriteTurret.prototype.getIconScale = function()
+model.ShipSpriteModule.prototype.getIconScale = function()
 {
     var hullScale = this.shipDesign.hullLayout.tileScale;
     if (window.innerWidth > window.innerHeight)

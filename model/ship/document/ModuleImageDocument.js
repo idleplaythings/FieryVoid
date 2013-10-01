@@ -19,7 +19,7 @@ ModuleImages.allow({
 
 ModuleImageStorage =
 {
-    insert: function(name, inside, outside, hull, over, under)
+    insert: function(name, inside, outside, hull, over, under, hullbump, outsidebump, overbump)
     {
         if (ModuleImages.findOne({name: name}))
         {
@@ -30,7 +30,10 @@ ModuleImageStorage =
                     outside:outside,
                     hull: hull,
                     over: over,
-                    under: under
+                    under: under,
+                    hullbump: hullbump,
+                    outsidebump: outsidebump, 
+                    overbump: overbump
                 }}
             );
         }
@@ -42,7 +45,10 @@ ModuleImageStorage =
                 outside:outside,
                 hull: hull,
                 over: over,
-                under: under
+                under: under,
+                hullbump: hullbump,
+                outsidebump: outsidebump, 
+                overbump: overbump
             });
         }
     },

@@ -1,84 +1,29 @@
-Meteor.subscribe("ModuleImages");
-
-
-Template.moduleEditor.contextObject = null;
-
-Template.moduleEditor.context = function()
-{
-    if ( ! Template.moduleEditor.contextObject)
-        Template.moduleEditor.contextObject =
-            Template.moduleEditor.createContext();
-
-    return Template.moduleEditor.contextObject;
-};
-
-Template.moduleEditor.createContext = function()
-{
-    return {
-        shipView: null,
-        viewClass: model.ShipViewModule,
-        lastMouseOverPos: null,
-        modulePlacing: null,
-        moduleHandle: null,
-        moduleLayout: null,
-
-        moduleLayoutReactivity: function(self)
-        {
-            self.moduleHandle = Deps.autorun(function(){
-                var module = ModuleLayouts.findOne(
-                    {_id: Session.get("selected_moduleLayout")});
-
-                if ( ! module)
-                    return;
-
-                self.moduleLayout = module;
-                self.shipView.drawImages({hullLayout: module, modules: [module]});
-            });
-        },
-
-        handle: function(self) {
-            self.moduleLayoutReactivity(self);
-        },
-
-        click: function(self, containerPos)
-        {
-            var shipView = self.shipView;
-            var module = self.moduleLayout;
-
-            if ( ! module)
-                return;
-
-            var pos = shipView.getClickedTile(containerPos);
-
-            if (pos)
-            {
-                var type = Session.get('moduleEditor_brushType');
-
-                if ( ! type)
-                    module.toggleDisabledTile(pos);
-                else if (type == 'outside')
-                    module.toggleOutsideTile(pos);
-            }
-
-        }
-    };
-};
-
-Template.moduleEditor = _.extend(Template.moduleEditor, BaseTemplate);
 
 Template.moduleEditor.created = function()
 {
+    Meteor.subscribe("ModuleImages");
     Meteor.subscribe("ModuleLayoutsAdmin");
 }
 
 Template.moduleEditor.destroyed = function()
 {
-    if (Template.moduleEditor.contextObject)
+    if (Template.moduleEditor.controller)
     {
-        Template.moduleEditor.contextObject.moduleHandle.stop();
-        Template.moduleEditor.contextObject = null;
+        Template.moduleEditor.controller.destroy();
     }
 }
+
+Template.moduleEditor.rendered = function()
+{
+    if ( ! Template.moduleEditor.controller)
+    {
+        var target = jQuery('div.displayLarge');
+
+        Template.moduleEditor.controller =
+            new model.ModuleEditor(target);
+    }
+}
+
 
 
 Template.moduleListing = _.extend(Template.moduleListing, BaseTemplate);
@@ -175,9 +120,9 @@ Template.moduleMenu.mass = function()
     return getFromSelectedLayout('mass');
 };
 
-Template.moduleMenu.tileScale = function()
+Template.moduleMenu.scale = function()
 {
-    return getFromSelectedLayout('tileScale');
+    return getFromSelectedLayout('scale');
 };
 
 Template.moduleMenu.tileHeight = function()

@@ -22,6 +22,11 @@ model.ShipDesign.prototype.getColor = function()
     return this.hullLayout.color;
 }
 
+model.ShipDesign.prototype.getPatternColor = function()
+{
+    return '255,234,0';
+}
+
 model.ShipDesign.prototype.onFailedLoad = function()
 {
     return null;
@@ -108,7 +113,7 @@ model.ShipDesign.prototype.removeModule = function(pos)
 
 model.ShipDesign.prototype.placeModule = function(module, pos)
 {
-    if (! module.isValidPosition(this, pos))
+    if ( ! module.isValidPosition(this, pos))
         return false;
 
     Meteor.call(
@@ -132,9 +137,9 @@ model.ShipDesign.prototype.getModuleInPosition = function(pos)
 
 model.ShipDesign.prototype.updateIfDifferent = function(name, value)
 {
-    if ( this[name] == undefined)
-        throw "Trying to change Ship design value '" + name
-            +"' that does not exist";
+    if ( this[name] === undefined)
+        throw new Error("Trying to change Ship design value '" + name
+            +"' that does not exist");
 
     if (this[name] != value)
     {

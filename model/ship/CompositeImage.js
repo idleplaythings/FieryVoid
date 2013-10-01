@@ -5,7 +5,7 @@ model.CompositeImage = function CompositeImage(shipDesign)
     this.imageLoader = new model.ImageLoader();
 
     this.imageData = {data:null};
-    this.imageLoader.addCallback(jQuery.proxy(this, this._createImage), this);
+    this.imageLoader.addCallback(this._createImage.bind(this), this);
 };
 
 model.CompositeImage.prototype.getImageDataToCallback = function(callback)
@@ -50,21 +50,22 @@ model.CompositeImage.prototype._drawModuleImages =
         for (var i in images)
         {
             var image = images[i];
-
-            var pos = this.getCanvasPosition(this.shipDesign.modules[i].getTopLeftPosition());
+            var module = this.shipDesign.modules[i];
 
             image.getImageDataToCallback(
                 function(data)
                 {
                     data = data.data;
 
-                    var canvas =
-                        $('<canvas width="'+data.width+'" height="'+data.height+'"></canvas>').get(0);
-                    var tmp = canvas.getContext("2d");
+                    var center = this.getCanvasPosition(module.getCenterPosition());
+                    var topleft = {
+                        x:center.x - data.width / 2 * module.scale,
+                        y:center.y - data.height / 2 * module.scale,
+                    };
 
-                    tmp.putImageData(data, 0, 0);
-                    context.drawImage(canvas, pos.x, pos.y);
-                }
+                    this.drawingTool.resizeImageDataAndDraw(context, topleft, data, module.scale);
+                    
+                }.bind(this)
             );
         }
     };
@@ -105,6 +106,6 @@ model.CompositeImage.prototype.getCoordinateTool = function()
     return new model.CoordinateConverter(
         {width: dim.width, height: dim.height},
         {width: gridWidth, height: gridHeight},
-        this.shipDesign.hullLayout.tileScale
+        30
     );
 };

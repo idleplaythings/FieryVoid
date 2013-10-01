@@ -31,7 +31,7 @@ model.CompositeImage.prototype.getDimensions = function()
 {
     var hull = this.shipDesign.hullLayout;
     return {
-        width:hull.width * hull.tileScale,
-        height:hull.height * hull.tileScale
+        width:hull.width * 30,
+        height:hull.height * 30
     };
 };

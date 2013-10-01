@@ -1,6 +1,6 @@
 model.CompositeImageModule = function CompositeImageModule(args)
 {
-    model.CompositeImage.call(this, args.shipDesign);
+    model.CompositeImage.call(this);
     this.shadow = args.shadow || false;
     this.imageLoader = args.imageLoader || this.imageLoader;
     this.base =
@@ -8,7 +8,8 @@ model.CompositeImageModule = function CompositeImageModule(args)
     this.rotation = args.rotation || 0;
 }
 
-model.CompositeImageModule.prototype = Object.create(model.CompositeImage.prototype);
+model.CompositeImageModule.prototype =
+    Object.create(model.CompositeImage.prototype);
 
 model.CompositeImageModule.prototype._createImage = function()
 {

@@ -39,6 +39,9 @@ model.MovementDisplayRoute.prototype.getWaypointTexture = function()
 
 model.MovementDisplayRoute.prototype.getWaypointInPosition = function(pos, route)
 {
+    if (this.hidden)
+        return null;
+    
     for (var i in route)
     {
         var wp = route[i];

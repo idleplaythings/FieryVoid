@@ -1,7 +1,6 @@
-model.ShipSpriteSelected = function ShipSpriteSelected(ship)
+model.ShipSpriteSelected = function ShipSpriteSelected(shipDesign)
 {
-    this.ship = ship;
-    model.ShipSprite.call(this, ship.shipDesign);
+    model.ShipSprite.call(this, shipDesign);
     this.z = -1;
 
     this.circle = null;
@@ -36,7 +35,8 @@ model.ShipSpriteSelected.prototype.getObject3d = function()
         this.arrow.scale.set(size, size, 1);
         this.object3d.add(this.arrow);
 
-        this.ship.gameScene.animators.push(this);
+        //TODO: correct way to expose gamescene animators to this
+        //this.ship.gameScene.animators.push(this);
     }
 
     return this.object3d;

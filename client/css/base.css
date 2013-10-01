@@ -1,5 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
 
+body, html
+{
+    height:100%;
+}
+
 body{
     margin:0;
     padding:0;
@@ -85,7 +90,7 @@ a
 .displayLarge
 {
     position:absolute;
-    right:200px;
+    right:205px;
     display: -webkit-flex;
     display: flex;
 }
@@ -192,7 +197,6 @@ canvas
 
 .img-background
 {
-    margin: 5px auto;
     border: 1px solid #16181d;
     background-color:#35383c;
     box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
