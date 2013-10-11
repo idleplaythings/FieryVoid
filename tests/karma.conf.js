@@ -12,6 +12,7 @@ files = [
   JASMINE_ADAPTER,
     'tests/**/*Spec.js',
     'tests/**/*Mock.js',
+    'tests/lib/*.js',
     'tests/mocks/jquery.min.js',
     'lib/model/model.js',
     'lib/math/Vector2.js',
@@ -29,13 +30,16 @@ files = [
     'model/game/movement/MovementWaypoint.js',
     'model/game/UiFocusResolver.js',
     'model/timeline/Timeline.js',
-    'client/three.min.js'
+    'client/lib/three.min.js',
+
+    'features/lib/DIC/DIC.js',
+    'features/lib/Extend/Extend.js'
 ];
 
 
 // list of files to exclude
 exclude = [
-  
+
 ];
 
 

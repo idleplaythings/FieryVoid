@@ -4,15 +4,13 @@ Meteor.methods({
 
         console.log(player1Id, player2Id);
 
-        var game = new model.Game({
-            _id: new Meteor.Collection.ObjectID().toHexString()
-        });
+        var game = dic.get('model.Game');
 
         var ship1 = game.getRandomShipForPlayer(player1Id);
         var ship2 = game.getRandomShipForPlayer(player2Id);
 
         if (!ship1 || !ship2) {
-            throw "Ships not found"
+            throw "Ships not found";
         }
 
         game.setStartingConditions();

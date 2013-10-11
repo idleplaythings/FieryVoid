@@ -13,6 +13,7 @@ model.GameStorage.prototype.getGame = function(gameId)
 
     var gameDoc = Games.findOne({_id: gameId});
     var game = new model[gameDoc.type]();
+
     game.load(gameDoc);
 
     if (Meteor.isClient)
@@ -22,7 +23,6 @@ model.GameStorage.prototype.getGame = function(gameId)
             game.updated(updated);
         });
     }
-
 
     return game;
 };

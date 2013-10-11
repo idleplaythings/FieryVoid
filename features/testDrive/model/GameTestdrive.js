@@ -1,3 +1,6 @@
+
+model.GameTestdrive = Extend.register(GameTestdrive, "Game");
+
 Meteor.methods({
     TestdriveStart: function (shipId) {
         console.log("testdrive start");
@@ -9,8 +12,10 @@ Meteor.methods({
         if ( ! shipDesign || shipDesign.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
 
-        var game = new model.GameTestdrive(
-            {_id: new Meteor.Collection.ObjectID().toHexString()});
+        var id = new Meteor.Collection.ObjectID().toHexString();
+
+        var game = dic.get('model.GameTestdrive');
+
         game.setStartingConditions(shipDesign);
         game.addPlayer(userid);
 
@@ -20,22 +25,19 @@ Meteor.methods({
     }
 });
 
-model.GameTestdrive = function GameTestdrive(args)
-{
-    model.Game.call(this, args);
+function GameTestdrive(args) {
+    this.super.apply(this, arguments);
     this.type = "GameTestdrive";
-};
+}
 
-model.GameTestdrive.prototype = Object.create(model.Game.prototype);
-
-model.GameTestdrive.prototype.setStartingConditions = function(shipDesign)
+GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 {
     this.name = displayName(Meteor.user()) + " testdriving " + shipDesign.name;
     this.created =  new Date().getTime();
     this.terrainSeed = Math.random();
 };
 
-model.GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
+GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
 {
     var ship = new model.ShipInGame({
         _id: 1,
@@ -57,7 +59,7 @@ model.GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
     this.shipStorage.addShip(ship);
 };
 
-model.GameTestdrive.prototype.getSelectedShip = function()
+GameTestdrive.prototype.getSelectedShip = function()
 {
     return this.ships[0];
 };

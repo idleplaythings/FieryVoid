@@ -6,3 +6,5 @@ Meteor.publish("currentGame", function (gameid) {
         ShipsInGameCollection.find({gameid: gameid})
     ];
 });
+
+foo = "bar";

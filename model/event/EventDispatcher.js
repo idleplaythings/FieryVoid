@@ -1,7 +1,7 @@
 model.EventDispatcher = function EventDispatcher()
 {
     this.listeners = {};
-};
+}
 
 model.EventDispatcher.prototype.attach = function(eventName, listener, priority)
 {
@@ -25,19 +25,19 @@ model.EventDispatcher.prototype._initListenersArray = function(eventName)
     if (typeof this.listeners[eventName] === 'undefined') {
         this.listeners[eventName] = [];
     }
-}
+};
 
 model.EventDispatcher.prototype._addListener = function(eventName, listener)
 {
     this.listeners[eventName].push(listener);
-}
+};
 
 model.EventDispatcher.prototype._sortListeners = function(eventName)
 {
     this.listeners[eventName].sort(function(a, b) {
         return b.__priority - a.__priority;
-    })
-}
+    });
+};
 
 /**
  *
@@ -58,5 +58,5 @@ model.EventDispatcher.prototype._dispatchEvent = function(event) {
         }
 
         return true;
-    }
-}
+    };
+};

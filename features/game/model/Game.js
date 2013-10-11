@@ -1,5 +1,6 @@
-model.Game = function Game(args)
-{
+model.Game = Extend.register(Game);
+
+function Game(/* dispatcher, */ args) {
     if ( ! args)
         args = {};
 
@@ -13,10 +14,14 @@ model.Game = function Game(args)
     this.uiEventResolver = null;
     this.movementFactory = null;
 
-    this.setState(args);
-};
+    // this.dispatcher = dispatcher;
+    this.dispatcher = new model.EventDispatcher();
 
-model.Game.prototype.getRandomShipForPlayer = function(playerId) {
+    // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    this.setState(args);
+}
+
+Game.prototype.getRandomShipForPlayer = function(playerId) {
     var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
     if (!shipDesignId) {
@@ -45,14 +50,14 @@ model.Game.prototype.getRandomShipForPlayer = function(playerId) {
 };
 
 
-model.Game.prototype.setStartingConditions = function()
+Game.prototype.setStartingConditions = function()
 {
     this.name = "a game";
     this.created =  new Date().getTime();
     this.terrainSeed = Math.random();
 };
 
-model.Game.prototype.setState = function(args)
+Game.prototype.setState = function(args)
 {
     if ( ! args)
         args = {};
@@ -69,12 +74,12 @@ model.Game.prototype.setState = function(args)
 
     this.gameState = new model.GameState(args.currentGameTime || 0);
 
-    this.dispatcher = new model.EventDispatcher();
-    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    // this.dispatcher = new model.EventDispatcher();
+    this.gameScene = new model.GameScene(this.dispatcher);
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
     this.uiEventResolver = new model.UiFocusResolver(
-        this.coordinateConverter, new model.EventDispatcher(), this.dispatcher);
+        this.coordinateConverter, this.dispatcher);
 
     this.timelineFactory = new model.TimelineFactory(
         this.gameState, this._id, new model.TimelineStorage());
@@ -88,7 +93,7 @@ model.Game.prototype.setState = function(args)
     this.created = args.created || null;
 };
 
-model.Game.prototype.addPlayer = function(id)
+Game.prototype.addPlayer = function(id)
 {
     var players = [].concat(id).map(function(id){
         return {id:id, orderTime:-1}
@@ -96,7 +101,7 @@ model.Game.prototype.addPlayer = function(id)
     this.players = this.players.concat(players);
 };
 
-model.Game.prototype.getPlayer = function(id)
+Game.prototype.getPlayer = function(id)
 {
     var players = this.players.filter(function(player){
         return player.id == id;
@@ -108,7 +113,7 @@ model.Game.prototype.getPlayer = function(id)
     return null;
 };
 
-model.Game.prototype.addShip = function(shipDesign)
+Game.prototype.addShip = function(shipDesign)
 {
     var ship = new model.ShipInGame({
         _id: 1,
@@ -130,7 +135,7 @@ model.Game.prototype.addShip = function(shipDesign)
     this.shipStorage.addShip(ship);
 };
 
-model.Game.prototype.play = function()
+Game.prototype.play = function()
 {
     var container = $('#gameContainer');
     this.gameScene.init(container);
@@ -156,12 +161,12 @@ model.Game.prototype.play = function()
     this.initGameState(container);
 };
 
-model.Game.prototype.getSelectedShip = function()
+Game.prototype.getSelectedShip = function()
 {
 
 };
 
-model.Game.prototype.getShipById = function(id)
+Game.prototype.getShipById = function(id)
 {
     var ships = this.ships.filter(function(ship) {
         return ship._id == id;
@@ -174,7 +179,7 @@ model.Game.prototype.getShipById = function(id)
     return null;
 };
 
-model.Game.prototype.onClicked = function(payload)
+Game.prototype.onClicked = function(payload)
 {
     if (payload.stopped)
         return;
@@ -184,7 +189,7 @@ model.Game.prototype.onClicked = function(payload)
     ship.movement.setWaypoint(pos);
 };
 
-model.Game.prototype.initGameState = function(container)
+Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain(this.gameScene, container, this.terrainSeed).createRandom();
 
@@ -193,17 +198,24 @@ model.Game.prototype.initGameState = function(container)
             ship.subscribeToScene(this.gameScene, this.dispatcher, this.uiEventResolver);
         }, this);
 
-    this.gameScene.animate();
+    this.animate();
 };
 
-model.Game.prototype.load = function(doc)
+Game.prototype.animate = function()
+{
+    requestAnimationFrame( this.animate.bind(this) );
+
+    this.gameScene.animate(this.gameState.currentDisplayGameTime);
+};
+
+Game.prototype.load = function(doc)
 {
     this.setState(doc);
     this.ships = this.shipStorage.getShipsInGame();
     return this;
 };
 
-model.Game.prototype.getInitialInsert = function()
+Game.prototype.getInitialInsert = function()
 {
     return {
         _id: this._id,
@@ -216,12 +228,12 @@ model.Game.prototype.getInitialInsert = function()
     };
 };
 
-model.Game.prototype.getSelectedShip = function()
+Game.prototype.getSelectedShip = function()
 {
     return this.ships[0];
 };
 
-model.Game.prototype.updated = function(doc)
+Game.prototype.updated = function(doc)
 {
     console.log('game updated', doc.currentGameTime);
 
@@ -231,7 +243,7 @@ model.Game.prototype.updated = function(doc)
     }
 };
 
-model.Game.prototype._changeTurn = function(time)
+Game.prototype._changeTurn = function(time)
 {
     console.log('CHANGE TURN');
     console.log(this);

@@ -1,4 +1,4 @@
-model.UiFocusResolver = function UiFocusResolver(coordinateConverter, dispatcher, externalDispatcher)
+model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDispatcher)
 {
     this.listeners = {
         click: [],

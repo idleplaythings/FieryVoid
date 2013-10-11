@@ -1,5 +1,4 @@
 Meteor.startup(function () {
-
     crawlResources();
 
     var admin = Meteor.users.findOne({'isAdmin' : true});

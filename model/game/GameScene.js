@@ -1,6 +1,5 @@
-model.GameScene = function GameScene(dispatcher, gameState){
-
-    this.gameState = gameState;
+model.GameScene = function GameScene(dispatcher)
+{
     this.width = 1000;
     this.height = 800;
     this.camera = null;
@@ -53,12 +52,12 @@ model.GameScene.prototype.init = function(target)
         .addClass("webglCanvas").appendTo(target);
 };
 
-model.GameScene.prototype.animate = function()
+model.GameScene.prototype.animate = function(displayTime)
 {
-    var self = this;
-//    requestAnimationFrame( jQuery.proxy(this.animate, this) );
-    requestAnimationFrame( this.animate.bind(this) );
-    this.animators.forEach(function(a){a.animate(self.gameState.currentDisplayGameTime)})
+    this.animators.forEach(function(a){
+        a.animate(displayTime);
+    });
+
     this.render();
 };
 
