@@ -1,6 +1,6 @@
 model.Game = Extend.register(Game);
 
-function Game(/* dispatcher, */ args) {
+function Game(dispatcher, args) {
     if ( ! args)
         args = {};
 
@@ -14,8 +14,8 @@ function Game(/* dispatcher, */ args) {
     this.uiEventResolver = null;
     this.movementFactory = null;
 
-    // this.dispatcher = dispatcher;
-    this.dispatcher = new model.EventDispatcher();
+    this.dispatcher = dispatcher;
+    // this.dispatcher = new model.EventDispatcher();
 
     // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.setState(args);

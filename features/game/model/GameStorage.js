@@ -1,5 +1,6 @@
-model.GameStorage = function GameStorage()
+model.GameStorage = function GameStorage(gameFactory)
 {
+    this._gameFactory = gameFactory;
 };
 
 model.GameStorage.prototype.insert = function(payload)
@@ -12,7 +13,8 @@ model.GameStorage.prototype.getGame = function(gameId)
     console.log("getting game with id " + gameId);
 
     var gameDoc = Games.findOne({_id: gameId});
-    var game = new model[gameDoc.type]();
+
+    var game = this._gameFactory.create('model.' + gameDoc.type);
 
     game.load(gameDoc);
 

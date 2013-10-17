@@ -1,7 +1,8 @@
 Template.game.rendered = function()
 {
     var gameId = Session.get('active_game');
-    var game = new model.GameStorage().getGame(gameId);
+    var gameStorage = dic.get('model.GameStorage');
+    var game = gameStorage.getGame(gameId);
 
     game.play();
 };

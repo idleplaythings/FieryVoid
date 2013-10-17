@@ -1,4 +1,8 @@
-dic.register('model.GameTestdrive', function(dic) {
-    var id = new Meteor.Collection.ObjectID().toHexString();
-    return new model.GameTestdrive({ _id: id });
-});
+dic.register(
+    'model.GameTestdrive',
+    function(dic) {
+        return new model.GameTestdrive(dic.get('model.EventDispatcher'));
+    }, {
+        tags: [ 'game.type' ]
+    }
+);
