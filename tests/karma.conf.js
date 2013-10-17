@@ -33,6 +33,7 @@ files = [
     'client/lib/three.min.js',
 
     'features/lib/DIC/DIC.js',
+    'features/lib/DIC/Factory.js',
     'features/lib/Extend/Extend.js'
 ];
 

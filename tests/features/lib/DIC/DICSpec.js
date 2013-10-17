@@ -57,4 +57,35 @@ describe("Dependency Injection Container", function() {
 
         expect(test1).toBe(test2);
     });
+
+    it("should throw an exception for an unknown key", function() {
+        expect(function() { dic.get('foobar'); }).toThrow();
+    });
+
+    it("should allow tagging factories", function() {
+        dic.register('some_service.components', function(dic) {
+            return dic.getTagged('some_service');
+        });
+
+        dic.register('some_service.component1', function(dic) {
+            return {
+                name: 'component1'
+            };
+        }, {
+            tags: [ 'some_service' ]
+        });
+
+        dic.register('some_service.component2', function(dic) {
+            return {
+                name: 'component2'
+            };
+        }, {
+            tags: [ 'some_service' ]
+        });
+
+        var components = dic.get('some_service.components');
+
+        expect(components).toContain('some_service.component1');
+        expect(components).toContain('some_service.component2');
+    });
 });

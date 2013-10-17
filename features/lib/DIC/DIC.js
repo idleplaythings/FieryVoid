@@ -2,6 +2,7 @@ DIC = function DIC()
 {
     this._registry = {};
     this._shared = {};
+    this._tags = {};
     this._resolved = false;
 };
 
@@ -16,6 +17,12 @@ DIC.prototype.register = function(name, item, opts)
         // but don't instantiate it yet
         this._shared[name] = null;
     }
+
+    if (opts.tags) {
+        opts.tags.forEach(function(tag) {
+            this._tag(name, tag);
+        }.bind(this));
+    }
 };
 
 DIC.prototype.get = function(name)
@@ -28,6 +35,20 @@ DIC.prototype.get = function(name)
     return this._create(name);
 };
 
+DIC.prototype.getTagged = function(tag)
+{
+    return this._tags[tag];
+}
+
+DIC.prototype._tag = function(name, tag)
+{
+    if (typeof this._tags[tag] === 'undefined') {
+        this._tags[tag] = [];
+    }
+
+    this._tags[tag].push(name);
+}
+
 DIC.prototype._isShared = function(name)
 {
     return Object.keys(this._shared).indexOf(name) != -1;
@@ -35,6 +56,10 @@ DIC.prototype._isShared = function(name)
 
 DIC.prototype._create = function(name)
 {
+    if (typeof this._registry[name] === 'undefined') {
+        throw "Undefined key."
+    }
+
     if (typeof this._registry[name] === 'function') {
         return this._registry[name].call(undefined, this);
     }
