@@ -1,7 +1,7 @@
 model.EventDispatcher = function EventDispatcher()
 {
     this.listeners = {};
-}
+};
 
 model.EventDispatcher.prototype.attach = function(eventName, listener, priority)
 {
