@@ -20,17 +20,17 @@ model.ShipDesign.prototype.getColor = function()
         return this.hullColor;
 
     return this.hullLayout.color;
-}
+};
 
 model.ShipDesign.prototype.getPatternColor = function()
 {
     return '255,234,0';
-}
+};
 
 model.ShipDesign.prototype.onFailedLoad = function()
 {
     return null;
-}
+};
 
 model.ShipDesign.prototype.load = function(id)
 {
@@ -45,7 +45,7 @@ model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc, timelineFa
 {
     //this.hullLayout = new model.HullLayout(this.hullLayout);
     shipDesignDoc.hullLayout =
-        HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId})
+        HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId});
 
     if ( ! shipDesignDoc.hullLayout)
         return this.onFailedLoad();
@@ -138,8 +138,9 @@ model.ShipDesign.prototype.getModuleInPosition = function(pos)
 model.ShipDesign.prototype.updateIfDifferent = function(name, value)
 {
     if ( this[name] === undefined)
-        throw new Error("Trying to change Ship design value '" + name
-            +"' that does not exist");
+        throw new Error(
+            "Trying to change Ship design value '" + name + "' that does not exist"
+        );
 
     if (this[name] != value)
     {
@@ -233,7 +234,7 @@ model.ShipDesign.prototype.calculateMomentOfIntertia = function()
     this.modules.forEach(
         function(module)
         {
-            var distance = MathLib.distance(massCenter, module.getCenterPosition())
+            var distance = MathLib.distance(massCenter, module.getCenterPosition());
             var mass = module.mass;
 
             moment += mass * Math.pow(distance, 2);
@@ -241,4 +242,4 @@ model.ShipDesign.prototype.calculateMomentOfIntertia = function()
     );
 
     return moment;
-}
+};

@@ -1,5 +1,8 @@
 Meteor.methods({
     TestdriveStart: function (shipId) {
+
+        var gameStorage = dic.get('model.GameStorage');
+
         console.log("testdrive start");
 
         var userid = Meteor.userId();
@@ -13,7 +16,6 @@ Meteor.methods({
         game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });
 
         var initialInsert = game.getInitialInsert();
-        var gameStorage = dic.get('model.GameStorage');
         gameStorage.insert(initialInsert);
 
         game._id = initialInsert._id;

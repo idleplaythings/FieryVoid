@@ -1,21 +1,3 @@
-// ShipDesigns = new Meteor.Collection(
-//     "ShipDesigns"
-// );
-
-// ShipDesigns.allow({
-//     insert: function () {
-//         return false;
-//     },
-
-//     update: function () {
-//         return false;
-//     },
-
-//     remove: function () {
-//         return false;
-//     }
-// });
-
 Meteor.methods({
     ShipDesignInsert: function (hullLayoutId) {
         console.log("ship insert");
@@ -107,4 +89,3 @@ Meteor.methods({
         );
     },
 });
-
