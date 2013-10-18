@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.SpritePhong = function SpritePhong(z, bumpScale)
 {
 	this.bumpScale = bumpScale || 2; 

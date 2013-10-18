@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.ModuleSprite = function ModuleSprite(module, type, z)
 {
     this.module = module;

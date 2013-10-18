@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.ShipSpriteModule = function ShipSpriteModule(module, shipDesign, type)
 {
     this.module = module;

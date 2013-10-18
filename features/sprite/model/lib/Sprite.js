@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.Sprite = function Sprite(z)
 {
     this.z = z || 0;

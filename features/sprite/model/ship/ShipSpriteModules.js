@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.ShipSpriteModules = function ShipSpriteModules(shipDesign, z)
 {
 	model.ShipSprite.call(this, shipDesign.hullLayout, z);

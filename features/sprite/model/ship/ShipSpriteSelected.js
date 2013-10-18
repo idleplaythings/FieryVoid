@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.ShipSpriteSelected = function ShipSpriteSelected(shipDesign)
 {
     model.ShipSprite.call(this, shipDesign);
