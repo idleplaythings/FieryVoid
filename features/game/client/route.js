@@ -13,7 +13,7 @@ CreateGameController = RouteController.extend({
         ];
     },
     run: function() {
-        Meteor.call('GameStart', Meteor.userId(), Meteor.userId(), this._onCreated);
+        Meteor.call('StartGame', Meteor.userId(), Meteor.userId(), this._onCreated);
     },
     _onCreated: function(error, game) {
         if (error) {

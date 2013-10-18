@@ -3,6 +3,11 @@ model.GameStorage = function GameStorage(gameFactory)
     this._gameFactory = gameFactory;
 };
 
+model.GameStorage.prototype.create = function()
+{
+    return this._gameFactory.create('model.Game');
+}
+
 model.GameStorage.prototype.insert = function(payload)
 {
     Games.insert(payload);

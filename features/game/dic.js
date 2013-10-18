@@ -24,3 +24,7 @@ dic.register('model.GameFactory', function(dic) {
 
     return gameFactory;
 });
+
+dic.register('GameController', function(dic) {
+    return new controller.GameController(dic.get('model.GameStorage'));
+});
