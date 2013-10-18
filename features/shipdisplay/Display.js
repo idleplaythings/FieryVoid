@@ -32,8 +32,15 @@ model.Display.prototype.renderOn = function(target)
 
     this.icon.create();
     this.gameScene.scene.add(this.icon.getThreeObject());
-
+    this.animate();
     return this;
+};
+
+model.Display.prototype.animate = function()
+{
+    requestAnimationFrame(this.animate.bind(this));
+
+    this.gameScene.animate(0);
 };
 
 model.Display.prototype.onClicked = function(payload)
