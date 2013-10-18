@@ -9,15 +9,22 @@ Meteor.methods({
         if ( ! shipDesign || shipDesign.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
 
-        var id = new Meteor.Collection.ObjectID().toHexString();
-
         var game = dic.get('model.GameTestdrive');
+        game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });
+
+        var initialInsert = game.getInitialInsert();
+        var gameStorage = dic.get('model.GameStorage');
+        gameStorage.insert(initialInsert);
+
+        game._id = initialInsert._id;
 
         game.setStartingConditions(shipDesign);
         game.addPlayer(userid);
 
-        new model.GameStorage().insert(Games.insert(game.getInitialInsert()));
+
+
         game.addTestDriveShip(shipDesign);
-        return game._id;
+
+        return game;
     }
 });

@@ -5,6 +5,7 @@ Meteor.methods({
         console.log(player1Id, player2Id);
 
         var game = dic.get('model.Game');
+        game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });
 
         var ship1 = game.getRandomShipForPlayer(player1Id);
         var ship2 = game.getRandomShipForPlayer(player2Id);
