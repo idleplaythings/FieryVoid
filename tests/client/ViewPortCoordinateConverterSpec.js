@@ -6,13 +6,10 @@ describe("Viewport Coordinate converter spec", function() {
         var cameraPos = {x:500, y:-500};
         var zoom = 1;
 
-        window.innerWidth  = 1000;
-        window.innerHeight = 1000;
-
         var clickPosition = {x:100, y:100};
 
         var converter = new model.CoordinateConverterViewPort(
-            {camera: {position: cameraPos}, zoom: zoom}
+            {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
         );
 
         var pos = converter.fromViewPortToGame(clickPosition);
@@ -37,13 +34,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:500, y:-500};
             var zoom = 2;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var clickPosition = {x:100, y:100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromViewPortToGame(clickPosition);
@@ -56,13 +50,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:5000, y:-5000};
             var zoom = 1;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var clickPosition = {x:100, y:100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromViewPortToGame(clickPosition);
@@ -76,13 +67,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:500, y:-500};
             var zoom = 0.5;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var clickPosition = {x:100, y:100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromViewPortToGame(clickPosition);
@@ -96,13 +84,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:500, y:-500};
             var zoom = 1;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var clickPosition = {x:50, y:100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromViewPortToGame(clickPosition);
@@ -116,13 +101,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:500, y:-500};
             var zoom = 1;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var gamePosition = {x:100, y:-100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromGameToViewPort(gamePosition);
@@ -136,13 +118,10 @@ describe("Viewport Coordinate converter spec", function() {
             var cameraPos = {x:500, y:-500};
             var zoom = 0.5;
 
-            window.innerWidth  = 1000;
-            window.innerHeight = 1000;
-
             var gamePosition = {x:100, y:-100};
 
             var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom}
+                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
             );
 
             var pos = converter.fromGameToViewPort(gamePosition);

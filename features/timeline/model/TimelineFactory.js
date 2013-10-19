@@ -14,7 +14,14 @@ model.TimelineFactory.prototype.getTimeline = function(id)
         id = new Meteor.Collection.ObjectID().toHexString();
 
     var timeline = new model.Timeline(
-       id, this._gameid, this._gameState, this._storage, contents.past, contents.future);
+       id,
+       this._gameid,
+       this._gameState,
+       this._storage,
+       contents.past,
+       contents.future,
+       new model.EventDispatcher()
+    );
 
     this._loadedTimelines.push(timeline);
     return timeline;

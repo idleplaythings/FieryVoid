@@ -1,4 +1,4 @@
-model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future)
+model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future, dispatcher)
 {
     this._gameid = gameid;
     this._gameState = gamestate;
@@ -8,7 +8,7 @@ model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future)
     this._future = future || [];
     this._storage = storage;
 
-    this.dispatcher = new model.EventDispatcher();
+    this.dispatcher = dispatcher;
 };
 
 model.Timeline.prototype.getId = function()

@@ -9,25 +9,26 @@ describe("UiFocusResolver", function() {
 
     it("should register listeners in correct order", function() {
 
-        var resolver = new model.UiFocusResolver(coordinateConverter);
-        resolver.registerListener(true, 1, 'click');
-        resolver.registerListener(false, 0, 'click');
+        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
+        resolver.registerListener('click', function(){return false}, 1);
+        resolver.registerListener('click', function(){return false}, 0);
+        resolver.registerListener('click', function(){return true}, 5);
 
-        expect(resolver.listeners.click[0].callback).toBe(true);
+        expect(resolver.listeners.click[0].callback()).toBe(true);
     });
 
     it("should capture a click", function() {
 
-        var resolver = new model.UiFocusResolver(coordinateConverter);
+        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
 
         resolver.getMousePositionInObservedElement = function(e){return {x:100, y:100};};
 
         var actual = null;
 
-        resolver.registerListener(function(payload){actual = payload;}, 1, 'click');
+        resolver.registerListener('click', function(payload){actual = payload;}, 1);
 
-        resolver.mouseDown(null);
-        resolver.mouseUp(null);
+        resolver.mouseDown(getMockEvent());
+        resolver.mouseUp(getMockEvent());
 
 
         expect(actual.view).toEqual({ x : 100, y : 100 });
@@ -35,8 +36,7 @@ describe("UiFocusResolver", function() {
 
     it("should consider a mouseUp a click if moved less than threshold", function() {
 
-        var threshold = 10;
-        var resolver = new model.UiFocusResolver(coordinateConverter, null,  threshold);
+        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:105, y:105}, {x:106, y:106}];
@@ -47,20 +47,18 @@ describe("UiFocusResolver", function() {
         var actual = null;
         var notActual = null;
 
-        resolver.registerListener(function(payload){notActual = payload;}, 1, 'drag');
-        resolver.registerListener(function(payload){actual = payload;}, 1, 'click');
+        resolver.registerListener( 'drag', function(payload){notActual = payload;}, 1);
+        resolver.registerListener('click', function(payload){actual = payload;}, 1);
 
-        resolver.mouseDown(null);
-        resolver.mouseMove(null);
-        resolver.mouseUp(null);
+        resolver.mouseDown(getMockEvent());
+        resolver.mouseMove(getMockEvent());
+        resolver.mouseUp(getMockEvent());
 
-        expect(actual.view).toEqual({ x : 105, y : 105 });
+        expect(actual.view).toBeTruthy();
     });
 
     it("should consider mouseUp a drag when moved more than threshold", function() {
-
-        var threshold = 10;
-        var resolver = new model.UiFocusResolver(coordinateConverter, null, threshold);
+        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:120, y:120}];
@@ -78,17 +76,27 @@ describe("UiFocusResolver", function() {
                 actual = payload;
         };
 
-        resolver.registerListener(function(payload){notActual = payload;}, 1, 'click');
-        resolver.registerListener(function(payload){
+        resolver.registerListener('click', function(payload){notActual = payload;}, 1);
+        resolver.registerListener('drag', function(payload){
             if (payload.capture)
                 payload.capture(listener);
-        }, 0, 'drag');
+        }, 0);
 
-        resolver.mouseDown(null);
-        resolver.mouseMove(null);
-        resolver.mouseUp(null);
+        resolver.mouseDown(getMockEvent());
+        resolver.mouseMove(getMockEvent());
+        resolver.mouseUp(getMockEvent());
 
         expect(actual.current.view).toEqual({ x : 120, y : 120 });
         expect(notActual).toBe(null);
     });
+
+    function getMockEvent()
+    {
+        return {
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            metaKey: false
+        };
+    }
 });

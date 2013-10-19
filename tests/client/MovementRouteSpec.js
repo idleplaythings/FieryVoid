@@ -37,12 +37,25 @@ describe("Movement route", function() {
 
     function getTimeline()
     {
-        return new model.Timeline(null, null, null, null, [
-            {time:20, name:'route', entry:getWaypoitObject(20, false)},
-            {time:0, name:'route', entry:getWaypoitObject(0, true)},
-            {time:30, name:'route', entry:getWaypoitObject(30, false)},
-            {time:10, name:'route', entry:getWaypoitObject(10, false)},
-        ], []);
+        return new model.Timeline(
+            null,
+            null,
+            {currentGametime: 0},
+            null,
+            [
+                {time:20, name:'route', entry:getWaypoitObject(20, false)},
+                {time:0, name:'route', entry:getWaypoitObject(0, true)},
+                {time:30, name:'route', entry:getWaypoitObject(30, false)},
+                {time:10, name:'route', entry:getWaypoitObject(10, false)},
+            ],
+            [],
+            getDispatcher()
+        );
+    }
+
+    function getDispatcher()
+    {
+        return {attach: function(){}};
     }
 
     function getWaypoitObject(time, resolved)

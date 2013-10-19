@@ -1,4 +1,4 @@
-ddescribe("Factory", function() {
+describe("Factory", function() {
     var factory;
 
     beforeEach(function() {

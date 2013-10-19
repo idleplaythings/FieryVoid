@@ -1,7 +1,5 @@
-describe("Coordinate converter spec", function() {
-
-    var noop = function(){};
-
+describe("Coordinate converter spec", function()
+{
     beforeEach(function() {
 
     });
