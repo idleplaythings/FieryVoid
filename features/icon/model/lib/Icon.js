@@ -117,8 +117,6 @@ model.Icon.prototype.getClosestTilePosition = function(pos)
     var yOffset = (this.height % 2 == 1) ? scale/2: 0;
     pos.y -= yOffset;
 
-    //parseInt(this.shipDesign.hullLayout.tileScale, 10);
-
     var x = pos.x % scale;
     x = x < 0 ? scale + x : x;
 
