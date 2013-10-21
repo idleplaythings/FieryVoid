@@ -28,26 +28,3 @@ Template.smallHullImage.receiveImageData = function(img)
     drawingTool.resizeToFitAndDrawToMiddle(
         self.hullcanvas, data);
 };
-
-Template.smallHullImage.shipType = function()
-{
-    if (this.width && this.height)
-    {
-        var size = this.width * this.height;
-
-        if (size < 800)
-        {
-            return '♙';
-        }
-        else if (size < 1500)
-        {
-            return '♘'
-        }
-        else
-        {
-            return '♖';
-        }
-        console.log(size);
-    }
-    return '';
-}

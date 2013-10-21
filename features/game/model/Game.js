@@ -5,15 +5,6 @@ function Game(dispatcher, args) {
         args = {};
 
     this.type = 'Game';
-
-    this.gameScene = null;
-    this.scrolling = null;
-    this.zooming = null;
-
-    this.dispatcher = null;
-    this.uiEventResolver = null;
-    this.movementFactory = null;
-
     this.dispatcher = dispatcher;
     // this.dispatcher = new model.EventDispatcher();
 
@@ -74,23 +65,30 @@ Game.prototype.setState = function(args)
 
     this.gameState = new model.GameState(args.currentGameTime || 0);
 
-    // this.dispatcher = new model.EventDispatcher();
+    this.timelineFactory = new model.TimelineFactory(
+        this.gameState, this._id, new model.TimelineStorage());
+
+    this.movementFactory = new model.MovementFactory(this.timelineFactory);
+
+    this.shipStorage = new model.ShipStorage(
+        this._id, this.movementFactory, this.timelineFactory);
+
+    this.created = args.created || null;
+};
+
+Game.prototype.init = function()
+{
+    if (Meteor.isServer)
+        return;
+
     this.gameScene = new model.GameScene(this.dispatcher);
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
     this.uiEventResolver = new model.UiFocusResolver(
         this.coordinateConverter, this.dispatcher);
 
-    this.timelineFactory = new model.TimelineFactory(
-        this.gameState, this._id, new model.TimelineStorage());
-
-    this.movementFactory = new model.MovementFactory(
-        this.timelineFactory, this.coordinateConverter, this.dispatcher, this.uiEventResolver);
-
-    this.shipStorage = new model.ShipStorage(
-        this._id, this.movementFactory, this.timelineFactory);
-
-    this.created = args.created || null;
+    this.movementFactory.createWaypointMenu(
+        this.coordinateConverter, this.dispatcher, this.uiEventResolver);
 };
 
 Game.prototype.addPlayer = function(id)
@@ -212,6 +210,7 @@ Game.prototype.animate = function()
 Game.prototype.load = function(doc)
 {
     this.setState(doc);
+    this.init();
     this.ships = this.shipStorage.getShipsInGame();
     return this;
 };

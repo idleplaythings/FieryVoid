@@ -1,7 +1,13 @@
-model.MovementFactory = function MovementFactory(
-    timelineFactory, coordinateConverter, dispatcher, uiResolver)
+model.MovementFactory = function MovementFactory(timelineFactory)
 {
     this.timelineFactory = timelineFactory;
+    this.waypointUi = null;
+};
+
+model.MovementFactory.prototype.createWaypointMenu =
+    function(coordinateConverter, dispatcher, uiResolver)
+{
+    console.log("create");
     this.waypointUi = new model.RadialMenu(
         'waypointUi',
         this.createWaypointUiButtons(),
@@ -14,6 +20,7 @@ model.MovementFactory = function MovementFactory(
 
 model.MovementFactory.prototype.createMovement = function(timelineId)
 {
+    console.log("hi");
     return new model.Movement(
         this.timelineFactory.getTimeline(timelineId),
         this.waypointUi
