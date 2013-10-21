@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.Icon = function Icon()
 {
     this.ThreeIconGroup = null;
@@ -107,16 +110,24 @@ model.Icon.prototype.getTileOnPosition = function(pos)
 model.Icon.prototype.getClosestTilePosition = function(pos)
 {
     var scale = 30;
+
+    var xOffset = (this.width % 2 == 1) ? scale/2: 0;
+    pos.x -= xOffset;
+
+    var yOffset = (this.height % 2 == 1) ? scale/2: 0;
+    pos.y -= yOffset;
+
     //parseInt(this.shipDesign.hullLayout.tileScale, 10);
 
     var x = pos.x % scale;
     x = x < 0 ? scale + x : x;
 
+
     var y = pos.y % scale;
     y = y < 0 ? scale + y : y;
 
     return {
-        x: pos.x - x,
-        y: pos.y - y
+        x: pos.x - x + xOffset,
+        y: pos.y - y + yOffset
     };
 };

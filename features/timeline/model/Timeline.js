@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future, dispatcher)
 {
     this._gameid = gameid;

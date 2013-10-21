@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 model.TimelineFactory = function TimelineFactory(gamestate, gameid, storage)
 {
     this._gameState = gamestate;

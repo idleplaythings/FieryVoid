@@ -38,7 +38,9 @@ module.exports = function(config) {
 
         'features/lib/DIC/DIC.js',
         'features/lib/DIC/Factory.js',
-        'features/lib/Extend/Extend.js'
+        'features/lib/Extend/Extend.js',
+
+        'features/icon/model/lib/Icon.js'
       
     ],
 

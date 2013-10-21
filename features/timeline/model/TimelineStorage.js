@@ -1,3 +1,6 @@
+if ( typeof model === 'undefined')
+    model = {};
+
 TimelineFutures = new Meteor.Collection("TimelineFutures");
 
 TimelineFutures.allow({
