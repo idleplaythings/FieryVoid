@@ -16,7 +16,8 @@ model.ModuleTrait.prototype.getArgsAsInt = function(args)
     if ( ! args)
         return 0;
 
-    var num = parseInt(this.args);
+    var num = parseInt(args, 10);
+
     if (num == "NaN")
     {
         console.log("Args: '"+args+"' is not a number");

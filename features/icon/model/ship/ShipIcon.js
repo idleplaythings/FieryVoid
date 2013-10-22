@@ -60,6 +60,11 @@ model.ShipIcon.prototype.createSprites = function()
 
 model.ShipIcon.prototype.getModulePositionInIcon = function(module)
 {
+    return this.getCustomModulePositionInIcon(module.getCenterPosition());
+};
+
+model.ShipIcon.prototype.getCustomModulePositionInIcon = function(modulepos)
+{
     var scale = 30;
     var dimensions = {x:this.width * scale, y:this.height * scale};
     var origo = {
@@ -67,11 +72,26 @@ model.ShipIcon.prototype.getModulePositionInIcon = function(module)
         y: (dimensions.y/-2)
     };
 
-    var moduleCenter = module.getCenterPosition();
     return {
-        x: moduleCenter.x * scale + origo.x,
-        y: moduleCenter.y * scale + origo.y
+        x: modulepos.x * scale + origo.x,
+        y: modulepos.y * scale + origo.y
     };
+};
+
+model.ShipIcon.prototype.getModuleTopLeftPosition = function(module)
+{
+    var modulePosition = this.getCustomModulePositionInIcon(module.getTopLeftPosition());
+    var iconPosition = this.getThreeObject().position;
+
+    return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
+};
+
+model.ShipIcon.prototype.getModulePosition = function(module)
+{
+    var modulePosition = this.getModulePositionInIcon(module);
+    var iconPosition = this.getThreeObject().position;
+
+    return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
 };
 
 

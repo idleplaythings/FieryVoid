@@ -20,6 +20,7 @@ model.ShipIconEditor.prototype.createSprites = function()
     this.sprites.hull = new model.ShipSpriteHull(shipDesign, 5);
     this.sprites.grid = new model.SpriteGrid(
     	new model.GridLayout(new model.TileLayout(), this.getHullLayout()), 1);
+    this.sprites.grid.hide();
 
     this.addObject(this.sprites.hull.getObject3d());
     this.addObject(this.sprites.grid.getObject3d());
@@ -48,12 +49,14 @@ model.ShipIconEditor.prototype.setMode = function(mode)
         case 0:
             this.sprites.hull.setZPosition(5);
             //this.sprites.hull.show();
+            this.sprites.grid.hide();
             this.modulesOutside.forEach(function(entry){entry.icon.show()});
             break;
         case 1:
             this.sprites.hull.setZPosition(0);
             this.modulesOutside.forEach(function(entry){entry.icon.hide()});
             //this.sprites.hull.hide();
+            this.sprites.grid.show();
             break;
     }
 };

@@ -35,7 +35,7 @@ model.ShipEditor = function ShipEditor(shipDesignId, leftSideMenu, iconcontainer
         iconcontainer,
         new model.CoordinateConverterViewPort(this.gameScene),
         dispatcher
-    );
+    ).hide();
 
     this.display = new model.Display(
         this.icon,
@@ -87,6 +87,7 @@ model.ShipEditor.prototype.createButtons = function()
 
 model.ShipEditor.prototype.selectRemove = function()
 {
+    this.shipStatusView.hide();
     this.iconcontainer.addClass('remove');
     this.unselectModule();
     this.remove = true;
@@ -94,6 +95,9 @@ model.ShipEditor.prototype.selectRemove = function()
 
 model.ShipEditor.prototype.unselectRemove = function()
 {
+    if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
+        this.shipStatusView.show();
+
     this.iconcontainer.removeClass('remove');
     this.remove = false;
 };
@@ -104,16 +108,18 @@ model.ShipEditor.prototype.toggleViewMode = function()
     if (this.iconViewMode >= this.possibleIconViewModes.length)
         this.iconViewMode = 0;
 
-    if (this.possibleIconViewModes[this.iconViewMode] != 'grid')
-        this.moduleList.hide();
-    else
-        this.moduleList.show();
-
-    if (this.possibleIconViewModes[this.iconViewMode] != 'hull')
+    if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
+    {
         this.shipApperanceMenu.hide();
+        this.moduleList.show();
+        this.shipStatusView.show();
+    }
     else
+    {
         this.shipApperanceMenu.show();
-
+        this.moduleList.hide();
+        this.shipStatusView.hide();
+    }
 
     this.icon.setMode(this.iconViewMode);
 };
@@ -141,12 +147,15 @@ model.ShipEditor.prototype.onShipDesignChange = function(event)
         this.icon.create(shipDesign).setMode(this.iconViewMode);
         this.shipDesign = shipDesign;
 
-        this.shipStatusView.display(shipDesign);
+        this.shipStatusView.display(this.icon, shipDesign.modules);
     }
 };
 
 model.ShipEditor.prototype.onSelectedModuleChange = function(event)
 {
+    if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
+        this.shipStatusView.show();
+
     this.iconcontainer.removeClass('remove');
     this.remove = false;
     this.selectedModule = event.module;

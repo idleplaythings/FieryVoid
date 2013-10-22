@@ -95,7 +95,7 @@ model.ModuleLayout.getAvailableTraits = function() {
 }
 
 model.ModuleLayout.prototype.initTraits = function() {
-    this.traits.every(function(trait) {
+    this.traits.forEach(function(trait) {
         var traitName = 'ModuleTrait' + trait.name[0].toUpperCase() + trait.name.slice(1);
 
         if (! model[traitName])
@@ -188,6 +188,12 @@ model.ModuleLayout.prototype.occupiesPosition = function(pos)
 model.ModuleLayout.prototype.setPosition = function(pos)
 {
     this.position = pos;
+};
+
+
+model.ModuleLayout.prototype.getPosition = function()
+{
+    return this.position;
 };
 
 model.ModuleLayout.prototype.getTopLeftPosition = function()
