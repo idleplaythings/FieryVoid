@@ -113,12 +113,14 @@ model.ShipEditor.prototype.toggleViewMode = function()
         this.shipApperanceMenu.hide();
         this.moduleList.show();
         this.shipStatusView.show();
+        this.icon.setInsideMode();
     }
     else
     {
         this.shipApperanceMenu.show();
         this.moduleList.hide();
         this.shipStatusView.hide();
+        this.icon.sethullMode();
     }
 
     this.icon.setMode(this.iconViewMode);
@@ -144,7 +146,7 @@ model.ShipEditor.prototype.onShipDesignChange = function(event)
         {
             this.selectedModuleIcon.changeShipDesign(shipDesign);
         }
-        this.icon.create(shipDesign).setMode(this.iconViewMode);
+        this.icon.create(shipDesign).sethullMode();
         this.shipDesign = shipDesign;
 
         this.shipStatusView.display(this.icon, shipDesign.modules);
@@ -154,7 +156,10 @@ model.ShipEditor.prototype.onShipDesignChange = function(event)
 model.ShipEditor.prototype.onSelectedModuleChange = function(event)
 {
     if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
-        this.shipStatusView.show();
+    {
+        this.shipStatusView.hide();
+        this.icon.showGrid();
+    }
 
     this.iconcontainer.removeClass('remove');
     this.remove = false;
@@ -242,6 +247,13 @@ model.ShipEditor.prototype.getNewModuleDirection = function(module, direction)
 
 model.ShipEditor.prototype.unselectModule = function()
 {
+    console.log("unselect module");
+    if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
+    {
+        this.shipStatusView.show();
+        this.icon.hideGrid();
+    }
+    console.log("hi");
     this.selectedModule = null;
     this.moduleList.unselect();
     this.selectedModuleIcon.hide();

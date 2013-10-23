@@ -71,7 +71,10 @@ model.ShipStatusView.prototype.symbolFits = function(module, symbol, position, s
             });
 
             if (other)
+            {
                 return false;
+            }
+
         }
     }
 
@@ -111,14 +114,15 @@ model.ShipStatusView.prototype.findValidTileFromTop = function(module, symbol, s
 
 model.ShipStatusView.prototype.getModulePosition = function(shipIcon, modulePosition, symbol)
 {
-    modulePosition.x += symbol.iconSize.width / 2 * 30;
-    modulePosition.y += symbol.iconSize.height / 2 * 30;
+    var position = {x:modulePosition.x, y:modulePosition.y};
+    position.x += symbol.iconSize.width / 2 * 30;
+    position.y += symbol.iconSize.height / 2 * 30;
 
     var moduleTilePos = symbol.positionOnIcon;
 
-    modulePosition.x += moduleTilePos.x * 30;
-    modulePosition.y += moduleTilePos.y * 30;
-    return modulePosition;
+    position.x += moduleTilePos.x * 30;
+    position.y += moduleTilePos.y * 30;
+    return position;
     //return this.coordinateConverter.fromGameToViewPort(modulePosition);
 };
 

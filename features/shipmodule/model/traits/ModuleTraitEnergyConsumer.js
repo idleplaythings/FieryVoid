@@ -4,7 +4,6 @@ model.ModuleTraitEnergyConsumer = function ModuleTraitEnergyConsumer(args)
     this.name = 'energyConsumer';
     this.label = 'Energy Consumer';
     this.value = null;
-    console.log(this.energyConsumed);
 };
 
 model.ModuleTraitEnergyConsumer.prototype = Object.create(model.ModuleTrait.prototype);

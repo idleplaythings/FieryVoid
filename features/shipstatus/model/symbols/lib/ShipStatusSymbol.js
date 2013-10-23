@@ -67,6 +67,19 @@ model.ShipStatusSymbol.prototype.drawString = function(context, text, center)
     context.fillText(text, center.x, center.y);
 };
 
+model.ShipStatusSymbol.prototype.strokeAndFillWithShadow = function(context)
+{
+    context.shadowColor = '#000';
+    context.shadowBlur = 5;
+    context.shadowOffsetX = 5;
+    context.shadowOffsetY = 5;
+    context.fill();
+    context.shadowBlur = 0;
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 0;
+    context.stroke();
+};
+
 model.ShipStatusSymbol.prototype.getCanvas = function()
 {
     return jQuery('<canvas width="'+this.size.width+'" height="'+this.size.height+'"></canvas>').get(0);
