@@ -2,7 +2,7 @@ model.ShipStatusSymbolCrew = function ShipStatusSymbolCrew(powerGenerated, args)
 {
     model.ShipStatusSymbol.call(this, args);
     this.deploymentPosition = 'bottom';
-    this.size = {width:30, height:30};
+    this.size = {width:33, height:33};
 };
 
 model.ShipStatusSymbolCrew.prototype =

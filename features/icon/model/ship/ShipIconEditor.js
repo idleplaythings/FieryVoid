@@ -70,5 +70,5 @@ model.ShipIconEditor.prototype.showGrid = function()
 
 model.ShipIconEditor.prototype.hideGrid = function()
 {
-    this.sprites.grid.hideGrid();
+    this.sprites.grid.hide();
 };
