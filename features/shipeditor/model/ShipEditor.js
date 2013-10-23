@@ -125,8 +125,6 @@ model.ShipEditor.prototype.toggleViewMode = function()
         this.shipStatusView.hide();
         this.icon.sethullMode();
     }
-
-    this.icon.setMode(this.iconViewMode);
 };
 
 model.ShipEditor.prototype.onShipDesignChange = function(event)
@@ -250,14 +248,12 @@ model.ShipEditor.prototype.getNewModuleDirection = function(module, direction)
 
 model.ShipEditor.prototype.unselectModule = function()
 {
-    console.log("hi");
     this.selectedModule = null;
     this.moduleList.unselect();
     this.selectedModuleIcon.hide();
-    console.log("unselect module", this.possibleIconViewModes[this.iconViewMode]);
+
     if (this.possibleIconViewModes[this.iconViewMode] == 'grid')
     {
-        console.log("grid views")
         this.shipStatusView.show();
         this.icon.hideGrid();
     }
