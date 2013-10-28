@@ -7,7 +7,7 @@ model.ModuleLayout = function ModuleLayout(args)
 
     this._id = args._id || null;
     this.name = args.name || 'unnamed';
-    this.description = '';
+    this.description = args.description || '';
     this.width = args.width || 10;
     this.height = args.height || 10;
     this.scale = args.scale || 1;

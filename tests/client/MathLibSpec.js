@@ -37,4 +37,8 @@ describe("Mathlib", function() {
     it("Comparing angles 0 -> 170 = 170", function() {
         expect(MathLib.distanceBetweenAngles(0, 170)).toEqual({ cw : 170, ccw : -190 });
     });
+
+    it("turning a vector 45 degrees", function() {
+        expect(MathLib.turnVector({x:50, y:0}, 45)).toEqual({ x : 35.35533845424652, y : 35.35533845424652 });
+    });
 });

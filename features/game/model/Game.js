@@ -138,6 +138,8 @@ Game.prototype.play = function()
     var container = $('#gameContainer');
     //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
+    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
 
     this.uiEventResolver.observeDomElement(container);
 
@@ -153,10 +155,19 @@ Game.prototype.play = function()
     this.zooming.init();
 
     this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
+    this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
+
+
+    this.shipStatusView = new model.ShipStatusView(
+        container,
+        this.coordinateConverter,
+        this.dispatcher
+    ).hide();
 
     new model.ReplayUI(this.gameState).create();
     new model.TurnUi(this._id, this.gameState).create();
 
+    this.moduleView = new model.ModuleDetailView(container);
     this.initGameState(container);
 };
 
@@ -249,4 +260,91 @@ Game.prototype._changeTurn = function(time)
     console.log(this);
     this.gameState.currentGametime = time;
     this.timelineFactory.reloadTimelines();
+};
+
+Game.prototype.getClosestShip = function()
+{
+    var center = this.scrolling.position;
+    var ships = this.ships.slice(0).filter(function(ship){return ! ship.isHidden()});
+
+    ships.sort(function(a, b){
+       return MathLib.distance(center, a.getPosition()) - MathLib.distance(center, b.getPosition());
+    });
+
+    if (ships.length == 0)
+        return null;
+
+    var ship = ships[0];
+    if (MathLib.distance(center, ship.getPosition()) > 2000)
+        return null;
+
+    return ship;
+};
+
+Game.prototype.onScroll = function()
+{
+    if (this.zooming.zoom < 1)
+        return;
+
+    var ship = this.getClosestShip();
+    if (! ship)
+        this.ships.forEach(function(ship){ship.getIcon().showHull()});
+
+    if ( this.shipStatusView.targetId == ship._id)
+        return;
+
+    this.ships.forEach(function(ship){ship.getIcon().showHull()});
+    ship.getIcon().hideHull();
+    this.shipStatusView.targetId = ship._id;
+    this.shipStatusView.display(ship.getIcon(), ship.shipDesign.modules).show();
+};
+
+Game.prototype.onZoom = function(event)
+{
+    if (event.oldZoom < 1 && event.zoom < 1)
+        return;
+
+    if ( event.zoom == 1)
+    {
+        var ship = this.getClosestShip();
+        if (! ship)
+            return;
+
+        ship.getIcon().hideHull();
+        this.shipStatusView.targetId = ship._id;
+        this.shipStatusView.display(ship.getIcon(), ship.shipDesign.modules).show();
+    }
+    else
+    {
+        this.ships.forEach(function(ship){ship.getIcon().showHull()});
+        this.shipStatusView.unsetShipIcon();
+        this.shipStatusView.targetId = null;
+        this.shipStatusView.hide();
+    }
+};
+
+Game.prototype.onMouseMove = function(event)
+{
+    if (this.zooming.zoom < 1)
+    {
+        this.moduleView.display(null);
+        return;
+    }
+
+    var ship = this.getClosestShip();
+    if (! ship)
+        return;
+
+    var module = ship.getIcon().getModuleOnPosition(event.game);
+
+    if (! module)
+    {
+        this.moduleView.display(null);
+        return;
+    }
+
+    var modulePos = this.coordinateConverter.fromGameToViewPort(
+        ship.getIcon().getModulePositionInGame(module));
+
+    this.moduleView.display(module, modulePos, ship.shipDesign.modules);
 };

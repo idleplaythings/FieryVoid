@@ -27,7 +27,7 @@ model.Zooming.prototype.animate = function()
     if ( this.zoomTarget && this.zoomTarget != this.zoom)
     {
         var change = (this.zoomTarget - this.zoom);
-        if (Math.abs(change) < 0.00001)
+        if (Math.abs(change) < 0.00001 || (this.zoomTarget == 1 && Math.abs(change) < 0.01))
         {
             this.dispatchZoom(this.zoomTarget);
             if (this.zoomPositionTarget)
@@ -86,8 +86,8 @@ model.Zooming.prototype.changeZoom = function(zoom)
     if (newzoom < 0.01)
         newzoom = 0.01;
 
-    if (newzoom > 1.1)
-        newzoom = 1.1;
+    if (newzoom > 1)
+        newzoom = 1;
 
     //newzoom = parseFloat(newzoom.toFixed(2));
     //console.log("zoom to: " + newzoom);
@@ -96,11 +96,13 @@ model.Zooming.prototype.changeZoom = function(zoom)
 
 model.Zooming.prototype.dispatchZoom = function(zoom)
 {
+    var oldZoom = this.zoom;
     this.zoom = zoom;
 
     this.dispatcher.dispatch({
         name: "ZoomEvent",
-        zoom: zoom
+        zoom: zoom,
+        oldZoom: oldZoom
     });
 };
 

@@ -5,6 +5,7 @@ model.CompositeImageShipHull = function CompositeImageShipHull(shipDesign)
     this.color = shipDesign.getColor();
     this.patternColor = null; //shipDesign.getPatternColor() || null;
     this.hullImgName = shipDesign.hullLayout.hullImgName;
+    this.scale = shipDesign.hullLayout.hullScale;
 
     this.base =
         this.imageLoader.loadImage(
@@ -38,7 +39,7 @@ model.CompositeImageShipHull.prototype._createImage = function()
     var context = drawingCanvas.getContext("2d");
 
     this.drawingTool.drawAndRotate(
-        context, width, height, width*2, height*2, 0, this.base, false);
+        context, width, height, width*2*this.scale, height*2*this.scale, 0, this.base, false);
 
     var data = context.getImageData(0, 0, width, height);
     this._applyColor(data, this.color);
@@ -47,17 +48,17 @@ model.CompositeImageShipHull.prototype._createImage = function()
     context.putImageData(data, 0, 0);
 
     this.drawingTool.drawAndRotate(
-       context, width, height, width*2, height*2, 0, this.details, false);
+       context, width, height, width*2*this.scale, height*2*this.scale, 0, this.details, false);
 
     this._drawModuleImages(context, this.hullModuleImages);
 
     this.drawingTool.drawAndRotate(
-        context, width, height, width*2, height*2, 0, this.shadow, false);
+        context, width, height, width*2*this.scale, height*2*this.scale, 0, this.shadow, false);
 
     return context.getImageData(0, 0, width, height);
 };
 
-model.CompositeImage.prototype.getDimensions = function()
+model.CompositeImageShipHull.prototype.getDimensions = function()
 {
     return {width:this.base.width, height:this.base.height};
 };

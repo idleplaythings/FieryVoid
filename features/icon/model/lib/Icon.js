@@ -88,6 +88,12 @@ model.Icon.prototype.updateSprites = function()
  
 };
 
+model.Icon.prototype.getAzimuth = function()
+{
+    var rotation = MathLib.radianToDegree(this.getThreeObject().rotation.z);
+    return MathLib.addToAzimuth(360, - rotation);
+};
+
 model.Icon.prototype.getTileOnPosition = function(pos)
 {
     if ( ! this.iconObject)
@@ -97,12 +103,12 @@ model.Icon.prototype.getTileOnPosition = function(pos)
     var iconPosition = this.getThreeObject().position;
 
     var dimensions = {x:this.width * scale, y:this.height * scale};
-    var origo = {
-        x: iconPosition.x - (dimensions.x/2),
-        y: iconPosition.y - (dimensions.y/2)
-    };
 
-    var delta = {x: pos.x - origo.x, y: pos.y - origo.y};
+    var centerDelta = {x: pos.x - iconPosition.x, y: pos.y - iconPosition.y};
+    var shipFacing = this.getAzimuth();
+    centerDelta = MathLib.turnVector(centerDelta, -shipFacing);
+
+    var delta = {x: centerDelta.x + (dimensions.x/2), y: centerDelta.y + (dimensions.y/2)};
 
     return {x: Math.floor(delta.x / scale), y: Math.floor(delta.y / scale) };
 };

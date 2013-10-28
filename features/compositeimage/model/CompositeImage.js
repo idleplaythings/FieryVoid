@@ -86,11 +86,6 @@ model.CompositeImage.prototype._doGetImageData = function()
     return this.imageData;
 };
 
-model.CompositeImage.prototype.getDimensions = function()
-{
-
-};
-
 model.CompositeImage.prototype.getCanvasPosition = function(pos)
 {
     return this.getCoordinateTool().convertGridToCanvas(pos);

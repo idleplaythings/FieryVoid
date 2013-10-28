@@ -37,8 +37,8 @@ model.ShipSpriteSilhouette.prototype.setInitialScale = function(data)
         return;
 
     this.object3d.scale.set(
-        data.data.width * this.hullLayout.hullScale,
-        data.data.height * this.hullLayout.hullScale,
+        data.data.width,
+        data.data.height,
         1
     );
 };

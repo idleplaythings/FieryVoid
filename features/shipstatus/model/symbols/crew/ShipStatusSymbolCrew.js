@@ -2,7 +2,9 @@ model.ShipStatusSymbolCrew = function ShipStatusSymbolCrew(powerGenerated, args)
 {
     model.ShipStatusSymbol.call(this, args);
     this.deploymentPosition = 'bottom';
-    this.size = {width:33, height:33};
+    this.size = {width:30, height:30};
+
+    this.description = 'Crew manning the system';
 };
 
 model.ShipStatusSymbolCrew.prototype =
@@ -52,7 +54,7 @@ model.ShipStatusSymbolCrew.prototype.createIconImage = function()
     context.strokeStyle = "rgba(0,0,0,1)";
     context.fillStyle = "rgba(180,235,130,1)";
 
-    this.drawCrewSymbol(context, 13, {x:this.size.width/2, y:this.size.height/2});
+    this.drawCrewSymbol(context, 12, {x:this.size.width/2, y:this.size.height/2});
 
     return drawingCanvas;
 };

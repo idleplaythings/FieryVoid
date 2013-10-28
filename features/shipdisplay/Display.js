@@ -4,6 +4,7 @@ model.Display = function Display(icon, gameScene, dispatcher)
     this.icon = icon;
     this.gameScene = gameScene;
     this.uiEventResolver = null;
+    this.scrolling = null;
 };
 
 model.Display.prototype.renderOn = function(target)
@@ -12,7 +13,7 @@ model.Display.prototype.renderOn = function(target)
 
     this.uiEventResolver = new model.UiFocusResolver(
         coordinateConverter, new model.EventDispatcher(), this.dispatcher)
-        .observeDomElement(target.find('canvas'));
+        .observeDomElement(target);
 
     this.uiEventResolver.registerListener(
         'click', this.onClicked.bind(this), 0);
@@ -29,6 +30,9 @@ model.Display.prototype.renderOn = function(target)
         'keyup', function(payload){
             this.dispatcher.dispatch({name:'keyup', keyCode: payload.keyCode});
         }.bind(this), 0);
+
+    this.scrolling = new model.Scrolling(this.dispatcher);
+    this.scrolling.registerTo(this.uiEventResolver);
 
     this.icon.create();
     this.gameScene.scene.add(this.icon.getThreeObject());

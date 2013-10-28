@@ -16,7 +16,7 @@ Meteor.publish("shipDesigns", function () {
         ShipDesigns.find({}),
             //{$or: [{"public": true}, {owner: this.userId}]}),
         HullImages.find({}),
-        HullLayouts.find({"published": true}),
+        HullLayouts.find({}),
         ModuleImages.find({}),
         ModuleLayouts.find({})
     ];

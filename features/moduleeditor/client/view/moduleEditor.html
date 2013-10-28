@@ -2,7 +2,7 @@
     <div class="mainContainer" style="height:calc(100% - 37px)">
         {{> moduleMenu}}
 
-        <div class="displayLarge" style="width:calc(100% - 400px);height:100%;">
+        <div class="displayLarge" style="width:calc(100% - 600px);height:100%;">
         </div>
     
         {{> moduleListing}}
@@ -11,21 +11,46 @@
 </template>
 
 <template name="moduleMenu">
-    <div class="sidemenu left moduleMenu" style="height:100%">
-        <div>Module name:</div>
-        <input type="text" name="name" value="{{moduleName}}"/>
-        <div>Width:</div>
-        <input type="text" name="width" value="{{tileGridWidth}}"/>
-        <div>Height:</div>
-        <input type="text" name="height" value="{{tileGridHeight}}"/>
-        <div>Scale:</div>
-        <input type="text" name="scale" value="{{scale}}"/>
-        <div>Tile height:</div>
-        <input type="text" name="tileHeight" value="{{tileHeight}}"/>
-        <div>Allowed directions:</div>
-        <input type="text" name="allowedDirections" value="{{allowedDirections}}"/>
-        <div>Mass:</div>
-        <input type="text" name="mass" value="{{mass}}"/>
+    <div class="sidemenu left moduleMenu" style="height:100%;width:400px;">
+        <table>
+            <tr><td colspan="2">Module name</td></tr>
+            <tr>
+                <td colspan="2">
+                    <input type="text" name="name" value="{{moduleName}}"/>
+                </td>
+            </tr>
+            <tr><td>Width</td><td>Height</td></tr>
+            <tr>
+                <td>
+                    <input type="text" name="width" value="{{tileGridWidth}}"/>
+                </td>
+                <td>
+                    <input type="text" name="height" value="{{tileGridHeight}}"/>
+                </td>
+            </tr>
+            <tr><td>Scale</td><td>Tile height</td></tr>
+            <tr>
+                <td>
+                    <input type="text" name="scale" value="{{scale}}"/>
+                </td>
+                <td>
+                    <input type="text" name="tileHeight" value="{{tileHeight}}"/>
+                </td>
+            </tr>
+            <tr><td>Allowed directions</td><td>Mass</td></tr>
+            <tr>
+                <td>
+                    <input type="text" name="allowedDirections" value="{{allowedDirections}}"/>
+                </td>
+                <td>
+                    <input type="text" name="mass" value="{{mass}}"/>
+                </td>
+            </tr>
+        </table>
+
+        <div>Description</div>
+        <textarea name="description">{{description}}</textarea>
+
         <div>
             <div class="button publish {{publishedClass}}">Publish</div>
             <h3>Click type</h3>

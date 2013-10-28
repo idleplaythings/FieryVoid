@@ -1,10 +1,12 @@
 model.ShipStatusSymbolPowerProducer = function ShipStatusSymbolPowerProducer(powerGenerated, args)
 {
     model.ShipStatusSymbolPower.call(this, args);
-    this.size = {width:50, height:50};
+    this.size = {width:45, height:45};
     this.powerGenerated = powerGenerated;
 
-    this.iconSize = {width:2, height:2};
+    this.iconSize = {width:1, height:1};
+
+    this.description = 'Generates ' + powerGenerated + " power";
 };
 
 model.ShipStatusSymbolPowerProducer.prototype =
@@ -20,10 +22,10 @@ model.ShipStatusSymbolPowerProducer.prototype.createIconImage = function()
     context.fillStyle = "rgba(255,255,255,1)";
 
     var center = {x:this.size.width/2, y:this.size.height/2};
-    this.drawLightningSymbol(context, 23, center);
+    this.drawLightningSymbol(context, 20, center);
 
     context.lineWidth = 4;
-    context.font = '16pt Helvetica';
+    context.font = '14pt Helvetica';
     this.drawString(context, this.powerGenerated, center);
 
     return drawingCanvas;

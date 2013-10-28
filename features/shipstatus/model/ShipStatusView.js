@@ -3,6 +3,9 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
 	this.coordinateConverter = coordinateConverter;
 	this.target = target;
     this.symbolResolver = new model.ShipStatusResolver();
+    this.shipIcon = null;
+    this.hidden = false;
+    this.targetId = null;
 
 	dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
@@ -10,17 +13,33 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
 
 model.ShipStatusView.prototype.display = function(shipIcon, modules)
 {
+    this.shipIcon = shipIcon;
+    this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
     this.symbolResolver.setModules(modules);
-    var position = this.coordinateConverter.fromGameToViewPort(shipIcon.getPosition());
-    template.css('left', position.x +'px');
-    template.css('top', position.y +'px');
 
     modules.forEach(function(module){
         this.createIcons(shipIcon, module, template);
     }, this);
 
+    return this;
+};
+
+model.ShipStatusView.prototype.unsetShipIcon = function()
+{
+    this.shipIcon = null;
+};
+
+model.ShipStatusView.prototype.positionStatusView = function()
+{
+    if ( ! this.shipIcon)
+        return;
+
+    var template = this.getTemplate();
+    var position = this.coordinateConverter.fromGameToViewPort(this.shipIcon.getPosition());
+    template.css('left', position.x +'px');
+    template.css('top', position.y +'px');
 };
 
 model.ShipStatusView.prototype.createIcons = function(shipIcon, module, template)
@@ -122,13 +141,18 @@ model.ShipStatusView.prototype.getModulePosition = function(shipIcon, modulePosi
 
     position.x += moduleTilePos.x * 30;
     position.y += moduleTilePos.y * 30;
+
+    var shipFacing = shipIcon.getAzimuth();
+
+    position = MathLib.turnVector(position, shipFacing);
+
     return position;
     //return this.coordinateConverter.fromGameToViewPort(modulePosition);
 };
 
 model.ShipStatusView.prototype.onScroll = function(event)
 {
-
+    this.positionStatusView();
 };
 
 model.ShipStatusView.prototype.onZoom = function(event)
@@ -139,12 +163,14 @@ model.ShipStatusView.prototype.onZoom = function(event)
 model.ShipStatusView.prototype.show = function()
 {
     this.getTemplate().show();
+    this.hidden = false;
     return this;
 };
 
 model.ShipStatusView.prototype.hide = function()
 {
     this.getTemplate().hide();
+    this.hidden = true;
     return this;
 };
 

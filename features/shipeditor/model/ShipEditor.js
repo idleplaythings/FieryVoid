@@ -31,9 +31,14 @@ model.ShipEditor = function ShipEditor(shipDesignId, leftSideMenu, iconcontainer
         'shipDesignChanged'
     );
 
+    this.moduleView = new model.ModuleDetailView(iconcontainer);
+
+    this.coordinateConverter =
+        new model.CoordinateConverterViewPort(this.gameScene);
+
     this.shipStatusView = new model.ShipStatusView(
         iconcontainer,
-        new model.CoordinateConverterViewPort(this.gameScene),
+        this.coordinateConverter,
         dispatcher
     ).hide();
 
@@ -264,18 +269,43 @@ model.ShipEditor.prototype.onMouseMove = function(event)
     //this.gameScene.light.position = new THREE.Vector3(event.position.game.x * 100, event.position.game.y * 100, -1);
 
     if ( ! this.selectedModule)
-        return;
+    {
+        this.showModuleView(event.position.game);
+    }
+    else
+    {
+        this.moduleView.display(null);
+        var pos = this.getTileSnap(this.selectedModule, event.tilePosition);
+        this.displayPlacedModule(pos, event.tile);
+    }
+};
 
-    var pos = this.getTileSnap(this.selectedModule, event.tilePosition);
+model.ShipEditor.prototype.displayPlacedModule = function(pos, tile)
+{
     var current = this.selectedModuleIcon.getPosition();
 
     if (pos.x == current.x && pos.y == current.y)
         return;
 
-    var moduleLowerLeftCorner = this.getModuleOffset(this.selectedModule, event.tile);
+    var moduleLowerLeftCorner = this.getModuleOffset(this.selectedModule, tile);
     this.selectedModuleIcon.changePositionOnShipDesign(moduleLowerLeftCorner);
 
     this.selectedModuleIcon.setPosition(pos);
+};
+
+model.ShipEditor.prototype.showModuleView = function(pos)
+{
+    var module = this.icon.getModuleOnPosition(pos);
+    if (! module)
+    {
+        this.moduleView.display(null);
+        return;
+    }
+
+    var modulePos = this.coordinateConverter.fromGameToViewPort(
+        this.icon.getModulePositionInGame(module));
+
+    this.moduleView.display(module, modulePos, this.shipDesign.modules);
 };
 
 model.ShipEditor.prototype.onMouseOut = function(event)

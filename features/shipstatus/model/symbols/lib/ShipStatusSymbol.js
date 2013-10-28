@@ -14,6 +14,8 @@ model.ShipStatusSymbol = function ShipStatusSymbol(args)
     this.deploymentPosition = args.deploymentPosition || 'bottom';
     this.iconSize = args.iconSize || {width:1, height:1};
     this.positionOnIcon = null;
+
+    this.description = args.description || '';
 };
 
 model.ShipStatusSymbol.prototype.getHtmlElement = function()
@@ -57,6 +59,8 @@ model.ShipStatusSymbol.prototype.occupiesPosition = function(position)
 
 model.ShipStatusSymbol.prototype.drawString = function(context, text, center)
 {
+    context.lineWidth = 4;
+    context.font = '14pt Helvetica'
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.shadowColor = '#000';

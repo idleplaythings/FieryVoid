@@ -140,6 +140,11 @@ Template.moduleMenu.allowedDirections = function()
     return getFromSelectedLayout('allowedDirections');
 };
 
+Template.moduleMenu.description = function()
+{
+    return getFromSelectedLayout('description');
+};
+
 Template.moduleMenu.traits = function()
 {
     var trait,
@@ -164,7 +169,7 @@ Template.moduleMenu.traits = function()
 }
 
 Template.moduleMenu.events({
-    'blur input': function (event) {
+    'blur input, blur textarea': function (event) {
         handleDetailChange(event.currentTarget);
     },
     'click .publish': function(event) {
@@ -240,6 +245,7 @@ function handleDetailChange(element)
 {
     var name = jQuery(element).attr('name');
     var value = jQuery(element).val();
+    value = value.trim();
 
     var layoutId = Session.get("selected_moduleLayout");
     if (layoutId)

@@ -81,6 +81,21 @@ model.ShipInGame.prototype.setAzimuth = function(azimuth)
     this.getIcon().getThreeObject().rotation.z = MathLib.degreeToRadian(MathLib.addToAzimuth(360, -azimuth));
 };
 
+model.ShipInGame.prototype.getAzimuth = function()
+{
+    this.getIcon().getAzimuth();
+};
+
+model.ShipInGame.prototype.isHidden = function()
+{
+    return this.getIcon().hidden;
+};
+
+model.ShipInGame.prototype.getPosition = function()
+{
+    return this.getIcon().getPosition();
+};
+
 model.ShipInGame.prototype.setPosition = function(pos)
 {
     if (!pos)

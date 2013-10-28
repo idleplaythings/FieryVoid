@@ -4,6 +4,7 @@ model.CompositeImageShipHullBumpMap = function CompositeImageShipHullBumpMap(shi
 
     this.color = shipDesign.getColor();
     this.hullImgName = shipDesign.hullLayout.hullImgName;
+    this.scale = shipDesign.hullLayout.hullScale;
 
     this.base =
         this.imageLoader.loadImage(
@@ -27,7 +28,7 @@ model.CompositeImageShipHullBumpMap.prototype._createImage = function()
     var context = drawingCanvas.getContext("2d");
 
     this.drawingTool.drawAndRotate(
-        context, width, height, width*2, height*2, 0, this.base, false);
+        context, width, height, width*2*this.scale, height*2*this.scale, 0, this.base, false);
 
     this._drawModuleImages(context, this.hullModuleImages);
 
