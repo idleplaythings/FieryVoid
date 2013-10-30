@@ -10,6 +10,13 @@ Meteor.publish(null, function () {
         {fields: {emails: 1, profile: 1}});
 });
 
+Meteor.publish("myFleets", function () {
+
+    return [
+        Fleets.find({owner: this.userId})
+    ];
+});
+
 Meteor.publish("shipDesigns", function () {
 
     return [

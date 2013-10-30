@@ -1,5 +1,6 @@
 model.MovementFactory = function MovementFactory(timelineFactory)
 {
+    //TODO: unused, move UI stuff to somewhere else
     this.timelineFactory = timelineFactory;
     this.waypointUi = null;
 };

@@ -37,21 +37,6 @@ model.ModuleLayout = function ModuleLayout(args)
     this.initTraits();
 };
 
-model.ModuleLayout.prototype.serialize = function()
-{
-    return {
-        module: this._id,
-        position: this.position,
-        direction: this.direction,
-        timelineId: this.timeline.getId()
-    };
-};
-
-model.ModuleLayout.prototype.setTimeline = function(timeline)
-{
-    this.timeline = timeline;
-};
-
 model.ModuleLayout.prototype.registerAnimator = function(animator)
 {
     this.animators.push(animator);

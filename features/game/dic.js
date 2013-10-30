@@ -1,7 +1,11 @@
 dic.register(
     'model.Game',
     function(dic) {
-        return new model.Game(dic.get('model.EventDispatcher'));
+        return new model.Game(
+            dic.get('model.EventDispatcher'),
+            dic.get('model.ShipStorage'),
+            dic.get('model.TimelineFactory')
+        );
     }, {
         tags: [ 'game.type' ]
     }

@@ -1,4 +1,10 @@
-model.ShipEditor = function ShipEditor(shipDesignId, leftSideMenu, iconcontainer, modulelist, shipapperance)
+model.ShipEditor = function ShipEditor(
+    shipDesignId,
+    leftSideMenu,
+    iconcontainer,
+    modulelist,
+    shipapperance,
+    shipDesignStorage)
 {
     var dispatcher = new model.EventDispatcher();
     this.gameScene = new model.GameScene(dispatcher);
@@ -28,7 +34,8 @@ model.ShipEditor = function ShipEditor(shipDesignId, leftSideMenu, iconcontainer
     this.reactiveShipDesign = new model.ReactiveShipDesign(
         shipDesignId,
         dispatcher,
-        'shipDesignChanged'
+        'shipDesignChanged',
+        shipDesignStorage
     );
 
     this.moduleView = new model.ModuleDetailView(iconcontainer);

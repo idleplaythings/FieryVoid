@@ -5,7 +5,7 @@ model.CompositeImageShipHull = function CompositeImageShipHull(shipDesign)
     this.color = shipDesign.getColor();
     this.patternColor = null; //shipDesign.getPatternColor() || null;
     this.hullImgName = shipDesign.hullLayout.hullImgName;
-    this.scale = shipDesign.hullLayout.hullScale;
+    this.scale = shipDesign.hullLayout.hullScale || 1;
 
     this.base =
         this.imageLoader.loadImage(

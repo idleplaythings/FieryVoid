@@ -1,7 +1,8 @@
 model.ReactiveShipDesign = function ReactiveShipDesign(
-    shipDesignId, dispatcher, eventName)
+    shipDesignId, dispatcher, eventName, shipDesignStorage)
 {
     this.shipDesignId = shipDesignId;
+    this.shipDesignStorage = shipDesignStorage;
     model.ReactiveComponent.call(this, dispatcher, null, null, eventName);
 };
 
@@ -15,7 +16,7 @@ model.ReactiveShipDesign.prototype.react = function()
 
     var self = this;
     this.reactivityHandle = Deps.autorun(function(){
-        self.modelObject = new model.ShipDesign().load(self.shipDesignId);
+        self.modelObject = self.shipDesignStorage.getShipDesign(self.shipDesignId);
         self.dispatch();
     });
        

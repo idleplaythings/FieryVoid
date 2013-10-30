@@ -1,6 +1,8 @@
-model.Movement = function Movement(timeline, waypointUi)
+model.Movement = function Movement(timeline)
 {
+    /*
     this.waypointUi = waypointUi;
+     */
     this.ship = null;
     this.route3d = null;
     this.resolver = new model.MovementResolver();
@@ -8,6 +10,7 @@ model.Movement = function Movement(timeline, waypointUi)
     this.route = new model.MovementRoute(
         timeline, 'route', this.onTurnChanged.bind(this));
     this.waypoints = new model.MovementRoute(timeline, 'waypoint');
+
     this._timeline = timeline;
 };
 
@@ -42,8 +45,8 @@ model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiR
 {
     uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
     uiResolver.registerListener('click', this.onClick.bind(this), 1);
-    this.route.extrapolateCourseForNext(10);
-    this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
+    //this.route.extrapolateCourseForNext(10);
+    //this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
 model.Movement.prototype.onClick = function(eventPayload)
@@ -226,6 +229,8 @@ model.Movement.prototype.recalculateRoute = function()
 
 model.Movement.prototype.getCurrentPosition = function(gameTime)
 {
+    return {x:0, y:0};
+
     var gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
     {
@@ -256,6 +261,8 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
 
 model.Movement.prototype.getFacing = function(gameTime)
 {
+    return 0;
+
     gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
     {

@@ -16,8 +16,8 @@ controller.GameController = function(gameStorage)
         game.setStartingConditions();
         game.ships.push(ship1);
         game.ships.push(ship2);
-        game.shipStorage.addShip(ship1);
-        game.shipStorage.addShip(ship2);
+        game.shipStorage.addShipToGame(ship1, game._id);
+        game.shipStorage.addShipToGame(ship2, game._id);
 
         game.addPlayer([player1Id, player2Id]);
 

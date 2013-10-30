@@ -14,7 +14,8 @@ Template.shipEditor.rendered = function()
         var shipapperance = jQuery('.sidemenu.right .shipapperance');
 
         Template.shipEditor.controller =
-            new model.ShipEditor(shipDesignId, leftmenu, shipview, modulelist, shipapperance);
+            new model.ShipEditor(
+                shipDesignId, leftmenu, shipview, modulelist, shipapperance, dic.get('model.ShipDesignStorage'));
     }
 }
 

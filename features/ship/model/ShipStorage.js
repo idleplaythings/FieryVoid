@@ -15,60 +15,43 @@ ShipsInGameCollection.allow({
 });
 
 
-model.ShipStorage = function ShipStorage(gameid, movementFactory, timelineFactory)
+model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage)
 {
-    this.movementFactory = movementFactory;
     this.timelineFactory = timelineFactory;
-    this.gameid = gameid;
+    this.shipDesignStorage = shipDesignStorage;
 };
 
-model.ShipStorage.prototype.addShip = function(ship)
+model.ShipStorage.prototype.addShipToGame = function(ship, gameid)
 {
-    ShipsInGameCollection.insert({gameid: this.gameid, ship: ship.serialize()});
+    console.log("add ship", ship, gameid);
+    ShipsInGameCollection.insert({gameid: gameid, ship: ship.serialize()});
 };
 
-model.ShipStorage.prototype.getShipsInGame = function()
+model.ShipStorage.prototype.getShipsInGame = function(gameid)
 {
     var self = this;
     var ships = [];
-    var shipsDoc = ShipsInGameCollection.find({gameid: this.gameid});
+    var shipsDoc = ShipsInGameCollection.find({gameid: gameid});
     shipsDoc.forEach(function(doc){
         console.log(doc);
         ships.push(self.createShipFromDoc(doc._id, doc.ship));
     });
 
+    console.log(shipsDoc);
     return ships;
 };
 
-
 model.ShipStorage.prototype.createShipFromDoc = function(id, shipdoc)
 {
-    var shipDesignDoc = shipdoc.shipDesign;
-    shipDesignDoc.hullLayout = HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId})
-
-    if ( ! shipDesignDoc.hullLayout)
-        throw Error("Failed to find hulllayout for ship in game");
-
-    shipDesignDoc.modules = shipDesignDoc.modules.map(
-        function(moduleDetails)
-        {
-            var module = ModuleLayouts.findOne(
-                {'_id': moduleDetails.module});
-
-            module.setPosition(moduleDetails.position);
-            module.setDirection(moduleDetails.direction);
-            module.setTimeline(this.timelineFactory.getTimeline(moduleDetails.timelineId));
-
-            return module;
-        }, this);
-
-    var shipDesign = new model.ShipDesignInGame(shipDesignDoc);
+    var shipDesign = this.shipDesignStorage.createShipDesign(shipdoc.shipDesign);
+    if ( ! shipDesign)
+        throw Error("Unable to construct ship design for ship");
 
     return new model.ShipInGame({
         _id: id,
         controller: shipdoc.controller,
         shipDesign: shipDesign,
-        movement: this.movementFactory.createMovement(shipdoc.movement)
+        movement: new model.Movement(this.timelineFactory.getTimeline(shipdoc.movement))
     });
 };
 

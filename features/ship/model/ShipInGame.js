@@ -17,11 +17,6 @@ model.ShipInGame = function ShipInGame(args)
     this.gameScene = null;
 };
 
-model.ShipInGame.prototype.createTimelines = function(timelineFactory)
-{
-    this.shipDesign.createTimelines(timelineFactory);
-};
-
 model.ShipInGame.prototype.serialize = function()
 {
     this.shipDesign.hullLayoutId =

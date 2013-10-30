@@ -32,54 +32,6 @@ model.ShipDesign.prototype.onFailedLoad = function()
     return null;
 };
 
-model.ShipDesign.prototype.load = function(id)
-{
-    var design = ShipDesigns.findOne({_id: id});
-    if (! design)
-        return null;
-
-    return this.loadWithDocument(design);
-};
-
-model.ShipDesign.prototype.loadWithDocument = function(shipDesignDoc, timelineFactory)
-{
-    //this.hullLayout = new model.HullLayout(this.hullLayout);
-    shipDesignDoc.hullLayout =
-        HullLayouts.findOne({'_id': shipDesignDoc.hullLayoutId});
-
-    if ( ! shipDesignDoc.hullLayout)
-        return this.onFailedLoad();
-
-    var invalidModule = false;
-    shipDesignDoc.modules = shipDesignDoc.modules.map(
-        function(moduleDetails)
-        {
-            var module = ModuleLayouts.findOne(
-                {'_id': moduleDetails.module});
-
-            if (module)
-            {
-                module.setPosition(moduleDetails.position);
-                module.setDirection(moduleDetails.direction);
-
-                if (timelineFactory)
-                    module.setTimeline(timelineFactory.getTimeline(moduleDetails.timelineId));
-            }
-            else
-            {
-                invalidModule = true;
-            }
-            return module;
-        });
-
-    if (invalidModule)
-        return this.onFailedLoad();
-
-    _.extend(this, shipDesignDoc);
-
-    return this;
-};
-
 model.ShipDesign.prototype.validateVariable = function(name, value)
 {
     if (name === "public")

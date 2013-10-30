@@ -7,7 +7,8 @@ Meteor.methods({
 
         var userid = Meteor.userId();
 
-        var shipDesign = new model.ShipDesignInGame().load(shipId);
+        var shipDesignStorage = dic.get('model.ShipDesignStorage');
+        var shipDesign = shipDesignStorage.getShipDesign(shipId);
 
         if ( ! shipDesign || shipDesign.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
@@ -22,9 +23,6 @@ Meteor.methods({
 
         game.setStartingConditions(shipDesign);
         game.addPlayer(userid);
-
-
-
         game.addTestDriveShip(shipDesign);
 
         return game;

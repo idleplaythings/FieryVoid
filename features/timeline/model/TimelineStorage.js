@@ -44,9 +44,8 @@ Meteor.methods({
     }
 });
 
-model.TimelineStorage = function TimelineStorage(gameid)
+model.TimelineStorage = function TimelineStorage()
 {
-    this.gameid = gameid;
 };
 
 model.TimelineStorage.prototype.load = function(id)

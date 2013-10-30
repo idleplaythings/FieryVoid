@@ -23,7 +23,8 @@ Meteor.methods({
         if ( ! userid)
             throw new Meteor.Error(403, "You must be logged in to edit a ship");
 
-        var ship = new model.ShipDesign().load(shipId);
+        var shipDesignStorage = dic.get('model.ShipDesignStorage');
+        var ship = shipDesignStorage.getShipDesign(shipId);
 
         if ( ! ship || ship.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
@@ -52,7 +53,8 @@ Meteor.methods({
         if ( ! userid)
             throw new Meteor.Error(403, "You must be logged in to edit a ship");
 
-        var ship = new model.ShipDesign().load(shipId);
+        var shipDesignStorage = dic.get('model.ShipDesignStorage');
+        var ship = shipDesignStorage.getShipDesign(shipId);
 
         if ( ! ship || ship.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
@@ -72,7 +74,8 @@ Meteor.methods({
         if ( ! userid)
             throw new Meteor.Error(403, "You must be logged in to edit a ship");
 
-        var ship = new model.ShipDesign().load(shipId);
+        var shipDesignStorage = dic.get('model.ShipDesignStorage');
+        var ship = shipDesignStorage.getShipDesign(shipId);
 
         if ( ! ship || ship.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");

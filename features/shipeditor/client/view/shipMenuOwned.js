@@ -32,20 +32,10 @@ Template.shipMenuOwned.events({
 
 Template.shipMenuOwned.publishedClass = function()
 {
-    return Template.shipMenuOwned.getFromSelectedLayout('public')
-        ? 'active' : '';
+    return '';
 };
 
 Template.shipMenuOwned.selectedShipMass = function()
 {
-    var id = Session.get("selected_ship");
-    if (id)
-    {
-
-        var ship = new model.ShipDesign().load(id);
-        if (ship)
-            return ' ' + ship.getMass() + ' ';
-    }
-
     return '';
 };

@@ -2,10 +2,11 @@ Template.shipMenu = _.extend(Template.shipMenu, BaseTemplate);
 
 Template.shipMenu.myShips = function()
 {
+    var shipDesignStorage = dic.get('model.ShipDesignStorage');
     var designs = ShipDesigns.find({owner: Meteor.userId()}).map(
         function(design)
         {
-            return new model.ShipDesign().loadWithDocument(design);
+            return shipDesignStorage.createShipDesign(design);
         }
     );
 
@@ -15,6 +16,7 @@ Template.shipMenu.myShips = function()
 
 Template.shipMenu.publicShips = function()
 {
+    var shipDesignStorage = dic.get('model.ShipDesignStorage');
     var userId = Meteor.userId();
     var designs = ShipDesigns
         .find(
@@ -22,7 +24,7 @@ Template.shipMenu.publicShips = function()
         .map(
             function(design)
             {
-                return new model.ShipDesign().loadWithDocument(design);
+                return shipDesignStorage.createShipDesign(design);
             }
     );
 

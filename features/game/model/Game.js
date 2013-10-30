@@ -1,11 +1,13 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, args) {
+function Game(dispatcher, shipStorage, timelineFactory, args) {
     if ( ! args)
         args = {};
 
     this.type = 'Game';
     this.dispatcher = dispatcher;
+    this.shipStorage = shipStorage;
+    this.timelineFactory = timelineFactory;
     // this.dispatcher = new model.EventDispatcher();
 
     // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
@@ -15,20 +17,19 @@ function Game(dispatcher, args) {
 Game.prototype.getRandomShipForPlayer = function(playerId) {
     var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
-    if (!shipDesignId) {
+    if ( ! shipDesignId) {
         return false;
     }
 
-    var shipDesign = new model.ShipDesignInGame().load(shipDesignId);
-
+    var shipDesignStorage = dic.get('model.ShipDesignStorage');
+    var shipDesign = shipDesignStorage.getShipDesign(shipDesignId);
+    console.log(shipDesign);
     var ship = new model.ShipInGame({
         _id: Math.ceil(Math.random() * 1000),
         controller: playerId,
         shipDesign: shipDesign,
-        movement: this.movementFactory.createMovement()
+        movement: new model.Movement(this.timelineFactory.getTimeline())
     });
-
-    ship.createTimelines(this.timelineFactory);
 
     ship.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
@@ -62,17 +63,7 @@ Game.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-
     this.gameState = new model.GameState(args.currentGameTime || 0);
-
-    this.timelineFactory = new model.TimelineFactory(
-        this.gameState, this._id, new model.TimelineStorage());
-
-    this.movementFactory = new model.MovementFactory(this.timelineFactory);
-
-    this.shipStorage = new model.ShipStorage(
-        this._id, this.movementFactory, this.timelineFactory);
-
     this.created = args.created || null;
 };
 
@@ -87,8 +78,8 @@ Game.prototype.init = function()
     this.uiEventResolver = new model.UiFocusResolver(
         this.coordinateConverter, this.dispatcher);
 
-    this.movementFactory.createWaypointMenu(
-        this.coordinateConverter, this.dispatcher, this.uiEventResolver);
+    //this.movementFactory.createWaypointMenu(
+    //    this.coordinateConverter, this.dispatcher, this.uiEventResolver);
 };
 
 Game.prototype.addPlayer = function(id)
@@ -130,7 +121,7 @@ Game.prototype.addShip = function(shipDesign)
     }));
 
     this.ships.push(ship);
-    this.shipStorage.addShip(ship);
+    this.shipStorage.addShipToGame(ship, this._id);
 };
 
 Game.prototype.play = function()
@@ -203,6 +194,7 @@ Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain(this.gameScene, container, this.terrainSeed).createRandom();
 
+    console.log(this.ships);
     this.ships.forEach(
         function(ship){
             ship.subscribeToScene(this.gameScene, this.dispatcher, this.uiEventResolver);
@@ -222,7 +214,7 @@ Game.prototype.load = function(doc)
 {
     this.setState(doc);
     this.init();
-    this.ships = this.shipStorage.getShipsInGame();
+    this.ships = this.shipStorage.getShipsInGame(this._id);
     return this;
 };
 

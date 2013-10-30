@@ -1,17 +1,28 @@
 if ( typeof model === 'undefined')
     model = {};
 
-model.Timeline = function Timeline(id, gameid, gamestate, storage, past, future, dispatcher)
+model.Timeline = function Timeline(id, storage, dispatcher)
 {
-    this._gameid = gameid;
-    this._gameState = gamestate;
     this._id = id;
 
-    this._past = past || [];
-    this._future = future || [];
+    this._past = [];
+    this._future = [];
     this._storage = storage;
 
     this.dispatcher = dispatcher;
+    this.loaded = false;
+};
+
+model.Timeline.prototype.ensureLoaded = function()
+{
+    if ( ! this.loaded && ! this._id)
+    {
+        console.log(this._storage);
+        var contents = this._storage.load(this._id);
+        this._past =  contents.past;
+        this._future = contents.future;
+        this.loaded = true;
+    }
 };
 
 model.Timeline.prototype.getId = function()
@@ -19,10 +30,14 @@ model.Timeline.prototype.getId = function()
     return this._id;
 };
 
-model.Timeline.prototype.reload = function(past, future)
+model.Timeline.prototype.reload = function()
 {
-    this._past = past || [];
-    this._future = future || [];
+    if ( ! this._id )
+        return; //nothing to load
+
+    var contents = this._storage.load(this._id);
+    this._past =  contents.past || [];
+    this._future = contents.future || [];
 
     this.dispatcher.dispatch({name:'timelineReload'});
 };
@@ -34,6 +49,12 @@ model.Timeline.prototype.observeReload = function(callback)
 
 model.Timeline.prototype.persist = function()
 {
+    if ( ! this._id && this._future.length == 0 && this._past.lenght == 0)
+        return; //Nothing to persist;
+
+    if ( ! this._id)
+        this._id = new Meteor.Collection.ObjectID().toHexString();
+
     if (Meteor.isClient)
     {
         this._storage.persistFuture(this._future, this._id);
@@ -49,6 +70,8 @@ model.Timeline.prototype.persist = function()
 
 model.Timeline.prototype.getAt = function(time, list)
 {
+    this.ensureLoaded();
+
     if (! list)
         list = this._past.concat(this._future);
 
@@ -64,6 +87,8 @@ model.Timeline.prototype.getAt = function(time, list)
 
 model.Timeline.prototype.getByName = function(time, name, list)
 {
+    this.ensureLoaded();
+
     if (! list)
         list = this._past.concat(this._future);
 
@@ -79,6 +104,8 @@ model.Timeline.prototype.getByName = function(time, name, list)
 
 model.Timeline.prototype.addToPast = function(time, name, object)
 {
+    this.ensureLoaded();
+
     if (Meteor.isClient)
         return;
 
@@ -87,6 +114,8 @@ model.Timeline.prototype.addToPast = function(time, name, object)
 
 model.Timeline.prototype.add = function(time, name, object)
 {
+    this.ensureLoaded();
+
     if (Meteor.isClient)
     {
         this._future.push({time: time, name: name, entry: object});
@@ -99,6 +128,8 @@ model.Timeline.prototype.add = function(time, name, object)
 
 model.Timeline.prototype.update = function(time, name, object)
 {
+    this.ensureLoaded();
+
     var entry = null;
     if (Meteor.isClient)
     {
@@ -113,7 +144,7 @@ model.Timeline.prototype.update = function(time, name, object)
         entry.entry = object;
 };
 
-model.Timeline.prototype.clear = function(time, name)
+model.Timeline.prototype.clear = function()
 {
     if (Meteor.isClient)
     {
@@ -127,6 +158,8 @@ model.Timeline.prototype.clear = function(time, name)
 
 model.Timeline.prototype.remove = function(time, name)
 {
+    this.ensureLoaded();
+
     if (Meteor.isClient)
     {
         this._future = this._removeFrom(time, false, name, this._future);
@@ -139,8 +172,11 @@ model.Timeline.prototype.remove = function(time, name)
 
 model.Timeline.prototype.removeFromFuture = function(time, name)
 {
+
     if (Meteor.isClient)
         return;
+
+    this.ensureLoaded();
 
     this._future = this._removeFrom(time, false, name, this._future);
 };
@@ -149,6 +185,8 @@ model.Timeline.prototype.removeFromPast = function(time, name)
 {
     if (Meteor.isClient)
         return;
+
+    this.ensureLoaded();
 
     this._future = this._removeFrom(time, false, name, this._past);
 };
@@ -178,6 +216,8 @@ model.Timeline.prototype._removeFrom = function(startTime, endTime, name, list)
 
 model.Timeline.prototype.removeAfter = function(time, name)
 {
+    this.ensureLoaded();
+
     if (Meteor.isClient)
     {
         this._future = this._removeFrom(time, true, name, this._future);
@@ -190,10 +230,12 @@ model.Timeline.prototype.removeAfter = function(time, name)
 
 model.Timeline.prototype.map = function(callback, context)
 {
+    this.ensureLoaded();
     return this._past.concat(this._future).map(callback, context);
 };
 
 model.Timeline.prototype.filter = function(callback, context)
 {
+    this.ensureLoaded();
     return this._past.concat(this._future).filter(callback, context);
 };
