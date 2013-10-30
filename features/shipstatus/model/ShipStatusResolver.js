@@ -1,14 +1,14 @@
 model.ShipStatusResolver = function ShipStatusResolver()
 {
     this.power = new model.PowerManagement();
-    this.crew = new model.CrewManagement();
-    this.thrust = new model.ThrustManagement();
+    this.crew = null;
+    this.thrust = new model.ThrustManagement(this.power, this.crew);
 };
 
 model.ShipStatusResolver.prototype.setModules = function(modules)
 {
     this.power.setModules(modules);
-    this.crew.setModules(modules);
+    this.crew = new model.CrewManagement(modules);
     this.thrust.setModules(modules);
 };
 
@@ -40,18 +40,12 @@ model.ShipStatusResolver.prototype.getThrustSymbols = function(module, symbols)
     return symbols;
 };
 
-
-
 model.ShipStatusResolver.prototype.getCrewSymbols = function(module, symbols)
 {
-    var crewRequired = this.crew.getCrewRequired(module);
-    if (crewRequired !== null )
-    {
-        while (crewRequired--)
-        {
-            symbols.push(new model.ShipStatusSymbolCrew());
-        }
-    }
+    var status = this.crew.getCrewStatus(module);
+
+    if (status !== null)
+        symbols = symbols.concat(status.getShipStatusSymbols());
 
     return symbols;
 };
