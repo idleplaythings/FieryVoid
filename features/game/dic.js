@@ -3,6 +3,7 @@ dic.register(
     function(dic) {
         return new model.Game(
             dic.get('model.EventDispatcher'),
+            dic.get('model.HexGrid'),
             dic.get('model.ShipStorage'),
             dic.get('model.FleetStorage'),
             dic.get('model.TimelineFactory')

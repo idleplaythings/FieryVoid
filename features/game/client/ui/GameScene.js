@@ -57,6 +57,11 @@ model.GameScene.prototype.init = function(target)
         .on('contextmenu', function(e){e.stopPropagation(); return false; })
         .addClass("webglCanvas").appendTo(this.target);
 
+    this.dispatcher.dispatch({
+        name: 'scene.init',
+        scene: this.scene
+    });
+
     return this;
 };
 

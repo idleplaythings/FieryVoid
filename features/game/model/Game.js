@@ -1,6 +1,6 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, shipStorage, fleetStorage, timelineFactory, args) {
+function Game(dispatcher, hexgrid, shipStorage, fleetStorage, timelineFactory, args) {
     if ( ! args)
         args = {};
 
@@ -13,6 +13,10 @@ function Game(dispatcher, shipStorage, fleetStorage, timelineFactory, args) {
 
     // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.setState(args);
+
+    this.name = "a game";
+    this.created =  new Date().getTime();
+    this.terrainSeed = Math.random();
 }
 
 Game.prototype.getRandomFleetForPlayer = function(playerId) {
@@ -35,14 +39,6 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
     
 	fleet.addShip(ship);
 	return fleet;
-};
-
-
-Game.prototype.setStartingConditions = function()
-{
-    this.name = "a game";
-    this.created =  new Date().getTime();
-    this.terrainSeed = Math.random();
 };
 
 Game.prototype.setState = function(args)
