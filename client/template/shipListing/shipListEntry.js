@@ -1,7 +1,7 @@
 Template.shipListEntry.name = function()
 {
     return this.name;
-}
+};
 
 Template.shipListEntry.username = function()
 {
@@ -9,10 +9,4 @@ Template.shipListEntry.username = function()
         return '';
 
     return displayName(Meteor.users.findOne({_id: this.owner}));
-}
-
-Template.shipListEntry.events({
-    'click .selectable': function () {
-      Router.go('shipEditor', {_id:  this._id });
-    }
-});
+};

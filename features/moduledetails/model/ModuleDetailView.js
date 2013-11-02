@@ -2,10 +2,10 @@ model.ModuleDetailView = function ModuleDetailView(target)
 {
     this.target = target;
     this.currentModule = null;
-    this.symbolResolver = new model.ShipStatusResolver();
 };
 
-model.ModuleDetailView.prototype.display = function(module, position, modules)
+model.ModuleDetailView.prototype.display = function(
+	module, position, shipStatus)
 {
     if (module === null)
     {
@@ -18,14 +18,12 @@ model.ModuleDetailView.prototype.display = function(module, position, modules)
 
     this.currentModule = module;
 
-    this.symbolResolver.setModules(modules);
-
     var template = this.getTemplate();
     template.html('');
     template.append('<h4>'+module.name+'</h4>');
     template.append('<p>'+module.description+'</p>');
 
-    var symbols = this.symbolResolver.getSymbols(module);
+    var symbols = shipStatus.getSymbols(module);
     symbols.forEach(function(symbol){
         var container = jQuery('<div></div>');
         container.appendTo(template);

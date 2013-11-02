@@ -11,6 +11,11 @@ model.CrewManagement = function CrewManagement(modules, timeline)
         this.getDefault();
 };
 
+model.CrewManagement.prototype.getFromTimeline = function()
+{
+	this.getDefault();
+};
+
 model.CrewManagement.prototype.getDefault = function()
 {
     var crewProviders = this.modules.filter(

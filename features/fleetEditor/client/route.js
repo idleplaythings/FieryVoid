@@ -13,7 +13,7 @@ CreateFleetController = RouteController.extend({
         ];
     },
     run: function() {
-        Meteor.call('CreateFleet', Meteor.userId(), this._onCreated);
+        Meteor.call('createFleet', this._onCreated);
     },
 
     _onCreated: function(error, fleet) {
@@ -21,7 +21,7 @@ CreateFleetController = RouteController.extend({
             console.log(error);
             return;
         }
-
+        
         Router.go('loadFleet', fleet);
     }
 });
@@ -33,12 +33,12 @@ Router.map(function() {
     });
 });
 
-LoadGameController = RouteController.extend({
+LoadFleetController = RouteController.extend({
     getFleetId: function() {
         return this.params._id;
     },
     waitOn: function() {
-        return Meteor.subscribe('myFleets');
+        return Meteor.subscribe('myFleet', this.getFleetId());
     },
     run: function() {
         Session.set("active_fleet", this.getFleetId());

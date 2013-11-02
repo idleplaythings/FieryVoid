@@ -3,7 +3,7 @@ model.MovementRoute = function MovementRoute(timeline, name, onReloadCallback)
     this._name = name;
     this._timeline = timeline;
 
-    timeline.observeReload(this.onReload.bind(this));
+	timeline.observeReload(this.onReload.bind(this));
 
     this._gameState = timeline._gameState;
     this._cached = null;

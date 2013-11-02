@@ -1,18 +1,19 @@
-model.ShipStatusResolver = function ShipStatusResolver()
+model.ShipStatus = function ShipStatus(modules, timeline)
 {
-    this.power = new model.PowerManagement();
-    this.crew = null;
-    this.thrust = new model.ThrustManagement(this.power, this.crew);
+	this.modules = modules;
+	this._timeline = timeline;
+    this.power = new model.PowerManagement(modules);
+    this.crew = new model.CrewManagement(modules, timeline);
+    this.thrust = new model.ThrustManagement(modules, this.power, this.crew);
+    this.movement = new model.Movement(modules, timeline);
 };
 
-model.ShipStatusResolver.prototype.setModules = function(modules)
+model.ShipStatus.prototype.serialize = function()
 {
-    this.power.setModules(modules);
-    this.crew = new model.CrewManagement(modules);
-    this.thrust.setModules(modules);
+    return this._timeline ? this._timeline._id : null;
 };
 
-model.ShipStatusResolver.prototype.getSymbols = function(module)
+model.ShipStatus.prototype.getSymbols = function(module)
 {
     var symbols = [];
     symbols = this.getPowerSymbols(module, symbols);
@@ -21,7 +22,7 @@ model.ShipStatusResolver.prototype.getSymbols = function(module)
     return symbols;
 };
 
-model.ShipStatusResolver.prototype.getPowerSymbols = function(module, symbols)
+model.ShipStatus.prototype.getPowerSymbols = function(module, symbols)
 {
     var status = this.power.getPowerStatus(module);
 
@@ -31,7 +32,7 @@ model.ShipStatusResolver.prototype.getPowerSymbols = function(module, symbols)
     return symbols;
 };
 
-model.ShipStatusResolver.prototype.getThrustSymbols = function(module, symbols)
+model.ShipStatus.prototype.getThrustSymbols = function(module, symbols)
 {
     var thrustProduced = this.thrust.getThrustProduced(module);
     if (thrustProduced !== null )
@@ -40,7 +41,7 @@ model.ShipStatusResolver.prototype.getThrustSymbols = function(module, symbols)
     return symbols;
 };
 
-model.ShipStatusResolver.prototype.getCrewSymbols = function(module, symbols)
+model.ShipStatus.prototype.getCrewSymbols = function(module, symbols)
 {
     var status = this.crew.getCrewStatus(module);
 

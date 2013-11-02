@@ -57,7 +57,7 @@ DIC.prototype._isShared = function(name)
 DIC.prototype._create = function(name)
 {
     if (typeof this._registry[name] === 'undefined') {
-        throw "Undefined key."
+        throw new Error("Undefined key: '" + name + "'");
     }
 
     if (typeof this._registry[name] === 'function') {

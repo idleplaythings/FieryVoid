@@ -1,8 +1,9 @@
-Meteor.publish("currentGame", function (gameid) {
+Meteor.publish("currentGame", function (gameId) {
     return [
-        Games.find({_id: gameid}),
+        Games.find({_id: gameId}),
         TimelineFutures.find({}),
         TimelinePasts.find({}),
-        ShipsInGameCollection.find({gameid: gameid})
+        ShipsInGameCollection.find({gameId: gameId}),
+        Fleets.find({currentGame: gameId})
     ];
 });

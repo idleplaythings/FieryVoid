@@ -1,7 +1,7 @@
 
 model.GameTestdrive = Extend.register(GameTestdrive, "Game");
 
-function GameTestdrive(dispatcher, shipStorage, timelineFactory, args) {
+function GameTestdrive(dispatcher, shipStorage, fleetStorage, timelineFactory, args) {
     this.super.apply(this, arguments);
     this.type = "GameTestdrive";
 }
@@ -15,22 +15,21 @@ GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 
 GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
 {
-    var ship = new model.ShipInGame({
-        _id: 1,
-        controller: Meteor.userId(),
-        shipDesign: shipDesign,
-        movement: new model.Movement(this.timelineFactory.getTimeline())
-    });
-
-    ship.movement.addStartPosition(new model.MovementWaypoint({
+	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
+	var ship = this.shipStorage.createFromDesign(shipDesign, Meteor.userId());
+	
+	ship.status.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
         position: {x:0, y:0},
         velocity: {x:500, y:0},
         facing: 0
     }));
-
-    this.ships.push(ship);
-    this.shipStorage.addShipToGame(ship, this._id);
+    
+    console.log(fleet);
+	fleet.addShip(ship);
+	console.log("this.fleets", this.fleets, this.fleets.push);
+	//this.fleets.push(fleet);
+	fleet.addToGame(this);
 };
 
 GameTestdrive.prototype.getSelectedShip = function()

@@ -1,12 +1,13 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, shipStorage, timelineFactory, args) {
+function Game(dispatcher, shipStorage, fleetStorage, timelineFactory, args) {
     if ( ! args)
         args = {};
 
     this.type = 'Game';
     this.dispatcher = dispatcher;
     this.shipStorage = shipStorage;
+    this.fleetStorage = fleetStorage;
     this.timelineFactory = timelineFactory;
     // this.dispatcher = new model.EventDispatcher();
 
@@ -14,8 +15,9 @@ function Game(dispatcher, shipStorage, timelineFactory, args) {
     this.setState(args);
 }
 
-Game.prototype.getRandomShipForPlayer = function(playerId) {
-    var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
+Game.prototype.getRandomFleetForPlayer = function(playerId) {
+	
+	var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
     if ( ! shipDesignId) {
         return false;
@@ -23,22 +25,19 @@ Game.prototype.getRandomShipForPlayer = function(playerId) {
 
     var shipDesignStorage = dic.get('model.ShipDesignStorage');
     var shipDesign = shipDesignStorage.getShipDesign(shipDesignId);
-    console.log(shipDesign);
-    var ship = new model.ShipInGame({
-        _id: Math.ceil(Math.random() * 1000),
-        controller: playerId,
-        shipDesign: shipDesign,
-        movement: new model.Movement(this.timelineFactory.getTimeline())
-    });
-
-    ship.movement.addStartPosition(new model.MovementWaypoint({
+    
+	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
+	var ship = this.shipStorage.createFromDesign(shipDesign, playerId);
+	
+	ship.status.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
         position: {x:Math.ceil(Math.random() * 200) - 100, y:Math.ceil(Math.random() * 200) - 100},
         velocity: {x:500, y:0},
         facing: 0
     }));
-
-    return ship;
+    
+	fleet.addShip(ship);
+	return fleet;
 };
 
 
@@ -59,7 +58,7 @@ Game.prototype.setState = function(args)
     this.background = args.background || null;
     this.terrainSeed = args.terrainSeed || null;
     this.terrain = args.terrain || [];
-    this.ships = args.ships || [];
+    this.fleets = args.fleets || [];
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
@@ -194,8 +193,8 @@ Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain(this.gameScene, container, this.terrainSeed).createRandom();
 
-    console.log(this.ships);
-    this.ships.forEach(
+    console.log(this.getShips());
+    this.getShips().forEach(
         function(ship){
             ship.subscribeToScene(this.gameScene, this.dispatcher, this.uiEventResolver);
         }, this);
@@ -214,7 +213,7 @@ Game.prototype.load = function(doc)
 {
     this.setState(doc);
     this.init();
-    this.ships = this.shipStorage.getShipsInGame(this._id);
+    this.fleets = this.fleetStorage.getFleetsInGame(this._id);
     return this;
 };
 
@@ -231,9 +230,17 @@ Game.prototype.getInitialInsert = function()
     };
 };
 
+Game.prototype.getShips = function()
+{
+    return this.fleets.reduce(function(value, fleet){
+		return value.concat(fleet.ships);
+	}, []);
+};
+
+
 Game.prototype.getSelectedShip = function()
 {
-    return this.ships[0];
+    return this.getShips()[0];
 };
 
 Game.prototype.updated = function(doc)
@@ -257,7 +264,7 @@ Game.prototype._changeTurn = function(time)
 Game.prototype.getClosestShip = function()
 {
     var center = this.scrolling.position;
-    var ships = this.ships.slice(0).filter(function(ship){return ! ship.isHidden()});
+    var ships = this.getShips().slice(0).filter(function(ship){return ! ship.isHidden()});
 
     ships.sort(function(a, b){
        return MathLib.distance(center, a.getPosition()) - MathLib.distance(center, b.getPosition());
@@ -280,15 +287,15 @@ Game.prototype.onScroll = function()
 
     var ship = this.getClosestShip();
     if (! ship)
-        this.ships.forEach(function(ship){ship.getIcon().showHull()});
+        this.getShips().forEach(function(ship){ship.getIcon().showHull()});
 
     if ( this.shipStatusView.targetId == ship._id)
         return;
 
-    this.ships.forEach(function(ship){ship.getIcon().showHull()});
+    this.getShips().forEach(function(ship){ship.getIcon().showHull()});
     ship.getIcon().hideHull();
     this.shipStatusView.targetId = ship._id;
-    this.shipStatusView.display(ship.getIcon(), ship.shipDesign.modules).show();
+    this.shipStatusView.display(ship.getIcon(), ship.status).show();
 };
 
 Game.prototype.onZoom = function(event)
@@ -304,11 +311,11 @@ Game.prototype.onZoom = function(event)
 
         ship.getIcon().hideHull();
         this.shipStatusView.targetId = ship._id;
-        this.shipStatusView.display(ship.getIcon(), ship.shipDesign.modules).show();
+        this.shipStatusView.display(ship.getIcon(), ship.status).show();
     }
     else
     {
-        this.ships.forEach(function(ship){ship.getIcon().showHull()});
+        this.getShips().forEach(function(ship){ship.getIcon().showHull()});
         this.shipStatusView.unsetShipIcon();
         this.shipStatusView.targetId = null;
         this.shipStatusView.hide();
@@ -338,5 +345,5 @@ Game.prototype.onMouseMove = function(event)
     var modulePos = this.coordinateConverter.fromGameToViewPort(
         ship.getIcon().getModulePositionInGame(module));
 
-    this.moduleView.display(module, modulePos, ship.shipDesign.modules);
+    this.moduleView.display(module, modulePos, ship.status);
 };

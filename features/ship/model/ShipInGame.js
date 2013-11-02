@@ -4,35 +4,44 @@ model.ShipInGame = function ShipInGame(args)
         args = {};
 
     this._id = args._id || null;
+    this.name = args.name || null;
+    this.owner = args.owner || null;
     this.controller = args.controller || null;
     this.shipDesign = args.shipDesign || null;
+    this.fleetId = args.fleetId || null;
+    this.gameId = args.gameId || null;
 
-    this.movement = args.movement;
-
-    if (this.movement && typeof this.movement.setShip === 'function') {
-        this.movement.setShip(this);
-    }
-
+    this.status = args.status;
     this.icon = null;
     this.gameScene = null;
 };
 
 model.ShipInGame.prototype.serialize = function()
 {
-    this.shipDesign.hullLayoutId =
-        this.shipDesign.hullLayout._id;
-
-    delete this.shipDesign.hullLayout;
-
-    this.movement = this.movement.serialize();
-
-    this.shipDesign.modules =
+	var shipDesign = new model.ShipDesign(this.shipDesign);
+	shipDesign.hullLayoutId = this.shipDesign.hullLayout._id;
+	delete shipDesign.hullLayout;
+	shipDesign.modules =
         this.shipDesign.modules.map(
             function(module){
                 return module.serialize();
             });
+            
 
-    return this;
+	var doc = {
+		shipDesign: shipDesign,
+		status: this.status.serialize(),
+		name: this.name,
+		owner: this.owner,
+		controller: this.controller,
+		fleetId: this.fleetId,
+		gameId: this.gameId
+	}
+	
+	if (this._id !== null)
+		doc._id = this._id;
+	
+    return doc;
 };
 
 model.ShipInGame.prototype.getIcon = function()
@@ -48,8 +57,6 @@ model.ShipInGame.prototype.subscribeToScene =
 {
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon().getThreeObject());
-
-    this.movement.subscribeToScene(this.gameScene.scene, eventDispatcher, uiResolver);
 
     this.shipDesign.modules.forEach(function(module){
         module.ship = this;
@@ -68,7 +75,7 @@ model.ShipInGame.prototype.subscribeToScene =
 
 model.ShipInGame.prototype.animate = function(gameTime)
 {
-    this.movement.animate(gameTime);
+    this.status.movement.animate(this, gameTime);
 };
 
 model.ShipInGame.prototype.setAzimuth = function(azimuth)

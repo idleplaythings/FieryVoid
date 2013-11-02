@@ -1,9 +1,4 @@
-model.ThrustManagement = function ThrustManagement()
-{
-    this.modules = null;
-};
-
-model.ThrustManagement.prototype.setModules = function(modules)
+model.ThrustManagement = function ThrustManagement(modules)
 {
     this.modules = modules;
 };

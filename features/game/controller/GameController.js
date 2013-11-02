@@ -6,18 +6,16 @@ controller.GameController = function(gameStorage)
 
         game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });
 
-        var ship1 = game.getRandomShipForPlayer(player1Id);
-        var ship2 = game.getRandomShipForPlayer(player2Id);
+        var fleet1 = game.getRandomFleetForPlayer(player1Id);
+        var fleet2 = game.getRandomFleetForPlayer(player2Id);
 
-        if (!ship1 || !ship2) {
-            throw "Ships not found";
+        if ( ! fleet1 || ! fleet2) {
+            throw new Error("Fleets not found while creating a random game");
         }
 
         game.setStartingConditions();
-        game.ships.push(ship1);
-        game.ships.push(ship2);
-        game.shipStorage.addShipToGame(ship1, game._id);
-        game.shipStorage.addShipToGame(ship2, game._id);
+		fleet1.addToGame(game);
+		fleet2.addToGame(game);
 
         game.addPlayer([player1Id, player2Id]);
 

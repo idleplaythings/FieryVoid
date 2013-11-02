@@ -21,37 +21,72 @@ model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage)
     this.shipDesignStorage = shipDesignStorage;
 };
 
-model.ShipStorage.prototype.addShipToGame = function(ship, gameid)
+model.ShipStorage.prototype.getShip = function(id)
 {
-    console.log("add ship", ship, gameid);
-    ShipsInGameCollection.insert({gameid: gameid, ship: ship.serialize()});
+     var doc = ShipsInGameCollection.findOne({_id: id});
+     return this.createShipFromDoc(doc);
 };
 
-model.ShipStorage.prototype.getShipsInGame = function(gameid)
+model.ShipStorage.prototype.renameShip = function(id, name)
+{
+	console.log("trying to set", id, name);
+    ShipsInGameCollection.update({_id: id}, {$set: {name: name}});
+};
+
+model.ShipStorage.prototype.addShipToGame = function(shipId, gameId)
+{	
+    ShipsInGameCollection.update({_id: shipId}, {$set: {gameId: gameId}});
+};
+
+model.ShipStorage.prototype.addShipToFleet = function(ship, fleetId)
+{	
+	ship.fleetId = fleetId;
+	var doc = ship.serialize();
+	console.log(doc);
+    ShipsInGameCollection.insert(ship.serialize());
+};
+
+model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
 {
     var self = this;
     var ships = [];
-    var shipsDoc = ShipsInGameCollection.find({gameid: gameid});
+    var shipsDoc = ShipsInGameCollection.find({fleetId: fleetId});
     shipsDoc.forEach(function(doc){
-        console.log(doc);
-        ships.push(self.createShipFromDoc(doc._id, doc.ship));
+        ships.push(self.createShipFromDoc(doc));
     });
 
-    console.log(shipsDoc);
     return ships;
 };
 
-model.ShipStorage.prototype.createShipFromDoc = function(id, shipdoc)
+model.ShipStorage.prototype.createFromDesign = 
+	function(shipDesign, owner, shipId)
 {
-    var shipDesign = this.shipDesignStorage.createShipDesign(shipdoc.shipDesign);
-    if ( ! shipDesign)
-        throw Error("Unable to construct ship design for ship");
-
-    return new model.ShipInGame({
-        _id: id,
-        controller: shipdoc.controller,
+	return new model.ShipInGame({
+		_id: shipId,
+		owner: owner,
+        controller: owner,
         shipDesign: shipDesign,
-        movement: new model.Movement(this.timelineFactory.getTimeline(shipdoc.movement))
+        status: new model.ShipStatus(
+			shipDesign.modules, this.timelineFactory.getTimeline())
     });
+};
+
+model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
+{
+	console.log(shipdoc);
+	if ( ! shipdoc)
+		return null;
+		
+    shipdoc.shipDesign = this.shipDesignStorage.createShipDesign(shipdoc.shipDesign);
+    
+    if ( ! shipdoc.shipDesign)
+        throw Error("Unable to construct ship design for ship");
+        
+    shipdoc.status = new model.ShipStatus(
+		shipdoc.shipDesign.modules,
+		this.timelineFactory.getTimeline(shipdoc.shipStatus)
+    );
+
+    return new model.ShipInGame(shipdoc);
 };
 

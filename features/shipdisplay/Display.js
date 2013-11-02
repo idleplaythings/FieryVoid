@@ -31,8 +31,8 @@ model.Display.prototype.renderOn = function(target)
             this.dispatcher.dispatch({name:'keyup', keyCode: payload.keyCode});
         }.bind(this), 0);
 
-    this.scrolling = new model.Scrolling(this.dispatcher);
-    this.scrolling.registerTo(this.uiEventResolver);
+    //this.scrolling = new model.Scrolling(this.dispatcher);
+    //this.scrolling.registerTo(this.uiEventResolver);
 
     this.icon.create();
     this.gameScene.scene.add(this.icon.getThreeObject());
@@ -67,7 +67,8 @@ model.Display.prototype.onMouseMove = function(payload)
 
 model.Display.prototype.destroy = function()
 {
-    //TODO: unbind everything from ui event nönnöti
+    this.uiEventResolver.destroy();
+    //this.scrolling.destroy();
 };
 
 

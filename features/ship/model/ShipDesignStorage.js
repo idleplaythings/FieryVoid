@@ -5,7 +5,6 @@ model.ShipDesignStorage = function ShipDesignStorage(timelineFactory)
 
 model.ShipDesignStorage.prototype.getShipDesign = function(id)
 {
-    console.log(id);
     var doc = ShipDesigns.findOne({_id: id});
     if (! doc)
         return null;

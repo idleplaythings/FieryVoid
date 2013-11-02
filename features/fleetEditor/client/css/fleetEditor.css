@@ -1,0 +1,38 @@
+.fleet .entry
+{
+	width:150px;
+	min-height:125px;
+	padding:6px;
+	position:relative;
+}
+
+.fleet .entry canvas
+{
+	position:relative;
+	border: 1px solid #16181d;
+	background-color: #35383c;
+	box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
+	height:125px;
+	padding:0;
+	margin:0;
+	-moz-box-sizing:    border-box;
+	-webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+    display:block;
+}
+
+.fleet .entry input
+{
+	width:calc(100% - 12px);
+}
+
+.fleetResources
+{
+	position:absolute;
+	bottom:0px;
+	left:205px;
+	height:150px;
+	width:100%;
+	border: 1px solid #16181d;
+	box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
+}

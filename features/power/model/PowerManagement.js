@@ -1,11 +1,6 @@
-model.PowerManagement = function PowerManagement()
+model.PowerManagement = function PowerManagement(modules)
 {
-    this.powerStatuses = [];
-};
-
-model.PowerManagement.prototype.setModules = function(modules)
-{
-    this.powerStatuses = modules.map(function(module){
+     this.powerStatuses = modules.map(function(module){
         return {module:module, status: null};
     });
     this.resolvePowerStatus();

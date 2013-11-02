@@ -9,8 +9,6 @@ Template.shipMenu.myShips = function()
             return shipDesignStorage.createShipDesign(design);
         }
     );
-
-    console.log(designs);
     return designs;
 };
 
@@ -27,7 +25,11 @@ Template.shipMenu.publicShips = function()
                 return shipDesignStorage.createShipDesign(design);
             }
     );
-
-    console.log(designs);
     return designs;
 };
+
+Template.shipMenu.events({
+    'click .selectable': function () {
+      Router.go('shipDesignEditor', {_id:  this._id });
+    }
+});

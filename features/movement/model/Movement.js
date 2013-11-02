@@ -1,4 +1,4 @@
-model.Movement = function Movement(timeline)
+model.Movement = function Movement(modules, timeline)
 {
     /*
     this.waypointUi = waypointUi;
@@ -7,9 +7,9 @@ model.Movement = function Movement(timeline)
     this.route3d = null;
     this.resolver = new model.MovementResolver();
 
-    this.route = new model.MovementRoute(
-        timeline, 'route', this.onTurnChanged.bind(this));
-    this.waypoints = new model.MovementRoute(timeline, 'waypoint');
+    //this.route = new model.MovementRoute(
+    //    timeline, 'route', this.onTurnChanged.bind(this));
+    //this.waypoints = new model.MovementRoute(timeline, 'waypoint');
 
     this._timeline = timeline;
 };
@@ -27,8 +27,8 @@ model.Movement.prototype.setShip = function(ship)
 
 model.Movement.prototype.addStartPosition = function(waypoint)
 {
-    this.route.add(waypoint);
-    this.route.persist();
+    //this.route.add(waypoint);
+    //this.route.persist();
 };
 
 model.Movement.prototype.setTimeline = function(timeline)
@@ -309,15 +309,21 @@ model.Movement.prototype.jump = function(waypoint)
     this.deleteWaypoint(waypoint.time + 1);
 };
 
-model.Movement.prototype.animate = function(gameTime)
+model.Movement.prototype.animate = function(ship, gameTime)
 {
+	ship.setPosition(this.getCurrentPosition(gameTime));
+    ship.setAzimuth(this.getFacing(gameTime));
+        
+	/*
     if (this.route.isJumping(gameTime))
     {
         this.ship.setPosition(null);
     }
     else
     {
-        this.ship.setPosition(this.getCurrentPosition(gameTime));
+		this.ship.setPosition(this.getCurrentPosition(gameTime));
         this.ship.setAzimuth(this.getFacing(gameTime));
     }
+    */ 
+
 };

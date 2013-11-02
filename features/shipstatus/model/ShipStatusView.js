@@ -2,7 +2,6 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
 {
 	this.coordinateConverter = coordinateConverter;
 	this.target = target;
-    this.symbolResolver = new model.ShipStatusResolver();
     this.shipIcon = null;
     this.hidden = false;
     this.targetId = null;
@@ -11,16 +10,15 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ShipStatusView.prototype.display = function(shipIcon, modules)
+model.ShipStatusView.prototype.display = function(shipIcon, shipStatus)
 {
     this.shipIcon = shipIcon;
     this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
-    this.symbolResolver.setModules(modules);
-
-    modules.forEach(function(module){
-        this.createIcons(shipIcon, module, template);
+   
+    shipStatus.modules.forEach(function(module){
+        this.createIcons(shipStatus, shipIcon, module, template);
     }, this);
 
     return this;
@@ -42,9 +40,9 @@ model.ShipStatusView.prototype.positionStatusView = function()
     template.css('top', position.y +'px');
 };
 
-model.ShipStatusView.prototype.createIcons = function(shipIcon, module, template)
+model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, module, template)
 {
-    var symbols = this.symbolResolver.getSymbols(module);
+    var symbols = shipStatus.getSymbols(module);
 
     if (symbols.length == 0)
         return;

@@ -4,6 +4,7 @@ dic.register(
         return new model.Game(
             dic.get('model.EventDispatcher'),
             dic.get('model.ShipStorage'),
+            dic.get('model.FleetStorage'),
             dic.get('model.TimelineFactory')
         );
     }, {

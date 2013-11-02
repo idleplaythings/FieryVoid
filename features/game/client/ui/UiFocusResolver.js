@@ -68,6 +68,22 @@ model.UiFocusResolver.prototype.observeDomElement = function(element)
     return this;
 };
 
+model.UiFocusResolver.prototype.destroy = function()
+{
+	if ( ! this.observedElement)
+		return;
+		
+    this.observedElement.off("mousedown",  this.mouseDown.bind(this));
+    this.observedElement.off("mouseup",    this.mouseUp.bind(this));
+    this.observedElement.off("mouseout",   this.mouseOut.bind(this));
+    this.observedElement.off("mouseover",   this.mouseOver.bind(this));
+    this.observedElement.off("mousemove",  this.mouseMove.bind(this));
+    jQuery(document).off("keyup",   this.keyup.bind(this));
+    jQuery('input').off('keyup', function(e){e.originalEvent.fromUi = true;});
+
+    return this;
+};
+
 model.UiFocusResolver.prototype.getMousePositionInObservedElement = function(event)
 {
     return {
