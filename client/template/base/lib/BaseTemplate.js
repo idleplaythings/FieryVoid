@@ -15,9 +15,9 @@ BaseTemplate = {
         return Session.get("selected_hullLayout");
     },
 
-    hasSelectedShip: function()
+    hasSelectedShipDesign: function()
     {
-        return Session.get("selected_ship");
+        return Session.get("selected_shipDesign");
     },
 
     hasSelectedModuleLayout: function()
@@ -31,15 +31,15 @@ BaseTemplate = {
         return user && user.isAdmin;
     },
 
-    isMyShip: function()
+    isMyShipDesign: function()
     {
-        return isMyShip(Session.get('selected_ship'));
+        return isMyShip(Session.get('selected_shipDesign'));
     },
 
     selectedShipOwnerName: function()
     {
         var owner = ShipDesigns.findOne(
-            {_id:Session.get('selected_ship')},
+            {_id:Session.get('selected_shipDesign')},
             {fields:{owner:1}}
         )
 
@@ -51,7 +51,7 @@ BaseTemplate = {
 
     getFromSelectedLayout: function (name)
     {
-        var id = Session.get("selected_ship");
+        var id = Session.get("selected_shipDesign");
         if (id)
         {
             var ship = ShipDesigns.findOne({_id: id});
@@ -67,7 +67,7 @@ BaseTemplate = {
         var name = jQuery(element).attr('name');
         var value = jQuery(element).val();
 
-        var id = Session.get("selected_ship");
+        var id = Session.get("selected_shipDesign");
         if (id)
         {
             var ship = new model.ShipDesign().load(id);
@@ -89,7 +89,7 @@ BaseTemplate = {
 
     handleDetailChange: function (name, value)
     {
-        var id = Session.get("selected_ship");
+        var id = Session.get("selected_shipDesign");
         if (id)
         {
             var ship = new model.ShipDesign().load(id);
@@ -107,7 +107,7 @@ BaseTemplate = {
 
     toggleDetail: function(name)
     {
-        var id = Session.get("selected_ship");
+        var id = Session.get("selected_shipDesign");
         if (id)
         {
             var ship = new model.ShipDesign().load(id);

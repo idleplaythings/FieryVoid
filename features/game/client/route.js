@@ -28,19 +28,7 @@ CreateGameController = RouteController.extend({
 Router.map(function() {
     this.route('loadGame', {
         path: '/game/:_id',
-        template: 'game'
+        template: 'game',
+        data: function() {return {gameId: this.params._id};}
     });
-});
-
-LoadGameController = RouteController.extend({
-    getGameId: function() {
-        return this.params._id;
-    },
-    waitOn: function() {
-        return Meteor.subscribe('currentGame', this.getGameId());
-    },
-    run: function() {
-        Session.set("active_game", this.getGameId());
-        this.render();
-    }
 });

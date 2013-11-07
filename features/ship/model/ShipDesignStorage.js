@@ -3,6 +3,20 @@ model.ShipDesignStorage = function ShipDesignStorage(timelineFactory)
     this.timelineFactory =  timelineFactory
 };
 
+model.ShipDesignStorage.prototype.getReactiveShipDesign = function(id, callback)
+{
+	var self = this;
+	Deps.autorun(function(){
+		var doc = ShipDesigns.findOne({_id: id});
+		
+		if (! doc)
+			return;
+
+		var shipDesign = self.createShipDesign(doc);
+		callback(shipDesign);
+    });
+};
+
 model.ShipDesignStorage.prototype.getShipDesign = function(id)
 {
     var doc = ShipDesigns.findOne({_id: id});

@@ -17,7 +17,7 @@ Template.shipMenuOwned.events({
         console.log("Testdrive");
         Meteor.call(
             'TestdriveStart',
-            Session.get('selected_ship'),
+            Session.get('selected_shipDesign'),
             function(err, result) {
                 if (err) {
                     console.log(err);

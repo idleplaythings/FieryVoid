@@ -48,10 +48,12 @@ model.ShipStorage.prototype.addShipToFleet = function(ship, fleetId)
 
 model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
 {
+	console.log("getting ships in fleet", fleetId);
     var self = this;
     var ships = [];
     var shipsDoc = ShipsInGameCollection.find({fleetId: fleetId});
     shipsDoc.forEach(function(doc){
+		console.log("found ship in fleet", fleetId);
         ships.push(self.createShipFromDoc(doc));
     });
 

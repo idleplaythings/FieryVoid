@@ -1,6 +1,6 @@
 <template name="shipMenuOwned">
     <div style="position:relative;width:90%;margin:10px auto;">
-        {{#if isMyShip}}
+        {{#if isMyShipDesign}}
         <h3>Ship design name</h3>
         <input type="text" name="name" value="{{designName}}"/>
         {{else}}
@@ -11,7 +11,7 @@
         <div class="label">Mass: {{selectedShipMass}}T</div>
 
         <!--<div class="label" style="margin-top:20px;"><span>Weight:</span> 450t</div>-->
-        {{#if isMyShip}}
+        {{#if isMyShipDesign}}
         <div style="position:relative;width:100%;height:37px;">
             <div style="position:absolute;left:0px;width:70px;" class="button publish {{publishedClass}}">Publish</div>
             <div style="position:absolute;right:0px;width:70px;" class="button delete warning">Delete</div>

@@ -12,7 +12,7 @@ Template.shipHull.events({
     'click .createShip': function () {
         Meteor.call('ShipDesignInsert', this._id, function(err, result){
           // Meteor.Router.to('shipEditor', result);
-          Router.go('shipEditor', { _id: result });
+          Router.go('shipDesignEditor', { _id: result });
         });
     }
 });

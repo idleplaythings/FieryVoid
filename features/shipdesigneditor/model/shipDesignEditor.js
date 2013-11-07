@@ -31,13 +31,6 @@ model.shipDesignEditor = function shipDesignEditor(
 
     this.icon = new model.ShipIconEditor();
 
-    this.reactiveShipDesign = new model.ReactiveShipDesign(
-        shipDesignId,
-        dispatcher,
-        'shipDesignChanged',
-        shipDesignStorage
-    );
-
     this.moduleView = new model.ModuleDetailView(iconcontainer);
 
     this.coordinateConverter =
@@ -69,11 +62,13 @@ model.shipDesignEditor = function shipDesignEditor(
     this.remove = false;
     this.shipDesign = null;
 
-    this.reactiveShipDesign.react();
     this.createButtons();
 
     this.possibleIconViewModes = ["hull", "grid"];
     this.iconViewMode = 0;
+    
+    this.reactiveShipDesign = shipDesignStorage.getReactiveShipDesign(
+		shipDesignId, this.onShipDesignChange.bind(this));
 };
 
 model.shipDesignEditor.prototype.createButtons = function()
@@ -139,9 +134,8 @@ model.shipDesignEditor.prototype.toggleViewMode = function()
     }
 };
 
-model.shipDesignEditor.prototype.onShipDesignChange = function(event)
+model.shipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
 {
-    var shipDesign = event.payload;
     if (shipDesign)
     {
         this.shipApperanceMenu.setShipDesign(shipDesign);
@@ -346,5 +340,8 @@ model.shipDesignEditor.prototype.getModuleOffset = function(module, pos)
 
 model.shipDesignEditor.prototype.destroy = function()
 {
+	if (this.reactiveShipDesign)
+		this.reactiveShipDesign.stop();
+		
 	this.display.destroy();
 };

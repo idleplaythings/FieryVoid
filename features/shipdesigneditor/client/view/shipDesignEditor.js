@@ -7,7 +7,7 @@ Template.shipDesignEditor.rendered = function()
 {
     if ( ! Template.shipDesignEditor.controller)
     {
-        var shipDesignId = Session.get("selected_ship");
+        var shipDesignId = Session.get("selected_shipDesign");
         var leftmenu = jQuery('.sidemenu.left');
         var shipview = jQuery('div.displayLarge');
         var modulelist = jQuery('.sidemenu.right .modulelist');

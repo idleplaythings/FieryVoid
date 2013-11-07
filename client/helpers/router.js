@@ -8,13 +8,6 @@ Router.map(function() {
     this.route('moduleEditor', {
         path: '/editor/module'
     });
-    this.route('shipDesignEditor', {
-        path: '/shipDesign/:_id/edit'
-    }, function() {
-        Session.set("selected_ship", this.params._id);
-
-        this.render();
-    });
     this.route('createShip', {
         path: '/ship/create'
     });
