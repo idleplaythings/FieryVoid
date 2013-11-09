@@ -2,14 +2,17 @@ Template.fleet.rendered = function()
 {
 	if ( ! Template.fleet.controller)
 	{
-		var fleetId = Session.get('active_fleet');
-		var fleetStorage = dic.get('model.FleetStorage');
-		Template.fleet.controller = new model.FleetEditor(
-			jQuery('.fleetContainer'),
-			jQuery('.shipEditor'),
-			fleetStorage.getFleet(fleetId),
-			dic.get('model.ShipStorage')
-		);
+		var fleetId = this.data.fleetId;
+	
+		Meteor.subscribe('myFleet', fleetId, function(){
+			var fleetStorage = dic.get('model.FleetStorage');
+			Template.fleet.controller = new model.FleetEditor(
+				jQuery('.fleetContainer'),
+				jQuery('.shipEditor'),
+				fleetStorage.getFleet(fleetId),
+				dic.get('model.ShipStorage')
+			);
+		});
 	};
 };
 
@@ -37,9 +40,9 @@ Template.fleet.myShips = function()
 
 Template.fleet.events({
     'click .selectable.shiplist': function () {
-		var fleetId = Session.get('active_fleet');
-		var shipId = new Meteor.Collection.ObjectID().toHexString();
-		console.log("asking to add ship id", shipId);
-		Meteor.call('addShipToFleet', this._id, fleetId, shipId);
+		if ( ! Template.fleet.controller)
+			return;
+			
+		Template.fleet.controller.addShipToFleet(this._id);
     }
 });

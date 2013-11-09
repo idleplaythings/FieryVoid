@@ -29,19 +29,7 @@ CreateFleetController = RouteController.extend({
 Router.map(function() {
     this.route('loadFleet', {
         path: '/fleet/:_id',
-        template: 'fleet'
+        template: 'fleet',
+        data: function(){return {fleetId: this.params._id};}
     });
-});
-
-LoadFleetController = RouteController.extend({
-    getFleetId: function() {
-        return this.params._id;
-    },
-    waitOn: function() {
-        return Meteor.subscribe('myFleet', this.getFleetId());
-    },
-    run: function() {
-        Session.set("active_fleet", this.getFleetId());
-        this.render();
-    }
 });

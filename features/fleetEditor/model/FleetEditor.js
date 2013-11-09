@@ -33,7 +33,7 @@ model.FleetEditor.prototype.destroy = function()
 
 model.FleetEditor.prototype.shipClicked = function(ship)
 {
-	this.showShipEditor(ship);
+	this.showShipEditor(ship._id);
 };
 
 model.FleetEditor.prototype.showShipEditor = function(ship)
@@ -46,4 +46,10 @@ model.FleetEditor.prototype.showShipEditor = function(ship)
 		jQuery('.shipapperance').show(),
 		this.shipStorage
 	);
+};
+
+model.FleetEditor.prototype.addShipToFleet = function(shipDesignId)
+{
+	var shipId = new Meteor.Collection.ObjectID().toHexString();
+	Meteor.call('addShipToFleet', shipDesignId, this.fleet._id, shipId);
 };

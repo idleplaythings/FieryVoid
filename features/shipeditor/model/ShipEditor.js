@@ -1,16 +1,20 @@
 model.ShipEditor = function ShipEditor(
-	ship,
+	shipId,
     iconcontainer,
     shipapperance,
     shipStorage)
 {
+	this.ship = null;
+	
     var dispatcher = new model.EventDispatcher();
+    dispatcher.attach(
+        'mousemove', this.onMouseMove.bind(this));
+        
     this.gameScene = new model.GameScene(dispatcher);
     this.gameScene.init(iconcontainer).animate();
     this.iconcontainer = iconcontainer;
 
     this.icon = new model.ShipIconEditor();
-    this.moduleView = new model.ModuleDetailView(iconcontainer);
 
     this.coordinateConverter =
         new model.CoordinateConverterViewPort(this.gameScene);
@@ -34,8 +38,20 @@ model.ShipEditor = function ShipEditor(
 
     this.possibleIconViewModes = ["hull", "grid"];
     this.iconViewMode = 0;
-    console.log(ship);
-    this.icon.create(ship.shipDesign);
+    
+    this.shipReactivityHandle = shipStorage.getReactiveShip(
+		shipId, this.shipChanged.bind(this));
+};
+
+model.ShipEditor.prototype.shipChanged = function(ship)
+{
+    if (ship)
+    {
+		this.ship = ship;
+        this.shipApperanceMenu.setShipDesign(ship.shipDesign);
+        this.icon.create(ship.shipDesign);
+        this.shipStatusView.display(this.icon, ship.status);
+    };
 };
 
 model.ShipEditor.prototype.createButtons = function()
@@ -71,7 +87,24 @@ model.ShipEditor.prototype.toggleViewMode = function()
     }
 };
 
+model.ShipEditor.prototype.onMouseMove = function(event)
+{
+	var pos = event.position.game;
+    var module = this.icon.getModuleOnPosition(pos);
+    if (! module)
+    {
+        this.shipStatusView.displayModuleView(null);
+        return;
+    }
+
+    var modulePos = this.coordinateConverter.fromGameToViewPort(
+        this.icon.getModulePositionInGame(module));
+
+	this.shipStatusView.displayModuleView(module, modulePos, this.ship.status);
+};
+
 model.ShipEditor.prototype.destroy = function()
 {
+	this.shipReactivityHandle.stop();
 	this.display.destroy();
 };

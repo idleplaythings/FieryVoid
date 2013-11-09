@@ -12,6 +12,7 @@ model.CrewStatus.prototype.isFullyCrewed = function()
 model.CrewStatus.prototype.getShipStatusSymbols = function()
 {
     var required = this.module.requiresCrew ? this.module.requiresCrew.getRequiredCrew() : 0;
+    var provided = this.module.crewProvider ? this.module.crewProvider.getProvidedCrew() : 0;
     var crew = this.crew.slice(0);
     var symbols = [];
 
@@ -27,6 +28,13 @@ model.CrewStatus.prototype.getShipStatusSymbols = function()
     crew.forEach(function(assignee){
         symbols.push(new model.ShipStatusSymbolCrew('idle', assignee));
     });
+    
+    var freeSpace = provided - crew.length;
+    
+    while (freeSpace--)
+    {
+		symbols.push(new model.ShipStatusSymbolCrew('freeSpace', assignee));
+	}
 
     return symbols;
 };

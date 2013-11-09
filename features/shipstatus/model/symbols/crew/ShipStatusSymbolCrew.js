@@ -2,6 +2,8 @@ model.ShipStatusSymbolCrew = function ShipStatusSymbolCrew(type, crew)
 {
     model.ShipStatusSymbol.call(this);
     this.deploymentPosition = 'bottom';
+    this.type = type;
+    this.crew = crew;
     this.set(type, crew);
 };
 
@@ -10,16 +12,22 @@ model.ShipStatusSymbolCrew.prototype =
 
 model.ShipStatusSymbolCrew.prototype.set = function(type, crew)
 {
+	this.type = type;
+	
     if (type == 'assigned')
     {
         this.description = 'Crew manning the system';
         this.createIconImage = this.createIconImageCrewManning.bind(this, crew);
+        this.draggable = true;
+        this.getHtmlElement().data("dropPayload", this.crew);
     }
 
     if (type == 'idle')
     {
         this.description = 'Idle crew';
         this.createIconImage = this.createIconImageCrewManning.bind(this, crew);
+        this.draggable = true;
+        this.getHtmlElement().data("dropPayload", this.crew);
     }
 
     if (type == 'missing')
@@ -29,6 +37,35 @@ model.ShipStatusSymbolCrew.prototype.set = function(type, crew)
 
         this.createIconImage = this.createIconImageCrewRequired.bind(this);
     }
+    
+    if (type == 'freeSpace')
+    {
+        this.description =
+            'Free space for crew';
+            
+        this.dropTarget = true;
+        this.createIconImage = this.createIconImageCrewRequired.bind(this);
+    }
+};
+
+model.ShipStatusSymbolCrew.prototype.getDropPayload = function()
+{
+	return JSON.stringify(this.crew.toJson());
+};
+
+model.ShipStatusSymbolCrew.prototype.allowDrop = function(statusSymbol)
+{
+	if (this.type != 'freeSpace' && this.type != 'missing')
+		return false;
+	
+	var allow = statusSymbol instanceof model.ShipStatusSymbolCrew && statusSymbol.draggable;
+	return allow;
+};
+
+model.ShipStatusSymbol.prototype.onDrop = function(event)
+{
+	var payload = this.getPayloadFromDropEvent(event);
+	console.log(payload);
 };
 
 model.ShipStatusSymbolCrew.prototype.createIconImage = function()

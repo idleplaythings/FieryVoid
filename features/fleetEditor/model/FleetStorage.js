@@ -30,6 +30,7 @@ model.FleetStorage.prototype.insert = function(fleet)
 
 model.FleetStorage.prototype.getFleet = function(fleetId)
 {
+	console.log("getting fleet id:", fleetId);
 	var doc = Fleets.findOne({_id: fleetId});
 	if ( ! doc)
 		return null;

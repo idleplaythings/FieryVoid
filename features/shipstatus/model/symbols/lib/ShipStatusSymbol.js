@@ -14,19 +14,84 @@ model.ShipStatusSymbol = function ShipStatusSymbol(args)
     this.deploymentPosition = args.deploymentPosition || 'bottom';
     this.iconSize = args.iconSize || {width:1, height:1};
     this.positionOnIcon = null;
+    this.draggable = false;
+    this.onDragStart = null;
+    this.onDragEnd = null;
+    this.dropTarget = false;
 
     this.description = args.description || '';
+};
+
+model.ShipStatusSymbol.prototype.enableDrag = function(start, end)
+{
+	if (this.draggable)
+	{
+		this.getHtmlElement().attr('draggable', 'true');
+		this.onDragStart = start;
+		this.onDragEnd = end;
+	}	
 };
 
 model.ShipStatusSymbol.prototype.getHtmlElement = function()
 {
     if ( ! this.element)
     {
+		var self = this;
         this.element = jQuery(this.createIconImage());
+        
+        this.element.on('dragstart', function(event){
+			//jQuery(this).css('opacity', '0.5');
+			event.originalEvent.dataTransfer.setData('dropPayload', self.getDropPayload());
+			
+			if (self.onDragStart)
+				self.onDragStart(event, self);
+		});
+		
+		this.element.on('dragend', function(event){
+			jQuery(this).css('opacity', '1.0');
+			
+			if (self.onDragEnd)
+				self.onDragEnd(event, self);
+		});
+		
+		this.element.on('drop', this.onDrop.bind(this));
+		this.element.on('dragover', function(event){
+			event.preventDefault();
+		});
+		
+		if (this.dropTarget)
+			this.element.hide();
     }
 
     return this.element;
 };
+
+model.ShipStatusSymbol.prototype.allowDrop = function(statusSymbol)
+{
+	return false;
+};
+
+model.ShipStatusSymbol.prototype.getDropPayload = function()
+{
+	return null;
+};
+
+model.ShipStatusSymbol.prototype.onDrop = function(event)
+{
+	return false;
+};
+
+model.ShipStatusSymbol.prototype.getPayloadFromDropEvent = function(event)
+{
+	event.preventDefault();
+	event.stopPropagation();
+	var payload = event.originalEvent.dataTransfer.getData('dropPayload');
+	if ( ! payload)
+		return null;
+	
+	return JSON.parse(payload);
+};
+
 
 model.ShipStatusSymbol.prototype.getPlacementOffset = function(position)
 {
@@ -87,4 +152,14 @@ model.ShipStatusSymbol.prototype.strokeAndFillWithShadow = function(context)
 model.ShipStatusSymbol.prototype.getCanvas = function()
 {
     return jQuery('<canvas width="'+this.size.width+'" height="'+this.size.height+'"></canvas>').get(0);
+};
+
+model.ShipStatusSymbol.prototype.show = function()
+{
+    this.getHtmlElement().show();
+};
+
+model.ShipStatusSymbol.prototype.hide = function()
+{
+    this.getHtmlElement().hide();
 };

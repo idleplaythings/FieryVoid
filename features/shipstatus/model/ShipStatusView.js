@@ -1,10 +1,14 @@
 model.ShipStatusView = function ShipStatusView(target, coordinateConverter, dispatcher)
 {
 	this.coordinateConverter = coordinateConverter;
+	this.moduleView = new model.ModuleDetailView(target);
 	this.target = target;
     this.shipIcon = null;
     this.hidden = false;
     this.targetId = null;
+    this.dragging = false;
+    
+    this.symbols = [];
 
 	dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
@@ -22,6 +26,15 @@ model.ShipStatusView.prototype.display = function(shipIcon, shipStatus)
     }, this);
 
     return this;
+};
+
+model.ShipStatusView.prototype.displayModuleView = 
+	function(module, modulePos, status)
+{
+    if (this.hidden || this.dragging)
+		return;
+		
+	this.moduleView.display(module, modulePos, status);
 };
 
 model.ShipStatusView.prototype.unsetShipIcon = function()
@@ -43,7 +56,14 @@ model.ShipStatusView.prototype.positionStatusView = function()
 model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, module, template)
 {
     var symbols = shipStatus.getSymbols(module);
-
+    
+	symbols.forEach(function(symbol){
+		symbol.enableDrag(
+			this.onDragStart.bind(this),
+			this.onDragEnd.bind(this)
+		);
+	}, this);
+	
     if (symbols.length == 0)
         return;
 
@@ -60,6 +80,33 @@ model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, modu
         template.append(element);
         num++;
     }, this);
+    
+    this.symbols = this.symbols.concat(symbols);
+};
+
+model.ShipStatusView.prototype.onDragStart = function(
+	event, draggedSymbol)
+{
+	this.dragging = true;
+	this.moduleView.display(null);
+	
+	this.symbols.forEach(function(symbol){
+		if (symbol.allowDrop(draggedSymbol))
+			symbol.show();
+		else
+			symbol.getHtmlElement().css('opacity', '0.5');
+	});
+};
+
+model.ShipStatusView.prototype.onDragEnd = function()
+{
+	this.dragging = false;
+	this.symbols.forEach(function(symbol){
+		if (symbol.dropTarget)
+			symbol.hide();
+		else
+			symbol.getHtmlElement().css('opacity', '1.0');
+	});
 };
 
 model.ShipStatusView.prototype.resolveIconDeploymentZone = function(module, symbols)

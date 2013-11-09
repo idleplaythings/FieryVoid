@@ -27,6 +27,15 @@ model.ShipStorage.prototype.getShip = function(id)
      return this.createShipFromDoc(doc);
 };
 
+model.ShipStorage.prototype.getReactiveShip = function(id, callback)
+{
+	var self = this;
+	return Deps.autorun(function(){
+		var doc = ShipsInGameCollection.findOne({_id: id});
+		callback(self.createShipFromDoc(doc));
+	});
+};
+
 model.ShipStorage.prototype.renameShip = function(id, name)
 {
 	console.log("trying to set", id, name);
