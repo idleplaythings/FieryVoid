@@ -1,5 +1,6 @@
-model.CrewManagement = function CrewManagement(modules, timeline)
+model.CrewManagement = function CrewManagement(modules, timeline, shipId)
 {
+	this.shipId = shipId;
     this.timeline = timeline || null;
     this.modules = modules;
 
@@ -58,6 +59,6 @@ model.CrewManagement.prototype.getDefault = function()
 model.CrewManagement.prototype.getCrewStatus = function(module)
 {
     var onModule = this.crew.filter(function(crew){ return crew.module == module});
-    return new model.CrewStatus(module, onModule);
+    return new model.CrewStatus(module, onModule, this);
 };
 

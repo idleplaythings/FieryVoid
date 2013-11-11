@@ -1,6 +1,7 @@
-model.ShipStatusSymbolCrew = function ShipStatusSymbolCrew(type, crew)
+model.ShipStatusSymbolCrew = function ShipStatusSymbolCrew(type, crew, crewManagement)
 {
     model.ShipStatusSymbol.call(this);
+    this.crewManagement = crewManagement;
     this.deploymentPosition = 'bottom';
     this.type = type;
     this.crew = crew;

@@ -192,7 +192,9 @@ Game.prototype.onClicked = function(payload)
 Game.prototype.initGameState = function(container)
 {
     this.terrain = new model.GameTerrain(this.gameScene, container, this.terrainSeed).createRandom();
-
+    this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
+	this.effectManager.createExplosion();
+	
     console.log(this.getShips());
     this.getShips().forEach(
         function(ship){

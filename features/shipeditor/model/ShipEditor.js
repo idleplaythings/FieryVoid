@@ -1,10 +1,10 @@
 model.ShipEditor = function ShipEditor(
-	shipId,
     iconcontainer,
     shipapperance,
     shipStorage)
 {
 	this.ship = null;
+	this.shipStorage = shipStorage;
 	
     var dispatcher = new model.EventDispatcher();
     dispatcher.attach(
@@ -39,7 +39,15 @@ model.ShipEditor = function ShipEditor(
     this.possibleIconViewModes = ["hull", "grid"];
     this.iconViewMode = 0;
     
-    this.shipReactivityHandle = shipStorage.getReactiveShip(
+    this.shipReactivityHandle = null
+};
+
+model.ShipEditor.prototype.setShip = function(shipId)
+{
+	if (this.shipReactivityHandle)
+		this.shipReactivityHandle.stop();
+		
+    this.shipReactivityHandle = this.shipStorage.getReactiveShip(
 		shipId, this.shipChanged.bind(this));
 };
 

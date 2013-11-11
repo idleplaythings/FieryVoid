@@ -7,7 +7,7 @@ Template.fleet.rendered = function()
 		Meteor.subscribe('myFleet', fleetId, function(){
 			var fleetStorage = dic.get('model.FleetStorage');
 			Template.fleet.controller = new model.FleetEditor(
-				jQuery('.fleetContainer'),
+				jQuery('.fleet'),
 				jQuery('.shipEditor'),
 				fleetStorage.getFleet(fleetId),
 				dic.get('model.ShipStorage')
@@ -42,7 +42,20 @@ Template.fleet.events({
     'click .selectable.shiplist': function () {
 		if ( ! Template.fleet.controller)
 			return;
-			
+		
+		jQuery('.availableShips').css({
+			'visibility': 'hidden', 'z-index': '-1'
+		});
 		Template.fleet.controller.addShipToFleet(this._id);
+    },
+    'click .addship': function () {
+		jQuery('.availableShips').css({
+			'visibility': 'visible', 'z-index': '10'
+		});
+    },
+    'click .hideShipAdd': function () {
+		jQuery('.availableShips').css({
+			'visibility': 'hidden', 'z-index': '-1'
+		});
     }
 });

@@ -9,11 +9,15 @@ model.FleetEditor = function FleetEditor(
 	
 	this.shipsInFleetDisplay = 
 		new model.ShipsInFleetDisplay(
-			jQuery('.fleet', fleetElement),
+			fleetElement,
 			this.shipClicked.bind(this)
 		);
 	
-	this.shipEditor = null;
+	this.shipEditor = new model.ShipEditor(
+		jQuery('.shipEditor'),
+		jQuery('.shipapperance'),
+		this.shipStorage
+	);
 	
 	this.reactiveShipsInFleetHandle = fleet.getReactiveShips(
 		this.shipsInFleetChanged.bind(this));
@@ -36,16 +40,11 @@ model.FleetEditor.prototype.shipClicked = function(ship)
 	this.showShipEditor(ship._id);
 };
 
-model.FleetEditor.prototype.showShipEditor = function(ship)
+model.FleetEditor.prototype.showShipEditor = function(shipId)
 {
-	jQuery('.fleet, .shiplist').hide();
-	
-	this.shipEditor = new model.ShipEditor(
-		ship,
-		jQuery('.shipEditor').show(),
-		jQuery('.shipapperance').show(),
-		this.shipStorage
-	);
+	this.shipEditor.setShip(shipId);
+	jQuery('.shipEditor').show();
+	jQuery('.shipapperance').show();
 };
 
 model.FleetEditor.prototype.addShipToFleet = function(shipDesignId)

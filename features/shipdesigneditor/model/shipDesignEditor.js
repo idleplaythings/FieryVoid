@@ -156,7 +156,7 @@ model.shipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
         this.icon.create(shipDesign);
         this.shipDesign = shipDesign;
 
-        this.shipStatusView.display(this.icon, new model.ShipStatus(shipDesign.modules));
+        this.shipStatusView.display(this.icon, new model.ShipStatus(null, shipDesign.modules));
     }
 };
 
@@ -306,7 +306,7 @@ model.shipDesignEditor.prototype.showModuleView = function(pos)
     var modulePos = this.coordinateConverter.fromGameToViewPort(
         this.icon.getModulePositionInGame(module));
 
-    this.moduleView.display(module, modulePos, new model.ShipStatus(this.shipDesign.modules));
+    this.moduleView.display(module, modulePos, new model.ShipStatus(null, this.shipDesign.modules));
 };
 
 model.shipDesignEditor.prototype.onMouseOut = function(event)

@@ -31,6 +31,7 @@ model.ShipStorage.prototype.getReactiveShip = function(id, callback)
 {
 	var self = this;
 	return Deps.autorun(function(){
+		console.log("ship id", id);
 		var doc = ShipsInGameCollection.findOne({_id: id});
 		callback(self.createShipFromDoc(doc));
 	});
@@ -78,7 +79,9 @@ model.ShipStorage.prototype.createFromDesign =
         controller: owner,
         shipDesign: shipDesign,
         status: new model.ShipStatus(
-			shipDesign.modules, this.timelineFactory.getTimeline())
+			shipId,
+			shipDesign.modules,
+			this.timelineFactory.getTimeline())
     });
 };
 
@@ -94,6 +97,7 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
         throw Error("Unable to construct ship design for ship");
         
     shipdoc.status = new model.ShipStatus(
+		shipdoc._id,
 		shipdoc.shipDesign.modules,
 		this.timelineFactory.getTimeline(shipdoc.shipStatus)
     );

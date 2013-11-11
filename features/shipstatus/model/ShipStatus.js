@@ -1,5 +1,6 @@
-model.ShipStatus = function ShipStatus(modules, timeline)
+model.ShipStatus = function ShipStatus(shipId, modules, timeline)
 {
+	this.shipId = shipId;
 	this.modules = modules;
 	this._timeline = timeline;
     this.power = new model.PowerManagement(modules);

@@ -10,19 +10,26 @@
 				<h4>Fleet price:</h4>
 				<div class="label"><h4>3400</h4></div>
             </div>
+            <div class="tab shipapperance" style="display:none;">
+			</div>
         </div>
         
 		<div class="fleetContainer" style="position:absolute;bottom:150px;left:205px;height:calc(100% - 150px);width:calc(100% - 410px);">
 			
-
-			<div class="fleet">
-			</div>
-			
-			<div class="shipEditor" style="display:none;position:absolute;top:0;left:0;height:100%;width:100%;">
+			<div class="shipEditor" style="position:absolute;top:0;left:0;height:100%;width:100%;">
 				<div class="buttoncontainer"></div>
 			</div>
-			
-			
+
+		</div>
+		
+		<div class="availableShips" style="visibility:hidden; z-index:-1;">
+			<h4 style="display:block">Select a ship to add:</h4>
+			{{#isolate}}
+				{{#each myShips}}
+					{{> shipListEntry}}
+				{{/each}}
+			{{/isolate}}
+			<button class="hideShipAdd"></button>
 		</div>
 		
 		<div class="fleetResources">
@@ -30,16 +37,20 @@
 		</div>
 
 		
-        <div class="sidemenu right" style="height:100%;text-align:justify;">
-			<div class="shiplist">
-				{{#isolate}}
-					{{#each myShips}}
-						{{> shipListEntry}}
-					{{/each}}
-				{{/isolate}}
-			</div>
+        <div class="sidemenu right" style="height:100%;">
+			<div class="tab shipsInFleet">
+				<h4>Ships in fleet:</h4>
+				
+				<div class="selectable entry addship">
+					<div class="img-background" style="position:relative;">
+						<img src="/misc/create_shipdesign.png" width="145" height="115"/>
+					</div>
+					<div class="label">ADD SHIP</div>
+				</div>
 			
-			<div class="shipapperance" style="display:none;">
+				<div class="fleet">
+					
+				</div>
 			</div>
         </div>
 

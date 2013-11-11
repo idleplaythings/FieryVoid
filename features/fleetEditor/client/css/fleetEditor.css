@@ -36,3 +36,23 @@
 	border: 1px solid #16181d;
 	box-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
 }
+
+.availableShips
+{
+	position:absolute;
+	width:calc(100% - 450px);
+	height:100%;
+	padding:20px;
+	border: 1p solid grey;
+	background-color:rgba(0,0,0,0.5);
+	top:0px;
+	left:205px;
+}
+
+.hideShipAdd
+{
+	position:absolute;
+	top:10px;
+	right:10px;
+	background-image:url(/misc/x.png);
+}
