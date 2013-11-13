@@ -69,6 +69,13 @@ model.GameScene.prototype.animate = function(displayTime)
     this.render();
 };
 
+model.GameScene.prototype.removeAnimator = function(object)
+{
+	this.animators = this.animators.filter(function(animanatee){
+		return animanatee != object;
+	});
+};
+
 model.GameScene.prototype.render = function()
 {
     this.renderer.render( this.scene, this.camera );

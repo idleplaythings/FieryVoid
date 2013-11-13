@@ -1,22 +1,33 @@
-model.EffectParticleEmitter = function EffectParticleEmitter(particles)
+model.EffectParticleEmitter = 
+	 function EffectParticleEmitter(particleCount, gameScene)
 {
-    this.particles = particles;
-    this.free = particles.slice();
+	this.particleCount = particleCount;
+    
+    this.free = [];
+    for ( var i = 0; i<particleCount; i++)
+    {
+		this.free.push(i);
+	}
+   
+    this.effects = 0;
+    this.gameScene = gameScene;
 
     var attributes = {
-        alive:					{ type: 'f',  value: [] },
-        angle:					{ type: 'f',  value: [] },
-        angleChange:			{ type: 'f',  value: [] },
-        size:					{ type: 'f',  value: [] },
+        alive:					{ type: 'f',  value: [] }, //unneccessary
+        angle:					{ type: 'f',  value: [] }, //pack
+        angleChange:			{ type: 'f',  value: [] }, //pack
+        size:					{ type: 'f',  value: [] }, //pack
+        sizeChange:				{ type: 'f',  value: [] }, //pack
         color:					{ type: 'c',  value: [] },
-        opacity:				{ type: 'f',  value: [] },
+        opacity:				{ type: 'f',  value: [] }, //pack
         fadeInTime:				{ type: 'f',  value: [] },
         fadeInSpeed:			{ type: 'f',  value: [] },
         fadeOutTime:			{ type: 'f',  value: [] },
         fadeOutSpeed:			{ type: 'f',  value: [] },
-        activationGameTime: 	{ type: 'f',  value: [] },
+        activationGameTime: 	{ type: 'f',  value: [] }, //unneccessary
         velocity: 				{type: 'v3', value: []},
         acceleration: 			{type: 'v3', value: []},
+        textureNumber: 			{ type: 'f',  value: [] },
     };
 
     var uniforms = {
@@ -38,53 +49,69 @@ model.EffectParticleEmitter = function EffectParticleEmitter(particles)
             blending: THREE.AdditiveBlending, depthTest: true
         });
         
-	for (var i = 0; i < this.particles.length; i++)
-	{
-		var particle = this.particles[i];
-		particle.material = this.particleMaterial;
-		particle.materialIndex = i;
-	}
+    this.flyParticle = new model.EffectParticle(
+		this.particleMaterial, this.particleGeometry);
 	
-    this.getObject3d();
+    this.particleMesh = this.getObject3d(particleCount);
+    
+    gameScene.scene.add(this.particleMesh); 
+    gameScene.animators.push(this);
 };
 
 model.EffectParticleEmitter.prototype =  Object.create(model.ParticleEmitter.prototype);
 
-model.EffectParticleEmitter.prototype.getObject3d = function()
+model.EffectParticleEmitter.prototype.getObject3d = function(particleCount)
 {
-    if ( ! this.particleMesh)
-    {
-        for (var i = 0; i < this.particles.length; i++)
-        {
-            var particle = this.particles[i];
+	while(particleCount--)
+	{
+		this.particleGeometry.vertices[particleCount] = new THREE.Vector3();
+		this.flyParticle.create(particleCount).setInitialValues();
+	}
 
-            this.particleGeometry.vertices[i] = particle.position;
-            particle.setInitialValues();
-        }
+	var particleMesh = new THREE.ParticleSystem( this.particleGeometry, this.particleMaterial );
+	particleMesh.position = new THREE.Vector3(0, 0, 10);
+	//this.particleMesh.dynamic = true;
+	//this.particleMesh.sortParticles = true;
+    
 
-        this.particleMesh = new THREE.ParticleSystem( this.particleGeometry, this.particleMaterial );
-        this.particleMesh.position = new THREE.Vector3(0, 0, 10);
-        //this.particleMesh.dynamic = true;
-        //this.particleMesh.sortParticles = true;
-    }
+    return particleMesh;
+};
 
-    return this.particleMesh;
+model.EffectParticleEmitter.prototype.register = function()
+{
+	this.effects++;
+};
+
+model.EffectParticleEmitter.prototype.unregister = function()
+{
+	this.effects--;
+};
+
+model.EffectParticleEmitter.prototype.update = function()
+{
+	Object.keys(this.particleMaterial.attributes).forEach(function(key){
+		this.particleMaterial.attributes[key].needsUpdate = true;
+	}, this);
+	this.particleGeometry.verticesNeedUpdate = true;
 };
 
 model.EffectParticleEmitter.prototype.getFreeParticle = function()
 {
-    return this.free.pop();
+	var i = this.free.pop();
+	if (i !== 0 && ! i)
+		console.log("found illegal index:", i, this.free.lenght);
+		
+	return this.flyParticle.create(i);
+};
+
+model.EffectParticleEmitter.prototype.freeParticles = function(particleIndices)
+{
+	this.free = this.free.concat(particleIndices);
 };
 
 model.EffectParticleEmitter.prototype.animate = function(gameTime)
 {
 	this.particleMaterial.uniforms.gameTime.value = gameTime;
-	
-    //for (var i = 0; i < this.particles.length; i++)
-    //{
-        //var particle = this.particles[i].animate(gameTime);
-    //}
-    //this.particleGeometry.verticesNeedUpdate = true;
 };
 
 //x = v0t + ½at2
@@ -97,16 +124,19 @@ model.EffectParticleEmitter.prototype.vertexShader =
         "attribute float fadeOutTime;",
         "attribute float fadeOutSpeed;",
         "attribute float size;",
+        "attribute float sizeChange;",
         "attribute float angle;",
         "attribute float angleChange;",
         "attribute vec3 velocity;",
         "attribute vec3 acceleration;", 
         "attribute float alive;",  // float used as boolean (0 = false, 1 = true)
         "attribute float activationGameTime;", 
+        "attribute float textureNumber;",
         "uniform float zoomLevel;",
         "uniform float gameTime;",
         "varying vec4  vColor;",
         "varying float vAngle;",
+        "varying float textureN;",
         "void main()",
         "{",
         
@@ -136,6 +166,7 @@ model.EffectParticleEmitter.prototype.vertexShader =
 			"vColor = vec4(0.0, 0.0, 0.0, 0.0);", 		//     make particle invisible.
 
         "vAngle = angle + angleChange * elapsedTime;",
+        "textureN = textureNumber;",
         
         "vec3 displacement = velocity * elapsedTime;",
         "vec3 accelerationDisplacement  = elapsedTime * elapsedTime * 0.5 * acceleration;",
@@ -143,29 +174,47 @@ model.EffectParticleEmitter.prototype.vertexShader =
         "vec3 modPos = position + displacement + accelerationDisplacement;",
         
 
-        "gl_PointSize = size * zoomLevel;",
+        "gl_PointSize = clamp(size + (sizeChange * elapsedTime), 0.0, 128.0) * zoomLevel;",
         "gl_Position = projectionMatrix * modelViewMatrix * vec4( modPos, 1.0 );",
         "}"
     ].join("\n");
 
+//xRot = xCenter + cos(Angle) * (x - xCenter) - sin(Angle) * (y - yCenter)
+//yRot = yCenter + sin(Angle) * (x - xCenter) + cos(Angle) * (y - yCenter)
 model.EffectParticleEmitter.prototype.fragmentShader =
     [
         "uniform sampler2D texture;",
         "varying vec4 vColor;",
         "varying float vAngle;",
+        "varying float textureN;",
         "void main()",
         "{",
         "gl_FragColor = vColor;",
 
-        "float c = cos(vAngle) * 0.125;",
-        "float s = sin(vAngle) * 0.125;",
-        
-        "vec2 position = gl_PointCoord * 0.125;",
-        
-        "vec2 rotatedUV = vec2(c * (position.x - 0.0625) + s * (position.y - 0.0625) + 0.0625,",
-        "c * (position.y - 0.0625) - s * (position.x - 0.0625) + 0.0625);",  // rotate UV coordinates to rotate texture
-        "vec4 rotatedTexture = texture2D( texture,  rotatedUV );",
-        "gl_FragColor = gl_FragColor * rotatedTexture;",    // sets an otherwise white particle texture to desired color
+        "float c = cos(vAngle);",
+        "float s = sin(vAngle);",
+        "float textureAmount = 8.0;",,
+        "vec2 tPos = vec2((mod(textureN, textureAmount) * (1.0 / textureAmount)), (floor(textureN / textureAmount) * (1.0 / textureAmount)));",
+        //"vec2 tCen = vec2((0.5 / textureAmount) , 1.0 - (0.5 / textureAmount));",//(1.0 / textureAmount);",
+        //"vec2 pos = vec2(",
+		//	"gl_PointCoord.x / textureAmount,",
+		//	"1.0 - (gl_PointCoord.y / textureAmount));",
+		
+		"vec2 pos = vec2(gl_PointCoord.x, gl_PointCoord.y);",
+		"vec2 tCen = vec2(0.5, 0.5);",//(1.0 / textureAmount);",
+		
+        "vec2 rPos = vec2(",
+			"tCen.x + c * (pos.x - tCen.x) - s * (pos.y - tCen.y),",
+			"tCen.y + s * (pos.x - tCen.x) + c * (pos.y - tCen.y));",
+			
+		"rPos = clamp(rPos, 0.0, 1.0);", 
+		
+		"vec2 finalPos = vec2(",
+			"(rPos.x / textureAmount + tPos.x),",
+			"1.0 - (rPos.y / textureAmount + tPos.y));",
+		
+        "vec4 rotatedTexture = texture2D( texture, finalPos);", //rotatedUV );",
+        "gl_FragColor = gl_FragColor * rotatedTexture;", 
         "}"
 	].join("\n");
 
