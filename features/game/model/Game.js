@@ -4,6 +4,8 @@ function Game(dispatcher, hexgrid, shipStorage, fleetStorage, timelineFactory, a
     if ( ! args)
         args = {};
 
+    console.log(hexgrid)
+
     this.type = 'Game';
     this.dispatcher = dispatcher;
     this.shipStorage = shipStorage;
@@ -20,7 +22,7 @@ function Game(dispatcher, hexgrid, shipStorage, fleetStorage, timelineFactory, a
 }
 
 Game.prototype.getRandomFleetForPlayer = function(playerId) {
-	
+
 	var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
     if ( ! shipDesignId) {
@@ -29,14 +31,14 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
 	var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
-	
+
 	ship.status.managers.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
         position: {x:Math.ceil(Math.random() * 200) - 100, y:Math.ceil(Math.random() * 200) - 100},
         velocity: {x:500, y:0},
         facing: 0
     }));
-    
+
 	fleet.addShip(ship);
 	return fleet;
 };
@@ -69,7 +71,7 @@ Game.prototype.init = function()
 
     this.uiEventResolver = new model.UiFocusResolver(
         this.coordinateConverter, this.dispatcher);
-	
+
     //this.movementFactory.createWaypointMenu(
     //    this.coordinateConverter, this.dispatcher, this.uiEventResolver);
 };
@@ -141,7 +143,7 @@ Game.prototype.play = function()
 
     this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
     this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
-    
+
     new model.ReplayUI(this.gameState).create();
     new model.TurnUi(this._id, this.gameState).create();
 
@@ -153,15 +155,15 @@ Game.prototype.play = function()
 
 	this.shipManager = new model.ShipManager(
 		this.fleets,
-		new model.ModuleDetailView(container), 
-		shipStatusView, 
+		new model.ModuleDetailView(container),
+		shipStatusView,
 		this.dispatcher,
 		this.uiEventResolver,
 		this.coordinateConverter
 	);
-	
+
 	this.actionBar = new model.ActionBar(this.dispatcher);
-	
+
     this.initGameState(container);
 };
 
@@ -191,7 +193,7 @@ Game.prototype.load = function(doc)
     this.setState(doc);
     this.init();
     this.fleets = this.fleetStorage.getFleetsInGame(this._id);
-    
+
     return this;
 };
 
@@ -228,15 +230,15 @@ Game.prototype._changeTurn = function(time)
 
 Game.prototype.onScroll = function(event)
 {
-    
+
 };
 
 Game.prototype.onZoom = function(event)
 {
-   
+
 };
 
 Game.prototype.onMouseMove = function(event)
 {
-   
+
 };

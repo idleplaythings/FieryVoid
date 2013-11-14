@@ -1,5 +1,15 @@
-model.HexLayoutRenderer = function HexLayoutRenderer(canvas)
+model.HexLayoutRenderer = function HexLayoutRenderer()
 {
+    var canvas = $('<canvas width="2048" height="512"></canvas>').css({
+        position: 'absolute',
+        top: '100px',
+        left: '100px',
+        border: '2px solid red',
+        zIndex: 1000,
+        backgroundColor: 'black'
+        ,display: 'none'
+    });
+    $(document.body).append(canvas);
     this._canvas = canvas[0];
     this._context = this._canvas.getContext('2d');
 
@@ -12,7 +22,10 @@ model.HexLayoutRenderer.prototype.render = function(hexLayout)
 {
     this._clear();
 
-    hexLayout.getHexes().every(this._renderHex.bind(this));
+    this._context.scale(1,1.01);
+
+
+    hexLayout.getHexes().forEach(this._renderHex.bind(this));
 }
 
 model.HexLayoutRenderer.prototype.getCanvas = function()
@@ -24,6 +37,8 @@ model.HexLayoutRenderer.prototype._renderHex = function(hex) {
     var i, current, next;
 
     this._context.fillStyle = '#fff';
+    this._context.strokeStyle = '#fff';
+    this._context.lineWidth = 1;
     this._context.beginPath();
     this._context.moveTo(
         this._adjustXCoordinate(hex.corners[0].x),
@@ -41,6 +56,7 @@ model.HexLayoutRenderer.prototype._renderHex = function(hex) {
     }
 
     this._context.closePath();
+    this._context.stroke();
 }
 
 model.HexLayoutRenderer.prototype._adjustXCoordinate = function(x) {
