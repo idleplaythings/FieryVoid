@@ -75,7 +75,7 @@ model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, modu
         var position = this.getModulePosition(shipIcon, modulePosition, symbol);
         var element = symbol.getHtmlElement();
         symbol.getPlacementOffset(position);
-
+        
         element.css({left: position.x + 'px', bottom: position.y +'px'});
         template.append(element);
         num++;

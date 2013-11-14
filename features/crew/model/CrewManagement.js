@@ -56,6 +56,11 @@ model.CrewManagement.prototype.getDefault = function()
     }, this);
 };
 
+model.CrewManagement.prototype.isCrewed = function(module)
+{
+    return this.getCrewStatus(module).isFullyCrewed();
+};
+
 model.CrewManagement.prototype.getCrewStatus = function(module)
 {
     var onModule = this.crew.filter(function(crew){ return crew.module == module});

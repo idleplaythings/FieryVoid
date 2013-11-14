@@ -70,16 +70,17 @@ BaseTemplate = {
         var id = Session.get("selected_shipDesign");
         if (id)
         {
-            var ship = new model.ShipDesign().load(id);
-            if (ship)
+			
+            var shipDesign = dic.get('model.ShipDesignStorage').getShipDesign(id);
+            if (shipDesign)
             {
-                if ( ! ship.validateVariable(name, value))
+                if ( ! shipDesign.validateVariable(name, value))
                 {
                     jQuery(element).addClass("error");
                     return false;
                 }
 
-                ship.updateIfDifferent(name, value);
+                shipDesign.updateIfDifferent(name, value);
 
                 jQuery(element).removeClass("error");
                 return true;
@@ -92,14 +93,14 @@ BaseTemplate = {
         var id = Session.get("selected_shipDesign");
         if (id)
         {
-            var ship = new model.ShipDesign().load(id);
+            var shipDesign = dic.get('model.ShipDesignStorage').getShipDesign(id);
 
-            if (ship)
+            if (shipDesign)
             {
-                if ( ! ship.validateVariable(name, value))
+                if ( ! shipDesign.validateVariable(name, value))
                     return false;
 
-                ship.updateIfDifferent(name, value);
+                shipDesign.updateIfDifferent(name, value);
                 return true;
             }
         }
@@ -110,17 +111,17 @@ BaseTemplate = {
         var id = Session.get("selected_shipDesign");
         if (id)
         {
-            var ship = new model.ShipDesign().load(id);
-            if (ship)
+            var shipDesign = dic.get('model.ShipDesignStorage').getShipDesign(id);
+            if (shipDesign)
             {
-                var value = ship[name];
+                var value = shipDesign[name];
                 if (value !== true && value !== false)
                     throw "Only boolean values can be toggled";
 
-                if ( ! ship.validateVariable(name, value))
+                if ( ! shipDesign.validateVariable(name, value))
                     return false;
 
-                ship.updateIfDifferent(name, (! value));
+                shipDesign.updateIfDifferent(name, (! value));
                 return true;
             }
         }

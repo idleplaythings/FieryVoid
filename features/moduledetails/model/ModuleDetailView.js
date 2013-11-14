@@ -25,6 +25,9 @@ model.ModuleDetailView.prototype.display = function(
 
     var symbols = shipStatus.getSymbols(module);
     symbols.forEach(function(symbol){
+		if ( ! symbol.displayOnModuleView)
+			return;
+			
         var container = jQuery('<div></div>');
         container.appendTo(template);
         container.append(symbol.getHtmlElement())

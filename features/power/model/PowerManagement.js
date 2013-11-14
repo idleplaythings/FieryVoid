@@ -61,6 +61,13 @@ model.PowerManagement.prototype.resolvePowerStatus = function()
 
 };
 
+model.PowerManagement.prototype.isPowered = function(module)
+{
+	var powerStatus = this.getPowerStatus(module);
+	
+	return powerStatus === null || powerStatus instanceof model.PowerStatusPowered;
+};
+
 model.PowerManagement.prototype.getPowerStatus = function(module)
 {
     var candidate = this.powerStatuses.filter(function(status){return status.module == module});

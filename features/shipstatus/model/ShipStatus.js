@@ -3,10 +3,12 @@ model.ShipStatus = function ShipStatus(shipId, modules, timeline)
 	this.shipId = shipId;
 	this.modules = modules;
 	this._timeline = timeline;
+	
     this.power = new model.PowerManagement(modules);
     this.crew = new model.CrewManagement(modules, timeline);
     this.thrust = new model.ThrustManagement(modules, this.power, this.crew);
     this.movement = new model.Movement(modules, timeline);
+    this.sensor = new model.SensorManagement(modules, timeline, shipId, this.power, this.crew);
 };
 
 model.ShipStatus.prototype.serialize = function()
@@ -20,6 +22,7 @@ model.ShipStatus.prototype.getSymbols = function(module)
     symbols = this.getPowerSymbols(module, symbols);
     symbols = this.getCrewSymbols(module, symbols);
     symbols = this.getThrustSymbols(module, symbols);
+    symbols = this.sensor.getSensorSymbols(module, symbols);
     return symbols;
 };
 

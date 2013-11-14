@@ -52,5 +52,5 @@ model.ModuleEditor.prototype.onClick = function(event)
 
 model.ModuleEditor.prototype.destroy = function()
 {
-	this.reactiveHullLayout.destroy();
+	this.reactiveModuleLayout.destroy();
 };

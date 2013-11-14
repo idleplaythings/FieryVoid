@@ -18,6 +18,9 @@ model.ShipStatusSymbol = function ShipStatusSymbol(args)
     this.onDragStart = null;
     this.onDragEnd = null;
     this.dropTarget = false;
+    
+    this.displayOnModule = true;
+    this.displayOnModuleView = true;
 
     this.description = args.description || '';
 };
