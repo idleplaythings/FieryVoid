@@ -22,7 +22,7 @@ model.EffectManager.prototype.createExplosion = function()
 {
 	Math.seedrandom();
 	
-	var explosions = 5000;
+	var explosions = 0;
 	var objects = [];
 	while (explosions--)
 	{
@@ -43,20 +43,6 @@ model.EffectManager.prototype.createExplosion = function()
 	//this.register(objects);
 	
 	
-	var explosion = new model.Explosion({
-		x: 0, 
-		y: 0, 
-	}, 
-	101,
-	{
-		size: Math.random()* 50 + 25,
-		type: 'gas',
-		speed: 1,
-		ring: true
-	});
-	
-	//this.register(explosion);
-	objects.push(explosion);
 	
 	explosion = new model.Explosion({
 		x: 200, 
@@ -64,7 +50,7 @@ model.EffectManager.prototype.createExplosion = function()
 	}, 
 	500,
 	{
-		size: Math.random()* 50 + 25,
+		size: 50,
 		type: 'gas',
 		speed: 1,
 		ring: true
@@ -123,8 +109,8 @@ model.EffectManager.prototype.createBatch = function(gameTime)
 	
 	this.emitter.freeParticles(toFree);
 	
-	//console.log("particles free:", this.emitter.free.length);
-	//this.emitter.update();
+	console.log("particles used:", this.emitter.particleCount - this.emitter.free.length);
+	this.emitter.update();
 }
 
 model.EffectManager.prototype.animate = function(gameTime)

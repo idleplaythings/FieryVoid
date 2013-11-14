@@ -7,12 +7,15 @@ model.ShipInGame = function ShipInGame(args)
     this.name = args.name || null;
     this.owner = args.owner || null;
     this.controller = args.controller || null;
-    this.shipDesign = args.shipDesign || null;
+    
     this.fleetId = args.fleetId || null;
     this.gameId = args.gameId || null;
 
+	this.shipDesign = args.shipDesign || null;
     this.status = args.status;
     this.icon = null;
+    
+    
     this.gameScene = null;
 };
 

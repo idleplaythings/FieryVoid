@@ -98,8 +98,6 @@ model.EffectParticleEmitter.prototype.update = function()
 model.EffectParticleEmitter.prototype.getFreeParticle = function()
 {
 	var i = this.free.pop();
-	if (i !== 0 && ! i)
-		console.log("found illegal index:", i, this.free.lenght);
 		
 	return this.flyParticle.create(i);
 };
@@ -114,7 +112,6 @@ model.EffectParticleEmitter.prototype.animate = function(gameTime)
 	this.particleMaterial.uniforms.gameTime.value = gameTime;
 };
 
-//x = v0t + ½at2
 model.EffectParticleEmitter.prototype.vertexShader =
     [
         "attribute vec3  color;",
