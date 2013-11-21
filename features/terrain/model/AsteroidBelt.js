@@ -38,6 +38,10 @@ model.AsteroidBelt.prototype._createMaterial = function()
         positionY: {
             type: 'f',
             value: []
+        },
+        xcolor: {
+            type: 'c',
+            value: []
         }
     };
 
@@ -62,6 +66,16 @@ model.AsteroidBelt.prototype._createMaterial = function()
 
     this.asteroids.forEach(function(asteroid) {
         for (var i=0; i<4; i++) {
+            if (i==0) {
+                this.material.attributes.xcolor.value.push(new THREE.Color('#ff0000'));
+            } else if (i==1) {
+                this.material.attributes.xcolor.value.push(new THREE.Color('#00ff00'));
+            } else if (i==2) {
+                this.material.attributes.xcolor.value.push(new THREE.Color('#0000ff'));
+            } else {
+                this.material.attributes.xcolor.value.push(new THREE.Color('#ffffff'));
+            }
+
             this.material.attributes.rotationCoefficient.value.push(asteroid.rotationCoefficient);
             this.material.attributes.rotationOffset.value.push(asteroid.rotationOffset);
             this.material.attributes.positionX.value.push(asteroid.position.x);
@@ -77,21 +91,24 @@ model.AsteroidBelt.prototype._createGeometry = function()
     var textureUvMaps = getUvMap(4);
 
     this.asteroids.forEach(function(asteroid, index) {
-        this.geometry.vertices.push(
-            new THREE.Vector3(asteroid.position.x - asteroid.radius, asteroid.position.y - asteroid.radius, 0),
-            new THREE.Vector3(asteroid.position.x + asteroid.radius, asteroid.position.y - asteroid.radius, 0),
-            new THREE.Vector3(asteroid.position.x + asteroid.radius, asteroid.position.y + asteroid.radius, 0),
-            new THREE.Vector3(asteroid.position.x - asteroid.radius, asteroid.position.y + asteroid.radius, 0)
-        );
+        var bl = new THREE.Vector3(asteroid.position.x + asteroid.radius, asteroid.position.y + asteroid.radius, 0);
+        var br = new THREE.Vector3(asteroid.position.x - asteroid.radius, asteroid.position.y + asteroid.radius, 0);
+        var tr = new THREE.Vector3(asteroid.position.x - asteroid.radius, asteroid.position.y - asteroid.radius, 0);
+        var tl = new THREE.Vector3(asteroid.position.x + asteroid.radius, asteroid.position.y - asteroid.radius, 0);
+
+        this.geometry.vertices.push(tl, bl, br, tr);
 
         this.geometry.faces.push(
-            new THREE.Face4(index * 4 + 0, index * 4 + 1, index * 4 + 2, index * 4 + 3)
+            new THREE.Face3(index * 4 + 0, index * 4 + 1, index * 4 + 2)
+        );
+        this.geometry.faces.push(
+            new THREE.Face3(index * 4 + 2, index * 4 + 3, index * 4 + 0)
         );
 
-        this.geometry.faceVertexUvs[0].push(
-            textureUvMaps[Math.floor(textureUvMaps.length * Math.random())]
-        );
-    }.bind(this));
+        var uvMap = textureUvMaps[Math.floor(textureUvMaps.length * Math.random())];
+        this.geometry.faceVertexUvs[0].push(uvMap);
+        this.geometry.faceVertexUvs[0].push([uvMap[2], uvMap[3], uvMap[0], uvMap[1]]);
+    }, this);
 }
 
 model.AsteroidBelt.prototype._createMesh = function()
@@ -105,7 +122,9 @@ model.AsteroidBelt.prototype.vertexShader = [
     "attribute float rotationOffset;",
     "attribute float positionX;",
     "attribute float positionY;",
+    "attribute vec3 xcolor;",
     "varying vec2 vUv;",
+    "varying vec4 vColor;",
 
     "mat3 rotateAngleAxisMatrix(float angle, vec3 axis) {",
         "float c = cos(angle);",
@@ -130,6 +149,8 @@ model.AsteroidBelt.prototype.vertexShader = [
         "vec4 fpos = vec4(rpos, 1.0);",
         "vec4 mvPosition = modelViewMatrix * fpos;",
 
+        "vColor = vec4(xcolor, 1.0);",
+
         "vUv = uv;",
         "gl_Position = projectionMatrix * mvPosition;",
     "}"
@@ -137,9 +158,12 @@ model.AsteroidBelt.prototype.vertexShader = [
 
 model.AsteroidBelt.prototype.fragmentShader = [
     "varying vec2 vUv;",
+    "varying vec4 vColor;",
     "uniform sampler2D map;",
 
     "void main() {",
         "gl_FragColor = texture2D(map, vUv);",
+        //"gl_FragColor = vec4(1.0,1.0,1.0,0.9);",
+//        "gl_FragColor = vColor;",
     "}"
 ].join("\n");

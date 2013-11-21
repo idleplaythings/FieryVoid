@@ -22,7 +22,7 @@ model.HexGridRenderer.prototype._initGeometry = function()
         return;
     }
 
-    this._geometry = new THREE.PlaneGeometry( 20000, 20000, 1, 1 );
+    this._geometry = new THREE.PlaneGeometry(1000000, 1000000, 1, 1);
 };
 
 model.HexGridRenderer.prototype._initMaterial = function()
@@ -32,11 +32,9 @@ model.HexGridRenderer.prototype._initMaterial = function()
     }
 
     this._material = new THREE.MeshBasicMaterial({
-        // map: THREE.ImageUtils.loadTexture("/effect/effectTextures1024.png"),
         map: this._getTexture(),
         transparent: true,
         opacity: 0.5
-        // wireframe: true
     });
 };
 

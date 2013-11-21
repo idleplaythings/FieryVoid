@@ -6,12 +6,10 @@ model.HexGrid = function HexGrid(renderer, eventDispatcher)
 
 model.HexGrid.prototype.init = function()
 {
-    this._eventDispatcher.attach('scene.init', function(event) {
-        this.renderGrid(event.scene);
-    }.bind(this));
+    this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
 };
 
-model.HexGrid.prototype.renderGrid = function(scene)
+model.HexGrid.prototype.onSceneInit = function(event)
 {
-    this._renderer.renderGrid(scene);
+    this._renderer.renderGrid(event.scene);
 };

@@ -18,12 +18,14 @@ model.GameTerrain.prototype.createRandom = function()
 
 model.GameTerrain.prototype._createBackdrop = function()
 {
+    return false;
     this.container.css('background-color', 'black');
     this.container.css('background-image', 'url(/background/bluespace3.jpg)');
 }
 
 model.GameTerrain.prototype._createStarField = function()
 {
+    return false;
     var starFieldFactory = new model.StarFieldFactory({
         starCount: 1000
     })
@@ -36,7 +38,7 @@ model.GameTerrain.prototype._createStarField = function()
 model.GameTerrain.prototype._createAsteroidBelt = function()
 {
     var asteroidBeltFactory = new model.AsteroidBeltFactory({
-        beltCentre: { x: 0, y: 0 },
+        beltCentre: { x: 40000, y: 0 },
         asteroidCount: 2000,
         minAsteroidRadius: 100,
         maxAsteroidRadius: 500,

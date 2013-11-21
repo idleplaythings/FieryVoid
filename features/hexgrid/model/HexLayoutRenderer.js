@@ -1,5 +1,9 @@
 model.HexLayoutRenderer = function HexLayoutRenderer()
 {
+    if (Meteor.isClient === false) {
+        return
+    }
+
     var canvas = $('<canvas width="2048" height="512"></canvas>').css({
         position: 'absolute',
         top: '100px',
@@ -38,7 +42,7 @@ model.HexLayoutRenderer.prototype._renderHex = function(hex) {
 
     this._context.fillStyle = '#fff';
     this._context.strokeStyle = '#fff';
-    this._context.lineWidth = 1;
+    this._context.lineWidth = 3;
     this._context.beginPath();
     this._context.moveTo(
         this._adjustXCoordinate(hex.corners[0].x),

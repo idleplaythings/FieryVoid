@@ -13,10 +13,7 @@ model.HexLayoutTextureProvider.prototype.getTexture = function()
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
 
-    // texture.magFilter = THREE.LinearFilter; //THREE.NearestFilter;
-    // texture.minFilter = THREE.LinearFilter; //THREE.NearestMipMapNearestFilter;
-
-    texture.repeat.set(3, 12);
+    texture.repeat.set(150, 600);
 
     return texture;
 }
@@ -28,7 +25,6 @@ model.HexLayoutTextureProvider.prototype._getLayout = function()
 
 model.HexLayoutTextureProvider.prototype._createTextureFromCanvas = function(canvas)
 {
-    console.log(canvas)
     return new THREE.Texture(canvas);
 }
 
