@@ -4,7 +4,8 @@ model.HexLayoutRenderer = function HexLayoutRenderer()
         return
     }
 
-    var canvas = $('<canvas width="2048" height="512"></canvas>').css({
+    // @todo
+    var canvas = $('<canvas width="512" height="512"></canvas>').css({
         position: 'absolute',
         top: '100px',
         left: '100px',
@@ -22,11 +23,14 @@ model.HexLayoutRenderer = function HexLayoutRenderer()
     this._offset = { left: 0, top: 0 }
 }
 
-model.HexLayoutRenderer.prototype.render = function(hexLayout)
+model.HexLayoutRenderer.prototype.render = function(hexLayout, scale)
 {
     this._clear();
 
-    this._context.scale(1,1.01);
+    this._context.scale(scale.x, scale.y);
+
+    // @todo
+    this._context.translate(0, -147.8);
 
 
     hexLayout.getHexes().forEach(this._renderHex.bind(this));

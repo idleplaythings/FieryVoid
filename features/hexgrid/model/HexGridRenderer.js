@@ -3,62 +3,33 @@ model.HexGridRenderer = function HexGridRenderer(textureProvider)
     this._textureProvider = textureProvider;
 
     this._geometry = null;
-    this._material = null;
-    this._texture = null;
-    this._mesh = null;
 };
 
-model.HexGridRenderer.prototype.renderGrid = function(scene)
+model.HexGridRenderer.prototype.renderGrid = function(scene, hexGrid)
 {
-    this._initGeometry();
-    this._initMaterial();
-    this._initMesh();
-    this._render(scene);
+    var geometry = this._initGeometry(hexGrid.getWidth(), hexGrid.getHeight());
+    var texture = this._textureProvider.getTexture(hexGrid.getGridWidth(), hexGrid.getGridHeight());
+    var material = this._initMaterial(texture);
+    var mesh = this._initMesh(geometry, material);
+    this._render(scene, mesh);
 };
 
-model.HexGridRenderer.prototype._initGeometry = function()
+model.HexGridRenderer.prototype._initGeometry = function(width, height)
 {
-    if (this._geometry) {
-        return;
-    }
-
-    this._geometry = new THREE.PlaneGeometry(1000000, 1000000, 1, 1);
+    return new THREE.PlaneGeometry(width, height, 1, 1);
 };
 
-model.HexGridRenderer.prototype._initMaterial = function()
+model.HexGridRenderer.prototype._initMaterial = function(texture)
 {
-    if (this._material) {
-        return;
-    }
-
-    this._material = new THREE.MeshBasicMaterial({
-        map: this._getTexture(),
-        transparent: true,
-        opacity: 0.5
-    });
+    return new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.5 });
 };
 
-model.HexGridRenderer.prototype._getTexture = function()
+model.HexGridRenderer.prototype._initMesh = function(geometry, material)
 {
-    if (this._texture) {
-        return this._texture;
-    }
-
-    this._texture = this._textureProvider.getTexture();
-
-    return this._texture;
+    return new THREE.Mesh(geometry, material);
 };
 
-model.HexGridRenderer.prototype._initMesh = function()
+model.HexGridRenderer.prototype._render = function(scene, mesh)
 {
-    if (this._mesh) {
-        return;
-    }
-
-    this._mesh = new THREE.Mesh(this._geometry, this._material);
-};
-
-model.HexGridRenderer.prototype._render = function(scene)
-{
-    scene.add(this._mesh);
+    scene.add(mesh);
 };

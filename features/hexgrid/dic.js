@@ -1,5 +1,7 @@
 dic.register('model.HexGrid', function(dic) {
     var hexGrid = new model.HexGrid(
+        10,
+        10,
         dic.get('model.HexGridRenderer'),
         dic.get('model.EventDispatcher')
     );
