@@ -12,9 +12,25 @@ model.HexGrid = function HexGrid(width, height, renderer, eventDispatcher)
 
 model.HexGrid.prototype.init = function()
 {
-    this._initHexPrototype();
     this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
 };
+
+model.HexGrid.prototype.onSceneInit = function(event)
+{
+    this._renderer.renderGrid(event.scene, this);
+};
+
+model.HexGrid.prototype.getHexPrototype = function()
+{
+    if (this._hexPrototype) {
+        return this._hexPrototype;
+    }
+
+    this._hexPrototype = new model.Hex({ x: 0, y: 0 }, this._hexSize, this._hexOrientation);
+    this._hexPrototype.calculate();
+
+    return this._hexPrototype;
+}
 
 model.HexGrid.prototype.getGridWidth = function()
 {
@@ -28,12 +44,12 @@ model.HexGrid.prototype.getGridHeight = function()
 
 model.HexGrid.prototype.getWidth = function()
 {
-    return this._gridWidth * this._hexPrototype.width + 0.5 * this._hexPrototype.width;
+    return this._gridWidth * this.getHexPrototype().width + 0.5 * this.getHexPrototype().width;
 }
 
 model.HexGrid.prototype.getHeight = function()
 {
-    return this._gridHeight * 3/4 * this._hexPrototype.height + 1/4 * this._hexPrototype.height;
+    return this._gridHeight * 3/4 * this.getHexPrototype().height + 1/4 * this.getHexPrototype().height;
 }
 
 model.HexGrid.prototype._initHexPrototype = function()

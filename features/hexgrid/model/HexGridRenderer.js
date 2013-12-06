@@ -1,8 +1,6 @@
 model.HexGridRenderer = function HexGridRenderer(textureProvider)
 {
     this._textureProvider = textureProvider;
-
-    this._geometry = null;
 };
 
 model.HexGridRenderer.prototype.renderGrid = function(scene, hexGrid)
@@ -11,6 +9,7 @@ model.HexGridRenderer.prototype.renderGrid = function(scene, hexGrid)
     var texture = this._textureProvider.getTexture(hexGrid.getGridWidth(), hexGrid.getGridHeight());
     var material = this._initMaterial(texture);
     var mesh = this._initMesh(geometry, material);
+    mesh.position = this._getMeshPosition(hexGrid);
     this._render(scene, mesh);
 };
 
@@ -28,6 +27,15 @@ model.HexGridRenderer.prototype._initMesh = function(geometry, material)
 {
     return new THREE.Mesh(geometry, material);
 };
+
+model.HexGridRenderer.prototype._getMeshPosition = function(hexGrid)
+{
+    return {
+        x: hexGrid.getWidth() / 2 - hexGrid.getHexPrototype().width / 2,
+        y: hexGrid.getHeight() / 2 - hexGrid.getHexPrototype().height / 2,
+        z: 0
+    }
+}
 
 model.HexGridRenderer.prototype._render = function(scene, mesh)
 {
