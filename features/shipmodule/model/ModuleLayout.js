@@ -31,8 +31,6 @@ model.ModuleLayout = function ModuleLayout(args)
     this.gameScene = null;
     this.dispatcher = null;
 
-    this.timeline = null;
-
     this.traits = args.traits || [];
     this.initTraits();
 };

@@ -17,16 +17,16 @@ model.ShipDesignStorage.prototype.getReactiveShipDesign = function(id, callback)
     });
 };
 
-model.ShipDesignStorage.prototype.getShipDesign = function(id)
+model.ShipDesignStorage.prototype.getShipDesign = function(id, ship)
 {
     var doc = ShipDesigns.findOne({_id: id});
     if (! doc)
         return null;
 
-    return this.createShipDesign(doc);
+    return this.createShipDesign(doc, ship);
 };
 
-model.ShipDesignStorage.prototype.createShipDesign = function(doc)
+model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
 {
     doc.hullLayout = HullLayouts.findOne({'_id': doc.hullLayoutId})
 
@@ -47,11 +47,9 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc)
             module.setPosition(moduleDetails.position);
             module.setDirection(moduleDetails.direction);
 
-            return new model.ModuleLayoutOnShip(
-                module,
-                this.timelineFactory.getTimeline(moduleDetails.timelineId)
-            );
+            return new model.ModuleLayoutOnShip(module, ship);
         }, this);
 
-    return new model.ShipDesignInGame(doc);
+	return new model.ShipDesignInGame(doc);
+	
 };

@@ -1,7 +1,6 @@
 model.ShipIcon = function ShipIcon()
 {
     model.Icon.call(this);
-    this.shipDesign = null;
     this.ThreeIconGroup = null;
     this.created = false;
     this.hidden = false;

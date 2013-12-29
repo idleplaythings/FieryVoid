@@ -1,6 +1,6 @@
-model.ShipStatus = function ShipStatus(shipId, modules, timeline)
+model.ShipStatus = function ShipStatus(ship, modules, timeline)
 {
-	this.shipId = shipId;
+	this.ship = ship;
 	this.modules = modules;
 	this._timeline = timeline;
 	
@@ -8,12 +8,7 @@ model.ShipStatus = function ShipStatus(shipId, modules, timeline)
     this.crew = new model.CrewManagement(modules, timeline);
     this.thrust = new model.ThrustManagement(modules, this.power, this.crew);
     this.movement = new model.Movement(modules, timeline);
-    this.sensor = new model.SensorManagement(modules, timeline, shipId, this.power, this.crew);
-};
-
-model.ShipStatus.prototype.serialize = function()
-{
-    return this._timeline ? this._timeline._id : null;
+    this.sensor = new model.SensorManagement(modules, timeline, ship, this.power, this.crew);
 };
 
 model.ShipStatus.prototype.getSymbols = function(module)

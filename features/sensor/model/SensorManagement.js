@@ -1,11 +1,11 @@
 model.SensorManagement = function SensorManagement(
-	modules, timeline, shipId, power, crew)
+	modules, timeline, ship, power, crew)
 {
 	this.modules = modules;
 	this.crew = crew;
 	this.power = power;
 	this.timeline = timeline;
-	this.shipId = shipId;
+	this.ship = ship;
 };
 
 model.SensorManagement.prototype.getSensorEfficiency = function(module)

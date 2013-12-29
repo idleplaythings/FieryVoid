@@ -23,11 +23,8 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
         return false;
     }
 
-    var shipDesignStorage = dic.get('model.ShipDesignStorage');
-    var shipDesign = shipDesignStorage.getShipDesign(shipDesignId);
-    
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
-	var ship = this.shipStorage.createFromDesign(shipDesign, playerId);
+	var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
 	
 	ship.status.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,

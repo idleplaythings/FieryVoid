@@ -13,20 +13,17 @@ controller.FleetController = function FleetController()
             throw new Meteor.Error(
 				400, "You must be logged in to add a ship to fleet");
 				
-		var shipDesignStorage = dic.get('model.ShipDesignStorage');
-		var design = shipDesignStorage.getShipDesign(shipDesignId);
-		
-		if ( ! design || design.owner != userId)
-			throw new Meteor.Error(
-				400, "Ship design not found or not owned");
-				
 		var shipStorage = dic.get('model.ShipStorage');
 		
 		if (shipStorage.getShip(shipId))
 			throw new Meteor.Error(
 				400, "Ship id collision while adding ship to fleet");
 		
-		var ship = shipStorage.createFromDesign(design, userId, shipId);
+		var ship = shipStorage.createFromDesignId(shipDesignId, userId, shipId);
+		
+		if ( ! ship)
+			throw new Meteor.Error(
+				500, "Unable to construct ship with design id: '"+shipDesignId+"'");
 		
 		var fleetStorage = dic.get('model.FleetStorage');
 		var fleet = fleetStorage.getFleet(fleetId);

@@ -73,16 +73,35 @@ model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
 model.ShipStorage.prototype.createFromDesign = 
 	function(shipDesign, owner, shipId)
 {
-	return new model.ShipInGame({
+	return new model.Ship({
 		_id: shipId,
 		owner: owner,
         controller: owner,
         shipDesign: shipDesign,
         status: new model.ShipStatus(
 			shipId,
-			shipDesign.modules,
-			this.timelineFactory.getTimeline())
-    });
+			shipDesign.modules)
+		},
+		this.timelineFactory.getTimeline()
+	);
+};
+
+model.ShipStorage.prototype.createFromDesignId = 
+	function(shipDesignId, owner, shipId)
+{
+	var ship = new model.Ship();
+	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
+	return ship.setState({
+		_id: shipId,
+		owner: owner,
+        controller: owner,
+        shipDesign: shipDesign,
+        status: new model.ShipStatus(
+			shipId,
+			shipDesign.modules)
+		},
+		this.timelineFactory.getTimeline()
+	);
 };
 
 model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
@@ -91,17 +110,20 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 	if ( ! shipdoc)
 		return null;
 		
-    shipdoc.shipDesign = this.shipDesignStorage.createShipDesign(shipdoc.shipDesign);
+	var ship = new model.Ship();
+    shipdoc.shipDesign = this.shipDesignStorage.createShipDesign(shipdoc.shipDesign, ship);
     
     if ( ! shipdoc.shipDesign)
         throw Error("Unable to construct ship design for ship");
+	
+	var timeline = this.timelineFactory.getTimeline(shipdoc.timeline);
         
     shipdoc.status = new model.ShipStatus(
-		shipdoc._id,
+		ship,
 		shipdoc.shipDesign.modules,
-		this.timelineFactory.getTimeline(shipdoc.shipStatus)
+		timeline
     );
 
-    return new model.ShipInGame(shipdoc);
+	return ship.setState(shipdoc, timeline);
 };
 

@@ -1,6 +1,13 @@
-model.ShipInGame = function ShipInGame(args)
+model.Ship = function Ship(args, timeline)
 {
-    if ( ! args)
+	this.gameScene = null;
+    this.icon = null;
+    this.setState(args, timeline);
+};
+
+model.Ship.prototype.setState = function(args, timeline)
+{
+	if ( ! args)
         args = {};
 
     this._id = args._id || null;
@@ -13,13 +20,14 @@ model.ShipInGame = function ShipInGame(args)
 
 	this.shipDesign = args.shipDesign || null;
     this.status = args.status;
-    this.icon = null;
     
     
-    this.gameScene = null;
+    this.timeline = timeline;
+    
+    return this;
 };
 
-model.ShipInGame.prototype.serialize = function()
+model.Ship.prototype.serialize = function()
 {
 	var shipDesign = new model.ShipDesign(this.shipDesign);
 	shipDesign.hullLayoutId = this.shipDesign.hullLayout._id;
@@ -33,12 +41,12 @@ model.ShipInGame.prototype.serialize = function()
 
 	var doc = {
 		shipDesign: shipDesign,
-		status: this.status.serialize(),
 		name: this.name,
 		owner: this.owner,
 		controller: this.controller,
 		fleetId: this.fleetId,
-		gameId: this.gameId
+		gameId: this.gameId,
+		timeline: this.timeline ? this.timeline._id : null
 	}
 	
 	if (this._id !== null)
@@ -47,7 +55,7 @@ model.ShipInGame.prototype.serialize = function()
     return doc;
 };
 
-model.ShipInGame.prototype.getIcon = function()
+model.Ship.prototype.getIcon = function()
 {
     if ( ! this.icon )
         this.icon = new model.ShipIcon().create(this.shipDesign);
@@ -55,7 +63,7 @@ model.ShipInGame.prototype.getIcon = function()
     return this.icon;
 };
 
-model.ShipInGame.prototype.subscribeToScene =
+model.Ship.prototype.subscribeToScene =
     function(gameScene, eventDispatcher, uiResolver)
 {
     this.gameScene = gameScene;
@@ -76,32 +84,32 @@ model.ShipInGame.prototype.subscribeToScene =
     this.gameScene.animators.push(this);
 };
 
-model.ShipInGame.prototype.animate = function(gameTime)
+model.Ship.prototype.animate = function(gameTime)
 {
     this.status.movement.animate(this, gameTime);
 };
 
-model.ShipInGame.prototype.setAzimuth = function(azimuth)
+model.Ship.prototype.setAzimuth = function(azimuth)
 {
     this.getIcon().getThreeObject().rotation.z = MathLib.degreeToRadian(MathLib.addToAzimuth(360, -azimuth));
 };
 
-model.ShipInGame.prototype.getAzimuth = function()
+model.Ship.prototype.getAzimuth = function()
 {
     this.getIcon().getAzimuth();
 };
 
-model.ShipInGame.prototype.isHidden = function()
+model.Ship.prototype.isHidden = function()
 {
     return this.getIcon().hidden;
 };
 
-model.ShipInGame.prototype.getPosition = function()
+model.Ship.prototype.getPosition = function()
 {
     return this.getIcon().getPosition();
 };
 
-model.ShipInGame.prototype.setPosition = function(pos)
+model.Ship.prototype.setPosition = function(pos)
 {
     if (!pos)
         this.getIcon().hide();
