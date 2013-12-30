@@ -11,16 +11,11 @@ model.Ship.prototype.setState = function(args, timeline)
         args = {};
 
     this._id = args._id || null;
-    this.name = args.name || null;
-    this.owner = args.owner || null;
-    this.controller = args.controller || null;
-    
     this.fleetId = args.fleetId || null;
     this.gameId = args.gameId || null;
 
 	this.shipDesign = args.shipDesign || null;
     this.status = args.status;
-    
     
     this.timeline = timeline;
     
@@ -41,12 +36,9 @@ model.Ship.prototype.serialize = function()
 
 	var doc = {
 		shipDesign: shipDesign,
-		name: this.name,
-		owner: this.owner,
-		controller: this.controller,
 		fleetId: this.fleetId,
 		gameId: this.gameId,
-		timeline: this.timeline ? this.timeline._id : null
+		timeline: this.timeline._id
 	}
 	
 	if (this._id !== null)

@@ -37,12 +37,6 @@ model.ShipStorage.prototype.getReactiveShip = function(id, callback)
 	});
 };
 
-model.ShipStorage.prototype.renameShip = function(id, name)
-{
-	console.log("trying to set", id, name);
-    ShipsInGameCollection.update({_id: id}, {$set: {name: name}});
-};
-
 model.ShipStorage.prototype.addShipToGame = function(shipId, gameId)
 {	
     ShipsInGameCollection.update({_id: shipId}, {$set: {gameId: gameId}});
@@ -70,37 +64,23 @@ model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
     return ships;
 };
 
-model.ShipStorage.prototype.createFromDesign = 
-	function(shipDesign, owner, shipId)
-{
-	return new model.Ship({
-		_id: shipId,
-		owner: owner,
-        controller: owner,
-        shipDesign: shipDesign,
-        status: new model.ShipStatus(
-			shipId,
-			shipDesign.modules)
-		},
-		this.timelineFactory.getTimeline()
-	);
-};
-
 model.ShipStorage.prototype.createFromDesignId = 
 	function(shipDesignId, owner, shipId)
 {
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
+	var timeline = this.timelineFactory.getTimeline();
+	var status = new model.ShipStatus(shipId, shipDesign.modules, timeline);
+		
+		
+	status.setOwner(owner);
+		
 	return ship.setState({
 		_id: shipId,
-		owner: owner,
-        controller: owner,
         shipDesign: shipDesign,
-        status: new model.ShipStatus(
-			shipId,
-			shipDesign.modules)
+        status: status
 		},
-		this.timelineFactory.getTimeline()
+		timeline
 	);
 };
 
@@ -124,6 +104,8 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 		timeline
     );
 
+	console.log('shipTimeline', timeline);
+	
 	return ship.setState(shipdoc, timeline);
 };
 

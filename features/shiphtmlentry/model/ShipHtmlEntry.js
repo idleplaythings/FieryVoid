@@ -41,7 +41,7 @@ model.ShipHtmlEntry.prototype.getTemplate = function()
 
 model.ShipHtmlEntry.prototype.addShipName = function(ship)
 {
-	var name = ship.name || ship.shipDesign.name;
+	var name = ship.status.getName() || ship.shipDesign.name;
 
 	var template = this.getTemplate();
 	

@@ -27,8 +27,8 @@ controller.FleetController = function FleetController()
 		
 		var fleetStorage = dic.get('model.FleetStorage');
 		var fleet = fleetStorage.getFleet(fleetId);
-		console.log(ship);
 		fleet.addShip(ship);
+		dic.get('model.TimelineFactory').persistAll();
 	};
 	
 	this.renameShip = function(shipId, name)
@@ -43,10 +43,11 @@ controller.FleetController = function FleetController()
 		var shipStorage = dic.get('model.ShipStorage');
 		var ship = shipStorage.getShip(shipId);
 		
-		if ( ! ship || ship.owner != userId)
+		if ( ! ship || ship.status.getOwner() != userId)
 			throw new Meteor.Error(
 				400, "Ship not found or not owned");
 		
-		shipStorage.renameShip(shipId, name);
+		ship.status.changeName(name);
+		dic.get('model.TimelineFactory').persistAll();
 	};
 }

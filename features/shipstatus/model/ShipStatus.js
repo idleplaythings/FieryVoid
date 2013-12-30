@@ -11,6 +11,38 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
     this.sensor = new model.SensorManagement(modules, timeline, ship, this.power, this.crew);
 };
 
+model.ShipStatus.prototype.setOwner = function(owner)
+{
+	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipOwner'}).pop();
+	
+	if (entry && entry.canUpdate())
+		entry.update({owner: owner});
+	else
+		this._timeline.add('shipOwner', {owner: owner});
+};
+
+model.ShipStatus.prototype.getOwner = function()
+{
+	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipOwner'}).pop();
+	return entry ? entry.payload.owner : null;
+};
+
+model.ShipStatus.prototype.changeName = function(name)
+{
+	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipName'}).pop();
+	
+	if (entry && entry.canUpdate())
+		entry.update({name: name});
+	else
+		this._timeline.add('shipName', {name: name});
+};
+
+model.ShipStatus.prototype.getName = function()
+{
+	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipName'}).pop();
+	return entry ? entry.payload.name : null;
+};
+
 model.ShipStatus.prototype.getSymbols = function(module)
 {
     var symbols = [];

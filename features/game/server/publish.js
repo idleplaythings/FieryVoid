@@ -1,8 +1,7 @@
 Meteor.publish("currentGame", function (gameId) {
     return [
         Games.find({_id: gameId}),
-        TimelineFutures.find({}),
-        TimelinePasts.find({}),
+        TimelineCollection.find({}),
         ShipsInGameCollection.find({gameId: gameId}),
         Fleets.find({currentGame: gameId}),
         ShipDesigns.find({}),

@@ -5,8 +5,7 @@ model.Timeline = function Timeline(id, storage, dispatcher)
 {
     this._id = id;
 
-    this._past = [];
-    this._future = [];
+    this._entries = [];
     this._storage = storage;
 
     this.dispatcher = dispatcher;
@@ -15,12 +14,9 @@ model.Timeline = function Timeline(id, storage, dispatcher)
 
 model.Timeline.prototype.ensureLoaded = function()
 {
-    if ( ! this.loaded && ! this._id)
+    if ( ! this.loaded)
     {
-        console.log(this._storage);
-        var contents = this._storage.load(this._id);
-        this._past =  contents.past;
-        this._future = contents.future;
+		this._entries = this._storage.load(this._id);
         this.loaded = true;
     }
 };
@@ -32,12 +28,10 @@ model.Timeline.prototype.getId = function()
 
 model.Timeline.prototype.reload = function()
 {
-    if ( ! this._id )
-        return; //nothing to load
 
-    var contents = this._storage.load(this._id);
-    this._past =  contents.past || [];
-    this._future = contents.future || [];
+	this.persist();
+	this.loaded = false;
+	this.ensureLoaded();
 
     this.dispatcher.dispatch({name:'timelineReload'});
 };
@@ -49,25 +43,29 @@ model.Timeline.prototype.observeReload = function(callback)
 
 model.Timeline.prototype.persist = function()
 {
-    if ( ! this._id && this._future.length == 0 && this._past.lenght == 0)
-        return; //Nothing to persist;
-
-    if ( ! this._id)
-        this._id = new Meteor.Collection.ObjectID().toHexString();
-
-    if (Meteor.isClient)
-    {
-        this._storage.persistFuture(this._future, this._id);
-    }
-    else
-    {
-        this._storage.persistPast(this._past, this._id);
-        this._storage.persistFuture(this._future, this._id);
-    }
-
+	var entries = this._entries.filter(function(entry){
+		return entry.needsSaving() || entry.needsRemoving();
+	});
+	
+	if (entries.length == 0)
+		return;
+		
+    this._storage.persist(entries, this._id);
+    
+    this._entries = this._entries.filter(function(entry){
+		return ! entry.isRemoved(); 
+	});
+   
     return this;
 };
 
+model.Timeline.prototype.add = function(name, payload)
+{
+    var entry = new model.TimelineEntry(name, payload);
+    this._entries.push(entry);
+};
+
+/*
 model.Timeline.prototype.getAt = function(time, list)
 {
     this.ensureLoaded();
@@ -228,14 +226,22 @@ model.Timeline.prototype.removeAfter = function(time, name)
     }
 };
 
-model.Timeline.prototype.map = function(callback, context)
+*/
+
+model.Timeline.prototype.get = function()
 {
     this.ensureLoaded();
-    return this._past.concat(this._future).map(callback, context);
+    return this._entries.filter(function(entry){
+		return ! entry.needsRemoving();
+	});
+};
+
+model.Timeline.prototype.map = function(callback, context)
+{
+    return this.get().map(callback, context);
 };
 
 model.Timeline.prototype.filter = function(callback, context)
 {
-    this.ensureLoaded();
-    return this._past.concat(this._future).filter(callback, context);
+    return this.get().filter(callback, context);
 };
