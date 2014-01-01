@@ -1,15 +1,25 @@
 model.ModuleTraitSensor = function ModuleTraitSensor(args)
 {
-    args = this.getArgsAsJson(args);
+	model.ModuleTrait.call(
+		this, 
+		[
+			new model.TraitVariable('energy', 'Amount of crew required'),
+			new model.TraitVariable('mass', 'Amount of crew required'),
+			new model.TraitVariable('ftl', 'Amount of crew required'),
+			new model.TraitVariable('stacking', 'Amount of crew required'),
+		],
+		args
+	);
 
     this.name = 'sensor';
     this.label = 'Sensor';
     this.value = null;
     
-    this.energySensor = args.energy || 0;
-    this.massSensor = args.mass || 0;
-    this.ftlSensor = args.ftl || 0;
-    this.stackingPenalty = args.stacking || 0.1;
+    this.energySensor = this.getVariable('energy') || 0;
+    this.massSensor = this.getVariable('mass') || 0;
+    this.ftlSensor = this.getVariable('ftl') || 0;
+    
+    this.stackingPenalty = this.getVariable('stacking') || 0.1;
 };
 
 model.ModuleTraitSensor.prototype = Object.create(model.ModuleTrait.prototype);

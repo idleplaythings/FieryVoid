@@ -145,6 +145,38 @@ Template.moduleMenu.description = function()
     return getFromSelectedLayout('description');
 };
 
+Template.moduleMenu.activetraits = function()
+{
+    var trait,
+        traits = [];
+
+    model.ModuleLayout.getAvailableTraits().forEach(function(traitName) {
+        trait = new model[traitName]();
+        value = getFromSelectedLayoutTrait(trait.name);
+
+        if (value) 
+            traits.push(trait);
+    });
+
+    return traits;
+}
+
+Template.moduleMenu.inactivetraits = function()
+{
+    var trait,
+        traits = [];
+
+    model.ModuleLayout.getAvailableTraits().forEach(function(traitName) {
+        trait = new model[traitName]();
+        value = getFromSelectedLayoutTrait(trait.name);
+
+        if ( ! value) 
+            traits.push(trait);
+    });
+
+    return traits;
+}
+
 Template.moduleMenu.traits = function()
 {
     var trait,
@@ -168,6 +200,93 @@ Template.moduleMenu.traits = function()
     return traits;
 }
 
+
+Template.traitDetail.events({
+    'click .smallClose': function(event) {
+		evaluateTraitStatus();
+        Session.set('activetrait', null);
+    }
+});
+
+function evaluateTraitStatus()
+{
+	var traitName = Session.get('activetrait');
+	
+	if ( ! traitName)
+		return;
+	
+	var variables = {};
+	
+    jQuery('.traitDetails input').get().forEach(function(input){
+		console.log(input);
+		var name = input.name;
+		var value = jQuery(input).val().trim();
+		
+		if (value == '')
+			return;
+			
+		variables[name] = value;
+	});
+	
+	if (Object.keys(variables).length === 0)
+		variables = null;
+	
+	
+	var trait = model.ModuleTrait.prototype.instantiateFromName(
+		traitName, variables);
+		
+	var valid = trait.getTraitVariables().every(function(variable){
+		return variable.isValid();
+	});
+	
+	var previousValue = getFromSelectedLayoutTrait(traitName);
+	
+	if (previousValue == '')
+		previousValue = null;
+		
+	console.log(previousValue);
+	console.log(variables);
+	if ( previousValue == variables)
+		return;
+		
+    var module = ModuleLayouts.findOne({_id: Session.get("selected_moduleLayout")});
+    
+	if ( ! module)
+		return;
+		
+	if (variables == null)
+		module.updateTrait(trait.name, null); //removes trait from module
+	else if (valid)
+	{
+		console.log("update trait, value:", value);
+		module.updateTrait(trait.name, variables);
+	}
+	else
+	{
+		console.log("Do nothing, invalid trait value");
+		//nothing?	
+	}
+};
+
+Template.traitDetail.traitDetailDisplay = function()
+{
+	return Session.get('activetrait') ? 'block' : 'none';
+};
+
+Template.traitDetail.traitVariables = function()
+{
+    var traitName = Session.get('activetrait');
+       
+	if ( ! traitName)
+		return [];
+		
+	var trait = model.ModuleTrait.prototype.instantiateFromName(
+		traitName, getFromSelectedLayoutTrait(traitName));
+
+	console.log('trait', trait);
+    return trait.getTraitVariables();
+}
+
 Template.moduleMenu.events({
     'blur input, blur textarea': function (event) {
         handleDetailChange(event.currentTarget);
@@ -188,8 +307,14 @@ Template.moduleMenu.events({
     },
     'click .disabled': function(event) {
         Session.set('moduleEditor_brushType', null);
+    }, 
+    'click .activetrait': function(event) {
+		jQuery('.traitDetails').show();
+        Session.set('activetrait', this.name);
+    },
+    'change .newtrait': function(event) {
+        Session.set('activetrait', jQuery(event.currentTarget).val());
     }
-
 });
 
 Template.moduleMenu.publishedClass = function()

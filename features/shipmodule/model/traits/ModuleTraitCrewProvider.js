@@ -1,6 +1,12 @@
 model.ModuleTraitCrewProvider = function ModuleTraitCrewProvider(args)
 {
-    this.crewProvided = this.getArgsAsInt(args);
+	model.ModuleTrait.call(
+		this, 
+		new model.TraitVariable('amount', 'Amount of crew provided'),
+		args
+	);
+	
+    this.crewProvided = this.getVariable('amount');
 
     this.name = 'crewProvider';
     this.label = 'Provides Crew';

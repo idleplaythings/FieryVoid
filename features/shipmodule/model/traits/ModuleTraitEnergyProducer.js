@@ -1,6 +1,12 @@
 model.ModuleTraitEnergyProducer = function ModuleTraitEnergyProducer(args)
 {
-    this.energyProduced = this.getArgsAsInt(args);
+	model.ModuleTrait.call(
+		this, 
+		new model.TraitVariable('amount', 'Amount of energy produced'),
+		args
+	);
+	
+    this.energyProduced = this.getVariable('amount');
 
     this.name = 'energyProducer';
     this.label = 'Energy Produced';

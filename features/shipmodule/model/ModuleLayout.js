@@ -369,7 +369,7 @@ model.ModuleLayout.prototype.updateValue = function(name, value, trait)
         updateObject,
         trait,
         function(err, result){
-            console.log('ModuleLayout ' +name + ' updated to ' + value);
+            console.log('ModuleLayout ' +name + ' updated to ', value);
         }
     );
 };

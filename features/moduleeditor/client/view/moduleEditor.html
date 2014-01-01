@@ -3,6 +3,7 @@
         {{> moduleMenu}}
 
         <div class="displayLarge" style="width:calc(100% - 600px);height:100%;">
+            {{> traitDetail}}
         </div>
     
         {{> moduleListing}}
@@ -57,11 +58,30 @@
             <div class="button outside {{outsideClass}}">Outside</div>
             <div class="button disabled {{disabledClass}}">Disabled</div>
         </div>
-
-        {{#each traits}}
-            <div>{{label}}:</div>
-            <input type="text" class="trait" name="{{name}}" value="{{value}}"/>
+        
+        <div>Active module traits</div>
+        {{#each activetraits}}
+			<div class="button activetrait">{{label}}</div>
         {{/each}}
+
+
+		<div>Add a module trait</div>
+		<select class="newtrait">
+			<option value="" disabled="disabled" selected="selected">Select new trait</option>
+			{{#each inactivetraits}}
+				<option value="{{name}}">{{label}}</option>
+			{{/each}}
+		</select>
+        
+</template>
+
+<template name="traitDetail">
+    <div class="traitDetails" style="display:{{traitDetailDisplay}};">
+		<button class="smallClose"></button>
+		{{#each traitVariables}}
+			<div>{{description}}</div>
+			<input type="text" name="{{name}}" value="{{get}}"/>
+		{{/each}}
     </div>
 </template>
 

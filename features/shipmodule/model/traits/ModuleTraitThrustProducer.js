@@ -1,6 +1,12 @@
 model.ModuleTraitThrustProducer = function ModuleTraitThrustProducer(args)
 {
-    this.thrustProduced = this.getArgsAsInt(args);
+	model.ModuleTrait.call(
+		this, 
+		new model.TraitVariable('amount', 'Amount of thrust produced'),
+		args
+	);
+	
+    this.thrustProduced = this.getVariable('amount');
 
     this.name = 'thrustProducer';
     this.label = 'Thrust produced';

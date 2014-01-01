@@ -1,6 +1,12 @@
 model.ModuleTraitEnergyConsumer = function ModuleTraitEnergyConsumer(args)
 {
-    this.energyConsumed = this.getArgsAsInt(args);
+	model.ModuleTrait.call(
+		this, 
+		new model.TraitVariable('amount', 'Amount of energy consumed'),
+		args
+	);
+	
+    this.energyConsumed = this.getVariable('amount');
     this.name = 'energyConsumer';
     this.label = 'Energy Consumer';
     this.value = null;

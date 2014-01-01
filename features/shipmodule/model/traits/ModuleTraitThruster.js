@@ -3,7 +3,8 @@ model.ModuleTraitThruster = function ModuleTraitThruster(args)
     this.name = 'thruster';
     this.label = 'Thruster';
     this.value = null;
-    args = this.getArgsAsJson(args);
+    
+    args = {}; //this.getArgsAsJson(args);
 
     this.efficiency = args.efficiency || 0;
     this.maxChannel = args.max || 0;
