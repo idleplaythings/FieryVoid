@@ -45,27 +45,8 @@ function crawlResources()
         }
     }
 
+	//Module Images
     files = fs.readdirSync(pub+'module');
-
-    var pattern = new RegExp(/^([a-zA-Z0-9]+)-outside\.png/);
-    for (var i in files)
-    {
-        var file = files[i];
-
-        var name = pattern.exec(file);
-        if (name)
-        {
-            name = name[1];
-            var inside = fs.existsSync(pub+'module/'+name+'-inside.png');
-            var outside = fs.existsSync(pub+'module/'+name+'-outside.png');
-            var hull = fs.existsSync(pub+'module/'+name+'-hull.png');
-            var over = fs.existsSync(pub+'module/'+name+'-over.png');
-            var under = fs.existsSync(pub+'module/'+name+'-under.png');
-            var hullbump = fs.existsSync(pub+'module/'+name+'-hullbump.png');
-            var outsidebump = fs.existsSync(pub+'module/'+name+'-outsidebump.png');
-            var overbump = fs.existsSync(pub+'module/'+name+'-overbump.png');
-
-            ModuleImageStorage.insert(name, inside, outside, hull, over, under, hullbump, outsidebump, overbump);
-        }
-    }
+	var moduleImageStorage = dic.get('model.ModuleImageStorage');
+	moduleImageStorage.insert(files);
 };

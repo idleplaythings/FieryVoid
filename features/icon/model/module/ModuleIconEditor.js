@@ -1,6 +1,9 @@
 model.ModuleIconEditor = function ModuleIconEditor(types)
 {
     model.ModuleIcon.call(this, types);
+    
+    this.outsideTypes = ['outside', 'hull', 'over'];
+    this.insideTypes = ['inside'];
 };
 
 model.ModuleIconEditor.prototype =
@@ -20,6 +23,39 @@ model.ModuleIconEditor.prototype.createSprites = function()
         new model.GridLayout(new model.TileLayout(), module), z);
 
     this.addObject(this.sprites.grid.getObject3d());
+};
+
+model.ModuleIconEditor.prototype.setOutsideMode = function()
+{
+	this.showIfInList(this.outsideTypes);
+};
+
+model.ModuleIconEditor.prototype.setInsideMode = function()
+{
+    this.showIfInList(this.insideTypes);
+};
+
+model.ModuleIconEditor.prototype.toggleGrid = function()
+{
+    if (this.sprites.grid.hidden)
+		this.sprites.grid.show();
+	else
+		this.sprites.grid.hide();
+};
+
+model.ModuleIconEditor.prototype.showIfInList = function(list)
+{
+	Object.keys(this.sprites).forEach(function(type){
+		
+		if (type == 'grid')
+			return;
+			
+		var sprite = this.sprites[type];
+		if (list.indexOf(type) > -1)
+			sprite.show();
+		else
+			sprite.hide();
+	}, this);
 };
 
 model.ModuleIconEditor.prototype.updateSprites = function()

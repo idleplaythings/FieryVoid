@@ -1,6 +1,7 @@
-model.ReactiveModuleList = function ReactiveModuleList(target, dispatcher)
+model.ReactiveModuleList = function ReactiveModuleList(target, dispatcher, findCriteria)
 {
     model.ModuleList.call(this, target, dispatcher);
+    this.findCriteria = findCriteria || {'published': true};
     this.reactivityHandle = null;
 };
 
@@ -9,9 +10,10 @@ model.ReactiveModuleList.prototype =
 
 model.ReactiveModuleList.prototype.react = function()
 {
+	console.log("modulelist react");
     var self = this;
     this.reactivityHandle = Deps.autorun(function(){
-        var modules = ModuleLayouts.find({'published': true});
+        var modules = ModuleLayouts.find(self.findCriteria);
         self.update(modules.fetch());
     });
 

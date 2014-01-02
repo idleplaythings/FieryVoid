@@ -2,8 +2,39 @@
     <div class="mainContainer" style="height:calc(100% - 37px)">
         {{> moduleMenu}}
 
-        <div class="displayLarge" style="width:calc(100% - 600px);height:100%;">
+        <div class="displayLarge" style="width:calc(100% - 610px);height:calc(100% - 200px);">
+			<div class="buttoncontainer"></div>
             {{> traitDetail}}
+        </div>
+        
+        <div class="moduleImageChooser" style="width:calc(100% - 610px);height:calc(200px);">
+				<div class="moduleImageChooseEntry">
+					<select class="inside">
+						<option value="" selected="selected">No inside</option>
+					</select>
+					<div class="inside"></div>
+				</div>
+				
+				<div class="moduleImageChooseEntry">
+					<select class="outside">
+						<option value="" selected="selected">No outside</option>
+					</select>
+					<div class="outside"></div>
+				</div>
+				
+				<div class="moduleImageChooseEntry">
+					<select class="hull">
+						<option value="" selected="selected">No hull</option>
+					</select>
+					<div class="hull"></div>
+				</div>
+				
+				<div class="moduleImageChooseEntry">
+					<select class="over">
+						<option value="" selected="selected">No over</option>
+					</select>
+					<div class="over"></div>
+				</div>
         </div>
     
         {{> moduleListing}}
@@ -87,9 +118,8 @@
 
 <template name="moduleListing">
     <div class="sidemenu right" style="height:100%;">
-        {{#each moduleImages}}
-            {{> moduleImage}}
-        {{/each}}
+		<div class="create button">CREATE NEW</div>
+        <div class="modulelist"></div>
     </div>
 </template>
 

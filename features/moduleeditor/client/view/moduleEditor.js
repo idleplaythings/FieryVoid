@@ -10,20 +10,30 @@ Template.moduleEditor.destroyed = function()
     if (Template.moduleEditor.controller)
     {
         Template.moduleEditor.controller.destroy();
+        Template.moduleEditor.controller = null;
     }
 }
 
 Template.moduleEditor.rendered = function()
 {
-    if ( ! Template.moduleEditor.controller)
-    {
-        var target = jQuery('div.displayLarge');
-
-        Template.moduleEditor.controller =
-            new model.ModuleEditor(target);
-    }
+	var sub = Meteor.subscribe('ModuleLayoutsAdmin', function(){
+		createController();
+	});
 }
 
+function createController()
+{
+	if ( ! Template.moduleEditor.controller)
+	{
+		var target = jQuery('div.displayLarge');
+		var modulelist = jQuery('div.modulelist');
+		var modulesImageContainer = jQuery('div.moduleImageChooser');
+
+		Template.moduleEditor.controller =
+			new model.ModuleEditor(
+				target, modulelist, modulesImageContainer, dic.get('model.ModuleImageStorage'));
+	}
+};
 
 
 Template.moduleListing = _.extend(Template.moduleListing, BaseTemplate);
@@ -60,9 +70,9 @@ Template.moduleImage.moduleLayouts = function()
     return ModuleLayouts.find({image: this.name});
 };
 
-Template.moduleImage.events({
+Template.moduleListing.events({
     'click .create': function () {
-        Meteor.call('ModuleLayoutInsert', this.name, function(err, result){
+        Meteor.call('ModuleLayoutInsert', function(err, result){
            Session.set('selected_moduleLayout', result);
         });
     }
@@ -89,13 +99,6 @@ Template.moduleLayout.selected = function()
     var selected = (Session.get("selected_moduleLayout") === this._id);
     return selected ? 'selected' : '';
 };
-
-Template.moduleLayout.events({
-    'click .moduleLayout': function () {
-        Session.set('selected_moduleLayout', this._id);
-    }
-});
-
 
 Template.moduleMenu = _.extend(Template.moduleMenu, BaseTemplate);
 

@@ -5,6 +5,7 @@ model.Sprite = function Sprite(z)
 {
     this.z = z || 0;
     this.object3d = null;
+    this.hidden = false;
 };
 
 model.Sprite.prototype.createTexture = function(image)
@@ -40,6 +41,8 @@ model.Sprite.prototype.hide = function()
     this.getObject3d().traverse(function (object){
         object.visible = false;
     });
+    
+    this.hidden = true;
 };
 
 model.Sprite.prototype.show = function()
@@ -47,6 +50,8 @@ model.Sprite.prototype.show = function()
     this.getObject3d().traverse(function (object){
         object.visible = true;
     });
+    
+    this.hidden = false;
 };
 
 model.Sprite.prototype.setZPosition = function(z)

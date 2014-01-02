@@ -3,7 +3,7 @@ ModuleLayouts = new Meteor.Collection(
     {transform: function (doc) {
         var moduleLayout = new model.ModuleLayout(doc);
 
-        var image = ModuleImages.findOne({name: moduleLayout.image})
+        var image = new model.ModuleImage(moduleLayout.image);
         if (! image)
             return null;
 
@@ -27,13 +27,12 @@ ModuleLayouts.allow({
 });
 
 Meteor.methods({
-    ModuleLayoutInsert: function (img) {
+    ModuleLayoutInsert: function () {
 
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         var layout = new model.ModuleLayout();
-        layout.image = img;
         delete layout._id;
         return ModuleLayouts.insert(layout);
     },

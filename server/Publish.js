@@ -30,10 +30,13 @@ Meteor.publish("HullLayoutsAdmin", function () {
 });
 
 Meteor.publish("ModuleLayoutsAdmin", function () {
-    if (isAdminUser(this.userId))
-        return ModuleLayouts.find({});
 
-    return ModuleLayouts.find({"published": true});
+    var modules = (isAdminUser(this.userId)) ? ModuleLayouts.find({}) : ModuleLayouts.find({"published": true});
+    
+    return [
+		modules,
+		ModuleImages.find({})
+    ];
 });
 
 function isAdminUser(userId)

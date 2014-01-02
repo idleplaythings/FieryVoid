@@ -23,6 +23,7 @@ model.ModuleList.prototype.show = function(modules)
 
 model.ModuleList.prototype.update = function(modules)
 {
+	console.log('update module list', modules);
     this.target.html('');
     modules.forEach(this.createEntry, this);
 

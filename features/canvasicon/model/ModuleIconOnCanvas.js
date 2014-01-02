@@ -27,6 +27,7 @@ model.ModuleIconOnCanvas.prototype.loadImages = function()
 	this.types.forEach(function(type){
 		var image = this.module.image.getByType(type.type);
 
+		console.log(image);
 		if ( ! image)
 		{
 			type.data = true;
