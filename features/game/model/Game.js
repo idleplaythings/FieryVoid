@@ -1,12 +1,11 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, hexgrid, shipStorage, fleetStorage, timelineFactory, args) {
+function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, args) {
     if ( ! args)
         args = {};
 
-    console.log(hexgrid)
-
     this.type = 'Game';
+    this.gridService = gridService;
     this.dispatcher = dispatcher;
     this.shipStorage = shipStorage;
     this.fleetStorage = fleetStorage;
@@ -65,6 +64,8 @@ Game.prototype.init = function()
 {
     if (Meteor.isServer)
         return;
+
+    this.gridService.init(100, 100, 450);
 
     this.gameScene = new model.GameScene(this.dispatcher);
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
@@ -141,7 +142,7 @@ Game.prototype.play = function()
 
     this.zooming.init();
 
-    this.uiEventResolver.registerListener('click', this.onClicked.bind(this), 0);
+    this.uiEventResolver.registerListener('click', this.onClick.bind(this), 0);
     this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
 
     new model.ReplayUI(this.gameState).create();
@@ -165,10 +166,6 @@ Game.prototype.play = function()
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
     this.initGameState(container);
-};
-
-Game.prototype.onClicked = function(payload)
-{
 };
 
 Game.prototype.initGameState = function(container)
@@ -238,7 +235,44 @@ Game.prototype.onZoom = function(event)
 
 };
 
+Game.prototype.onClick = function(event)
+{
+    this.gridService.selectHexAt(event.game);
+};
+
 Game.prototype.onMouseMove = function(event)
 {
-
+    this._highlightMouseOverHex(event);
+    this._displayShipModules(event);
 };
+
+Game.prototype._highlightMouseOverHex = function(event)
+{
+    this.gridService.highlightHexAt(event.game);
+}
+
+Game.prototype._displayShipModules = function(event)
+{
+    if (this.zooming.zoom < 1)
+    {
+        this.moduleView.display(null);
+        return;
+    }
+
+    var ship = this.getClosestShip();
+    if (! ship)
+        return;
+
+    var module = ship.getIcon().getModuleOnPosition(event.game);
+
+    if (! module)
+    {
+        this.moduleView.display(null);
+        return;
+    }
+
+    var modulePos = this.coordinateConverter.fromGameToViewPort(
+        ship.getIcon().getModulePositionInGame(module));
+
+    this.moduleView.display(module, modulePos, ship.status);
+}

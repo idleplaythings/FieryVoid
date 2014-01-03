@@ -1,24 +1,23 @@
-model.HexGrid = function HexGrid(width, height, renderer, eventDispatcher)
+model.HexGrid = function HexGrid()
 {
-    this._gridWidth = width;
-    this._gridHeight = height;
-    this._renderer = renderer;
-    this._eventDispatcher = eventDispatcher;
-
-    this._hexOrientation = model.Hex.HORIZONTAL;
-    this._hexSize = 450;
+    this._gridWidth = null;
+    this._gridHeight = null;
+    this._hexOrientation = null;
+    this._hexSize = null;
     this._hexPrototype = null;
 };
 
-model.HexGrid.prototype.init = function()
+model.HexGrid.prototype.init = function(args)
 {
-    this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
-};
+    if (typeof args === 'undefined') {
+        args = {};
+    }
 
-model.HexGrid.prototype.onSceneInit = function(event)
-{
-    this._renderer.renderGrid(event.scene, this);
-};
+    this._gridWidth = args.gridWidth || 10;
+    this._gridHeight = args.gridHeight || 10;
+    this._hexSize = args.hexSize || 450;
+    this._hexOrientation = args.hexOrientation || model.Hex.HORIZONTAL;
+}
 
 model.HexGrid.prototype.getHexPrototype = function()
 {
@@ -52,19 +51,28 @@ model.HexGrid.prototype.getHeight = function()
     return this._gridHeight * 3/4 * this.getHexPrototype().height + 1/4 * this.getHexPrototype().height;
 }
 
-model.HexGrid.prototype._initHexPrototype = function()
+model.HexGrid.prototype.getHexForGridCoordinates = function(gridCoordinates)
 {
-    if (this._hexPrototype) {
-        return this._hexPrototype;
+    var centrePoint = {};
+
+    centrePoint.x = gridCoordinates.x * this._getHorizontalDistance();
+
+    if (gridCoordinates.y % 2 != 0) {
+        centrePoint.x += this._getHorizontalDistance() / 2;
     }
 
-    this._hexPrototype = new model.Hex(null, this._hexSize, this._hexOrientation);
-    this._hexPrototype.calculate();
+    centrePoint.y = gridCoordinates.y * this._getVerticalDistance();
 
-    return this._hexPrototype;
+    return new model.Hex(centrePoint, this._hexSize, this._hexOrientation);
 }
 
-model.HexGrid.prototype.onSceneInit = function(event)
+model.HexGrid.prototype._getHorizontalDistance = function()
 {
-    this._renderer.renderGrid(event.scene, this);
-};
+    return this.getHexPrototype().width;
+}
+
+model.HexGrid.prototype._getVerticalDistance = function()
+{
+    return this.getHexPrototype().height * 3/4;
+}
+

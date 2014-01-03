@@ -78,6 +78,8 @@ model.AsteroidBelt.prototype._createMaterial = function()
 
             this.material.attributes.rotationCoefficient.value.push(asteroid.rotationCoefficient);
             this.material.attributes.rotationOffset.value.push(asteroid.rotationOffset);
+            // this.material.attributes.rotationCoefficient.value.push(0);
+            // this.material.attributes.rotationOffset.value.push(0);
             this.material.attributes.positionX.value.push(asteroid.position.x);
             this.material.attributes.positionY.value.push(asteroid.position.y);
         }
