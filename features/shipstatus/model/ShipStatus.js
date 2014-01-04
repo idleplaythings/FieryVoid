@@ -4,11 +4,29 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
 	this.modules = modules;
 	this._timeline = timeline;
 	
-    this.power = new model.PowerManagement(modules);
-    this.crew = new model.CrewManagement(modules, timeline);
-    this.thrust = new model.ThrustManagement(modules, this.power, this.crew);
-    this.movement = new model.Movement(modules, timeline);
-    this.sensor = new model.SensorManagement(modules, timeline, ship, this.power, this.crew);
+	this.managers = {};
+	this.gameScene, this.effectManager, this.dispatcher, this.uiResolver = null;
+	
+    this.managers.power = new model.PowerManagement(modules);
+    this.managers.crew = new model.CrewManagement(modules, timeline);
+    this.managers.thrust = new model.ThrustManagement(modules, this.managers.power, this.managers.crew);
+    this.managers.movement = new model.Movement(modules, timeline);
+    this.managers.sensor = new model.SensorManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
+    this.managers.weapon = new model.WeaponManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
+};
+
+model.ShipStatus.prototype.subscribeToScene = function(
+	gameScene, effectManager, dispatcher, uiResolver)
+{
+	this.gameScene = gameScene;
+	this.effectManager = effectManager;
+	this.dispatcher = dispatcher;
+	this.uiResolver = uiResolver;
+	
+	Object.keys(this.managers).forEach(function(key){ 
+		this.managers[key].subscribeToScene(
+			gameScene, effectManager, dispatcher, uiResolver);
+	}, this);
 };
 
 model.ShipStatus.prototype.setOwner = function(owner)
@@ -49,13 +67,13 @@ model.ShipStatus.prototype.getSymbols = function(module)
     symbols = this.getPowerSymbols(module, symbols);
     symbols = this.getCrewSymbols(module, symbols);
     symbols = this.getThrustSymbols(module, symbols);
-    symbols = this.sensor.getSensorSymbols(module, symbols);
+    symbols = this.managers.sensor.getSensorSymbols(module, symbols);
     return symbols;
 };
 
 model.ShipStatus.prototype.getPowerSymbols = function(module, symbols)
 {
-    var status = this.power.getPowerStatus(module);
+    var status = this.managers.power.getPowerStatus(module);
 
     if (status !== null)
         symbols.push(new model.ShipStatusSymbolPower(status));
@@ -65,7 +83,7 @@ model.ShipStatus.prototype.getPowerSymbols = function(module, symbols)
 
 model.ShipStatus.prototype.getThrustSymbols = function(module, symbols)
 {
-    var thrustProduced = this.thrust.getThrustProduced(module);
+    var thrustProduced = this.managers.thrust.getThrustProduced(module);
     if (thrustProduced !== null )
         symbols.push(new model.ShipStatusSymbolThrust(thrustProduced));
 
@@ -74,10 +92,20 @@ model.ShipStatus.prototype.getThrustSymbols = function(module, symbols)
 
 model.ShipStatus.prototype.getCrewSymbols = function(module, symbols)
 {
-    var status = this.crew.getCrewStatus(module);
+    var status = this.managers.crew.getCrewStatus(module);
 
     if (status !== null)
         symbols = symbols.concat(status.getShipStatusSymbols());
 
     return symbols;
+};
+
+model.ShipStatus.prototype.getActionButtons = function()
+{
+	var buttons = [];
+    Object.keys(this.managers).forEach(function(key){
+		buttons = buttons.concat(this.managers[key].getActionButtons());
+	}, this);
+	
+	return buttons;
 };

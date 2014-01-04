@@ -14,6 +14,13 @@ model.Movement = function Movement(modules, timeline)
     this._timeline = timeline;
 };
 
+model.Movement.prototype = Object.create(model.ShipStatusManager.prototype);
+
+model.Movement.prototype.getActionButtons = function()
+{
+    return [];
+};
+
 model.Movement.prototype.onTurnChanged = function()
 {
     this.route.extrapolateCourseForNext(10);
@@ -39,14 +46,6 @@ model.Movement.prototype.setTimeline = function(timeline)
 model.Movement.prototype.serialize = function ()
 {
     return this._timeline.getId();
-};
-
-model.Movement.prototype.subscribeToScene = function(scene, eventDispatcher, uiResolver)
-{
-    uiResolver.registerListener('drag', this.onDrag.bind(this), 1);
-    uiResolver.registerListener('click', this.onClick.bind(this), 1);
-    //this.route.extrapolateCourseForNext(10);
-    //this.getRoute3d().subscribeToScene(scene, eventDispatcher).displayRoute(this.route);
 };
 
 model.Movement.prototype.onClick = function(eventPayload)

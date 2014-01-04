@@ -35,6 +35,20 @@
 					</select>
 					<div class="over"></div>
 				</div>
+				
+				<div class="moduleImageChooseEntry">
+					<select class="under">
+						<option value="" selected="selected">No under</option>
+					</select>
+					<div class="under"></div>
+				</div>
+				
+				<div class="moduleImageChooseEntry">
+					<select class="ui">
+						<option value="" selected="selected">No ui</option>
+					</select>
+					<div class="ui"></div>
+				</div>
         </div>
     
         {{> moduleListing}}
@@ -111,7 +125,17 @@
 		<button class="smallClose"></button>
 		{{#each traitVariables}}
 			<div>{{description}}</div>
-			<input type="text" name="{{name}}" value="{{get}}"/>
+			{{#if hasOptions}}
+				<select name={{name}}>
+					<option value="" selected="selected">None</option>
+					{{#each options}}
+						<option value="{{option}}" {{selected}}>{{option}}</option>
+					{{/each}}
+				</select>
+			{{else}}
+				<input type="text" name="{{name}}" value="{{get}}"/>
+			{{/if}}
+			
 		{{/each}}
     </div>
 </template>

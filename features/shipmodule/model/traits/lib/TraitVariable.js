@@ -2,11 +2,13 @@ if ( typeof model === 'undefined')
     model = {};
 
 model.TraitVariable = function TraitVariable(
-	name, description, defaultValue, deserialization, validation)
+	name, description, options, defaultValue, deserialization, validation)
 {
 	this.name = name;
 	this.description = description;
 	this.defaultValue = defaultValue || '';
+	this.options = options || false;
+	this.condition = null;
 	
 	this.value = null;
 	
@@ -17,6 +19,20 @@ model.TraitVariable = function TraitVariable(
 model.TraitVariable.prototype.get = function()
 {
 	return this.value !== null && this.value !== '' ? this.value : this.defaultValue;
+};
+
+model.TraitVariable.prototype.setCondition = function(condition)
+{
+	this.condition = condition;
+	return this;
+};
+
+model.TraitVariable.prototype.shouldDisplay = function()
+{
+	if (this.condition)
+		return this.condition();
+		
+	return true;
 };
 
 model.TraitVariable.prototype.consume = function(name, value)
@@ -55,13 +71,19 @@ model.TraitVariable.prototype.DESERIALIZATION_VALUE = function(value)
 {
 	var num = parseInt(value, 10);
 
-    if (num == "NaN")
-        return value;
+    if (isNaN(num))
+		return value;
+	
         
 	return num;
 };
 
 model.TraitVariable.prototype.VALIDATION_NOT_EMPTY = function(value)
 {
-	return value !== null && typeof value !== 'undefined';
+	if (value)
+		return value !== null && typeof value !== 'undefined';
+		
+	return this.defaultValue || (this.value !== null && typeof this.value !== 'undefined');
+	
+	
 };

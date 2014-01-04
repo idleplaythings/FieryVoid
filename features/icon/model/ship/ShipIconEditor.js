@@ -4,6 +4,7 @@ model.ShipIconEditor = function ShipIconEditor()
     this.modulesInside = [];
     this.modulesOutside = [];
     this.modulesOver = [];
+    this.modulesUnder = [];
 };
 
 model.ShipIconEditor.prototype =
@@ -29,6 +30,7 @@ model.ShipIconEditor.prototype.createSprites = function()
     this.addObject(this.sprites.hull.getObject3d());
     this.addObject(this.sprites.grid.getObject3d());
 
+	this.modulesUnder = this.updateOrCreateModules(this.modulesUnder, "under", -1);
     this.modulesInside = this.updateOrCreateModules(this.modulesInside, "inside", 2);
     this.modulesOutside = this.updateOrCreateModules(this.modulesOutside, "outside", 3);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);

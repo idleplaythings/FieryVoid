@@ -12,6 +12,8 @@ model.CrewManagement = function CrewManagement(modules, timeline, shipId)
         this.getDefault();
 };
 
+model.CrewManagement.prototype = Object.create(model.ShipStatusManager.prototype);
+
 model.CrewManagement.prototype.getFromTimeline = function()
 {
 	this.getDefault();
@@ -67,3 +69,7 @@ model.CrewManagement.prototype.getCrewStatus = function(module)
     return new model.CrewStatus(module, onModule, this);
 };
 
+model.CrewManagement.prototype.getActionButtons = function()
+{
+    return [];
+};

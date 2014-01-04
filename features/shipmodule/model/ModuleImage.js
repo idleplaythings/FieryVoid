@@ -11,10 +11,18 @@ model.ModuleImage = function ModuleImage(args)
     this.hullbump = args.hullbump || false;
     this.outsidebump = args.outsidebump || false;
     this.overbump = args.overbump || false;
+    this.ui = args.ui || false;
 };
 
 model.ModuleImage.prototype.serialize = function(){
     return this;
+};
+
+model.ModuleImage.prototype.getImageUi = function(){
+    if ( ! this.ui)
+        return '/misc/x.png';
+
+    return '/module/ui/' +this.ui;
 };
 
 model.ModuleImage.prototype.getImageInside = function(){
@@ -59,6 +67,13 @@ model.ModuleImage.prototype.getImageOver = function(){
     return '/module/' + this.over;
 };
 
+model.ModuleImage.prototype.getImageUnder = function(){
+    if ( ! this.under)
+        return null;
+
+    return '/module/' + this.under;
+};
+
 model.ModuleImage.prototype.getImageOverBump = function(){
     if ( ! this.overbump)
         return null;
@@ -97,6 +112,12 @@ model.ModuleImage.prototype.getByType = function(type){
 
     if (type == 'over')
         return this.getImageOver();
+        
+	if (type == 'under')
+        return this.getImageUnder();
+        
+	if (type == 'ui')
+        return this.getImageUi();
 
     if (type == 'default')
         return this.getDefault();

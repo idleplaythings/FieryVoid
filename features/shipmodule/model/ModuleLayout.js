@@ -17,6 +17,8 @@ model.ModuleLayout = function ModuleLayout(args)
     this.allowedDirections = this.parseAvailableDirections(args.allowedDirections);
     this.direction = 1;
     this.setDirection(args.direction);
+    
+    this.icon = {under: null, over: null};
 
     this.mass = args.mass || 1;
 

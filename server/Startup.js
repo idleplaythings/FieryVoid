@@ -46,7 +46,22 @@ function crawlResources()
     }
 
 	//Module Images
-    files = fs.readdirSync(pub+'module');
 	var moduleImageStorage = dic.get('model.ModuleImageStorage');
+	var all = fs.readdirSync(pub+'module');
+	
+    files = all.filter(function(file){
+		return  ! fs.lstatSync(pub+'module/'+file).isDirectory();
+	});
+	
+	var directories = all.filter(function(file){
+		return fs.lstatSync(pub+'module/'+file).isDirectory();
+	});
+	
+	directories.forEach(function(dir){
+		console.log(dir);
+		
+		moduleImageStorage.insert(fs.readdirSync(pub+'module/'+dir), dir);
+	});
+	
 	moduleImageStorage.insert(files);
 };

@@ -1,6 +1,5 @@
 model.ReplayUI = function ReplayUI(gameState)
 {
-    console.log(gameState);
     this.gameState = gameState;
 };
 
@@ -30,7 +29,5 @@ model.ReplayUI.prototype.forward = function()
 
 model.ReplayUI.prototype.back = function()
 {
-    console.log("back");
-    console.log(this.gameState);
     this.gameState.backOne();
 };

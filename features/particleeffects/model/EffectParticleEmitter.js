@@ -187,6 +187,8 @@ model.EffectParticleEmitter.prototype.fragmentShader =
         "void main()",
         "{",
         "gl_FragColor = vColor;",
+        "if (gl_FragColor.a == 0.0)",
+			"return;",
 
         "float c = cos(vAngle);",
         "float s = sin(vAngle);",

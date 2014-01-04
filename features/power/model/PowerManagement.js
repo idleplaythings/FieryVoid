@@ -6,6 +6,8 @@ model.PowerManagement = function PowerManagement(modules)
     this.resolvePowerStatus();
 };
 
+model.PowerManagement.prototype = Object.create(model.ShipStatusManager.prototype);
+
 model.PowerManagement.prototype.resolvePowerStatus = function()
 {
     var energyProducers = this.powerStatuses.filter(
@@ -75,4 +77,9 @@ model.PowerManagement.prototype.getPowerStatus = function(module)
         return null;
 
     return candidate[0].status;
+};
+
+model.PowerManagement.prototype.getActionButtons = function()
+{
+    return [];
 };

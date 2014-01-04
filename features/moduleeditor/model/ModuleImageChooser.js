@@ -7,7 +7,7 @@ model.ModuleImageChooser = function(
         
 	this.target = target;
 	
-	this.types = ['inside', 'outside', 'hull', 'over'];
+	this.types = ['inside', 'outside', 'hull', 'over', 'under', 'ui'];
 	
 	this.allModuleImages = moduleImageStorage.getAll();
 	
@@ -25,18 +25,24 @@ model.ModuleImageChooser.prototype.onModuleLayoutChanged = function(event)
 		var view = jQuery('.moduleImageChooseEntry div.'+type, this.target);
 		var select = jQuery('.moduleImageChooseEntry select.'+type, this.target);
 		
+		
 		if (select.find('option').length == 1)
 		{
 			select.on('change', function(event){
 				this.change(type, jQuery(event.currentTarget).val());
 			}.bind(this));
-    
-			this.getImages(type).forEach(function (image){
-				var selected = moduleValue == image ? 'selected = "selected"' : '';
-				select.append('<option value="'+image+'" '+selected+'>'+image+'</option>');
+			
+			this.allModuleImages.forEach(function (image){
+	
+				if ((image.type == 'ui' && type != 'ui') || (image.type != 'ui' && type == 'ui'))
+					return;
+				
+				
+				var selected = moduleValue == image.name ? 'selected = "selected"' : '';
+				select.append('<option value="'+image.name+'" '+selected+'>'+image.name+'</option>');
 			});
 		}
-		
+	
 		view.html('');
 		
 		if ( ! moduleValue)
@@ -54,6 +60,13 @@ model.ModuleImageChooser.prototype.change = function(type, value)
 		
 	this.module.image[type] = value;	
 	this.module.updateValue('image', this.module.image.serialize());
+};
+
+model.ModuleImageChooser.prototype.getBump = function(type, value)
+{
+	return this.allModuleImages[type+'bump'].filter(function(image){
+		return image == value; 
+	})[0];
 };
 
 model.ModuleImageChooser.prototype.getImages = function(type)

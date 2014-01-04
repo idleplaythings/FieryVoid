@@ -5,6 +5,7 @@ model.ShipIcon = function ShipIcon()
     this.created = false;
     this.hidden = false;
     this.modulesOver = [];
+    this.modulesUnder = [];
 };
 
 model.ShipIcon.prototype =
@@ -65,6 +66,7 @@ model.ShipIcon.prototype.createSprites = function()
     this.sprites.modules = new model.ShipSpriteModules(shipDesign, 2);
     //this.sprites.selected = new model.ShipSpriteSelected(shipDesign);
 
+	this.modulesUnder = this.updateOrCreateModules(this.modulesOver, "under", -1);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
 
     this.sprites.silhouette.getObject3d().material.opacity = 0.5;
@@ -138,7 +140,7 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
     var newModules = [];
 
     shipDesign.modules.forEach(function(module){
-
+			
         var found = false;
 
         list.forEach(function(entry){
@@ -151,8 +153,8 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
                 found = true;
             }
         });
-
-        if ( ! found)
+        
+        if ( ! found && module.image.getByType(type))
         {
             var newEntry = {
                 position: module.position,
@@ -163,6 +165,7 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
                     .setPosition(this.getModulePositionInIcon(module))
             };
             newModules.push(newEntry);
+            module.icon[type] = newEntry.icon;
             this.addObject(newEntry.icon.getObject3d());
         }
 

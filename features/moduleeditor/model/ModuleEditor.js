@@ -27,7 +27,7 @@ model.ModuleEditor = function ModuleEditor(
 			Session.set("selected_moduleLayout", event.module._id);
 		});
 
-    this.icon = new model.ModuleIconEditor(['inside', 'outside', 'hull', 'over']);
+    this.icon = new model.ModuleIconEditor(['under', 'inside', 'outside', 'hull', 'over']);
     
     this.possibleIconViewModes = ["outside", "inside"];
     this.iconViewMode = 0;

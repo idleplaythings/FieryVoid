@@ -2,7 +2,7 @@ model.EffectManager = function EffectManager(gameScene, dispatcher)
 {
 	this.gameScene = gameScene;
 	this.dispatcher = dispatcher;
-	this.particleCount = 100000;
+	this.particleCount = 20000;
 	
 	this.emitter = new model.EffectParticleEmitter(this.particleCount, this.gameScene);
     this.emitter.observeZoomLevelChange(this.dispatcher);
@@ -109,7 +109,7 @@ model.EffectManager.prototype.createBatch = function(gameTime)
 	
 	this.emitter.freeParticles(toFree);
 	
-	console.log("particles used:", this.emitter.particleCount - this.emitter.free.length);
+	//console.log("particles used:", this.emitter.particleCount - this.emitter.free.length);
 	this.emitter.update();
 }
 

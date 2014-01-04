@@ -8,6 +8,8 @@ model.SensorManagement = function SensorManagement(
 	this.ship = ship;
 };
 
+model.SensorManagement.prototype = Object.create(model.ShipStatusManager.prototype);
+
 model.SensorManagement.prototype.getSensorEfficiency = function(module)
 {
 	return module.sensor.getSensorEfficiency(
@@ -30,3 +32,7 @@ model.SensorManagement.prototype.getSensorSymbols = function(module, symbols)
     return symbols;
 };
 
+model.SensorManagement.prototype.getActionButtons = function()
+{
+    return [];
+};

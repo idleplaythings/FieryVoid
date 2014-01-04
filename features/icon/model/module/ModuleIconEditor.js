@@ -2,8 +2,8 @@ model.ModuleIconEditor = function ModuleIconEditor(types)
 {
     model.ModuleIcon.call(this, types);
     
-    this.outsideTypes = ['outside', 'hull', 'over'];
-    this.insideTypes = ['inside'];
+    this.outsideTypes = ['under', 'outside', 'hull', 'over'];
+    this.insideTypes = ['under', 'inside'];
 };
 
 model.ModuleIconEditor.prototype =

@@ -10,8 +10,6 @@ model.WaypointMenuButton.prototype = Object.create(model.Button.prototype);
 
 model.WaypointMenuButton.prototype._onClicked = function(onClick)
 {
-    console.log("hi");
-    console.log(arguments);
     onClick(this._movement, this._waypoint);
 };
 

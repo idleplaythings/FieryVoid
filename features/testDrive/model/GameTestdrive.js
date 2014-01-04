@@ -16,9 +16,9 @@ GameTestdrive.prototype.setStartingConditions = function(shipDesign)
 GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
 {
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
-	var ship = this.shipStorage.createFromDesign(shipDesign, Meteor.userId());
+	var ship = this.shipStorage.createFromDesignId(shipDesign._id, Meteor.userId());
 	
-	ship.status.movement.addStartPosition(new model.MovementWaypoint({
+	ship.status.managers.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
         position: {x:0, y:0},
         velocity: {x:500, y:0},

@@ -208,6 +208,10 @@ Template.traitDetail.events({
     'click .smallClose': function(event) {
 		evaluateTraitStatus();
         Session.set('activetrait', null);
+    },
+    'change select, change input': function(event) {
+		console.log("change");
+		evaluateTraitStatus();
     }
 });
 
@@ -220,7 +224,7 @@ function evaluateTraitStatus()
 	
 	var variables = {};
 	
-    jQuery('.traitDetails input').get().forEach(function(input){
+    jQuery('.traitDetails input, .traitDetails select').get().forEach(function(input){
 		console.log(input);
 		var name = input.name;
 		var value = jQuery(input).val().trim();
@@ -230,6 +234,8 @@ function evaluateTraitStatus()
 			
 		variables[name] = value;
 	});
+	
+	console.log(variables);
 	
 	if (Object.keys(variables).length === 0)
 		variables = null;
@@ -288,7 +294,22 @@ Template.traitDetail.traitVariables = function()
 
 	console.log('trait', trait);
     return trait.getTraitVariables();
-}
+};
+
+Template.traitDetail.hasOptions = function()
+{
+	return this.options
+};
+
+Template.traitDetail.options = function()
+{
+	var current = this.get();
+	return this.options.map(function(option){
+		
+		var selected = option == current ? 'selected="selected"' : '';
+		return {option: option, selected: selected};
+	});
+};
 
 Template.moduleMenu.events({
     'blur input, blur textarea': function (event) {

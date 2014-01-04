@@ -29,7 +29,7 @@ model.ModuleTrait.prototype.instantiateFromName = function(traitName, value)
 	return null;
 };
 
-model.ModuleTrait.prototype.deserialize = function()
+model.ModuleTrait.prototype.serialize = function()
 {
 	var variables = {};
 	
@@ -62,7 +62,9 @@ model.ModuleTrait.prototype.getVariable = function(name)
 
 model.ModuleTrait.prototype.getTraitVariables = function()
 {
-	return this.traitVariables;
+	return this.traitVariables.filter(function(variable){
+		return variable.shouldDisplay();
+	});
 };
 
 model.ModuleTrait.prototype.resolveVariables = function(value)

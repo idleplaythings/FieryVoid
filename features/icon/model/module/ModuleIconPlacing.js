@@ -14,11 +14,13 @@ model.ModuleIconPlacing.prototype.createSprites = function()
     if ( ! module)
         return;
 
+	this.sprites.under = new model.ModuleSprite(module, 'under', -1);
     this.sprites.inside = new model.ModuleSprite(module, 'inside', 4);
     this.sprites.over = new model.ModuleSprite(module, 'over', 6);
     this.sprites.grid = new model.SpriteGrid(
         new model.GridLayout(this.TilePlacingModule, module), 10);
 
+	this.addObject(this.sprites.under.getObject3d());
     this.addObject(this.sprites.inside.getObject3d());
     this.addObject(this.sprites.over.getObject3d());
     this.addObject(this.sprites.grid.getObject3d());
