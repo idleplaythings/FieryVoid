@@ -1,5 +1,9 @@
 model.HexHighlighter = function HexHighlighter(hexRenderer)
 {
+    if (Meteor.isServer) {
+        return false;
+    }
+
     this._hexRenderer = hexRenderer;
     this._scene = null;
 

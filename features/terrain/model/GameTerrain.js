@@ -1,8 +1,9 @@
-model.GameTerrain = function GameTerrain(gameScene, container, seed)
+model.GameTerrain = function GameTerrain(gameScene, container, seed, gridService)
 {
     this.gameScene = gameScene;
     this.container = container;
     this.seed = seed;
+    this._gridService = gridService;
 };
 
 model.GameTerrain.prototype.createRandom = function()
@@ -18,7 +19,6 @@ model.GameTerrain.prototype.createRandom = function()
 
 model.GameTerrain.prototype._createBackdrop = function()
 {
-    return false;
     this.container.css('background-color', 'black');
     this.container.css('background-image', 'url(/background/bluespace3.jpg)');
 }
@@ -38,13 +38,15 @@ model.GameTerrain.prototype._createStarField = function()
 model.GameTerrain.prototype._createAsteroidBelt = function()
 {
     var asteroidBeltFactory = new model.AsteroidBeltFactory({
-        beltCentre: { x: 40000, y: 0 },
-        asteroidCount: 2000,
-        minAsteroidRadius: 100,
-        maxAsteroidRadius: 500,
-        beltRadius: 20000,
-        beltWidth: 50000
-    });
+            beltCentre: { x: 10, y: 10 },
+            asteroidCount: 300,
+            minAsteroidRadius: 100,
+            maxAsteroidRadius: 500,
+            beltRadius: 10,
+            beltWidth: 10
+        },
+        this._gridService
+    );
     var asteroidBelt = asteroidBeltFactory.create();
 
     this.gameScene.scene.add(asteroidBelt.mesh);

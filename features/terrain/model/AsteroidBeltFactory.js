@@ -1,4 +1,4 @@
-model.AsteroidBeltFactory = function AsteroidBeltFactory(args)
+model.AsteroidBeltFactory = function AsteroidBeltFactory(args, gridService)
 {
     this.beltCentre = args.beltCentre || { x: 0, y: 0 };
     this.beltRadius = args.beltRadius || 300;
@@ -6,6 +6,8 @@ model.AsteroidBeltFactory = function AsteroidBeltFactory(args)
     this.asteroidCount = args.asteroidCount || 100;
     this.minAsteroidRadius = args.minAsteroidRadius || 200;
     this.maxAsteroidRadius = args.maxAsteroidRadius || 200;
+
+    this._gridService = gridService;
 }
 
 model.AsteroidBeltFactory.prototype.create = function()
@@ -40,10 +42,10 @@ model.AsteroidBeltFactory.prototype.getRandomPosition = function()
         rand = rand * 0.1 + 0.5;
     var distance = this.beltRadius + rand * this.beltWidth;
 
-    return {
-        x: this.beltCentre.x + distance * Math.cos(angle),
-        y: this.beltCentre.y + distance * Math.sin(angle)
-    };
+    return this._gridService.resolveGameCoordinates({
+        x: Math.floor(this.beltCentre.x + distance * Math.cos(angle)),
+        y: Math.floor(this.beltCentre.y + distance * Math.sin(angle))
+    })
 }
 
 model.AsteroidBeltFactory.prototype.getRandomRadius = function()

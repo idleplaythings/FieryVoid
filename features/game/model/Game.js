@@ -165,12 +165,17 @@ Game.prototype.play = function()
 
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
-    this.initGameState(container);
+    this._initGameState(container);
 };
 
-Game.prototype.initGameState = function(container)
+Game.prototype._initGameState = function(container)
 {
-    this.terrain = new model.GameTerrain(this.gameScene, container, this.terrainSeed).createRandom();
+    this.terrain = new model.GameTerrain(
+        this.gameScene,
+        container,
+        this.terrainSeed,
+        this.gridService
+    ).createRandom();
     this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
 	this.effectManager.createExplosion();
     this.shipManager.subscribeToScene(this.gameScene, this.effectManager, this.dispatcher, this.uiEventResolver);
