@@ -14,3 +14,8 @@ model.ShipStatusManager.prototype.subscribeToScene = function(
 	this.dispatcher = dispatcher;
 	this.uiResolver = uiResolver;
 };
+
+model.ShipStatusManager.prototype.getActionButtons = function()
+{
+	return [];
+};

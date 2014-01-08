@@ -8,8 +8,9 @@ model.Sprite = function Sprite(z)
     this.hidden = false;
 };
 
-model.Sprite.prototype.createTexture = function(image)
+model.Sprite.prototype.createTexture = function(image, nearest)
 {
+	console.log(image);
     var texturedata = {
         data : new Uint8Array(image.data.data.buffer),
         height: image.data.height,
@@ -17,8 +18,18 @@ model.Sprite.prototype.createTexture = function(image)
     };
 
     var tex = new THREE.DataTexture(null, image.data.width, image.data.height);
-    tex.magFilter = THREE.LinearFilter; //THREE.NearestFilter;
-    tex.minFilter = THREE.LinearFilter; //THREE.NearestMipMapNearestFilter;
+    if (nearest)
+    {
+		tex.generateMipmaps = false;
+		tex.magFilter = THREE.NearestFilter;
+		tex.minFilter = THREE.NearestFilter;
+	}
+	else
+	{
+		tex.magFilter = THREE.LinearFilter; //THREE.NearestFilter;
+		tex.minFilter = THREE.LinearFilter; //THREE.NearestMipMapNearestFilter;
+	}
+    
     tex.image = texturedata;
     tex.needsUpdate = true;
 

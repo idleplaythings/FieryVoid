@@ -6,6 +6,7 @@ model.CompositeImage = function CompositeImage(shipDesign)
 
     this.imageData = {data:null};
     this.imageLoader.addCallback(this._createImage.bind(this), this);
+    this.scale = 1;
 };
 
 model.CompositeImage.prototype.getImageDataToCallback = function(callback)
@@ -58,10 +59,14 @@ model.CompositeImage.prototype._drawModuleImages =
                     data = data.data;
 
                     var center = this.getCanvasPosition(module.getCenterPosition());
+                    center.x *= this.scale;
+                    center.y *= this.scale;
                     var topleft = {
                         x:center.x - data.width / 2 * module.scale,
                         y:center.y - data.height / 2 * module.scale,
                     };
+                    
+                    console.log(center, topleft);
 
                     this.drawingTool.resizeImageDataAndDraw(context, topleft, data, module.scale);
                     
@@ -101,7 +106,7 @@ model.CompositeImage.prototype.getCoordinateTool = function()
     return new model.CoordinateConverter(
         {width: dim.width, height: dim.height},
         {width: gridWidth, height: gridHeight},
-        30
+        30 / this.scale
     );
 };
 

@@ -13,6 +13,7 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
     this.managers.movement = new model.Movement(modules, timeline);
     this.managers.sensor = new model.SensorManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
     this.managers.weapon = new model.WeaponManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
+    this.managers.damage = new model.DamageManagement(modules, timeline, ship);
 };
 
 model.ShipStatus.prototype.subscribeToScene = function(

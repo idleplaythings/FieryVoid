@@ -23,6 +23,7 @@ model.ShipManager = function ShipManager(
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     
     this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
+    window.ships = this.getShips();
 }
 
 model.ShipManager.prototype.selectShip = function(ship)

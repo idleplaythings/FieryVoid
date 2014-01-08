@@ -69,7 +69,7 @@ model.ShipIcon.prototype.createSprites = function()
 	this.modulesUnder = this.updateOrCreateModules(this.modulesOver, "under", -1);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
 
-    this.sprites.silhouette.getObject3d().material.opacity = 0.5;
+    this.sprites.silhouette.uniforms.opacity.value = 0.5;
 
     this.addObject(this.sprites.silhouette.getObject3d());
     this.addObject(this.sprites.inside.getObject3d());
@@ -183,6 +183,11 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
     }
 
     return list.concat(newModules);
+};
+
+model.ShipIcon.prototype.setDamageLookup = function(type, data)
+{
+	this.sprites[type].setDamageOverlay(data);
 };
 
 model.ShipIcon.prototype.getModuleOnPosition = function(pos)

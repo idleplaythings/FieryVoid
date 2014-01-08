@@ -41,10 +41,6 @@ model.ShipSpriteHull.prototype.setInitialScale = function(data)
 {
 	if ( ! data)
 		return;
-
-    this.object3d.scale.set(
-    	data.data.width,
-    	data.data.height,
-    	1
-	);
+		
+	this.scale(data.data.width, data.data.height);
 };

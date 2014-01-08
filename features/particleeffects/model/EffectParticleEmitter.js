@@ -25,8 +25,8 @@ model.EffectParticleEmitter =
         fadeOutTime:			{ type: 'f',  value: [] },
         fadeOutSpeed:			{ type: 'f',  value: [] },
         activationGameTime: 	{ type: 'f',  value: [] }, //unneccessary
-        velocity: 				{type: 'v3', value: []},
-        acceleration: 			{type: 'v3', value: []},
+        velocity: 				{ type: 'v3', value: [] },
+        acceleration: 			{ type: 'v3', value: [] },
         textureNumber: 			{ type: 'f',  value: [] },
     };
 
