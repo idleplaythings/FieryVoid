@@ -248,36 +248,10 @@ Game.prototype.onClick = function(event)
 Game.prototype.onMouseMove = function(event)
 {
     this._highlightMouseOverHex(event);
-    this._displayShipModules(event);
+    this.shipManager.onMouseMove(event);
 };
 
 Game.prototype._highlightMouseOverHex = function(event)
 {
     this.gridService.highlightHexAt(event.game);
-}
-
-Game.prototype._displayShipModules = function(event)
-{
-    if (this.zooming.zoom < 1)
-    {
-        this.moduleView.display(null);
-        return;
-    }
-
-    var ship = this.getClosestShip();
-    if (! ship)
-        return;
-
-    var module = ship.getIcon().getModuleOnPosition(event.game);
-
-    if (! module)
-    {
-        this.moduleView.display(null);
-        return;
-    }
-
-    var modulePos = this.coordinateConverter.fromGameToViewPort(
-        ship.getIcon().getModulePositionInGame(module));
-
-    this.moduleView.display(module, modulePos, ship.status);
-}
+};
