@@ -24,8 +24,8 @@ model.ModuleSprite.prototype.requestImageDataToCallback = function()
         {imageSrc: this.image, shadow: this.type == 'over', rotation: this.module.getRotation()}
     ).getImageDataToCallback(this.receiveImageData.bind(this));
 
-    var bumptype = this.type+'bump';
-    var image = this.module.image.getByType(bumptype);
+    //var bumptype = this.type+'bump';
+    //var image = this.module.image.getByType(bumptype);
 
     /* TODO: Bumpmapping for modules
     if ( ! image)

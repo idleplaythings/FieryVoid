@@ -185,9 +185,9 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
     return list.concat(newModules);
 };
 
-model.ShipIcon.prototype.setDamageLookup = function(type, data)
+model.ShipIcon.prototype.setDamageLookup = function(type, data, data2)
 {
-	this.sprites[type].setDamageOverlay(data);
+	this.sprites[type].setDamageOverlay(data, data2);
 };
 
 model.ShipIcon.prototype.getModuleOnPosition = function(pos)

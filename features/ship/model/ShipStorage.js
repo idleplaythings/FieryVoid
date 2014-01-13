@@ -31,7 +31,6 @@ model.ShipStorage.prototype.getReactiveShip = function(id, callback)
 {
 	var self = this;
 	return Deps.autorun(function(){
-		console.log("ship id", id);
 		var doc = ShipsInGameCollection.findOne({_id: id});
 		callback(self.createShipFromDoc(doc));
 	});
@@ -46,18 +45,15 @@ model.ShipStorage.prototype.addShipToFleet = function(ship, fleetId)
 {	
 	ship.fleetId = fleetId;
 	var doc = ship.serialize();
-	console.log(doc);
     ShipsInGameCollection.insert(ship.serialize());
 };
 
 model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
 {
-	console.log("getting ships in fleet", fleetId);
     var self = this;
     var ships = [];
     var shipsDoc = ShipsInGameCollection.find({fleetId: fleetId});
     shipsDoc.forEach(function(doc){
-		console.log("found ship in fleet", fleetId);
         ships.push(self.createShipFromDoc(doc));
     });
 
@@ -86,7 +82,6 @@ model.ShipStorage.prototype.createFromDesignId =
 
 model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 {
-	console.log(shipdoc);
 	if ( ! shipdoc)
 		return null;
 		
@@ -103,8 +98,6 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 		shipdoc.shipDesign.modules,
 		timeline
     );
-
-	console.log('shipTimeline', timeline);
 	
 	return ship.setState(shipdoc, timeline);
 };

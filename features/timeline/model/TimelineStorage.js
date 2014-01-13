@@ -56,8 +56,6 @@ model.TimelineStorage.prototype.load = function(id)
 
     var timeline = TimelineCollection.findOne(find);
     
-    console.log('timeline id: '+ id, timeline);
-    
     if ( ! timeline)
 		return [];
     

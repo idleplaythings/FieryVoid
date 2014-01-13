@@ -62,8 +62,15 @@ model.Icon.prototype.show = function()
 
 model.Icon.prototype.setPosition = function(pos)
 {
-    this.getThreeObject().position = new THREE.Vector3(pos.x, pos.y, 0);
+	var newPos = new THREE.Vector3(pos.x, pos.y, 0);
+    this.getThreeObject().position = new THREE.Vector3(pos.x, pos.y, 0);;
 
+	Object.keys(this.sprites).forEach(function(key){
+		var sprite = this.sprites[key];
+		if (sprite.uniforms && sprite.uniforms.worldPosition)
+			sprite.uniforms.worldPosition.value = new THREE.Vector3(pos.x, -pos.y, 0);;
+	}, this);
+	
     if (this.hidden)
         this.show();
 

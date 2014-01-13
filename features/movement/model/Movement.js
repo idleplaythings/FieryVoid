@@ -1,11 +1,20 @@
-model.Movement = function Movement(modules, timeline)
+model.Movement = function Movement(modules, timeline, ship)
 {
     /*
     this.waypointUi = waypointUi;
      */
-    this.ship = null;
+    this.ship = ship;
     this.route3d = null;
     this.resolver = new model.MovementResolver();
+    this.startPosition = {
+		x:Math.ceil(Math.random() * 4000 - 2000), 
+		y:Math.ceil(Math.random() * 4000 - 2000)
+    };
+    
+    this.startPosition = {
+		x:0, 
+		y:-500
+    };
 
     //this.route = new model.MovementRoute(
     //    timeline, 'route', this.onTurnChanged.bind(this));
@@ -34,8 +43,7 @@ model.Movement.prototype.setShip = function(ship)
 
 model.Movement.prototype.addStartPosition = function(waypoint)
 {
-    //this.route.add(waypoint);
-    //this.route.persist();
+    this.startPosition = waypoint;
 };
 
 model.Movement.prototype.setTimeline = function(timeline)
@@ -228,8 +236,10 @@ model.Movement.prototype.recalculateRoute = function()
 
 model.Movement.prototype.getCurrentPosition = function(gameTime)
 {
-    return {x:0, y:0};
-
+	//return{x:0, y:0};
+	return {x:this.startPosition.x, y:this.startPosition.y + gameTime * 0.1};
+    return {x:this.startPosition.x + gameTime * 0.1, y:this.startPosition.y};
+	return {x:450, y:600};
     var gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
     {
@@ -260,9 +270,12 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
 
 model.Movement.prototype.getFacing = function(gameTime)
 {
-    return 0;
-
-    gameTime = gameTime / 1000;
+	//return 0;
+	
+    gameTime = gameTime / 10;
+    
+    return gameTime % 360;
+    
     if (gameTime % 1 === 0)
     {
         if ( ! this.route.getAt(gameTime))

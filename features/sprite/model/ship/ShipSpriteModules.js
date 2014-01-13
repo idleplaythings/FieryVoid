@@ -15,6 +15,9 @@ model.ShipSpriteModules.prototype.requestImageDataToCallback = function()
 {
     new model.CompositeImageShipModules(this.shipDesign, this.types).getImageDataToCallback(
         this.receiveImageData.bind(this));
+        
+	new model.CompositeImageShipModulesNormalMaps(this.shipDesign, this.types)
+       .getImageDataToCallback(this.receiveNormalMapData.bind(this));
 };
 
 model.ShipSpriteModules.prototype.update = function(shipDesign)
@@ -25,4 +28,7 @@ model.ShipSpriteModules.prototype.update = function(shipDesign)
 
 	new model.CompositeImageShipModules(this.shipDesign, this.types)
         .getImageDataToCallback(this.receiveImageData.bind(this));
+        
+	new model.CompositeImageShipModulesNormalMaps(this.shipDesign, this.types)
+       .getImageDataToCallback(this.receiveNormalMapData.bind(this));
 };

@@ -10,7 +10,6 @@ model.Sprite = function Sprite(z)
 
 model.Sprite.prototype.createTexture = function(image, nearest)
 {
-	console.log(image);
     var texturedata = {
         data : new Uint8Array(image.data.data.buffer),
         height: image.data.height,

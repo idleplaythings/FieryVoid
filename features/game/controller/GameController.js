@@ -13,7 +13,7 @@ controller.GameController = function(gameStorage)
             throw new Error("Fleets not found while creating a random game");
         }
 
-        game.setStartingConditions();
+        //game.setStartingConditions();
 		fleet1.addToGame(game);
 		fleet2.addToGame(game);
 

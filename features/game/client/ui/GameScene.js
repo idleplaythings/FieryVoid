@@ -52,6 +52,8 @@ model.GameScene.prototype.init = function(target)
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize( width, height );
     //this.renderer.autoClear = false;
+    
+    this.renderer.context.getExtension('OES_standard_derivatives');
 
     $(this.renderer.domElement)
         .on('contextmenu', function(e){e.stopPropagation(); return false; })
@@ -61,17 +63,34 @@ model.GameScene.prototype.init = function(target)
         name: 'scene.init',
         scene: this.scene
     });
+    
+    this._addStats();
 
     return this;
 };
 
+model.GameScene.prototype._addStats = function()
+{
+    var stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms
+
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+
+	this.target.append(stats.domElement);
+	this._stats = stats;
+};
+
 model.GameScene.prototype.animate = function(displayTime)
 {
+	this._stats.begin();
     this.animators.forEach(function(a){
         a.animate(displayTime);
     });
 
     this.render();
+    this._stats.end();
 };
 
 model.GameScene.prototype.removeAnimator = function(object)

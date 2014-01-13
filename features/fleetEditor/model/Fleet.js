@@ -25,8 +25,6 @@ model.Fleet.prototype.serialize = function()
 
 model.Fleet.prototype.addShip = function(ship)
 {
-	console.log("addShip");
-	console.log(this.ships);
 	this.ships.push(ship);
 	
 	if (Meteor.isServer)

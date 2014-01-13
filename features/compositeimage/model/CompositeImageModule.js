@@ -21,6 +21,9 @@ model.CompositeImageModule.prototype._createImage = function()
 
     var context = drawingCanvas.getContext("2d");
 
+	if ( ! this.base.loaded)
+		return null;
+		
     if (this.shadow)
     {
         context.drawImage(this.base, 5, 5);
@@ -29,11 +32,10 @@ model.CompositeImageModule.prototype._createImage = function()
 
         context.putImageData(data, 0, 0);
     }
-
-    context.drawImage(this.base, 0, 0);
-
-    return this.rotate(this.rotation, drawingCanvas);
-    //return context.getImageData(0, 0, width, height);
+	
+	context.drawImage(this.base, 0, 0);
+	return this.rotate(this.rotation, drawingCanvas);
+	
 };
 
 model.CompositeImageModule.prototype.rotate = function(rotation, drawingCanvas)

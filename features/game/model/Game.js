@@ -22,23 +22,27 @@ function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactor
 
 Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
-	var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
-
-    if ( ! shipDesignId) {
-        return false;
-    }
-
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
-	var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
+	
+	var shipCount = 5;
+	
+	while(shipCount--)
+	{
+			var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
-	ship.status.managers.movement.addStartPosition(new model.MovementWaypoint({
-        time: 0,
-        position: {x:Math.ceil(Math.random() * 200) - 100, y:Math.ceil(Math.random() * 200) - 100},
-        velocity: {x:500, y:0},
-        facing: 0
-    }));
+		if ( ! shipDesignId) {
+			return false;
+		}
 
-	fleet.addShip(ship);
+		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
+
+		ship.status.managers.movement.addStartPosition( {
+			//TODO: movement
+		});
+
+		fleet.addShip(ship);
+	}
+	
 	return fleet;
 };
 

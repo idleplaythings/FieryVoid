@@ -29,12 +29,3 @@ model.CompositeImageShipModules.prototype._createImage = function()
 
     return context.getImageData(0, 0, width, height);
 };
-
-model.CompositeImage.prototype.getDimensions = function()
-{
-    var hull = this.shipDesign.hullLayout;
-    return {
-        width:hull.width * 30,
-        height:hull.height * 30
-    };
-};

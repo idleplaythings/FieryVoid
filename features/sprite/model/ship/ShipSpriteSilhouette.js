@@ -30,15 +30,3 @@ model.ShipSpriteSilhouette.prototype.receiveImageData = function(data)
     model.ShipSprite.prototype.receiveImageData.call(this, data);
     this.setInitialScale(data);
 };
-
-model.ShipSpriteSilhouette.prototype.setInitialScale = function(data)
-{
-    if ( ! data)
-        return;
-
-    this.object3d.scale.set(
-        data.data.width,
-        data.data.height,
-        1
-    );
-};

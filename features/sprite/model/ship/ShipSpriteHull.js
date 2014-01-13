@@ -14,8 +14,8 @@ model.ShipSpriteHull.prototype.requestImageDataToCallback = function()
     new model.CompositeImageShipHull(this.shipDesign)
        .getImageDataToCallback(this.receiveImageData.bind(this));
 
-    new model.CompositeImageShipHullBumpMap(this.shipDesign)
-       .getImageDataToCallback(this.receiveBumpMapData.bind(this));
+    new model.CompositeImageShipHullNormalMap(this.shipDesign)
+       .getImageDataToCallback(this.receiveNormalMapData.bind(this));
 };
 
 model.ShipSpriteHull.prototype.update = function(shipDesign)
@@ -27,8 +27,8 @@ model.ShipSpriteHull.prototype.update = function(shipDesign)
 	new model.CompositeImageShipHull(this.shipDesign)
         .getImageDataToCallback(this.receiveImageData.bind(this));
 
-    new model.CompositeImageShipHullBumpMap(this.shipDesign)
-       .getImageDataToCallback(this.receiveBumpMapData.bind(this));
+    new model.CompositeImageShipHullNormalMap(this.shipDesign)
+       .getImageDataToCallback(this.receiveNormalMapData.bind(this));
 };
 
 model.ShipSpriteHull.prototype.receiveImageData = function(data)
@@ -37,10 +37,11 @@ model.ShipSpriteHull.prototype.receiveImageData = function(data)
  	this.setInitialScale(data);
 };
 
+/*
 model.ShipSpriteHull.prototype.setInitialScale = function(data)
 {
 	if ( ! data)
 		return;
 		
 	this.scale(data.data.width, data.data.height);
-};
+};*/
