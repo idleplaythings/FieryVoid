@@ -1,4 +1,4 @@
-describe("Coordinate converter spec", function()
+xdescribe("Coordinate converter spec", function()
 {
     beforeEach(function() {
 
