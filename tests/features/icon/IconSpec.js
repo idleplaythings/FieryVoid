@@ -6,7 +6,12 @@ describe("Icon", function() {
         icon = new model.Icon();
         icon.iconObject = {};
         icon.position = {x:0, y:0}
-        icon.getThreeObject = function(){return {position: icon.position};};
+        icon.getThreeObject = function(){
+            return {
+                position: icon.position,
+                rotation: { z: 0 }
+            };
+        };
     });
 
     it("calculates clicked center tile on even width/height grid correctly", function() {
