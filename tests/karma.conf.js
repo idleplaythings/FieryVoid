@@ -23,6 +23,7 @@ module.exports = function(config) {
         'lib/MathLib.js',
         'lib/CoordinateConverter.js',
         'features/shipmodule/model/ModuleLayout.js',
+        'features/shipstatus/model/lib/ShipStatusManager.js',
         'features/movement/model/Movement.js',
         'features/movement/model/MovementResolver.js',
         'features/movement/model/ThrusterResolver.js',
@@ -39,13 +40,13 @@ module.exports = function(config) {
         'features/lib/Extend/Extend.js',
 
         'features/icon/model/lib/Icon.js'
-      
+
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
 
 

@@ -1,4 +1,4 @@
-describe("Movement route", function() {
+xdescribe("Movement route", function() {
 
     it("should return route", function() {
 
