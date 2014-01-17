@@ -32,6 +32,11 @@ module.exports = function(config) {
         'features/movement/model/MovementRoute.js',
         'features/movement/model/MovementWaypoint.js',
         'features/game/client/ui/UiFocusResolver.js',
+
+        'features/hexagon/model/coordinate/Cube.js',
+        'features/hexagon/model/coordinate/Axial.js',
+        'features/hexagon/model/coordinate/Offset.js',
+
         'features/timeline/model/Timeline.js',
         'client/lib/three.min.js',
 
