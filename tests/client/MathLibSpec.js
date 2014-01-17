@@ -39,6 +39,6 @@ describe("Mathlib", function() {
     });
 
     it("turning a vector 45 degrees", function() {
-        expect(MathLib.turnVector({x:50, y:0}, 45)).toEqual({ x : 35.35533845424652, y : 35.35533845424652 });
+        expect(MathLib.turnVector({x:50, y:0}, 45)).toEqual({ x : 35.35533845424652, y : -35.35533845424652 });
     });
 });
