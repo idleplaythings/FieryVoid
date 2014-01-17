@@ -55,13 +55,13 @@ model.HexGrid.prototype.getHexForGridCoordinates = function(gridCoordinates)
 {
     var centrePoint = {};
 
-    centrePoint.x = gridCoordinates.x * this._getHorizontalDistance();
+    centrePoint.x = gridCoordinates.q * this._getHorizontalDistance();
 
-    if (gridCoordinates.y % 2 != 0) {
+    if (gridCoordinates.r % 2 != 0) {
         centrePoint.x += this._getHorizontalDistance() / 2;
     }
 
-    centrePoint.y = gridCoordinates.y * this._getVerticalDistance();
+    centrePoint.y = gridCoordinates.r * this._getVerticalDistance();
 
     return new model.Hex(centrePoint, this._hexSize, this._hexOrientation);
 }

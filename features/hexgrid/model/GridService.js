@@ -41,7 +41,7 @@ model.GridService.prototype.resolveGameCoordinates = function(gridCoordinates)
 
 model.GridService.prototype.resolveGridCoordinates = function(gameCoordinates)
 {
-    return this._coordinateResolver.gameCoordinatesToGridCoordinates(gameCoordinates, this._hexSize);
+    return this._coordinateResolver.gameCoordinatesToCubeCoordinates(gameCoordinates, this._hexSize);
 }
 
 // http://www.redblobgames.com/grids/hexagons/#range
@@ -57,19 +57,21 @@ model.GridService.prototype.getRange = function(gridCoordinates, range)
         for (var y=low; y<=high; y++) {
             var z = -x - y;
 
+            var cube = new model.hexagon.coordinate.Cube(x, y, z);
+            var result = cube.toEvenR();
             // cube(x, y, z).toEvenQ ...
-            var result = this._coordinateResolver.cubeToEvenQOffset({ x: x, y: y, z: z });
+            // var result = this._coordinateResolver.cubeToEvenQOffset({ x: x, y: y, z: z });
 
             // Abstracted to EvenQ...
-            if (gridCoordinates.y&1) {
+            if (gridCoordinates.r&1) {
                 results.push({
-                    x: gridCoordinates.x + result.x + (result.y&1),
-                    y: gridCoordinates.y + result.y
+                    q: gridCoordinates.q + result.q + (result.r&1),
+                    r: gridCoordinates.r + result.r
                 });
             } else {
                 results.push({
-                    x: gridCoordinates.x + result.x,
-                    y: gridCoordinates.y + result.y
+                    q: gridCoordinates.q + result.q,
+                    r: gridCoordinates.r + result.r
                 });
             }
         }
@@ -100,13 +102,12 @@ model.GridService.prototype.highlight = function(gridCoordinates)
 
 model.GridService.prototype._highlight = function(highlighter, gridCoordinates)
 {
-    var hexes = this._getHexCoordinatesForGridCoordinates(gridCoordinates);
-
+    var hexes = this._getHexesForGridCoordinates(gridCoordinates);
     highlighter.clearHighlights();
     highlighter.highlight(hexes);
 }
 
-model.GridService.prototype._getHexCoordinatesForGridCoordinates = function(gridCoordinates)
+model.GridService.prototype._getHexesForGridCoordinates = function(gridCoordinates)
 {
     if (gridCoordinates instanceof Array === false) {
         gridCoordinates = [gridCoordinates];

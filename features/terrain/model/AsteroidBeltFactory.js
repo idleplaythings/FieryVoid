@@ -43,8 +43,8 @@ model.AsteroidBeltFactory.prototype.getRandomPosition = function()
     var distance = this.beltRadius + rand * this.beltWidth;
 
     return this._gridService.resolveGameCoordinates({
-        x: Math.floor(this.beltCentre.x + distance * Math.cos(angle)),
-        y: Math.floor(this.beltCentre.y + distance * Math.sin(angle))
+        q: Math.floor(this.beltCentre.x + distance * Math.cos(angle)),
+        r: Math.floor(this.beltCentre.y + distance * Math.sin(angle))
     })
 }
 
