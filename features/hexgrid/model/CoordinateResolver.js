@@ -1,9 +1,9 @@
 model.HexGridCoordinateResolver = {}
 
-model.HexGridCoordinateResolver.gameCoordinatesToGridCoordinates = function(coordinates, hexSize)
+model.HexGridCoordinateResolver.gameCoordinatesToGridCoordinates = function(gameCoordinates, hexSize)
 {
-    var q = (1/3 * Math.sqrt(3) * coordinates.x - 1/3 * coordinates.y) / hexSize;
-    var r = 2/3 * coordinates.y / hexSize;
+    var q = (1/3 * Math.sqrt(3) * gameCoordinates.x - 1/3 * gameCoordinates.y) / hexSize;
+    var r = 2/3 * gameCoordinates.y / hexSize;
 
     var cube = {};
     cube.x = q;
@@ -32,11 +32,26 @@ model.HexGridCoordinateResolver.gameCoordinatesToGridCoordinates = function(coor
 
     cube = round(cube);
 
-    q = cube.x + (cube.z - (cube.z & 1)) / 2;
-    r = cube.z;
+    return this.cubeToEvenQOffset(cube);
+}
+
+model.HexGridCoordinateResolver.cubeToEvenQOffset = function(cube)
+{
+    var q = cube.x + (cube.z - (cube.z & 1)) / 2;
+    var r = cube.z;
+
+    return { x: q, y: r };
+}
+
+model.HexGridCoordinateResolver.evenQToCube = function(gridCoordinates)
+{
+    var x = gridCoordinates.x;
+    var z = gridCoordinates.y - (gridCoordinates.x + (gridCoordinates.x & 1)) / 2;
+    var y = -x - z;
 
     return {
-        x: q,
-        y: r
+        x: x,
+        y: y,
+        z: z
     }
 }

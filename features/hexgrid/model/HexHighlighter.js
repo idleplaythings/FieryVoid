@@ -19,7 +19,7 @@ model.HexHighlighter = function HexHighlighter(hexRenderer)
     this._canvas = canvas[0];
     this._context = this._canvas.getContext('2d');
 
-    this._maxHighlights = 3;
+    this._maxHighlights = 10000;
 }
 
 model.HexHighlighter.prototype._getTexture = function()

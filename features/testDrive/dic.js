@@ -6,7 +6,8 @@ dic.register(
             dic.get('model.GridService'),
             dic.get('model.ShipStorage'),
             dic.get('model.FleetStorage'),
-            dic.get('model.TimelineFactory')
+            dic.get('model.TimelineFactory'),
+            dic.get('model.GameScene')
         );
     }, {
         tags: [ 'game.type' ]

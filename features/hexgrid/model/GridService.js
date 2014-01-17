@@ -44,6 +44,40 @@ model.GridService.prototype.resolveGridCoordinates = function(gameCoordinates)
     return this._coordinateResolver.gameCoordinatesToGridCoordinates(gameCoordinates, this._hexSize);
 }
 
+// http://www.redblobgames.com/grids/hexagons/#range
+model.GridService.prototype.getRange = function(gridCoordinates, range)
+{
+    var results = [];
+
+    var N = range;
+    for (var x=-N; x<= N; x++) {
+        var low = Math.max(-N, -x-N);
+        var high = Math.min(N, -x+N);
+
+        for (var y=low; y<=high; y++) {
+            var z = -x - y;
+
+            // cube(x, y, z).toEvenQ ...
+            var result = this._coordinateResolver.cubeToEvenQOffset({ x: x, y: y, z: z });
+
+            // Abstracted to EvenQ...
+            if (gridCoordinates.y&1) {
+                results.push({
+                    x: gridCoordinates.x + result.x + (result.y&1),
+                    y: gridCoordinates.y + result.y
+                });
+            } else {
+                results.push({
+                    x: gridCoordinates.x + result.x,
+                    y: gridCoordinates.y + result.y
+                });
+            }
+        }
+    }
+
+    return results;
+}
+
 model.GridService.prototype.highlightHexAt = function(gameCoordinates)
 {
     this.highlight(this.resolveGridCoordinates(gameCoordinates));

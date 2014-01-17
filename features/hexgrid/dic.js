@@ -48,7 +48,7 @@ dic.register('model.HexLayoutRenderer', function(dic) {
 });
 
 dic.register('model.HexRenderer.grid', function(dic) {
-    return new model.HexRenderer();
+    return new model.HexRenderer({ lineWidth: 8 });
 });
 
 dic.register('model.HexRenderer.select', function(dic) {

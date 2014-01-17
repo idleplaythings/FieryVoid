@@ -6,7 +6,8 @@ dic.register(
             dic.get('model.GridService'),
             dic.get('model.ShipStorage'),
             dic.get('model.FleetStorage'),
-            dic.get('model.TimelineFactory')
+            dic.get('model.TimelineFactory'),
+            dic.get('model.GameScene')
         );
     }, {
         tags: [ 'game.type' ]
@@ -33,4 +34,8 @@ dic.register('model.GameFactory', function(dic) {
 
 dic.register('GameController', function(dic) {
     return new controller.GameController(dic.get('model.GameStorage'));
+});
+
+dic.register('model.GameScene', function(dic) {
+    return new model.GameScene(dic.get('model.EventDispatcher'));
 });

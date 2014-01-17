@@ -1,16 +1,17 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, args) {
+function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, gameScene, args) {
     if ( ! args)
         args = {};
 
     this.type = 'Game';
-    this.gridService = gridService;
     this.dispatcher = dispatcher;
+    this.gridService = gridService;
     this.shipStorage = shipStorage;
     this.fleetStorage = fleetStorage;
     this.timelineFactory = timelineFactory;
-    // this.dispatcher = new model.EventDispatcher();
+    this.gameScene = gameScene;
+
 
     // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.setState(args);
@@ -71,7 +72,6 @@ Game.prototype.init = function()
 
     this.gridService.init(100, 100, 300);
 
-    this.gameScene = new model.GameScene(this.dispatcher);
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
     this.uiEventResolver = new model.UiFocusResolver(
@@ -235,7 +235,11 @@ Game.prototype.onClick = function(event)
 	if (event.stopped)
 		return;
 
-    this.gridService.selectHexAt(event.game);
+    var coordinates = this.gridService.resolveGridCoordinates(event.game);
+
+    var range = this.gridService.getRange(coordinates, 5);
+
+    this.gridService.select(range);
 };
 
 Game.prototype.onMouseMove = function(event)
