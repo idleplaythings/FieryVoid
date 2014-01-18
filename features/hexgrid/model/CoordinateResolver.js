@@ -1,6 +1,6 @@
 model.HexGridCoordinateResolver = {}
 
-model.HexGridCoordinateResolver.gameCoordinatesToCubeCoordinates = function(gameCoordinates, hexSize)
+model.HexGridCoordinateResolver.gameCoordinatesToOffsetCoordinates = function(gameCoordinates, hexSize)
 {
     var q = (1/3 * Math.sqrt(3) * gameCoordinates.x - 1/3 * gameCoordinates.y) / hexSize;
     var r = 2/3 * gameCoordinates.y / hexSize;
@@ -9,5 +9,5 @@ model.HexGridCoordinateResolver.gameCoordinatesToCubeCoordinates = function(game
     var z = r;
     var y = -x - z
 
-    return new model.hexagon.coordinate.Cube(x, y, z).toEvenR();
+    return new model.hexagon.coordinate.Cube(x, y, z).toOddR();
 }

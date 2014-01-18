@@ -41,15 +41,42 @@ model.GridService.prototype.resolveGameCoordinates = function(gridCoordinates)
 
 model.GridService.prototype.resolveGridCoordinates = function(gameCoordinates)
 {
-    return this._coordinateResolver.gameCoordinatesToCubeCoordinates(gameCoordinates, this._hexSize);
+    return this._coordinateResolver.gameCoordinatesToOffsetCoordinates(gameCoordinates, this._hexSize);
+}
+
+model.GridService.prototype.traverse = function(start, range, validate)
+{
+    var fringes = [[ start ]];
+    var visits = {};
+
+    for (var i=1; i<=range; i++) {
+        fringes[i] = [];
+        fringes[i-1].forEach(function(coordinate) {
+            coordinate.getNeighbours().forEach(function(neighbour) {
+                if (visits[neighbour.q + ',' + neighbour.r] === true) {
+                    return;
+                }
+
+                if (validate(neighbour) === false) {
+                    return;
+                }
+
+                visits[neighbour.q + ',' + neighbour.r] = true;
+                fringes[i].push(neighbour);
+            });
+        });
+    }
+
+    return fringes;
 }
 
 // http://www.redblobgames.com/grids/hexagons/#range
 model.GridService.prototype.getRange = function(gridCoordinates, range)
 {
+    var gridCube = gridCoordinates.toCube();
     var results = [];
-
     var N = range;
+
     for (var x=-N; x<= N; x++) {
         var low = Math.max(-N, -x-N);
         var high = Math.min(N, -x+N);
@@ -58,22 +85,10 @@ model.GridService.prototype.getRange = function(gridCoordinates, range)
             var z = -x - y;
 
             var cube = new model.hexagon.coordinate.Cube(x, y, z);
-            var result = cube.toEvenR();
-            // cube(x, y, z).toEvenQ ...
-            // var result = this._coordinateResolver.cubeToEvenQOffset({ x: x, y: y, z: z });
+            var result = cube.add(gridCube);
+            var offset = result.toOddR();
 
-            // Abstracted to EvenQ...
-            if (gridCoordinates.r&1) {
-                results.push({
-                    q: gridCoordinates.q + result.q + (result.r&1),
-                    r: gridCoordinates.r + result.r
-                });
-            } else {
-                results.push({
-                    q: gridCoordinates.q + result.q,
-                    r: gridCoordinates.r + result.r
-                });
-            }
+            results.push(offset);
         }
     }
 
@@ -103,6 +118,16 @@ model.GridService.prototype.highlight = function(gridCoordinates)
 model.GridService.prototype._highlight = function(highlighter, gridCoordinates)
 {
     var hexes = this._getHexesForGridCoordinates(gridCoordinates);
+
+    if (gridCoordinates instanceof Array) {
+        hexes.forEach(function(hex, index) {
+            // hex.opacity = gridCoordinates[index].opacity;
+            hex.opacity = 0.5;
+        });
+    } else {
+        hexes[0].opacity = gridCoordinates.opacity;
+    }
+
     highlighter.clearHighlights();
     highlighter.highlight(hexes);
 }

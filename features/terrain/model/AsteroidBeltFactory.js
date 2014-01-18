@@ -27,8 +27,11 @@ model.AsteroidBeltFactory.prototype.create = function()
 
 model.AsteroidBeltFactory.prototype.createRandomAsteroid = function()
 {
+    var coordinates = this.getRandomPosition();
+
     return new model.Asteroid({
-        position: this.getRandomPosition(),
+        coordinates: coordinates,
+        position: this._gridService.resolveGameCoordinates(coordinates),
         radius: this.getRandomRadius(),
         rotationCoefficient: this.getRandomRotationCoefficient(),
         rotationOffset: this.getRandomAngle()
@@ -42,10 +45,10 @@ model.AsteroidBeltFactory.prototype.getRandomPosition = function()
         rand = rand * 0.1 + 0.5;
     var distance = this.beltRadius + rand * this.beltWidth;
 
-    return this._gridService.resolveGameCoordinates({
+    return {
         q: Math.floor(this.beltCentre.x + distance * Math.cos(angle)),
         r: Math.floor(this.beltCentre.y + distance * Math.sin(angle))
-    })
+    };
 }
 
 model.AsteroidBeltFactory.prototype.getRandomRadius = function()

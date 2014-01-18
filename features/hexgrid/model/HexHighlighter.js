@@ -19,7 +19,7 @@ model.HexHighlighter = function HexHighlighter(hexRenderer)
     this._canvas = canvas[0];
     this._context = this._canvas.getContext('2d');
 
-    this._maxHighlights = 10000;
+    this._maxHighlights = 1000;
 }
 
 model.HexHighlighter.prototype._getTexture = function()
@@ -57,11 +57,15 @@ model.HexHighlighter.prototype.setScene = function(scene)
 model.HexHighlighter.prototype._createMaterial = function()
 {
     var attributes = {
-        positionX: {
-            type: 'f',
-            value: []
-        },
-        positionY: {
+        // positionX: {
+        //     type: 'f',
+        //     value: []
+        // },
+        // positionY: {
+        //     type: 'f',
+        //     value: []
+        // }
+        opacity: {
             type: 'f',
             value: []
         }
@@ -82,16 +86,34 @@ model.HexHighlighter.prototype._createMaterial = function()
         transparent: true
     });
 
-    this.material.attributes.positionX.value.push(0);
-    this.material.attributes.positionY.value.push(0);
-    this.material.attributes.positionX.value.push(0);
-    this.material.attributes.positionY.value.push(0);
-    this.material.attributes.positionX.value.push(0);
-    this.material.attributes.positionY.value.push(0);
-    this.material.attributes.positionX.value.push(0);
-    this.material.attributes.positionY.value.push(0);
+    for (var i = 0; i < this._maxHighlights; i++) {
+        this.material.attributes.opacity.value.push(1);
+        this.material.attributes.opacity.value.push(1);
+        this.material.attributes.opacity.value.push(1);
+        this.material.attributes.opacity.value.push(1);
 
-    this.material.side = THREE.DoubleSide;
+        // this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        // this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        // this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        // this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+
+        // this.geometry.faces.push(new THREE.Face3(i * 4 + 0, i * 4 + 1, i * 4 + 2));
+        // this.geometry.faces.push(new THREE.Face3(i * 4 + 2, i * 4 + 3, i * 4 + 0));
+
+        // this.geometry.faceVertexUvs[0].push(uv1);
+        // this.geometry.faceVertexUvs[0].push(uv2);
+    }
+
+    // this.material.attributes.positionX.value.push(0);
+    // this.material.attributes.positionY.value.push(0);
+    // this.material.attributes.positionX.value.push(0);
+    // this.material.attributes.positionY.value.push(0);
+    // this.material.attributes.positionX.value.push(0);
+    // this.material.attributes.positionY.value.push(0);
+    // this.material.attributes.positionX.value.push(0);
+    // this.material.attributes.positionY.value.push(0);
+
+    // this.material.side = THREE.DoubleSide;
 }
 
 model.HexHighlighter.prototype._createGeometry = function()
@@ -124,6 +146,19 @@ model.HexHighlighter.prototype._createMesh = function()
 
 model.HexHighlighter.prototype.clearHighlights = function()
 {
+    for (var i = 0; i < this._maxHighlights; i++) {
+        this.geometry.vertices[i * 4 + 1].x = 0;
+        this.geometry.vertices[i * 4 + 1].y = 0;
+
+        this.geometry.vertices[i * 4 + 2].x = 0;
+        this.geometry.vertices[i * 4 + 2].y = 0;
+
+        this.geometry.vertices[i * 4 + 3].x = 0;
+        this.geometry.vertices[i * 4 + 3].y = 0;
+
+        this.geometry.vertices[i * 4 + 0].x = 0;
+        this.geometry.vertices[i * 4 + 0].y = 0;
+    }
 }
 
 model.HexHighlighter.prototype.highlight = function(hexes)
@@ -150,6 +185,14 @@ model.HexHighlighter.prototype.highlight = function(hexes)
 
         this.geometry.vertices[i * 4 + 0].x = Math.round(hex.centrePoint.x - widthOffset);
         this.geometry.vertices[i * 4 + 0].y = Math.round(hex.centrePoint.y + heightOffset);
+
+        console.log(hex)
+        var opacity = hex.opacity ? hex.opacity : 1;
+
+        this.material.attributes.opacity.value[i * 4 + 1] = opacity;
+        this.material.attributes.opacity.value[i * 4 + 2] = opacity;
+        this.material.attributes.opacity.value[i * 4 + 3] = opacity;
+        this.material.attributes.opacity.value[i * 4 + 0] = opacity;
     }, this);
 
     this.geometry.verticesNeedUpdate = true;
@@ -158,12 +201,15 @@ model.HexHighlighter.prototype.highlight = function(hexes)
 }
 
 model.HexHighlighter.prototype.vertexShader = [
-    "attribute float positionX;",
-    "attribute float positionY;",
+    // "attribute float positionX;",
+    // "attribute float positionY;",
+    "attribute float opacity;",
+    "varying float vOpacity;",
     "varying vec2 vUv;",
 
     "void main() {",
         "vUv = uv;",
+        "vOpacity = opacity;",
         "gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
     "}"
 ].join("\n");
@@ -171,8 +217,9 @@ model.HexHighlighter.prototype.vertexShader = [
 model.HexHighlighter.prototype.fragmentShader = [
     "varying vec2 vUv;",
     "uniform sampler2D map;",
+    "varying float vOpacity;",
 
     "void main() {",
-        "gl_FragColor = texture2D(map, vUv);",
+        "gl_FragColor = texture2D(map, vUv) * vOpacity;",
     "}"
 ].join("\n");

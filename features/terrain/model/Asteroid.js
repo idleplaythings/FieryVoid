@@ -1,6 +1,7 @@
 model.Asteroid = function Asteroid(args)
 {
     this._id = args._id || null;
+    this.coordinates = args.coordinates || null;
     this.position = args.position || null;
     this.rotationCoefficient = args.rotationCoefficient || 0;
     this.rotationOffset = args.rotationOffset || 0;

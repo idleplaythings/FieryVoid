@@ -4,6 +4,7 @@ model.GameTerrain = function GameTerrain(gameScene, container, seed, gridService
     this.container = container;
     this.seed = seed;
     this._gridService = gridService;
+    this.asteroidBelt = null;
 };
 
 model.GameTerrain.prototype.createRandom = function()
@@ -47,8 +48,8 @@ model.GameTerrain.prototype._createAsteroidBelt = function()
         },
         this._gridService
     );
-    var asteroidBelt = asteroidBeltFactory.create();
+    this.asteroidBelt = asteroidBeltFactory.create();
 
-    this.gameScene.scene.add(asteroidBelt.mesh);
-    this.gameScene.animators.push(asteroidBelt);
+    this.gameScene.scene.add(this.asteroidBelt.mesh);
+    this.gameScene.animators.push(this.asteroidBelt);
 }

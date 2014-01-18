@@ -94,10 +94,21 @@ model.hexagon.coordinate.Cube.prototype.subtract = function(cube)
 
 model.hexagon.coordinate.Cube.prototype.toEvenR = function()
 {
-    var q = this.x + (this.z - (this.z & 1)) / 2;
+    var q = this.x + (this.z + (this.z & 1)) / 2;
     var r = this.z;
 
     var Offset = model.hexagon.coordinate.Offset;
 
     return new Offset(q, r, Offset.EVEN_R);
 }
+
+model.hexagon.coordinate.Cube.prototype.toOddR = function()
+{
+    var q = this.x + (this.z - (this.z & 1)) / 2;
+    var r = this.z;
+
+    var Offset = model.hexagon.coordinate.Offset;
+
+    return new Offset(q, r, Offset.ODD_R);
+}
+

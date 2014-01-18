@@ -1,5 +1,5 @@
 describe("Cube Coordinate", function() {
-    var Cube;
+    var Cube ;
 
     beforeEach(function() {
         Cube = model.hexagon.coordinate.Cube;
@@ -49,12 +49,39 @@ describe("Cube Coordinate", function() {
         expect(cube.z).toEqual(1);
     });
 
-    it("convers to evenr-r offset coordinates", function() {
-        var cube = new Cube(2, -1 , -1);
+    it("convers to even-r offset coordinates on even row", function() {
+        var cube = new Cube(1, -1 , 0);
         var offset = cube.toEvenR();
 
         expect(offset.q).toEqual(1);
-        expect(offset.r).toEqual(-1);
-        expect(offset.variant).toEqual(model.hexagon.coordinate.Offset.EVEN_R);
+        expect(offset.r).toEqual(0);
+        expect(offset.layout).toEqual(model.hexagon.coordinate.Offset.EVEN_R);
+    });
+
+    it("convers to even-r offset coordinates on odd row", function() {
+        var cube = new Cube(0, -1 , 1);
+        var offset = cube.toEvenR();
+
+        expect(offset.q).toEqual(1);
+        expect(offset.r).toEqual(1);
+        expect(offset.layout).toEqual(model.hexagon.coordinate.Offset.EVEN_R);
+    });
+
+    it("convers to odd-r offset coordinates on even row", function() {
+        var cube = new Cube(1, -1 , 0);
+        var offset = cube.toOddR();
+
+        expect(offset.q).toEqual(1);
+        expect(offset.r).toEqual(0);
+        expect(offset.layout).toEqual(model.hexagon.coordinate.Offset.ODD_R);
+    });
+
+    it("convers to odd-r offset coordinates on odd row", function() {
+        var cube = new Cube(0, -1 , 1);
+        var offset = cube.toOddR();
+
+        expect(offset.q).toEqual(0);
+        expect(offset.r).toEqual(1);
+        expect(offset.layout).toEqual(model.hexagon.coordinate.Offset.ODD_R);
     });
 });

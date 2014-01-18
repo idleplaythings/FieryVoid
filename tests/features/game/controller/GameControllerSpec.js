@@ -19,8 +19,6 @@ xdescribe('Game Controller', function() {
     it("creates a new game", function() {
         gameStorageMock.create.andReturn(gameMock);
 
-        // spyOn(gameMock)
-
         ctrl.StartGame(123, 456);
 
         expect(gameStorageMock.create).toHaveBeenCalled();
