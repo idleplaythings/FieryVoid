@@ -1,9 +1,11 @@
 model.DamageManagement = function DamageManagement(
-	modules, timeline, ship, power, crew)
+	modules, timeline, ship, movement)
 {
 	this.modules = modules;
 	this.timeline = timeline;
 	this.ship = ship;
+	
+	this.movement = movement;
 	
 	this.damageTile = new model.DamageTile();
 };
@@ -47,6 +49,41 @@ model.DamageManagement.prototype.generateDamageLookup = function()
 	this.ship.getIcon().setDamageLookup('hull', imageData, imageDataDetails);
 };
 
+model.DamageManagement.prototype.subscribeToScene = function(
+	gameScene, effectManager, dispatcher, uiResolver)
+{
+	this.gameScene = gameScene;
+	this.effectManager = effectManager;
+	this.dispatcher = dispatcher;
+	this.uiResolver = uiResolver;
+	
+	this.generateDamageLookup();
+};
+
+
+model.DamageManagement.prototype.addSmokeTrail = function(time, position)
+{
+
+	var smokeCount = 200;
+	var step = 10000 / smokeCount;
+	var path = [];
+	while(smokeCount--)
+	{
+		var currentTime = time + step * smokeCount; 
+		
+		path.unshift(this.ship.getIcon().getPositionInIcon(
+			position,
+			this.movement.getCurrentPosition(currentTime),
+			this.movement.getFacing(currentTime)
+		));
+	}
+	
+	
+	//this.effectManager.register(new model.ParticleEffectTrail(time, 'fire', {path:path}));
+	this.effectManager.register(new model.ParticleEffectTrail(time, 'smoke', {path:path}));
+};
+
+
 model.DamageManagement.prototype.getDamageTile = function()
 {
 	return this.damageTile.reset();
@@ -57,15 +94,26 @@ model.DamageManagement.prototype.getRandomDamage = function(data, data2, positio
 	var scale = 0.3 + Math.random();
 	var holeScale = Math.random() > 0.1 ? scale + 0.2 : 0;
 	
-	if (Math.random()>0.5)
-		this.getDamageTile()
-			.setPosition(position)
-			.setTexture(1)
-			.setBrush(Math.floor(Math.random()*15))
-			.setOpacity(Math.random()* 0.2 + 0.2)
-			.setScale(scale)
-			.setHoleSize(holeScale) //scale + 0.2)
-			.setDamageLookup(data, dim)
-			.setDamageLookup2(data2, dim);
+	if (Math.random() > 0.9)
+		return;
+		
+	this.getDamageTile()
+		.setPosition(position)
+		.setTexture(1)
+		.setBrush(Math.floor(Math.random()*15))
+		.setOpacity(Math.random()* 0.2 + 0.2)
+		.setScale(scale)
+		.setHoleSize(holeScale) //scale + 0.2)
+		.setDamageLookup(data, dim)
+		.setDamageLookup2(data2, dim);
+			
+	var module = this.ship.shipDesign.getModuleInPosition(position);
+	
+	if (module && Math.random() > 0.8)
+	{
+		console.log(module, position);
+		this.addSmokeTrail(0, position);
+	}
+		
 
 };

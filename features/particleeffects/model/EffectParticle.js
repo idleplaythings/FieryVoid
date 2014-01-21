@@ -42,7 +42,7 @@ model.EffectParticle.prototype.setInitialValues = function()
 
 model.EffectParticle.prototype.setTexture = function(tex)
 {
-	if ( ! tex.index)
+	if (typeof tex.index == undefined)
 		throw new Error("You should give texture as particle.textures.textureName.");
 
     this.material.attributes.textureNumber.value[this.index] = tex.index;

@@ -11,11 +11,12 @@ model.Movement = function Movement(modules, timeline, ship)
 		y:Math.ceil(Math.random() * 4000 - 2000)
     };
     
+    /*
     this.startPosition = {
 		x:0, 
-		y:-500
+		y:0
     };
-
+*/
     //this.route = new model.MovementRoute(
     //    timeline, 'route', this.onTurnChanged.bind(this));
     //this.waypoints = new model.MovementRoute(timeline, 'waypoint');
@@ -237,8 +238,8 @@ model.Movement.prototype.recalculateRoute = function()
 model.Movement.prototype.getCurrentPosition = function(gameTime)
 {
 	//return{x:0, y:0};
-	return {x:this.startPosition.x, y:this.startPosition.y + gameTime * 0.1};
-    return {x:this.startPosition.x + gameTime * 0.1, y:this.startPosition.y};
+	//return {x:this.startPosition.x, y:this.startPosition.y + gameTime * 0.1};
+    return {x:this.startPosition.x + gameTime * 0.2, y:this.startPosition.y};
 	return {x:450, y:600};
     var gameTime = gameTime / 1000;
     if (gameTime % 1 === 0)
@@ -274,7 +275,7 @@ model.Movement.prototype.getFacing = function(gameTime)
 	
     gameTime = gameTime / 10;
     
-    return gameTime % 360;
+    return (gameTime % (360 * 4)) / 4;
     
     if (gameTime % 1 === 0)
     {

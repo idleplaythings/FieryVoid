@@ -38,7 +38,7 @@ normalMapping = [
 		"vec4 ambientColor = vec4(1.0, 1.0, 1.0, 1.0);",
 		"vec4 diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);",
 		//"vec4 diffuseColor = vec4(1.0, 0.9, 0.4, 1.0);",
-		"float ambientIntensity = 0.0;",
+		"float ambientIntensity = 0.2;",
 
 		"vec4 calculateLight(vec2 uv, vec4 color){",
 		

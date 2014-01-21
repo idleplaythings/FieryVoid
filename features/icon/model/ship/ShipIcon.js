@@ -6,6 +6,8 @@ model.ShipIcon = function ShipIcon()
     this.hidden = false;
     this.modulesOver = [];
     this.modulesUnder = [];
+    
+    this.iconEffectManager = null;
 };
 
 model.ShipIcon.prototype =
@@ -76,6 +78,8 @@ model.ShipIcon.prototype.createSprites = function()
     this.addObject(this.sprites.hull.getObject3d());
     this.addObject(this.sprites.modules.getObject3d());
     //this.addObject(this.sprites.selected.getObject3d());
+    
+    //this.iconEffectManager = new model.EffectManager();
 
     this.created = true;
 
@@ -120,17 +124,35 @@ model.ShipIcon.prototype.getModulePosition = function(module)
     return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
 };
 
-model.ShipIcon.prototype.getModulePositionInGame = function(module)
+model.ShipIcon.prototype.getModulePositionInGame = function(module, shipPosition, shipFacing)
 {
     var modulePosition = this.getModulePositionInIcon(module);
-    var iconPosition = this.getThreeObject().position;
+    
+    if ( ! shipPosition)
+		shipPosition = this.getThreeObject().position;
 
-    var shipFacing = this.getAzimuth();
+    if ( ! shipFacing)
+		shipFacing = this.getAzimuth();
     modulePosition = MathLib.turnVector(modulePosition, shipFacing);
 
-    return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
+    return {x: shipPosition.x + modulePosition.x, y: shipPosition.y + modulePosition.y};
 };
 
+
+model.ShipIcon.prototype.getPositionInIcon = function(position, shipPosition, shipFacing)
+{
+	position = this.getCustomModulePositionInIcon(position);
+	
+    if ( ! shipPosition)
+		shipPosition = this.getThreeObject().position;
+
+    if ( ! shipFacing)
+		shipFacing = this.getAzimuth();
+		
+    position = MathLib.turnVector(position, shipFacing);
+
+    return {x: shipPosition.x + position.x, y: shipPosition.y + position.y};
+};
 
 model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
 {

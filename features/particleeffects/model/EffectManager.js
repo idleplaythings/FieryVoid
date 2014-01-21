@@ -1,11 +1,16 @@
-model.EffectManager = function EffectManager(gameScene, dispatcher)
+model.EffectManager = function EffectManager(gameScene, dispatcher, args)
 {
+	if ( ! args)
+		args = {};
+	
 	this.gameScene = gameScene;
 	this.dispatcher = dispatcher;
-	this.particleCount = 20000;
+	this.particleCount = args.particleCount || 20000;
 	
-	this.emitter = new model.EffectParticleEmitter(this.particleCount, this.gameScene);
-    this.emitter.observeZoomLevelChange(this.dispatcher);
+	this.emitters = {
+		additive: this.createEmitter('additive', THREE.AdditiveBlending),
+		normal: this.createEmitter('normal')
+	}
     
 	gameScene.animators.push(this);
 	
@@ -14,28 +19,42 @@ model.EffectManager = function EffectManager(gameScene, dispatcher)
 	this.toDestroy = [];
 	this.usageTop = 0;
 	
-	this.updateFrqeuency = 10000;
+	this.updateFrqeuency = args.updateFrqeuency || 10000;
 	this.lastUpdate = this.updateFrqeuency * -1;
 };
+
+model.EffectManager.prototype.createEmitter = function(name, blending)
+{
+	return new model.EffectParticleEmitter(this.particleCount, this.gameScene, blending)
+		.observeZoomLevelChange(this.dispatcher);
+}
+
+model.EffectManager.prototype.forEmitters = function(callback)
+{
+	Object.keys(this.emitters).forEach(function (key) {
+		callback(this.emitters[key]);
+	}, this);
+}
 
 model.EffectManager.prototype.createExplosion = function()
 {
 	Math.seedrandom();
 	
-	var explosions = 0;
+	var explosions = 20;
 	var objects = [];
 	while (explosions--)
 	{
-		var explosion = new model.Explosion({
-				x: Math.floor(Math.random() * 3000 - 1500), 
-				y: Math.floor(Math.random() * 3000 - 1500), 
+		var explosion = new model.ParticleEffectExplosion({
+				x: Math.floor(Math.random() * 200 - 100), 
+				y: Math.floor(Math.random() * 200 - 100), 
 			}, 
-			Math.random()* 12000,
+			Math.random()* 1000,
 			{
-				size: Math.random()* 50,
+				size: Math.random()* 50 + 10,
 				type: Math.random() > 0.5 ? 'gas' : 'glow',
 				speed: Math.random() + 1,
-				ring: Math.random() > 0.9 ? true : false
+				ring: Math.random() > 0.9 ? true : false,
+				movement: {x:200, y:0}
 			});
 		objects.push(explosion);
 	}
@@ -44,7 +63,7 @@ model.EffectManager.prototype.createExplosion = function()
 	
 	
 	
-	explosion = new model.Explosion({
+	explosion = new model.ParticleEffectExplosion({
 		x: 200, 
 		y: 200, 
 	}, 
@@ -57,15 +76,11 @@ model.EffectManager.prototype.createExplosion = function()
 	});
 	
 	//this.register(explosion);
-	objects.push(explosion);
+	//objects.push(explosion);
+	
 	
 	this.register(objects);
 	
-};
-
-model.EffectManager.prototype.getEmitter = function()
-{
-    return this.emitter;
 };
 
 model.EffectManager.prototype.register = function(effects)
@@ -85,7 +100,7 @@ model.EffectManager.prototype.createBatch = function(gameTime)
 		if (this.toCreate[0] && this.toCreate[0].time - this.updateFrqeuency <= gameTime)
 		{
 			var effect = this.toCreate.shift();
-			effect.create(this.getEmitter());
+			effect.create(this.emitters);
 		}
 		else
 		{
@@ -107,10 +122,7 @@ model.EffectManager.prototype.createBatch = function(gameTime)
 		}
 	}
 	
-	this.emitter.freeParticles(toFree);
-	
-	//console.log("particles used:", this.emitter.particleCount - this.emitter.free.length);
-	this.emitter.update();
+	this.forEmitters(function(emitter){emitter.update();});
 }
 
 model.EffectManager.prototype.animate = function(gameTime)

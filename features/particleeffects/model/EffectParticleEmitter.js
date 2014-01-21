@@ -1,6 +1,9 @@
 model.EffectParticleEmitter = 
-	 function EffectParticleEmitter(particleCount, gameScene)
+	 function EffectParticleEmitter(particleCount, gameScene, blending)
 {
+	if ( ! blending )
+		blending = THREE.NormalBlending;
+		
 	this.particleCount = particleCount;
     
     this.free = [];
@@ -46,13 +49,23 @@ model.EffectParticleEmitter =
             fragmentShader: this.fragmentShader,
             transparent: true,
             alphaTest: 0.5, // if having transparency issues, try including: alphaTest: 0.5,
-            blending: THREE.AdditiveBlending, depthTest: true
+            blending: blending, depthTest: true
         });
+        
+	/*
+	THREE.NormalBlending = 0;
+	THREE.AdditiveBlending = 1;
+	THREE.SubtractiveBlending = 2;
+	THREE.MultiplyBlending = 3;
+	THREE.AdditiveAlphaBlending = 4;
+	*/
         
     this.flyParticle = new model.EffectParticle(
 		this.particleMaterial, this.particleGeometry);
 	
     this.particleMesh = this.getObject3d(particleCount);
+    
+    this.needsUpdate = false;
     
     gameScene.scene.add(this.particleMesh); 
     gameScene.animators.push(this);
@@ -79,6 +92,7 @@ model.EffectParticleEmitter.prototype.getObject3d = function(particleCount)
 
 model.EffectParticleEmitter.prototype.register = function()
 {
+	this.needsUpdate = true;
 	this.effects++;
 };
 
@@ -89,6 +103,9 @@ model.EffectParticleEmitter.prototype.unregister = function()
 
 model.EffectParticleEmitter.prototype.update = function()
 {
+	if ( ! this.needsUpdate)
+		return;
+		
 	Object.keys(this.particleMaterial.attributes).forEach(function(key){
 		this.particleMaterial.attributes[key].needsUpdate = true;
 	}, this);

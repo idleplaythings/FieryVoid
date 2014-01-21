@@ -24,7 +24,7 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
 	
-	var shipCount = 5;
+	var shipCount = 1;
 	
 	while(shipCount--)
 	{
