@@ -21,7 +21,7 @@ describe("UiFocusResolver", function() {
 
         var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
 
-        resolver.getMousePositionInObservedElement = function(e){return {x:100, y:100};};
+        resolver._getMousePositionInObservedElement = function(e){return {x:100, y:100};};
 
         var actual = null;
 
@@ -40,7 +40,7 @@ describe("UiFocusResolver", function() {
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:105, y:105}, {x:106, y:106}];
-        resolver.getMousePositionInObservedElement = function(e){
+        resolver._getMousePositionInObservedElement = function(e){
             i++;
             return positions[i];
         };
@@ -62,7 +62,7 @@ describe("UiFocusResolver", function() {
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:120, y:120}];
-        resolver.getMousePositionInObservedElement = function(e){
+        resolver._getMousePositionInObservedElement = function(e){
             i++;
             return positions[i];
         };
