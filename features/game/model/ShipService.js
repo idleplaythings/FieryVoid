@@ -12,16 +12,16 @@ model.ShipService = function ShipService(
 	this.moduleView = moduleView;
 	this.shipStatusView = shipStatusView;
 	this.coordinateConverter = coordinateConverter
-	
-	
-	
+
+
+
 	this.selectedShip = null;
 	this.zoom = 1;
 	this.scroll = {x:0, y:0};;
-	
+
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
-    
+
     this.uiEventResolver.registerListener('click', this.onClick.bind(this), 1);
     this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
     window.ships = this.getShips();
@@ -31,21 +31,21 @@ model.ShipService.prototype.selectShip = function(ship)
 {
 	if (this.selectedShip)
 		this.selectedShip.deselect();
-		
+
     this.selectedShip = ship;
     this.selectedShip.select();
-    
+
     console.trace();
     this.dispatcher.dispatch({name: 'ShipSelectedEvent', payload:ship});
 };
 
-model.ShipService.prototype.subscribeToScene = function(scene, effectManager, dispatcher, eventResolver)
+model.ShipService.prototype.subscribeToScene = function(scene, effectManager, dispatcher, eventResolver, gridService)
 {
 	this.getShips().forEach(
         function(ship){
-            ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver);
+            ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver, gridService);
         }, this);
-        
+
 	//this.selectShip(this.getClosestShip());
 };
 
@@ -67,7 +67,7 @@ model.ShipService.prototype.getClosestShip = function(center)
 {
 	if ( ! center)
 		center = this.scroll;
-		
+
     var ships = this.getShips().slice(0).filter(function(ship){return ! ship.isHidden()});
 
     ships.sort(function(a, b){
@@ -87,7 +87,7 @@ model.ShipService.prototype.getClosestShip = function(center)
 model.ShipService.prototype.onScroll = function(event)
 {
 	this.scroll = event.position;
-	
+
     if (this.zoom < 1)
         return;
 
@@ -107,7 +107,7 @@ model.ShipService.prototype.onScroll = function(event)
 model.ShipService.prototype.onZoom = function(event)
 {
 	this.zoom = event.zoom;
-	
+
     if (event.oldZoom < 1 && event.zoom < 1)
         return;
 
@@ -135,9 +135,9 @@ model.ShipService.prototype.onClick = function(event)
     var ship = this.getClosestShip(event.game);
     if (! ship)
         return;
-        
+
 	var position = ship.getIcon().getTileOnPosition(event.game);
-	
+
 	if (! ship.getIcon().occupiesPosition(position))
 		return;
 

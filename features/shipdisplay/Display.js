@@ -12,8 +12,10 @@ model.Display.prototype.renderOn = function(target)
     var coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
     this.uiEventResolver = new model.UiFocusResolver(
-        coordinateConverter, new model.EventDispatcher(), this.dispatcher)
-        .observeDomElement(target);
+        coordinateConverter,
+        new model.EventDispatcher(),
+        this.dispatcher
+    ).observeDomElement(target);
 
     this.uiEventResolver.registerListener(
         'click', this.onClicked.bind(this), 0);

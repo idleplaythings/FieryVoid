@@ -16,9 +16,9 @@ model.Ship.prototype.setState = function(args, timeline)
 
 	this.shipDesign = args.shipDesign || null;
     this.status = args.status;
-    
+
     this.timeline = timeline;
-    
+
     return this;
 };
 
@@ -32,7 +32,7 @@ model.Ship.prototype.serialize = function()
             function(module){
                 return module.serialize();
             });
-            
+
 
 	var doc = {
 		shipDesign: shipDesign,
@@ -40,10 +40,10 @@ model.Ship.prototype.serialize = function()
 		gameId: this.gameId,
 		timeline: this.timeline._id
 	}
-	
+
 	if (this._id !== null)
 		doc._id = this._id;
-	
+
     return doc;
 };
 
@@ -53,7 +53,7 @@ model.Ship.prototype.getIcon = function()
 };
 
 model.Ship.prototype.subscribeToScene =
-    function(gameScene, effectManager, eventDispatcher, uiResolver)
+    function(gameScene, effectManager, eventDispatcher, uiResolver, gridService)
 {
 	this.icon = new model.ShipIcon(gameScene, eventDispatcher).create(this.shipDesign);
 
@@ -72,7 +72,7 @@ model.Ship.prototype.subscribeToScene =
         }
     }, this);
 
-	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver);
+	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService);
     this.gameScene.animators.push(this);
 };
 

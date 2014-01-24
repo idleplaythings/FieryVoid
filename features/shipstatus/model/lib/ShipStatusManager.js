@@ -3,19 +3,20 @@ if ( typeof model === 'undefined')
 
 model.ShipStatusManager = function ShipStatusManager()
 {
-	
+
 }
 
 model.ShipStatusManager.prototype.subscribeToScene = function(
-	gameScene, effectManager, dispatcher, uiResolver)
+    gameScene, effectManager, dispatcher, uiResolver, gridService)
 {
-	this.gameScene = gameScene;
-	this.effectManager = effectManager;
-	this.dispatcher = dispatcher;
-	this.uiResolver = uiResolver;
+    this.gameScene = gameScene;
+    this.effectManager = effectManager;
+    this.dispatcher = dispatcher;
+    this.uiResolver = uiResolver;
+    this.gridService = gridService;
 };
 
 model.ShipStatusManager.prototype.getActionButtons = function()
 {
-	return [];
+    return [];
 };

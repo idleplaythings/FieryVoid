@@ -19,10 +19,10 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDi
     this.lastDraggingPosition = null;
     this.distanceDragged = 0;
     this.draggingDistanceTreshold = 10;
-    
+
     this.clickStrategyStates = [];
 
-    this.coordinateConverter = coordinateConverter;
+    this._coordinateConverter = coordinateConverter;
 };
 
 model.UiFocusResolver.prototype.getCurrentClickStrategy = function()
@@ -33,10 +33,10 @@ model.UiFocusResolver.prototype.getCurrentClickStrategy = function()
 model.UiFocusResolver.prototype.addClickStrategy = function(state)
 {
 	var current = this.getCurrentClickStrategy();
-	
+
 	if (current)
 		current.deactivate();
-		
+
 	this.clickStrategyStates.push(state);
 	state.activate();
 };
@@ -64,13 +64,8 @@ model.UiFocusResolver.prototype.registerListener = function(event, callback, pri
         priority: priority
     })
 
-    this.listeners[event] = this.listeners[event].sort(this.__sortByListenerPriority);
+    this.listeners[event] = this.listeners[event].sort(this._sortByListenerPriority);
 };
-
-model.UiFocusResolver.prototype.__sortByListenerPriority = function(a,b)
-{
-    return b.priority - a.priority;
-}
 
 model.UiFocusResolver.prototype.observeDomElement = function(element)
 {
@@ -90,7 +85,7 @@ model.UiFocusResolver.prototype.destroy = function()
 {
 	if ( ! this.observedElement)
 		return;
-		
+
     this.observedElement.off("mousedown",  this.mouseDown.bind(this));
     this.observedElement.off("mouseup",    this.mouseUp.bind(this));
     this.observedElement.off("mouseout",   this.mouseOut.bind(this));
@@ -100,14 +95,6 @@ model.UiFocusResolver.prototype.destroy = function()
     jQuery('input').off('keyup', function(e){e.originalEvent.fromUi = true;});
 
     return this;
-};
-
-model.UiFocusResolver.prototype.getMousePositionInObservedElement = function(event)
-{
-    return {
-        x: event.pageX - this.observedElement.offset().left,
-        y: event.pageY - this.observedElement.offset().top
-    };
 };
 
 model.UiFocusResolver.prototype.keyup = function(event)
@@ -123,8 +110,8 @@ model.UiFocusResolver.prototype.keyup = function(event)
 
 model.UiFocusResolver.prototype.mouseDown = function(event)
 {
-    var pos = this.getMousePositionInObservedElement(event);
-    var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
+    var pos = this._getMousePositionInObservedElement(event);
+    var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
 
     this.draggingStartPosition = this.getViewPortAndGameObject(pos, gamePos);
     this.lastDraggingPosition = this.getViewPortAndGameObject(pos, gamePos);
@@ -183,8 +170,8 @@ model.UiFocusResolver.prototype.mouseMove = function(event)
 
 model.UiFocusResolver.prototype.doMouseMove = function(event)
 {
-    var pos = this.getMousePositionInObservedElement(event);
-    var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
+    var pos = this._getMousePositionInObservedElement(event);
+    var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
 
     this.fireEvent(
         this.getViewPortAndGameObject(pos, gamePos),
@@ -195,8 +182,8 @@ model.UiFocusResolver.prototype.doMouseMove = function(event)
 
 model.UiFocusResolver.prototype.drag = function(event)
 {
-    var pos = this.getMousePositionInObservedElement(event);
-    var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
+    var pos = this._getMousePositionInObservedElement(event);
+    var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
     var current = this.getViewPortAndGameObject(pos, gamePos);
 
     var deltaView = {
@@ -223,12 +210,12 @@ model.UiFocusResolver.prototype.drag = function(event)
 
 model.UiFocusResolver.prototype.click = function(event)
 {
-    var pos = this.getMousePositionInObservedElement(event);
-    var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
+    var pos = this._getMousePositionInObservedElement(event);
+    var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
 
 	var payload = this.getViewPortAndGameObject(pos, gamePos);
 	payload.clickStrategy = this.getCurrentClickStrategy();
-	
+
     this.fireEvent(
         payload,
         this.listeners.click
@@ -245,4 +232,17 @@ model.UiFocusResolver.prototype.fireEvent = function(payload, listeners)
         var listener = listeners[i];
         listener.callback(payload);
     }
+};
+
+model.UiFocusResolver.prototype._sortByListenerPriority = function(a,b)
+{
+    return b.priority - a.priority;
+}
+
+model.UiFocusResolver.prototype._getMousePositionInObservedElement = function(event)
+{
+    return {
+        x: event.pageX - this.observedElement.offset().left,
+        y: event.pageY - this.observedElement.offset().top
+    };
 };

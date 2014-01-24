@@ -3,37 +3,38 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
 	this.ship = ship;
 	this.modules = modules;
 	this._timeline = timeline;
-	
+
 	this.managers = {};
 	this.gameScene, this.effectManager, this.dispatcher, this.uiResolver = null;
-	
+
     this.managers.power = new model.PowerManagement(modules);
     this.managers.crew = new model.CrewManagement(modules, timeline);
     this.managers.thrust = new model.ThrustManagement(modules, this.managers.power, this.managers.crew);
-    this.managers.movement = new model.Movement(modules, timeline, ship);
+    this.managers.movement = new model.MovementManagement();
+    // this.managers.movement = new model.Movement(modules, timeline, ship);
     this.managers.sensor = new model.SensorManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
     this.managers.weapon = new model.WeaponManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
     this.managers.damage = new model.DamageManagement(modules, timeline, ship, this.managers.movement);
 };
 
 model.ShipStatus.prototype.subscribeToScene = function(
-	gameScene, effectManager, dispatcher, uiResolver)
+	gameScene, effectManager, dispatcher, uiResolver, gridService)
 {
 	this.gameScene = gameScene;
 	this.effectManager = effectManager;
 	this.dispatcher = dispatcher;
 	this.uiResolver = uiResolver;
-	
-	Object.keys(this.managers).forEach(function(key){ 
+
+	Object.keys(this.managers).forEach(function(key){
 		this.managers[key].subscribeToScene(
-			gameScene, effectManager, dispatcher, uiResolver);
+			gameScene, effectManager, dispatcher, uiResolver, gridService);
 	}, this);
 };
 
 model.ShipStatus.prototype.setOwner = function(owner)
 {
 	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipOwner'}).pop();
-	
+
 	if (entry && entry.canUpdate())
 		entry.update({owner: owner});
 	else
@@ -49,7 +50,7 @@ model.ShipStatus.prototype.getOwner = function()
 model.ShipStatus.prototype.changeName = function(name)
 {
 	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipName'}).pop();
-	
+
 	if (entry && entry.canUpdate())
 		entry.update({name: name});
 	else
@@ -107,6 +108,6 @@ model.ShipStatus.prototype.getActionButtons = function()
     Object.keys(this.managers).forEach(function(key){
 		buttons = buttons.concat(this.managers[key].getActionButtons());
 	}, this);
-	
+
 	return buttons;
 };

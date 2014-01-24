@@ -23,9 +23,9 @@ function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactor
 Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
-	
+
 	var shipCount = 1;
-	
+
 	while(shipCount--)
 	{
 			var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
@@ -42,7 +42,7 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
 		fleet.addShip(ship);
 	}
-	
+
 	return fleet;
 };
 
@@ -69,7 +69,7 @@ Game.prototype.init = function()
     if (Meteor.isServer)
         return;
 
-    this.gridService.init(100, 100, 450);
+    this.gridService.init(100, 100, 300);
 
     this.gameScene = new model.GameScene(this.dispatcher);
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
@@ -100,30 +100,6 @@ Game.prototype.getPlayer = function(id)
 
     return null;
 };
-
-/*
-Game.prototype.addShip = function(shipDesign)
-{
-    var ship = new model.ShipInGame({
-        _id: 1,
-        controller: Meteor.userId(),
-        shipDesign: shipDesign,
-        movement: this.movementFactory.createMovement()
-    });
-
-    ship.createTimelines(this.timelineFactory);
-
-    ship.movement.addStartPosition(new model.MovementWaypoint({
-        time: 0,
-        position: {x:0, y:0},
-        velocity: {x:500, y:0},
-        facing: 0
-    }));
-
-    this.ships.push(ship);
-    this.shipStorage.addShipToGame(ship, this._id);
-};
-*/
 
 Game.prototype.play = function()
 {
@@ -170,7 +146,7 @@ Game.prototype.play = function()
 	this.uiEventResolver.addClickStrategy(
 		new model.ClickStrategySelect(this.shipService)
 	);
-	
+
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
     this._initGameState(container);
@@ -186,7 +162,13 @@ Game.prototype._initGameState = function(container)
     ).createRandom();
     this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
 	this.effectManager.createExplosion();
-    this.shipService.subscribeToScene(this.gameScene, this.effectManager, this.dispatcher, this.uiEventResolver);
+    this.shipService.subscribeToScene(
+        this.gameScene,
+        this.effectManager,
+        this.dispatcher,
+        this.uiEventResolver,
+        this.gridService
+    );
 
     this.animate();
 };
@@ -252,7 +234,7 @@ Game.prototype.onClick = function(event)
 {
 	if (event.stopped)
 		return;
-		
+
     this.gridService.selectHexAt(event.game);
 };
 
