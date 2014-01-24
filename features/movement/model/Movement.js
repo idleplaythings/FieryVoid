@@ -238,7 +238,7 @@ model.Movement.prototype.recalculateRoute = function()
 model.Movement.prototype.getCurrentPosition = function(gameTime)
 {
 	//return{x:0, y:0};
-	//return {x:this.startPosition.x, y:this.startPosition.y + gameTime * 0.1};
+	return {x:this.startPosition.x, y:this.startPosition.y};
     return {x:this.startPosition.x + gameTime * 0.2, y:this.startPosition.y};
 	return {x:450, y:600};
     var gameTime = gameTime / 1000;
@@ -271,7 +271,7 @@ model.Movement.prototype.getCurrentPosition = function(gameTime)
 
 model.Movement.prototype.getFacing = function(gameTime)
 {
-	//return 0;
+	return 0;
 	
     gameTime = gameTime / 10;
     

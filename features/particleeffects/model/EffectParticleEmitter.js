@@ -1,5 +1,5 @@
 model.EffectParticleEmitter = 
-	 function EffectParticleEmitter(particleCount, gameScene, blending)
+	 function EffectParticleEmitter(target, particleCount, gameScene, blending)
 {
 	if ( ! blending )
 		blending = THREE.NormalBlending;
@@ -67,7 +67,7 @@ model.EffectParticleEmitter =
     
     this.needsUpdate = false;
     
-    gameScene.scene.add(this.particleMesh); 
+    target.add(this.particleMesh); 
     gameScene.animators.push(this);
 };
 

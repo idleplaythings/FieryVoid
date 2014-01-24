@@ -158,7 +158,7 @@ Game.prototype.play = function()
         this.dispatcher
     ).hide();
 
-	this.shipManager = new model.ShipManager(
+	this.shipService = new model.ShipService(
 		this.fleets,
 		new model.ModuleDetailView(container),
 		shipStatusView,
@@ -167,6 +167,10 @@ Game.prototype.play = function()
 		this.coordinateConverter
 	);
 
+	this.uiEventResolver.addClickStrategy(
+		new model.ClickStrategySelect(this.shipService)
+	);
+	
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
     this._initGameState(container);
@@ -182,7 +186,7 @@ Game.prototype._initGameState = function(container)
     ).createRandom();
     this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
 	this.effectManager.createExplosion();
-    this.shipManager.subscribeToScene(this.gameScene, this.effectManager, this.dispatcher, this.uiEventResolver);
+    this.shipService.subscribeToScene(this.gameScene, this.effectManager, this.dispatcher, this.uiEventResolver);
 
     this.animate();
 };
@@ -246,13 +250,15 @@ Game.prototype.onZoom = function(event)
 
 Game.prototype.onClick = function(event)
 {
+	if (event.stopped)
+		return;
+		
     this.gridService.selectHexAt(event.game);
 };
 
 Game.prototype.onMouseMove = function(event)
 {
     this._highlightMouseOverHex(event);
-    this.shipManager.onMouseMove(event);
 };
 
 Game.prototype._highlightMouseOverHex = function(event)

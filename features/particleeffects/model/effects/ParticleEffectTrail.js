@@ -52,7 +52,7 @@ model.ParticleEffectTrail.prototype._createSmoke = function()
 {
 	var time = this.time;
 	var step = this.duration / this.path.length;
-	console.log("step", step);
+	
 	var color = this._getSmokeColor();
 	
 	this.path.forEach( function(position){

@@ -16,10 +16,37 @@ model.WeaponManagement.prototype.getActionButtons = function()
     return this.modules.filter(function(module){
 			return module.weapon
 		}).map(function(module){
-			return new model.ActionButton('', function(){self.setRandomTarget(module);}, {background: module.image.getByType('ui')});
+			return new model.ActionButton('', function(){self.selectWeapon(module);}, {background: module.image.getByType('ui')});
 		}, this);
 };
 
+model.WeaponManagement.prototype.selectWeapon = function(module)
+{
+	var current = this.uiResolver.getCurrentClickStrategy();
+	
+	if ( ! (current instanceof model.ClickStrategyWeapon))
+	{
+		current  = new model.ClickStrategyWeapon(this);
+		this.uiResolver.addClickStrategy(current);
+	}
+	
+	current.addWeapon(module);
+};
+
+model.WeaponManagement.prototype.target = function(target, position, weapons)
+{
+
+	var targetPos = target.getIcon().getPositionInIcon(position);
+	
+	weapons.forEach(function(weapon){
+		var weaponPosition = this.ship.getIcon().getModulePositionInGame(weapon)
+		this.gameScene.scene.add(new model.Line(weaponPosition, targetPos).get());
+	}, this);
+	
+	console.log("targeting", target, "with", weapons);
+};
+
+/*
 model.WeaponManagement.prototype.setRandomTarget = function(module)
 {
 	var hit = Math.random() > 0.5;
@@ -41,8 +68,9 @@ model.WeaponManagement.prototype.setRandomTarget = function(module)
 			time: time
 		}
 	);
-	*/
+	
 	
 	this.effectManager.register(new model.Bolt(start, pos, time));
 	this.effectManager.createBatch(0);
 };
+*/

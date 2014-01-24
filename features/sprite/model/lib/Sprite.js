@@ -53,6 +53,8 @@ model.Sprite.prototype.hide = function()
     });
     
     this.hidden = true;
+    
+    return this;
 };
 
 model.Sprite.prototype.show = function()
@@ -62,6 +64,8 @@ model.Sprite.prototype.show = function()
     });
     
     this.hidden = false;
+    
+    return this;
 };
 
 model.Sprite.prototype.setZPosition = function(z)
@@ -128,8 +132,8 @@ model.Sprite.prototype.getCircle = function(size, r, r1, r2, segments, gapratio)
     {
         drawingTool.drawDottedCircle(context, r, r, r1, r2, segments, gapratio);
     }
-
-    return this.createObject3d(this.createTexture({data:context.getImageData(0, 0, size, size)}));
+	console.log(size, r, r1, r2, segments, gapratio);
+    return {data:context.getImageData(0, 0, size, size)};
 };
 
 model.Sprite.prototype.getArrow = function(size)

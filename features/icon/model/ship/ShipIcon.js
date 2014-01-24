@@ -1,4 +1,4 @@
-model.ShipIcon = function ShipIcon()
+model.ShipIcon = function ShipIcon(gameScene, dispatcher)
 {
     model.Icon.call(this);
     this.ThreeIconGroup = null;
@@ -6,6 +6,9 @@ model.ShipIcon = function ShipIcon()
     this.hidden = false;
     this.modulesOver = [];
     this.modulesUnder = [];
+    
+    this.gameScene = gameScene;
+    this.dispatcher = dispatcher;
     
     this.iconEffectManager = null;
 };
@@ -66,7 +69,7 @@ model.ShipIcon.prototype.createSprites = function()
     this.sprites.inside = new model.ShipSpriteModules(shipDesign, 1, ['inside']);
     this.sprites.hull = new model.ShipSpriteHull(shipDesign, 5);
     this.sprites.modules = new model.ShipSpriteModules(shipDesign, 2);
-    //this.sprites.selected = new model.ShipSpriteSelected(shipDesign);
+    this.sprites.selected = new model.ShipSpriteSelected(shipDesign, 0).hide();
 
 	this.modulesUnder = this.updateOrCreateModules(this.modulesOver, "under", -1);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
@@ -77,9 +80,9 @@ model.ShipIcon.prototype.createSprites = function()
     this.addObject(this.sprites.inside.getObject3d());
     this.addObject(this.sprites.hull.getObject3d());
     this.addObject(this.sprites.modules.getObject3d());
-    //this.addObject(this.sprites.selected.getObject3d());
+    this.addObject(this.sprites.selected.getObject3d());
     
-    //this.iconEffectManager = new model.EffectManager();
+    this.iconEffectManager = new model.EffectManager(this.gameScene, this.dispatcher, this.ThreeIconGroup);
 
     this.created = true;
 
@@ -135,7 +138,7 @@ model.ShipIcon.prototype.getModulePositionInGame = function(module, shipPosition
 		shipFacing = this.getAzimuth();
     modulePosition = MathLib.turnVector(modulePosition, shipFacing);
 
-    return {x: shipPosition.x + modulePosition.x, y: shipPosition.y + modulePosition.y};
+    return new THREE.Vector3(shipPosition.x + modulePosition.x, shipPosition.y + modulePosition.y, 0);
 };
 
 
@@ -151,7 +154,7 @@ model.ShipIcon.prototype.getPositionInIcon = function(position, shipPosition, sh
 		
     position = MathLib.turnVector(position, shipFacing);
 
-    return {x: shipPosition.x + position.x, y: shipPosition.y + position.y};
+    return new THREE.Vector3( shipPosition.x + position.x, shipPosition.y + position.y, 0);
 };
 
 model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
@@ -212,6 +215,15 @@ model.ShipIcon.prototype.setDamageLookup = function(type, data, data2)
 	this.sprites[type].setDamageOverlay(data, data2);
 };
 
+model.ShipIcon.prototype.occupiesPosition = function(pos)
+{
+    if ( ! this.iconObject)
+        return false;
+
+    var tile = this.getTileOnPosition(pos);
+    return  ! this.getShipDesign().hullLayout.isUnavailableTile(pos);
+};
+
 model.ShipIcon.prototype.getModuleOnPosition = function(pos)
 {
     if ( ! this.iconObject)
@@ -227,4 +239,15 @@ model.ShipIcon.prototype.getModuleOnPosition = function(pos)
     }
 
     return null;
+};
+
+
+model.ShipIcon.prototype.select = function()
+{
+	this.sprites.selected.show();
+};
+
+model.ShipIcon.prototype.deselect = function()
+{
+	this.sprites.selected.hide();
 };

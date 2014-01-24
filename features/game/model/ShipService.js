@@ -1,4 +1,4 @@
-model.ShipManager = function ShipManager(
+model.ShipService = function ShipService(
 	fleets,
 	moduleView,
 	shipStatusView,
@@ -22,43 +22,52 @@ model.ShipManager = function ShipManager(
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     
-    this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
+    this.uiEventResolver.registerListener('click', this.onClick.bind(this), 1);
+    this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
     window.ships = this.getShips();
 }
 
-model.ShipManager.prototype.selectShip = function(ship)
+model.ShipService.prototype.selectShip = function(ship)
 {
+	if (this.selectedShip)
+		this.selectedShip.deselect();
+		
     this.selectedShip = ship;
+    this.selectedShip.select();
+    
+    console.trace();
     this.dispatcher.dispatch({name: 'ShipSelectedEvent', payload:ship});
 };
 
-model.ShipManager.prototype.subscribeToScene = function(scene, effectManager, dispatcher, eventResolver)
+model.ShipService.prototype.subscribeToScene = function(scene, effectManager, dispatcher, eventResolver)
 {
 	this.getShips().forEach(
         function(ship){
             ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver);
         }, this);
         
-	this.selectShip(this.getClosestShip());
+	//this.selectShip(this.getClosestShip());
 };
 
-model.ShipManager.prototype.getShips = function()
+model.ShipService.prototype.getShips = function()
 {
     return this.fleets.reduce(function(value, fleet){
 		return value.concat(fleet.ships);
 	}, []);
 };
 
-model.ShipManager.prototype.getShipById = function(id)
+model.ShipService.prototype.getShipById = function(id)
 {
     return this.getShips().filter(function(ship) {
         return ship._id == id;
     })[0];
 };
 
-model.ShipManager.prototype.getClosestShip = function()
+model.ShipService.prototype.getClosestShip = function(center)
 {
-	var center = this.scroll;
+	if ( ! center)
+		center = this.scroll;
+		
     var ships = this.getShips().slice(0).filter(function(ship){return ! ship.isHidden()});
 
     ships.sort(function(a, b){
@@ -75,7 +84,7 @@ model.ShipManager.prototype.getClosestShip = function()
     return ship;
 };
 
-model.ShipManager.prototype.onScroll = function(event)
+model.ShipService.prototype.onScroll = function(event)
 {
 	this.scroll = event.position;
 	
@@ -95,7 +104,7 @@ model.ShipManager.prototype.onScroll = function(event)
     this.shipStatusView.display(ship.getIcon(), ship.status).show();
 };
 
-model.ShipManager.prototype.onZoom = function(event)
+model.ShipService.prototype.onZoom = function(event)
 {
 	this.zoom = event.zoom;
 	
@@ -121,7 +130,25 @@ model.ShipManager.prototype.onZoom = function(event)
     }
 };
 
-model.ShipManager.prototype.onMouseMove = function(event)
+model.ShipService.prototype.onClick = function(event)
+{
+    var ship = this.getClosestShip(event.game);
+    if (! ship)
+        return;
+        
+	var position = ship.getIcon().getTileOnPosition(event.game);
+	
+	if (! ship.getIcon().occupiesPosition(position))
+		return;
+
+    //var module = ship.getIcon().getModuleOnPosition(event.game);
+
+    //if (! module)
+    event.clickStrategy.clickShip(ship, position, event);
+};
+
+
+model.ShipService.prototype.onMouseMove = function(event)
 {
     if (this.zoom < 1)
     {

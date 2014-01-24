@@ -111,9 +111,23 @@ model.DamageManagement.prototype.getRandomDamage = function(data, data2, positio
 	
 	if (module && Math.random() > 0.8)
 	{
-		console.log(module, position);
 		this.addSmokeTrail(0, position);
+		this.ship.getIcon().iconEffectManager.register(new model.ParticleEffectExplosion(
+			{
+				x: Math.floor(Math.random() * 200 - 100), 
+				y: Math.floor(Math.random() * 200 - 100), 
+			}, 
+			Math.random()* 8000,
+			{
+				size: Math.random()* 50 + 10,
+				type: Math.random() > 0.5 ? 'glow' : 'glow',
+				speed: Math.random() + 1,
+				ring: Math.random() > 0.9 ? true : false
+			}
+		)); 
 	}
+	
+	
 		
 
 };

@@ -19,8 +19,26 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDi
     this.lastDraggingPosition = null;
     this.distanceDragged = 0;
     this.draggingDistanceTreshold = 10;
+    
+    this.clickStrategyStates = [];
 
     this.coordinateConverter = coordinateConverter;
+};
+
+model.UiFocusResolver.prototype.getCurrentClickStrategy = function()
+{
+	return this.clickStrategyStates[this.clickStrategyStates.length-1];
+};
+
+model.UiFocusResolver.prototype.addClickStrategy = function(state)
+{
+	var current = this.getCurrentClickStrategy();
+	
+	if (current)
+		current.deactivate();
+		
+	this.clickStrategyStates.push(state);
+	state.activate();
 };
 
 model.UiFocusResolver.prototype.onZoom = function(event)
@@ -208,8 +226,11 @@ model.UiFocusResolver.prototype.click = function(event)
     var pos = this.getMousePositionInObservedElement(event);
     var gamePos = this.coordinateConverter.fromViewPortToGame(pos);
 
+	var payload = this.getViewPortAndGameObject(pos, gamePos);
+	payload.clickStrategy = this.getCurrentClickStrategy();
+	
     this.fireEvent(
-        this.getViewPortAndGameObject(pos, gamePos),
+        payload,
         this.listeners.click
     );
 };

@@ -1,8 +1,9 @@
-model.EffectManager = function EffectManager(gameScene, dispatcher, args)
+model.EffectManager = function EffectManager(gameScene, dispatcher, target, args)
 {
 	if ( ! args)
 		args = {};
 	
+	this.target = target || gameScene.scene;
 	this.gameScene = gameScene;
 	this.dispatcher = dispatcher;
 	this.particleCount = args.particleCount || 20000;
@@ -25,7 +26,7 @@ model.EffectManager = function EffectManager(gameScene, dispatcher, args)
 
 model.EffectManager.prototype.createEmitter = function(name, blending)
 {
-	return new model.EffectParticleEmitter(this.particleCount, this.gameScene, blending)
+	return new model.EffectParticleEmitter(this.target, this.particleCount, this.gameScene, blending)
 		.observeZoomLevelChange(this.dispatcher);
 }
 

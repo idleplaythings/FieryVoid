@@ -49,15 +49,14 @@ model.Ship.prototype.serialize = function()
 
 model.Ship.prototype.getIcon = function()
 {
-    if ( ! this.icon )
-        this.icon = new model.ShipIcon().create(this.shipDesign);
-
     return this.icon;
 };
 
 model.Ship.prototype.subscribeToScene =
     function(gameScene, effectManager, eventDispatcher, uiResolver)
 {
+	this.icon = new model.ShipIcon(gameScene, eventDispatcher).create(this.shipDesign);
+
     this.gameScene = gameScene;
     this.gameScene.scene.add(this.getIcon().getThreeObject());
 
@@ -75,6 +74,16 @@ model.Ship.prototype.subscribeToScene =
 
 	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver);
     this.gameScene.animators.push(this);
+};
+
+model.Ship.prototype.select = function()
+{
+    this.getIcon().select();
+};
+
+model.Ship.prototype.deselect = function()
+{
+    this.getIcon().deselect();
 };
 
 model.Ship.prototype.animate = function(gameTime)
