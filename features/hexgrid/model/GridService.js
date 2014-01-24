@@ -44,6 +44,22 @@ model.GridService.prototype.resolveGridCoordinates = function(gameCoordinates)
     return this._coordinateResolver.gameCoordinatesToOffsetCoordinates(gameCoordinates, this._hexSize);
 }
 
+model.GridService.prototype.getPathBetween = function(start, end)
+{
+    start = start.toCube();
+    end = end.toCube();
+
+    var delta = end.subtract(start);
+    var distance = start.distanceTo(end);
+    var path = [];
+
+    for (var i=0; i<=distance; i++) {
+        path.push(start.add(delta.scale(i/distance)).round().toOddR());
+    }
+
+    return path;
+}
+
 model.GridService.prototype.traverse = function(start, range, validate)
 {
     var fringes = [[ start ]];

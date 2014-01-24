@@ -9,5 +9,5 @@ model.HexGridCoordinateResolver.gameCoordinatesToOffsetCoordinates = function(ga
     var z = r;
     var y = -x - z
 
-    return new model.hexagon.coordinate.Cube(x, y, z).toOddR();
+    return new model.hexagon.coordinate.Cube(x, y, z).round().toOddR();
 }

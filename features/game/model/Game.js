@@ -237,21 +237,23 @@ Game.prototype.onClick = function(event)
 
     var coordinates = this.gridService.resolveGridCoordinates(event.game);
 
+    // range
     // var range = this.gridService.getRange(coordinates, 2);
     // this.gridService.select(range);
 
-    var steps = this.gridService.traverse(coordinates, 20, this._validateTerrain.bind(this));
+    // distance
+    // var steps = this.gridService.traverse(coordinates, 20, this._validateTerrain.bind(this));
 
-    var result = [];
-    steps.forEach(function(coordinatesAtDistance, distance) {
-        var opacity = 0.5 - (distance / 20 * 0.5) + 0.5;
-        result = result.concat(coordinatesAtDistance.map(function(coordinates) {
-            coordinates.opacity = opacity;
-            return coordinates;
-        }));
-    });
+    // var result = [];
+    // steps.forEach(function(coordinatesAtDistance, distance) {
+    //     var opacity = 0.5 - (distance / 20 * 0.5) + 0.5;
+    //     result = result.concat(coordinatesAtDistance.map(function(coordinates) {
+    //         coordinates.opacity = opacity;
+    //         return coordinates;
+    //     }));
+    // });
 
-    this.gridService.select(result);
+    this.gridService.select(coordinates);
 };
 
 Game.prototype._validateTerrain = function(coordinates)
@@ -268,7 +270,10 @@ Game.prototype._validateTerrain = function(coordinates)
 
 Game.prototype.onMouseMove = function(event)
 {
-    this._highlightMouseOverHex(event);
+    var coordinates = this.gridService.resolveGridCoordinates(event.game);
+    var origin = this.gridService.resolveGridCoordinates({ x: 0, y: 0 });
+    var path = this.gridService.getPathBetween(origin, coordinates);
+    this.gridService.highlight(path);
 };
 
 Game.prototype._highlightMouseOverHex = function(event)

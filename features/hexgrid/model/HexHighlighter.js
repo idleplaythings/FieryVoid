@@ -186,7 +186,6 @@ model.HexHighlighter.prototype.highlight = function(hexes)
         this.geometry.vertices[i * 4 + 0].x = Math.round(hex.centrePoint.x - widthOffset);
         this.geometry.vertices[i * 4 + 0].y = Math.round(hex.centrePoint.y + heightOffset);
 
-        console.log(hex)
         var opacity = hex.opacity ? hex.opacity : 1;
 
         this.material.attributes.opacity.value[i * 4 + 1] = opacity;

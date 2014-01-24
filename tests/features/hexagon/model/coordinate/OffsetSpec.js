@@ -26,7 +26,7 @@ describe("Offset Coordinate", function() {
     });
 
     it("convers to cube coordinates", function() {
-        var offset = new Offset(1, 1, Offset.EVEN_R);
+        var offset = new Offset(1, 0, Offset.ODD_R);
         var cube = offset.toCube();
 
         expect(cube.x).toEqual(1);

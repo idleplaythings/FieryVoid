@@ -12,23 +12,24 @@ model.hexagon.coordinate.Cube = function Cube(x, y, z)
 {
     if (typeof x === 'object') {
         var cube = x;
-        this.x = cube.x;
-        this.y = cube.y;
-        this.z = cube.z;
+        this.x = this._formatNumber(cube.x);
+        this.y = this._formatNumber(cube.y);
+        this.z = this._formatNumber(cube.z);
     } else {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = this._formatNumber(x);
+        this.y = this._formatNumber(y);
+        this.z = this._formatNumber(z);
     }
 
-    this._round();
     this._validate();
 }
 
-model.hexagon.coordinate.Cube.prototype._round = function()
+model.hexagon.coordinate.Cube.PRECISION = 4;
+
+model.hexagon.coordinate.Cube.prototype.round = function()
 {
     if (this.x % 1 === 0 && this.y % 1 === 0 && this.z % 1 === 0) {
-        return;
+        return this;
     }
 
     rx = Math.round(this.x);
@@ -47,14 +48,12 @@ model.hexagon.coordinate.Cube.prototype._round = function()
         rz = -rx - ry;
     }
 
-    this.x = rx;
-    this.y = ry;
-    this.z = rz;
+    return new model.hexagon.coordinate.Cube(rx, ry, rz);
 }
 
 model.hexagon.coordinate.Cube.prototype._validate = function()
 {
-    if (this.x + this.y + this.z !== 0) {
+    if (Math.abs(this.x + this.y + this.z) > 0.001) {
         throw new Error(
             "Invalid Cube coordinates: (" + this.x + ", " + this.y + ", " + this.z + ")"
         );
@@ -92,6 +91,20 @@ model.hexagon.coordinate.Cube.prototype.subtract = function(cube)
     return new model.hexagon.coordinate.Cube(this.x - cube.x, this.y - cube.y, this.z - cube.z);
 }
 
+model.hexagon.coordinate.Cube.prototype.scale = function(scale)
+{
+    return new model.hexagon.coordinate.Cube(this.x * scale, this.y * scale, this.z * scale);
+}
+
+model.hexagon.coordinate.Cube.prototype.distanceTo = function(cube)
+{
+    return Math.max(
+        Math.abs(this.x - cube.x),
+        Math.abs(this.y - cube.y),
+        Math.abs(this.z - cube.z)
+    );
+}
+
 model.hexagon.coordinate.Cube.prototype.toEvenR = function()
 {
     var q = this.x + (this.z + (this.z & 1)) / 2;
@@ -112,3 +125,6 @@ model.hexagon.coordinate.Cube.prototype.toOddR = function()
     return new Offset(q, r, Offset.ODD_R);
 }
 
+model.hexagon.coordinate.Cube.prototype._formatNumber = function(number) {
+    return parseFloat(number.toFixed(model.hexagon.coordinate.Cube.PRECISION));
+}

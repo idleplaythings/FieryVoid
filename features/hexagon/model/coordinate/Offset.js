@@ -57,15 +57,6 @@ model.hexagon.coordinate.Offset.prototype.getNeighbours = function()
 
     this.neighbours[this.layout][this.r & 1].forEach(function(neighbour) {
         neighbours.push(this.add(neighbour));
-        // neighbours.push(neighbour.add(this));
-        // neighbour = new model.hexagon.coordinate.Offset(neighbour);
-        // neighbours.push(
-        //     new model.hexagon.coordinate.Offset(
-        //         this.q + neighbour.q,
-        //         this.r + neighbour.r,
-        //         this.layout
-        //     )
-        // );
     }, this);
 
     return neighbours;
@@ -81,9 +72,14 @@ model.hexagon.coordinate.Offset.prototype.add = function(offset)
 
 model.hexagon.coordinate.Offset.prototype.toCube = function()
 {
-    var x = this.q;
-    var z = this.r - (this.q + (this.x & 1)) / 2;
-    var y = -x - z;
+    switch (this.layout) {
+        case model.hexagon.coordinate.Offset.ODD_R:
+            var x = this.q - (this.r - (this.r&1)) / 2;
+            var z = this.r;
+            var y = -x - z;
+            break;
+        // todo ... implementify rest
+    }
 
-    return new model.hexagon.coordinate.Cube(x, y, z);
+    return new model.hexagon.coordinate.Cube(x, y, z).round();
 }
