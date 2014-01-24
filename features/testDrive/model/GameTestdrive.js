@@ -18,13 +18,14 @@ GameTestdrive.prototype.addTestDriveShip = function(shipDesign)
 	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
 	var ship = this.shipStorage.createFromDesignId(shipDesign._id, Meteor.userId());
 	
+	/*
 	ship.status.managers.movement.addStartPosition(new model.MovementWaypoint({
         time: 0,
         position: {x:0, y:0},
         velocity: {x:500, y:0},
         facing: 0
     }));
-    
+    */
     console.log(fleet);
 	fleet.addShip(ship);
 	console.log("this.fleets", this.fleets, this.fleets.push);

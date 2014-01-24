@@ -1,6 +1,6 @@
 model.MovementManagement = function MovementManagement()
 {
-
+	this._route = [];
 };
 
 model.MovementManagement.prototype = Object.create(model.ShipStatusManager.prototype);
@@ -17,6 +17,12 @@ model.MovementManagement.prototype.getFacing = function(currentTime)
 {
     return 0
 }
+
+model.MovementManagement.prototype.targetHex = function(hex)
+{
+    ship.setPosition(this._getScenePosition(gameTime));
+    ship.setAzimuth(this.getFacing(gameTime));
+};
 
 model.MovementManagement.prototype.animate = function(ship, gameTime)
 {
