@@ -1,8 +1,13 @@
-model.ModuleDetailView = function ModuleDetailView(target)
+model.ModuleDetailView = function ModuleDetailView(target, dispatcher)
 {
-    this.target = target;
+	console.log("disp", dispatcher);
+    model.TooltipView.call(this, target, dispatcher);
     this.currentModule = null;
+    this.htmlClass = 'moduledetailview';
 };
+
+model.ModuleDetailView.prototype = Object.create(model.TooltipView.prototype);
+
 
 model.ModuleDetailView.prototype.display = function(
 	module, position, shipStatus)
@@ -37,11 +42,6 @@ model.ModuleDetailView.prototype.display = function(
     this.position(position, module);
 };
 
-model.ModuleDetailView.prototype.hide = function()
-{
-    this.getTemplate().hide();
-};
-
 model.ModuleDetailView.prototype.position = function(position, module)
 {
     this.getTemplate().css(
@@ -50,16 +50,4 @@ model.ModuleDetailView.prototype.position = function(position, module)
             'top': (position.y - module.getHeight()/2*30) + 'px'
         })
         .show();
-};
-
-model.ModuleDetailView.prototype.getTemplate = function()
-{
-    var template = jQuery('#moduleDetailView', this.target);
-
-    if (template.length == 0)
-    {
-        template = jQuery('<div id="moduleDetailView" style="display:none;position:absolute;left:0px;top:0px;"></div>').appendTo(this.target);
-    }
-
-    return template;
 };

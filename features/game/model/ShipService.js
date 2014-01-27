@@ -1,6 +1,5 @@
 model.ShipService = function ShipService(
 	fleets,
-	moduleView,
 	shipStatusView,
 	dispatcher,
 	uiEventResolver,
@@ -9,7 +8,6 @@ model.ShipService = function ShipService(
 	this.fleets = fleets;
 	this.dispatcher = dispatcher;
 	this.uiEventResolver = uiEventResolver;
-	this.moduleView = moduleView;
 	this.shipStatusView = shipStatusView;
 	this.coordinateConverter = coordinateConverter
 
@@ -132,6 +130,9 @@ model.ShipService.prototype.onZoom = function(event)
 
 model.ShipService.prototype.onClick = function(event)
 {
+	if ( ! event.clickStrategy.clickShip)
+		return;
+		
     var ship = this.getClosestShip(event.game);
     if (! ship)
         return;
@@ -150,26 +151,24 @@ model.ShipService.prototype.onClick = function(event)
 
 model.ShipService.prototype.onMouseMove = function(event)
 {
-    if (this.zoom < 1)
-    {
-        this.moduleView.display(null);
-        return;
-    }
-
-    var ship = this.getClosestShip();
+	if ( ! event.clickStrategy.mouseOverShip)
+		return;
+		
+	var ship = this.getClosestShip(event.game);
     if (! ship)
-        return;
-
-    var module = ship.getIcon().getModuleOnPosition(event.game);
-
-    if (! module)
     {
-        this.moduleView.display(null);
+		event.clickStrategy.mouseOverShip(null);
         return;
-    }
+	}
 
-    var modulePos = this.coordinateConverter.fromGameToViewPort(
-        ship.getIcon().getModulePositionInGame(module));
+	var position = ship.getIcon().getTileOnPosition(event.game);
 
-    this.moduleView.display(module, modulePos, ship.status);
+	if (! ship.getIcon().occupiesPosition(position))
+	{
+		event.clickStrategy.mouseOverShip(null);
+        return;
+	}
+	
+	event.clickStrategy.mouseOverShip(ship, position, event);
 };
+

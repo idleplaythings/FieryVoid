@@ -31,7 +31,7 @@ model.shipDesignEditor = function shipDesignEditor(
 
     this.icon = new model.ShipIconEditor();
 
-    this.moduleView = new model.ModuleDetailView(iconcontainer);
+    this.moduleView = new model.ModuleDetailView(iconcontainer, dispatcher);
 
     this.coordinateConverter =
         new model.CoordinateConverterViewPort(this.gameScene);

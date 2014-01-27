@@ -1,7 +1,7 @@
 model.ShipStatusView = function ShipStatusView(target, coordinateConverter, dispatcher)
 {
 	this.coordinateConverter = coordinateConverter;
-	this.moduleView = new model.ModuleDetailView(target);
+	this.moduleView = new model.ModuleDetailView(target, dispatcher);
 	this.target = target;
     this.shipIcon = null;
     this.hidden = false;

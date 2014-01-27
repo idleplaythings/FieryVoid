@@ -11,8 +11,6 @@ function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactor
     this.fleetStorage = fleetStorage;
     this.timelineFactory = timelineFactory;
 
-
-    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.setState(args);
 
     this.name = "a game";
@@ -65,22 +63,6 @@ Game.prototype.setState = function(args)
     this.created = args.created || null;
 };
 
-Game.prototype.init = function()
-{
-    if (Meteor.isServer)
-        return;
-
-    this.gridService.init(100, 100, 300);
-
-    this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
-
-    this.uiEventResolver = new model.UiFocusResolver(
-        this.coordinateConverter, this.dispatcher);
-
-    //this.movementFactory.createWaypointMenu(
-    //    this.coordinateConverter, this.dispatcher, this.uiEventResolver);
-};
-
 Game.prototype.addPlayer = function(id)
 {
     var players = [].concat(id).map(function(id){
@@ -103,7 +85,23 @@ Game.prototype.getPlayer = function(id)
 
 Game.prototype.play = function()
 {
-    var container = $('#gameContainer');
+	var container = $('#gameContainer');
+	this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    this.gridService.init(100, 100, 300);
+
+    this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
+
+	this.clickStrategyFactory = new model.ClickStrategyFactory(
+		this.dispatcher, 
+		this.coordinateConverter,
+		new model.ModuleDetailView(container, this.dispatcher),
+		new model.ShipTooltipView(container, this.dispatcher)
+	);
+
+    this.uiEventResolver = new model.UiFocusResolver(
+        this.coordinateConverter, this.dispatcher, this.clickStrategyFactory);
+        
+	
     //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
@@ -136,16 +134,21 @@ Game.prototype.play = function()
 
 	this.shipService = new model.ShipService(
 		this.fleets,
-		new model.ModuleDetailView(container),
 		shipStatusView,
 		this.dispatcher,
 		this.uiEventResolver,
 		this.coordinateConverter
 	);
-
+	
 	this.uiEventResolver.addClickStrategy(
-		new model.ClickStrategySelect(this.shipService)
+		this.clickStrategyFactory.construct(
+			'ClickStrategySelect', 
+			{
+				shipService: this.shipService
+			})
 	);
+
+	
 
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
@@ -183,7 +186,6 @@ Game.prototype.animate = function()
 Game.prototype.load = function(doc)
 {
     this.setState(doc);
-    this.init();
     this.fleets = this.fleetStorage.getFleetsInGame(this._id);
 
     return this;

@@ -1,28 +1,28 @@
-#moduleDetailView
+.tooltipView
 {
     background-color:rgba(0,0,0,0.8);
     max-width: 300px;
     padding:2px 5px;
 }
 
-#moduleDetailView p{
+.tooltipView p{
     margin:2px 5px;
     padding:0;
 }
 
-#moduleDetailView div{
+.tooltipView div{
     margin:2px 0px;
     display:inline-block;
     position:relative;
     width:100%;
 }
 
-#moduleDetailView canvas{
+.tooltipView canvas{
     display:inline-block;
     vertical-align: middle;
 }
 
-#moduleDetailView span{
+.tooltipView span{
     display:inline-block;
     vertical-align: middle;
     margin-left:10px;

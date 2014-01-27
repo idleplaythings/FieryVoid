@@ -26,7 +26,8 @@ model.WeaponManagement.prototype.selectWeapon = function(module)
 	
 	if ( ! (current instanceof model.ClickStrategyWeapon))
 	{
-		current  = new model.ClickStrategyWeapon(this);
+		current  = this.uiResolver.clickStrategyFactory.construct(
+			'ClickStrategyWeapon', {weaponManager: this});
 		this.uiResolver.addClickStrategy(current);
 	}
 	

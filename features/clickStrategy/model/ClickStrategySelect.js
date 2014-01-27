@@ -1,7 +1,12 @@
-model.ClickStrategySelect = function ClickStrategySelect(shipService)
+model.ClickStrategySelect = function ClickStrategySelect(args)
 {
-	this.shipService = shipService;
+	model.ClickStrategy.call(this, args);
+
+	this.shipService = args.shipService;
 };
+
+model.ClickStrategySelect.prototype = Object.create(model.ClickStrategy.prototype);
+
 
 model.ClickStrategySelect.prototype.clickShip = function(ship, position, event)
 {

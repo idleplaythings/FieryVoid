@@ -1,8 +1,10 @@
-model.ClickStrategyWeapon = function ClickStrategyWeapon(weaponManager)
+model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
 {
-	this.weaponManager = weaponManager;
+	model.ClickStrategy.call(this, args);
+	this.weaponManager = args.weaponManager;
 	this.weapons = [];
 };
+
 
 model.ClickStrategyWeapon.prototype = Object.create(model.ClickStrategy.prototype);
 

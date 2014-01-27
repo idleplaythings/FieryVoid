@@ -1,4 +1,5 @@
-model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDispatcher)
+model.UiFocusResolver = function UiFocusResolver(
+	coordinateConverter, externalDispatcher, clickStrategyFactory)
 {
     this.listeners = {
         click: [],
@@ -20,6 +21,7 @@ model.UiFocusResolver = function UiFocusResolver(coordinateConverter, externalDi
     this.distanceDragged = 0;
     this.draggingDistanceTreshold = 10;
 
+	this.clickStrategyFactory = clickStrategyFactory;
     this.clickStrategyStates = [];
 
     this._coordinateConverter = coordinateConverter;
@@ -214,7 +216,6 @@ model.UiFocusResolver.prototype.click = function(event)
     var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
 
 	var payload = this.getViewPortAndGameObject(pos, gamePos);
-	payload.clickStrategy = this.getCurrentClickStrategy();
 
     this.fireEvent(
         payload,
@@ -226,7 +227,8 @@ model.UiFocusResolver.prototype.fireEvent = function(payload, listeners)
 {
     payload.stopped = false;
     payload.stop = function(){this.stopped = true;};
-
+	payload.clickStrategy = this.getCurrentClickStrategy();
+	
     for (var i in listeners)
     {
         var listener = listeners[i];
