@@ -53,5 +53,37 @@ describe("MovementAction", function() {
 		expect(action.turnDirection(12)).toEqual(0);
 		
     });
+    
+    it("should resolve needed thrusters properly", function() {
+		
+		var mockPosition = {
+			add: function(){},
+			getNeighbours: function(){ return [0,1,2,3,4,5]}
+		};
+		
+		var action = new model.movement.Action({
+			position: mockPosition,
+			direction: 2,
+			facing: 4
+		});
+		
+		expect(action._getThrusterDirection(model.movement.Action.THRUSTER_LEFT))
+			.toEqual(model.movement.Action.THRUSTER_RIGHT)
+			
+		expect(action._getThrusterDirection(model.movement.Action.THRUSTER_FRONT))
+			.toEqual(model.movement.Action.THRUSTER_REAR)
+			
+		action = new model.movement.Action({
+			position: mockPosition,
+			direction: 2,
+			facing: 1
+		});
+		
+		expect(action._getThrusterDirection(model.movement.Action.THRUSTER_LEFT))
+			.toEqual(model.movement.Action.THRUSTER_LEFT)
+			
+		expect(action._getThrusterDirection(model.movement.Action.THRUSTER_FRONT))
+			.toEqual(model.movement.Action.THRUSTER_FRONT)
+	});
 
 });

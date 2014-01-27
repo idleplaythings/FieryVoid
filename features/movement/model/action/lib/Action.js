@@ -17,6 +17,11 @@ model.movement.Action = function Action(args)
 	this._validate();
 };
 
+model.movement.Action.THRUSTER_FRONT = 0;
+model.movement.Action.THRUSTER_RIGHT = 90;
+model.movement.Action.THRUSTER_REAR = 180;
+model.movement.Action.THRUSTER_LEFT = 270;
+
 model.movement.Action.createFrom = 
 	function(lastAction, movementStatus)
 {
@@ -109,4 +114,21 @@ model.movement.Action.prototype._validate = function()
 		
 	if (this.speed < 0)
 		throw new Error("Negative speed not allowed for movement action");
+};
+
+model.movement.Action.prototype._getThrusterDirection = function(dir)
+{
+	var diff = (Math.abs(this._direction - this._facing));
+	var max = this._position.getNeighbours().length;
+	
+	if (max - diff < diff)
+		diff = max - diff;
+		
+	if (diff > 1)
+		dir = MathLib.addToAzimuth(dir, 180);
+		
+	if (dir == 360)
+		dir = 0;
+		
+	return dir;
 };

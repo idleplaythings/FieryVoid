@@ -32,31 +32,29 @@ model.movement.Action.Turn.prototype.getTurnDelay =
 	function(movementStatus)
 {
 	return Math.ceil(
-		this.speed * movementStatus.getShipTurnDelaySpeedFactor());
+		this._speed * movementStatus.getShipTurnDelaySpeedFactor());
 };
 
 model.movement.Action.Turn.prototype.getThrustCost = 
 	function(movementStatus)
 {
-	/*
-	var thrustCost = new model.ThrustCost();
+	var thrustCost = new model.movement.ThrustCost();
 	var totalCost = 
-		Math.ceil(this.movementStatus.getTurnCostSpeedFactor * this.speed);
+		Math.ceil(movementStatus.getTurnCostSpeedFactor() * this._speed);
 	
-	var side = this.getSideThrusterLocation(
-		this.orginalDirection, this.direction);
-		
-	var rear = this.getRearThrusterLocation
-		this.orginalDirection, this.direction);
+	var dir = this._turnDirection == model.movement.Action.Turn.CW ? 270 : 90;
+	var side = this._getThrusterDirection(dir);	
+	var rear = this._getThrusterDirection(180);
 	
 	var cost = Math.floor(totalCost / 2);
 	var extra = Math.floor(totalCost % 2);
 	
 	thrustCost.setCost(side, cost);
 	thrustCost.setCost(rear, cost);
+	thrustCost.setCost([side, rear], extra);
 	
 	return thrustCost;
-	*/
+	
 };
 
 model.movement.Action.Turn.prototype._validateTurnDirection = function()

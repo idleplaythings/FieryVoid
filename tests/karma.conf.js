@@ -27,6 +27,7 @@ module.exports = function(config) {
         'features/movement/model/action/lib/Action.js',
         'features/movement/model/action/Move.js',
         'features/movement/model/action/Turn.js',
+        'features/movement/model/ThrustCost.js',
         'features/movement/model/MovementResolver.js',
         'features/movement/model/ThrusterResolver.js',
         'features/movement/model/ThrusterForMovement.js',
