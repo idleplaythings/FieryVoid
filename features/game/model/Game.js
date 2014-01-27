@@ -1,6 +1,6 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, gameScene, args) {
+function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, args) {
     if ( ! args)
         args = {};
 
@@ -10,10 +10,9 @@ function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactor
     this.shipStorage = shipStorage;
     this.fleetStorage = fleetStorage;
     this.timelineFactory = timelineFactory;
-    this.gameScene = gameScene;
 
 
-    // this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
     this.setState(args);
 
     this.name = "a game";
@@ -36,11 +35,12 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 		}
 
 		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
-
+		/*
 		ship.status.managers.movement.addStartPosition( {
 			//TODO: movement
 		});
-
+		*/
+		
 		fleet.addShip(ship);
 	}
 
