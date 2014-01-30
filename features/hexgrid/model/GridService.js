@@ -44,7 +44,7 @@ model.GridService.prototype.resolveGridCoordinates = function(gameCoordinates)
     return this._coordinateResolver.gameCoordinatesToOffsetCoordinates(gameCoordinates, this._hexSize);
 }
 
-model.GridService.prototype.getPathBetween = function(start, end)
+model.GridService.prototype.rayTrace = function(start, end)
 {
     start = start.toCube();
     end = end.toCube();
@@ -55,6 +55,80 @@ model.GridService.prototype.getPathBetween = function(start, end)
 
     for (var i=0; i<=distance; i++) {
         path.push(start.add(delta.scale(i/distance)).round().toOddR());
+    }
+
+    return path;
+}
+
+model.GridService.prototype.findPath = function(
+    start, end, pathCost, heuristicCost, movementCost, debugClosed
+)
+{
+    start = start.toCube();
+    end = end.toCube();
+
+    var filterByNodeAndCost = function(needle, cost) {
+        return function(node, index, arr) {
+            if (node.equals(needle) && cost < node.cost) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    var findNode = function(needle) {
+        return function(node) {
+            return node.equals(needle);
+        }
+    }
+
+    start.cost = 0;
+    start.rank = Infinity;
+    start.parent = null;
+
+    var open = [ start ];
+    var closed = [];
+
+    while (open[0].equals(end) === false) {
+        current = open.shift();
+        closed.push(current);
+
+        current.getNeighbours().forEach(function(neighbour) {
+            var cost = pathCost(start, current) + movementCost(current, neighbour);
+
+            // Remove equal nodes with worse costs from open array
+            open = open.filter(filterByNodeAndCost(neighbour, cost));
+
+            // Remove equal nodes with worse costs from closed array
+            closed = closed.filter(filterByNodeAndCost(neighbour, cost));
+
+            if (!open.find(findNode(neighbour)) && !closed.find(findNode(neighbour))) {
+                neighbour.cost = cost;
+                neighbour.rank = cost + heuristicCost(neighbour, end);
+                neighbour.parent = current;
+                open.push(neighbour);
+            }
+        });
+
+        open.sort(function(a, b) {
+            return a.rank - b.rank;
+        })
+    };
+
+    var path = [];
+    var current = open[0];
+
+    while (current !== null) {
+        console.log(current)
+        path.push(current.toOddR());
+        current = current.parent;
+    }
+
+    if (debugClosed instanceof Array) {
+        closed.forEach(function(closed) {
+            debugClosed.push(closed.toOddR());
+        });
     }
 
     return path;
