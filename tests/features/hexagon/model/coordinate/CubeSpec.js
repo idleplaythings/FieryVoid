@@ -108,4 +108,20 @@ describe("Cube Coordinate", function() {
 
         expect(start1.distanceTo(end1)).toEqual(2);
     })
+
+    it("compares itself to another cube", function() {
+        var cube1 = new Cube(1, 1, -2);
+        var cube2 = new Cube(1, 1, -2);
+        var cube3 = new Cube(1, 2, -3);
+
+        expect(cube1.equals(cube2)).toEqual(true);
+        expect(cube2.equals(cube1)).toEqual(true);
+        expect(cube1.equals(cube3)).toEqual(false);
+        expect(cube3.equals(cube1)).toEqual(false);
+    });
+
+    it("returns it's coordinates as a string", function() {
+        var cube = new Cube(1, 1, -2);
+        expect(cube.toString()).toEqual('(1,1,-2)');
+    });
 });

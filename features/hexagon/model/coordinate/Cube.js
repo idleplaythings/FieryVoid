@@ -105,6 +105,13 @@ model.hexagon.coordinate.Cube.prototype.distanceTo = function(cube)
     );
 }
 
+model.hexagon.coordinate.Cube.prototype.equals = function(cube)
+{
+    return this.x === cube.x &&
+           this.y === cube.y &&
+           this.z === cube.z;
+}
+
 model.hexagon.coordinate.Cube.prototype.toEvenR = function()
 {
     var q = this.x + (this.z + (this.z & 1)) / 2;
@@ -123,6 +130,11 @@ model.hexagon.coordinate.Cube.prototype.toOddR = function()
     var Offset = model.hexagon.coordinate.Offset;
 
     return new Offset(q, r, Offset.ODD_R);
+}
+
+model.hexagon.coordinate.Cube.prototype.toString = function()
+{
+    return "(" + this.x + "," + this.y + "," + this.z + ")";
 }
 
 model.hexagon.coordinate.Cube.prototype._formatNumber = function(number) {
