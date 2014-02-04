@@ -4,17 +4,9 @@ if ( typeof model === 'undefined')
 if ( typeof model.movement === 'undefined')
     model.movement = {};
 
-model.movement.Action = function Action(args)
+model.movement.Action = function Action()
 {
-	if (! args)
-		args = {};
-		
-	this._position = args.position;
-	this._facing = args.facing || 0;
-	this._direction = args.direction || 0;
-	this._speed = args.speed || 0;
 	
-	this._validate();
 };
 
 model.movement.Action.THRUSTER_FRONT = 0;
@@ -22,113 +14,61 @@ model.movement.Action.THRUSTER_RIGHT = 90;
 model.movement.Action.THRUSTER_REAR = 180;
 model.movement.Action.THRUSTER_LEFT = 270;
 
-model.movement.Action.createFrom = 
-	function(lastAction, movementStatus)
+model.movement.Action.prototype.apply = 
+	function(current, movementAbility)
 {
-	return new model.movement.Action(lastAction);
+	return new model.movement.Action.Current({
+		position: this.getPosition(current, movementAbility),
+		facing: this.getFacing(current, movementAbility),
+		direction: this.getDirection(current, movementAbility),
+		speed: this.getSpeed(current, movementAbility),
+		turnDelay: this.getTurnDelay(current, movementAbility),
+		slipDelay: this.getSlipDelay(current, movementAbility),
+		thrustCost: current.getThrustCost().add(this.getThrustCost(current, movementAbility))
+	});
 };
 
-model.movement.Action.prototype.getPosition = function()
+model.movement.Action.prototype.getPosition = function(current, movementAbility)
 {
-	return this._position;
+	return current.getPosition();
 };
 
-model.movement.Action.prototype.getFacing = function()
+model.movement.Action.prototype.getFacing = function(current, movementAbility)
 {
-	return this._facing;
+	return current.getFacing();
 };
 
-model.movement.Action.prototype.getDirection = function()
+model.movement.Action.prototype.getDirection = function(current, movementAbility)
 {
-	return this._direction;
+	return current.getDirection();
 };
 
-model.movement.Action.prototype.getSpeed = function()
+model.movement.Action.prototype.getSpeed = function(current, movementAbility)
 {
-	return this._speed;
+	return current.getSpeed();
 };
 
-model.movement.Action.prototype.getTurnDelay = function(movementStatus)
+model.movement.Action.prototype.getTurnDelay = function(current, movementAbility)
 {
-	return 0;
+	return current.getTurnDelay();
 };
 
-model.movement.Action.prototype.getSlipDelay = function(movementStatus)
+model.movement.Action.prototype.getSlipDelay = function(current, movementAbility)
 {
-	return 0;
+	return current.getSlipDelay();
 };
 
-model.movement.Action.prototype.getThrustCost = function(movementStatus)
+model.movement.Action.prototype.getThrustCost = function(current, movementAbility)
 {
-	return null;
+	return new model.movement.ThrustCost();
 };
 
-model.movement.Action.prototype.getStepInDirection = 
-	function(direction)
+model.movement.Action.prototype.getTotalThrustCost = function(current, movementAbility)
 {
-	return this._position.add(this._position.getNeighbours()[direction]);
-};
-
-model.movement.Action.prototype.turnDirection = 
-	function(turn)
-{
-	return this._turn(this.direction, turn);
-};
-
-model.movement.Action.prototype.turnFacing = 
-	function(turn)
-{
-	return this._turn(this.facing, turn);
-};
-
-model.movement.Action.prototype._turn = 
-	function(current, turn)
-{
-	var max = this._position.getNeighbours().length;
-	var direction = this._direction + turn;
+	var cost = this.getThrustCost(current, movementAbility);
 	
-	if (direction < 0)
-		direction = max + (direction % max);
+	if ( ! cost)
+		return 0;
 		
-	if (direction > max - 1)
-		direction = direction % max;
-		
-	return direction;
-};
-
-model.movement.Action.prototype._validate = function()
-{
-	if ( ! this._position)
-		throw new Error("Movement action requires a position");
-		
-	if ( ! this._position.getNeighbours || ! this._position.add)
-		throw new Error("Movement action requires a position that implements 'getNeighbours' and 'add'");
-		
-	var neighbours = this._position.getNeighbours();
-	
-	if (this._direction < 0 || this._direction > neighbours.length -1)
-		throw new Error("Illegal direction for movement action: '"+this.direction+"'");
-		
-	if (this._facing < 0 || this._facing > neighbours.length -1)
-		throw new Error("Illegal facing for movement action: '"+this.facing+"'");
-		
-	if (this.speed < 0)
-		throw new Error("Negative speed not allowed for movement action");
-};
-
-model.movement.Action.prototype._getThrusterDirection = function(dir)
-{
-	var diff = (Math.abs(this._direction - this._facing));
-	var max = this._position.getNeighbours().length;
-	
-	if (max - diff < diff)
-		diff = max - diff;
-		
-	if (diff > 1)
-		dir = MathLib.addToAzimuth(dir, 180);
-		
-	if (dir == 360)
-		dir = 0;
-		
-	return dir;
+	return cost.getTotalCost();
 };

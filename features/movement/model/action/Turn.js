@@ -1,12 +1,6 @@
-model.movement.Action.Turn = function Turn(args)
+model.movement.Action.Turn = function Turn(turnDirection)
 {
-	if ( ! args)
-		args = {};
-		
-	this._turnDirection = args.turnDirection;
-	
-	model.movement.Action.call(this, args);
-	
+	this._turnDirection = turnDirection;
 	this._validateTurnDirection();
 };
 
@@ -16,42 +10,38 @@ model.movement.Action.Turn.CCW = -1;
 model.movement.Action.Turn.prototype = 
 	Object.create(model.movement.Action.prototype);
 
-model.movement.Action.Turn.createFrom = 
-	function(turnDirection, action)
+model.movement.Action.Turn.prototype.getFacing = function(current, movementAbility)
 {
-	return new model.movement.Action.Turn({
-			position: action.getPosition(),
-			facing: action.turnFacing(turnDirection),
-			direction: action.turnDirection(turnDirection),
-			speed: action.getSpeed()
-		}
-	);
+	return current.turnFacing(this._turnDirection);
+};
+
+model.movement.Action.Turn.prototype.getDirection = function(current, movementAbility)
+{
+	return current.turnDirection(this._turnDirection);
 };
 
 model.movement.Action.Turn.prototype.getTurnDelay = 
-	function(movementStatus)
+	function(current, movementAbility)
 {
 	return Math.ceil(
-		this._speed * movementStatus.getShipTurnDelaySpeedFactor());
+		current.getSpeed() * movementAbility.getShipTurnDelaySpeedFactor());
 };
 
 model.movement.Action.Turn.prototype.getThrustCost = 
-	function(movementStatus)
+	function(current, movementAbility)
 {
 	var thrustCost = new model.movement.ThrustCost();
 	var totalCost = 
-		Math.ceil(movementStatus.getTurnCostSpeedFactor() * this._speed);
+		Math.ceil(movementAbility.getTurnCostSpeedFactor() * current.getSpeed());
 	
 	var dir = this._turnDirection == model.movement.Action.Turn.CW ? 270 : 90;
-	var side = this._getThrusterDirection(dir);	
-	var rear = this._getThrusterDirection(180);
+	var side = current.getThrusterDirection(dir);	
+	var rear = current.getThrusterDirection(180);
 	
-	var cost = Math.floor(totalCost / 2);
-	var extra = Math.floor(totalCost % 2);
+	var cost = totalCost / 2;
 	
 	thrustCost.setCost(side, cost);
 	thrustCost.setCost(rear, cost);
-	thrustCost.setCost([side, rear], extra);
 	
 	return thrustCost;
 	
@@ -61,5 +51,11 @@ model.movement.Action.Turn.prototype._validateTurnDirection = function()
 {
 	if ( this._turnDirection != model.movement.Action.Turn.CW
 		&& this._turnDirection != model.movement.Action.Turn.CCW)
-		throw new Error("Invalid turn direction");
+		throw new Error("Invalid turn direction: '" + this._turnDirection + "'");
+};
+
+model.movement.Action.Turn.prototype.validateInContextOrFail = function(current)
+{
+	if (current.getTurnDelay() > 0)
+		throw new Error("Unable to turn within turn delay");
 };

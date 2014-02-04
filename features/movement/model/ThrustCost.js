@@ -1,6 +1,11 @@
 model.movement.ThrustCost = function ThrustCost()
 {
-	this.costs = {};
+	this.costs = {
+		0: 0,
+		90: 0,
+		180: 0,
+		270: 0
+	};
 };
 
 model.movement.ThrustCost.prototype.setCost = function(directions, cost)
@@ -8,8 +13,34 @@ model.movement.ThrustCost.prototype.setCost = function(directions, cost)
 	if (cost <= 0)
 		return;
 	
-	if (this.costs[directions])
-		this.costs[directions] += cost;
+	this.costs[directions] += cost;
+	
+	return this;
+};
 
-	this.costs[directions] = cost;
+model.movement.ThrustCost.prototype.getCosts = function()
+{
+	return this.costs;
+};
+
+model.movement.ThrustCost.prototype.getTotalCost = function()
+{
+	return this.costs.reduce(function(total, cost){ return total + cost; }, 0);
+};
+
+model.movement.ThrustCost.prototype.add = function(cost)
+{
+	var newCost = new model.movement.ThrustCost();
+	
+	for (var d in this.costs)
+	{
+		newCost.setCost(d, this.costs[d]);
+	}
+	
+	for (var d in cost.costs)
+	{
+		newCost.setCost(d, cost.costs[d]);
+	}
+	
+	return newCost;
 };

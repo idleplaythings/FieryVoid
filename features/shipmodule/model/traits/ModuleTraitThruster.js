@@ -39,26 +39,20 @@ model.ModuleTraitThruster.prototype.extend = function(obj)
     obj.registerAnimator(this.effect);
 };
 
-model.ModuleTraitThruster.prototype.getBaseThrustVector = function()
+model.ModuleTraitThruster.prototype.getThrustDirection = function()
 {
     switch(this.module.direction)
     {
-        case 1: return new Vector2(-1, 0);
-        case 2: return new Vector2(0, -1);
-        case 3: return new Vector2(0, 1);
-        case 4: return new Vector2(1, 0);
+        case 1: return 0;
+        case 2: return 270;
+        case 3: return 90;
+        case 4: return 180;
     }
 };
 
 model.ModuleTraitThruster.prototype.getMaxChannel = function()
 {
     return this.maxChannel;
-};
-
-model.ModuleTraitThruster.prototype.getThrustEfficiency = function()
-{
-    //If the truster is damaged, modify efficiency here
-    return this.efficiency * 20;
 };
 
 model.ModuleTraitThruster.prototype.getThrustForceVector = function()

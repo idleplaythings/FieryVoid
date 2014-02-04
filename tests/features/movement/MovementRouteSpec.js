@@ -1,0 +1,246 @@
+describe("MovementRoute", function() {
+
+	var movementAbility, start, route, action;
+	
+	beforeEach(function() {
+		
+		action = model.movement.Action;
+		
+		movementAbility = new model.movement.MovementAbility(1, 0.4, 0.4, 10, [
+			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
+		]);
+		start = new model.movement.Action.Current({
+			position: new model.hexagon.coordinate.Cube(0,0,0),
+			facing: 0,
+			direction: 0,
+			speed: 5
+		});
+		
+    });
+    
+    it("should throw if too few moves", function() {
+		
+		actions = [
+			new action.Move(),
+			new action.Move(),
+		];
+	
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+	});
+	
+	 it("should throw if too many moves", function() {	
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+		];
+	
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+	});
+	
+	it("should throw if not observing turn delay", function() {	
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.TurnLeft(),
+			new action.TurnRight(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move()
+		];
+	
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.TurnLeft(),
+			new action.Move(), // turn delay 1 satisified
+			new action.TurnRight(),
+			new action.Move(),
+			new action.Move()
+		];
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).not.toThrow();
+    });
+    
+    it("should throw if not enough thrust to pay", function() {	
+		movementAbility = new model.movement.MovementAbility(1, 0.4, 0.4, 1, [
+			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
+			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
+		]);
+		
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.TurnLeft(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move()
+		];
+	
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+    });
+    
+     it("should throw if not enough thruster capacity to pay", function() {	
+		movementAbility = new model.movement.MovementAbility(1, 1, 1, 10, [
+			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 1}),
+			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 1}),
+			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 1}),
+			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 1})
+		]);
+		
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.TurnLeft(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move()
+		];
+	
+		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+    });
+	
+	it("should be able to take actions", function() {
+		
+		var move = new action.Move();
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				move, 
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.Move()
+			]);
+		
+		expect(route._modifiers[0]).toBe(move);
+    });
+    
+    
+    it("should be able to apply moves together", function() {
+		
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.Move()
+			]);
+				
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(5,-5,0));
+    });
+    
+    it("should be able to apply moves and turns together", function() {
+
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.TurnLeft(),
+				new action.Move(),
+				new action.Move(),
+				new action.TurnRight(),
+				new action.Move()
+			]);
+			
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(3, -5, 2));
+    });
+    
+    it("should be able to evaluate its cost", function() {
+
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.TurnLeft(),
+				new action.Move(),
+				new action.Move(),
+				new action.TurnRight(),
+				new action.Move()
+			]);
+		
+		expect(route.getCurrent().getThrustCost().costs).toEqual({ 0 : 0, 90 : 1, 180 : 2, 270 : 1 });
+    });
+    
+    it("should be able to deaccelerate", function() {
+
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.SpeedDeaccelerate()
+				
+			]);
+		
+		expect(route.getCurrent().getSpeed()).toEqual(4);	
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(4, -4, 0));
+    });
+    
+    it("should be able to accelerate", function() {
+
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.SpeedAccelerate()
+				
+			]);
+		
+		expect(route.getCurrent().getSpeed()).toEqual(6);	
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(6, -6, 0));
+    });
+    
+    it("deaccelerating below zero should change direction", function() 
+    {
+		start = new model.movement.Action.Current({
+			position: new model.hexagon.coordinate.Cube(0,0,0),
+			facing: 2,
+			direction: 2,
+			speed: 1
+		});
+		
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.SpeedDeaccelerate(),
+				new action.SpeedDeaccelerate(),
+				new action.Move(),
+				
+			]);
+		
+		expect(route.getCurrent().getSpeed()).toEqual(1);
+		expect(route.getCurrent().getDirection()).toEqual(5);
+		expect(route.getCurrent().getFacing()).toEqual(2);	
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, -1, 1));
+    });
+	
+	
+});
