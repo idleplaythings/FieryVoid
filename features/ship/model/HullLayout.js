@@ -12,6 +12,12 @@ model.HullLayout = function HullLayout(args)
     this.hullScale = args.hullScale || 1;
     this.disabledTiles = args.disabledTiles || [];
     this.tileHeights = args.tileHeights || [];
+    
+    this.baseTurnCost = 1;
+    this.baseTurnDelay = 1;
+    this.baseSpeedCost = 1;
+    
+    
     this.color = args.color || '100,100,100';
 
     this.deprecated = args.deprecated || false;

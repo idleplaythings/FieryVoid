@@ -1,6 +1,7 @@
-model.ModuleLayoutOnShip = function ModuleLayoutOnShip(args, ship)
+model.ModuleLayoutOnShip = function ModuleLayoutOnShip(idOnShip, args, ship)
 {
     model.ModuleLayout.call(this, args);
+    this.idOnShip = idOnShip;
     this.ship = ship;
 };
 

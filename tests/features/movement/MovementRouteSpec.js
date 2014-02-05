@@ -12,7 +12,7 @@ describe("MovementRoute", function() {
 			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
 		]);
-		start = new model.movement.Action.Current({
+		start = new model.movement.Position({
 			position: new model.hexagon.coordinate.Cube(0,0,0),
 			facing: 0,
 			direction: 0,
@@ -219,7 +219,7 @@ describe("MovementRoute", function() {
     
     it("deaccelerating below zero should change direction", function() 
     {
-		start = new model.movement.Action.Current({
+		start = new model.movement.Position({
 			position: new model.hexagon.coordinate.Cube(0,0,0),
 			facing: 2,
 			direction: 2,

@@ -1,5 +1,10 @@
-model.MovementManagement = function MovementManagement()
+model.MovementManagement = function MovementManagement(ship, timeline, thrustManager)
 {
+	this._ship = ship;
+	this._timeline = timeline;
+	this._thrustManager = thrustManager
+	
+	this._start = null;
 	this._route = [];
 };
 
@@ -11,6 +16,30 @@ model.MovementManagement.prototype.getCurrentPosition = function(currentTime)
         x: 3,
         y: 3
     }
+}
+
+model.MovementManagement.prototype.getStartPosition = function(position)
+{
+	if ( ! this._start)
+	{
+		var entry = this._timeline.filter(function(entry){ return entry.name == 'startPosition'}).pop();
+		if ( ! entry)
+			throw new Error("Ships require a start position");
+			
+		this._start = new model.movement.Position({
+			position: entry._position,
+			facing: entry._facing,
+			direction: entry._direction,
+			speed: entry._speed
+		});
+	}
+	return this._start;
+}
+
+model.MovementManagement.prototype.setStartPosition = function(position)
+{
+    this._timeline.add('startPosition', position);
+    this._start = position;
 }
 
 model.MovementManagement.prototype.getFacing = function(currentTime)
@@ -33,7 +62,33 @@ model.MovementManagement.prototype.animate = function(ship, gameTime)
 model.MovementManagement.prototype._getScenePosition = function(gameTime)
 {
     return this.gridService.resolveGameCoordinates(this.getCurrentPosition(gameTime));
-}
+};
+
+model.MovementManagement.prototype._getMovementAbility = function()
+{
+    return new model.Movement.MovementAbility(
+		this.getSpeedCost(),
+		this.getTurnCostSpeedFactor(),
+		this.getTurnDelaySpeedFactor(),
+		this._thrustManagement.getgetTotalThrustProduced(),
+		this._thrustManagement.getThrusters()
+    );
+};
+
+model.MovementManagement.prototype.getTurnDelaySpeedFactor = function()
+{
+    return this._ship.hullDesign.baseTurnDelay;
+};
+
+model.MovementManagement.prototype.getTurnCostSpeedFactor = function()
+{
+    return this._ship.hullDesign.baseTurnCost;
+};
+
+model.MovementManagement.prototype.getSpeedCost = function()
+{
+    return this._ship.hullDesign.baseSpeedCost;
+};
 
 // model.Movement = function Movement(modules, timeline, ship)
 // {

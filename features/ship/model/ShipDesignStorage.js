@@ -47,7 +47,8 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
             module.setPosition(moduleDetails.position);
             module.setDirection(moduleDetails.direction);
 
-            return new model.ModuleLayoutOnShip(module, ship);
+            return new model.ModuleLayoutOnShip(
+				moduleDetails.moduleIdOnShip, module, ship);
         }, this);
 
 	return new model.ShipDesignInGame(doc);

@@ -38,6 +38,7 @@ Meteor.methods({
         ShipDesigns.update(
             {$and: [{'_id': shipId}, {'owner': userid}]},
             {$push: {'modules':{
+				'moduleIdOnShip': new Meteor.Collection.ObjectID().toHexString(),
                 'module': moduleId,
                 'position': modulePosition,
                 'direction': direction

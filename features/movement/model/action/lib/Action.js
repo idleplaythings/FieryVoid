@@ -17,7 +17,7 @@ model.movement.Action.THRUSTER_LEFT = 270;
 model.movement.Action.prototype.apply = 
 	function(current, movementAbility)
 {
-	return new model.movement.Action.Current({
+	return new model.movement.Position({
 		position: this.getPosition(current, movementAbility),
 		facing: this.getFacing(current, movementAbility),
 		direction: this.getDirection(current, movementAbility),

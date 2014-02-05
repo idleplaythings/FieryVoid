@@ -114,6 +114,21 @@ Template.hullmenu.hullScale = function()
     return getFromSelectedLayout('hullScale');
 };
 
+Template.hullmenu.baseTurnCost = function()
+{
+    return getFromSelectedLayout('baseTurnCost');
+};
+
+Template.hullmenu.baseTurnDelay = function()
+{
+    return getFromSelectedLayout('baseTurnDelay');
+};
+
+Template.hullmenu.baseSpeedCost = function()
+{
+    return getFromSelectedLayout('baseSpeedCost');
+};
+
 Template.hullmenu.color = function()
 {
     return getFromSelectedLayout('color');

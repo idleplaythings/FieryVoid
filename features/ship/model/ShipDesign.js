@@ -14,6 +14,11 @@ model.ShipDesign = function ShipDesign(args)
     this.public = args.public || false;
 };
 
+model.ShipDesign.prototype.getModuleByOnShipId = function(id)
+{
+    return this.modules.filter(function(module){return module.idOnShip == id;})[0];
+};
+
 model.ShipDesign.prototype.getColor = function()
 {
     if (this.hullColor)

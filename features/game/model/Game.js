@@ -33,11 +33,11 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 		}
 
 		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
-		/*
-		ship.status.managers.movement.addStartPosition( {
+		
+		//ship.status.managers.movement.addStartPosition( {
 			//TODO: movement
-		});
-		*/
+		//});
+		
 		
 		fleet.addShip(ship);
 	}

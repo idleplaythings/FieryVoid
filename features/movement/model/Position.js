@@ -1,4 +1,4 @@
-model.movement.Action.Current = function Current(args)
+model.movement.Position = function Position(args)
 {
 	if (! args)
 		args = {};
@@ -13,65 +13,65 @@ model.movement.Action.Current = function Current(args)
 	this._thrustCost = args.thrustCost || new model.movement.ThrustCost();
 };
 
-model.movement.Action.THRUSTER_FRONT = 0;
-model.movement.Action.THRUSTER_RIGHT = 90;
-model.movement.Action.THRUSTER_REAR = 180;
-model.movement.Action.THRUSTER_LEFT = 270;
+model.movement.THRUSTER_FRONT = 0;
+model.movement.THRUSTER_RIGHT = 90;
+model.movement.THRUSTER_REAR = 180;
+model.movement.THRUSTER_LEFT = 270;
 
-model.movement.Action.Current.prototype.getThrustCost = function()
+model.movement.Position.prototype.getThrustCost = function()
 {
 	return this._thrustCost;
 };
 
-model.movement.Action.Current.prototype.getPosition = function()
+model.movement.Position.prototype.getPosition = function()
 {
 	return this._position;
 };
 
-model.movement.Action.Current.prototype.getFacing = function()
+model.movement.Position.prototype.getFacing = function()
 {
 	return this._facing;
 };
 
-model.movement.Action.Current.prototype.getDirection = function()
+model.movement.Position.prototype.getDirection = function()
 {
 	return this._direction;
 };
 
-model.movement.Action.Current.prototype.getSpeed = function()
+model.movement.Position.prototype.getSpeed = function()
 {
 	return this._speed;
 };
 
-model.movement.Action.Current.prototype.getTurnDelay = function()
+model.movement.Position.prototype.getTurnDelay = function()
 {
 	return this._turnDelay;
 };
 
-model.movement.Action.Current.prototype.getSlipDelay = function()
+model.movement.Position.prototype.getSlipDelay = function()
 {
 	return this._slipDelay;
 };
 
-model.movement.Action.Current.prototype.moveToDirection = 
+model.movement.Position.prototype.moveToDirection = 
 	function(direction)
 {
 	return this._position.moveToDirection(direction);
 };
 
-model.movement.Action.Current.prototype.turnDirection = 
+model.movement.Position.prototype.turnDirection = 
 	function(turn)
 {
 	return this._turn(this._direction, turn);
 };
 
-model.movement.Action.Current.prototype.turnFacing = 
+model.movement.Position.prototype.turnFacing = 
 	function(turn)
 {
 	return this._turn(this._facing, turn);
 };
 
-model.movement.Action.Current.prototype._turn = 
+model.movement.Position.prototype._turn = 
 	function(current, turn)
 {
 	var max = this._position.getNeighbours().length;
@@ -86,7 +86,7 @@ model.movement.Action.Current.prototype._turn =
 	return direction;
 };
 
-model.movement.Action.Current.prototype.getThrusterDirection = function(dir)
+model.movement.Position.prototype.getThrusterDirection = function(dir)
 {
 	var diff = (Math.abs(this._direction - this._facing));
 	var max = this._position.getNeighbours().length;
@@ -94,9 +94,6 @@ model.movement.Action.Current.prototype.getThrusterDirection = function(dir)
 	if (max - diff < diff)
 		diff = max - diff;
 		
-	//if (this.getSpeed() < 0)
-	//	dir = MathLib.addToAzimuth(dir, 180);
-	
 	if (diff > 1)
 		dir = MathLib.addToAzimuth(dir, 180);
 		

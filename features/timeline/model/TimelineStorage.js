@@ -120,7 +120,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 		
 		if (entry.needsRemoving())
 		{
-			entry.setDeleted();
+			entry.setRemoved();
 			
 			if ( ! timeline)
 				return;
