@@ -57,34 +57,7 @@ model.MovementManagement.prototype._resolveRoute = function()
 
     this._route = new model.movement.Route(this._start, this._getMovementAbility(), modifiers);
 
-    this._route.getRoute().reduce(function(last, position, i, a) {
-        if (last) {
-            var lastCenter = this.gridService.resolveGameCoordinates(last.getPosition().toOddR());
-            var currentCenter = this.gridService.resolveGameCoordinates(position.getPosition().toOddR());
-            if (typeof a[i+1] !== 'undefined') {
-                var nextCenter = this.gridService.resolveGameCoordinates(a[i+1].getPosition().toOddR());
-            } else {
-                var nextCenter = currentCenter;
-            }
-
-            var start = {
-                x: (lastCenter.x + currentCenter.x) / 2,
-                y: (lastCenter.y + currentCenter.y) / 2,
-            }
-            var control = {
-                x: currentCenter.x,
-                y: currentCenter.y
-            }
-            var end = {
-                x: (nextCenter.x + currentCenter.x) / 2,
-                y: (nextCenter.y + currentCenter.y) / 2,
-            }
-
-            this.gameScene.scene.add(new model.Curve(start, control, end).get());
-        }
-
-        return position;
-    }.bind(this));
+    new model.movement.RouteDisplay(this.gameScene, this.gridService).makeItSo(this._route);
 }
 
 model.MovementManagement.prototype.setStartPosition = function(position)
