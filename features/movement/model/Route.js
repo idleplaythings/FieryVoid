@@ -43,6 +43,10 @@ model.movement.Route.prototype._constructRoute = function()
 		var action = actions[i];
 		action.validateInContextOrFail(current);
 		current = action.apply(current, this._movementAbility);
+		
+		if (last.occupiesSamePosition(current))
+			route.pop();
+		
 		route.push(current);
 	}
 	
@@ -61,7 +65,7 @@ model.movement.Route.prototype._getOtherThanSpeeds = function(route)
 	return route.filter(function(action){return ! (action instanceof model.movement.Action.Speed);});
 };
 
-model.movement.Route.prototype.getMoves = function()
+model.movement.Route.prototype._getMoves = function()
 {
 	return this._modifiers.filter(function(action){
 		return action instanceof model.movement.Action.Move;
@@ -70,7 +74,7 @@ model.movement.Route.prototype.getMoves = function()
 
 model.movement.Route.prototype._validateMoveAmount = function(speed)
 {
-	var moves = this.getMoves().length;
+	var moves = this._getMoves().length;
 	
 	if (moves != Math.abs(speed))
 		throw new Error("Invalid route, amount of moves ("+moves+") does not match speed ("+speed+")");

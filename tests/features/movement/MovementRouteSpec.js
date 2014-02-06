@@ -263,5 +263,25 @@ describe("MovementRoute", function() {
 		expect(route.getCurrent().getFacing()).toEqual(4);	
 		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, 0, 0));
     });
+    
+    it("merges route positions that are in the same hex", function() 
+    {
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.Move(), 
+				new action.Move(),
+				new action.Move(),
+				new action.TurnLeft(),
+				new action.Move(),
+				new action.Move(),
+				new action.Move(),
+				new action.SpeedAccelerate()
+				
+			]);
+		
+		expect(route.getRoute().length).toEqual(7);	
+    });
 	
 });

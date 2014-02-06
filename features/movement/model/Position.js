@@ -18,6 +18,11 @@ model.movement.THRUSTER_RIGHT = 90;
 model.movement.THRUSTER_REAR = 180;
 model.movement.THRUSTER_LEFT = 270;
 
+model.movement.Position.prototype.occupiesSamePosition = function(position)
+{
+	return this.getPosition().equals(position.getPosition());
+};
+
 model.movement.Position.prototype.getThrustCost = function()
 {
 	return this._thrustCost;
