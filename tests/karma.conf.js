@@ -24,7 +24,7 @@ module.exports = function(config) {
         'lib/CoordinateConverter.js',
         'features/shipmodule/model/ModuleLayout.js',
         'features/shipstatus/model/lib/ShipStatusManager.js',
-        
+
         'features/movement/model/MovementAbility.js',
         'features/movement/model/Thruster.js',
         'features/movement/model/ThrusterUsage.js',

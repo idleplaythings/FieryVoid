@@ -33,8 +33,8 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 		}
 
 		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
-		
-		ship.status.managers.movement.setStartPosition( 
+
+		ship.status.managers.movement.setStartPosition(
 			new model.movement.Position({
 				position: new model.hexagon.coordinate.Offset(
 					Math.floor(Math.random() * 10),
@@ -43,8 +43,8 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 				speed: 5
 			})
 		);
-		
-		
+
+
 		fleet.addShip(ship);
 	}
 
@@ -98,7 +98,7 @@ Game.prototype.play = function()
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
 	this.clickStrategyFactory = new model.ClickStrategyFactory(
-		this.dispatcher, 
+		this.dispatcher,
 		this.coordinateConverter,
 		new model.ModuleDetailView(container, this.dispatcher),
 		new model.ShipTooltipView(container, this.dispatcher)
@@ -106,8 +106,8 @@ Game.prototype.play = function()
 
     this.uiEventResolver = new model.UiFocusResolver(
         this.coordinateConverter, this.dispatcher, this.clickStrategyFactory);
-        
-	
+
+
     //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
@@ -145,16 +145,16 @@ Game.prototype.play = function()
 		this.uiEventResolver,
 		this.coordinateConverter
 	);
-	
+
 	this.uiEventResolver.addClickStrategy(
 		this.clickStrategyFactory.construct(
-			'ClickStrategySelect', 
+			'ClickStrategySelect',
 			{
 				shipService: this.shipService
 			})
 	);
 
-	
+
 
 	this.actionBar = new model.ActionBar(this.dispatcher);
 
@@ -279,7 +279,8 @@ Game.prototype._validateTerrain = function(coordinates)
 Game.prototype.onMouseMove = function(event)
 {
     var coordinates = this.gridService.resolveGridCoordinates(event.game);
-    var origin = this.gridService.resolveGridCoordinates({ x: 0, y: 0 });
+    // var origin = this.gridService.resolveGridCoordinates({ x: 3, y: 0 });
+    var origin = new model.hexagon.coordinate.Offset(3, 3);
     var path = this.gridService.rayTrace(origin, coordinates);
     this.gridService.highlight(path);
 };
