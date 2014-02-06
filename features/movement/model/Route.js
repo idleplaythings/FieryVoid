@@ -47,7 +47,7 @@ model.movement.Route.prototype._constructRoute = function()
 	}
 	
 	this._thrusterUsage.payOrFail(current.getThrustCost());
-	this._validateMoveAmount(actions, current.getSpeed());
+	this._validateMoveAmount(current.getSpeed());
 	this._route = route;
 };
 
@@ -61,11 +61,16 @@ model.movement.Route.prototype._getOtherThanSpeeds = function(route)
 	return route.filter(function(action){return ! (action instanceof model.movement.Action.Speed);});
 };
 
-model.movement.Route.prototype._validateMoveAmount = function(actions, speed)
+model.movement.Route.prototype.getMoves = function()
 {
-	var moves = actions.filter(function(action){
+	return this._modifiers.filter(function(action){
 		return action instanceof model.movement.Action.Move;
-	}).length;
+	})
+};
+
+model.movement.Route.prototype._validateMoveAmount = function(speed)
+{
+	var moves = this.getMoves().length;
 	
 	if (moves != Math.abs(speed))
 		throw new Error("Invalid route, amount of moves ("+moves+") does not match speed ("+speed+")");
