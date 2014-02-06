@@ -40,6 +40,7 @@ model.movement.Route.prototype._constructRoute = function()
 	
 	for (var i in actions)
 	{
+		var last = current;
 		var action = actions[i];
 		action.validateInContextOrFail(current);
 		current = action.apply(current, this._movementAbility);
