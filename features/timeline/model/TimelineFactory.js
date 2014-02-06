@@ -12,6 +12,7 @@ model.TimelineFactory.prototype.getTimeline = function(id)
 	if ( ! id)
 		id = new Meteor.Collection.ObjectID().toHexString();
 		
+	console.log("loading timeline with id", id);
     var timeline = new model.Timeline(
        id,
        this._storage,

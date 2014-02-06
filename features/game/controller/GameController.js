@@ -20,6 +20,7 @@ controller.GameController = function(gameStorage)
         game.addPlayer([player1Id, player2Id]);
 
         new model.GameStorage().insert(Games.insert(game.getInitialInsert()));
+        dic.get('model.TimelineFactory').persistAll();
 
         return game;
     };

@@ -20,21 +20,20 @@ model.MovementManagement.prototype.getStartPosition = function(position)
 	
 	if ( ! this._start)
 	{
-		/*
 		var entry = this._timeline.filter(function(entry){ return entry.name == 'startPosition'}).pop();
 		if ( ! entry)
-			throw new Error("Ships require a start position");
-			*/
+			throw new Error("Ships require a start position, timelineId",  this._timeline._id);
+			
+		entry = entry.payload;
+		
 		this._start = new model.movement.Position({
-			position: new model.hexagon.coordinate.Offset(3, 3),
-			facing: 0,
-			direction: 0,
-			speed: 5
+			position: new model.hexagon.coordinate.Offset(entry._position),
+			facing: entry._facing,
+			direction: entry._direction,
+			speed: entry._speed
 		});
 		
-		console.log("startpos", this._start.getPosition());
 	}
-	
 	return this._start;
 }
 
@@ -42,7 +41,6 @@ model.MovementManagement.prototype.setStartPosition = function(position)
 {
     this._timeline.add('startPosition', position);
     this._start = position;
-    //this._timeline.persist();
 }
 
 model.MovementManagement.prototype.getFacing = function(currentTime)

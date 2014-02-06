@@ -84,7 +84,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
     }
     
     var timeline = TimelineCollection.findOne({_id: id});
-
+	
 	entries.forEach(function(entry)
 	{
 		if (entry.needsSaving())
@@ -94,6 +94,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 			if ( ! timeline)
 			{
 				TimelineCollection.insert({_id: id, entries: [entry.serialize()]});
+				timeline = true;
 			}
 			else
 			{
