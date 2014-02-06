@@ -112,6 +112,21 @@ model.hexagon.coordinate.Cube.prototype.equals = function(cube)
            this.z === cube.z;
 }
 
+model.hexagon.coordinate.Cube.prototype.getFacing = function(neighbour) {
+    var index = -1;
+
+    var delta = neighbour.subtract(this);
+
+    this.neighbours.some(function(hex, i) {
+        if (delta.equals(hex)) {
+            index = i;
+            return true;
+        }
+    });
+
+    return index;
+}
+
 model.hexagon.coordinate.Cube.prototype.toEvenR = function()
 {
     var q = this.x + (this.z + (this.z & 1)) / 2;
@@ -137,6 +152,7 @@ model.hexagon.coordinate.Cube.prototype.toString = function()
     return "(" + this.x + "," + this.y + "," + this.z + ")";
 }
 
-model.hexagon.coordinate.Cube.prototype._formatNumber = function(number) {
+model.hexagon.coordinate.Cube.prototype._formatNumber = function(number)
+{
     return parseFloat(number.toFixed(model.hexagon.coordinate.Cube.PRECISION));
 }
