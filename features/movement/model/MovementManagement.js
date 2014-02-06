@@ -44,16 +44,43 @@ model.MovementManagement.prototype._resolveRoute = function()
     var movements = this._start.getSpeed();
     var modifiers = [];
 
-    while (movements--) {
-        if (movements == 3) {
-            modifiers.push(new model.movement.Action.TurnLeft());
-        }
+    // while (movements--) {
+    //     if (movements == 3) {
+    //         modifiers.push(new model.movement.Action.TurnLeft());
+    //     }
 
-        if (movements == 0) {
-            modifiers.push(new model.movement.Action.TurnRight());
-        }
-        modifiers.push(new model.movement.Action.Move());
-    }
+    //     if (movements == 0) {
+    //         modifiers.push(new model.movement.Action.TurnRight());
+    //     }
+    //     modifiers.push(new model.movement.Action.Move());
+    // }
+
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.SpeedAccelerate());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnLeft());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.TurnRight());
+    modifiers.push(new model.movement.Action.Move());
+    modifiers.push(new model.movement.Action.Move());
 
     this._route = new model.movement.Route(this._start, this._getMovementAbility(), modifiers);
 
@@ -93,8 +120,8 @@ model.MovementManagement.prototype._getMovementAbility = function()
     return new model.movement.MovementAbility(
 		this.getSpeedCost(),
 		// this.getTurnCostSpeedFactor(),
-        0.4,
-        0.4,
+        0.00001,
+        0.00001,
 		// this.getTurnDelaySpeedFactor(),
 		// this._thrustManager.getTotalThrustProduced(),
         1000,

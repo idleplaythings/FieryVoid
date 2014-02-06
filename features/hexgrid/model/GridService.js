@@ -33,6 +33,15 @@ model.GridService.prototype.onSceneInit = function(event)
     this._renderer.renderGrid(this._grid);
 };
 
+model.GridService.prototype.getPrototypeHex = function()
+{
+    return new model.Hex(
+        null,
+        this._hexSize,
+        model.Hex.HORIZONTAL
+    );
+}
+
 model.GridService.prototype.resolveGameCoordinates = function(gridCoordinates)
 {
     var hex = this._grid.getHexForGridCoordinates(gridCoordinates);
