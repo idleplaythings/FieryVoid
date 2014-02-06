@@ -10,14 +10,22 @@ model.movement.Action.Move.prototype.getPosition = function(current, movementAbi
 	return current.moveToDirection(current.getDirection());
 };
 
-model.movement.Action.Move.prototype.getTurnDelay = function()
+model.movement.Action.Move.prototype.getTurnDelay = function(current)
 {
-	return -1;
+	var delay = current.getTurnDelay() - 1;
+	if (delay < 0)
+		delay = 0;
+		
+	return delay;
 };
 
-model.movement.Action.Move.prototype.getSlipDelay = function()
+model.movement.Action.Move.prototype.getSlipDelay = function(current)
 {
-	return -1;
+	var delay = current.getSlipDelay() - 1;
+	if (delay < 0)
+		delay = 0;
+		
+	return delay;
 };
 
 model.movement.Action.Move.prototype.validateInContextOrFail = function(current)
