@@ -1,7 +1,7 @@
-model.movement.Route = function Route(start, movementAbility, modifiers)
+model.movement.Route = function Route(startPosition, movementAbility, modifiers)
 {
 	this._movementAbility = movementAbility;
-	this._start = start;
+	this._startPosition = startPosition;
 	
 	this._modifiers = modifiers;
 	
@@ -19,21 +19,6 @@ model.movement.Route.INVALID_BREAKS_TURN_DELAY = 3;
 model.movement.Route.INVALID_BREAKS_SLIP_DELAY = 4;
 model.movement.Route.INVALID_TOO_EXPENSIVE = 5;
 
-model.movement.Route.prototype.clone = function()
-{
-	return new model.movement.Route({
-		gameTurn: this._gameTurn,
-		start: this._start,
-		movementAbility: this._movementAbility,
-		modifiers: this._modifiers
-	})
-};
-
-model.movement.Route.prototype.getThrusterUsage = function()
-{
-	return this._thrusterUsage;
-}
-
 model.movement.Route.prototype.getRoute = function()
 {
 	return this._route;
@@ -46,8 +31,8 @@ model.movement.Route.prototype.getCurrent = function()
 
 model.movement.Route.prototype._constructRoute = function()
 {
-	var current = this._start;
-	var route = [this._start];
+	var current = this._startPosition;
+	var route = [this._startPosition];
 	var speed = this._getSpeeds(this._modifiers);
 	var modifiers = this._getOtherThanSpeeds(this._modifiers);
 	
@@ -61,7 +46,7 @@ model.movement.Route.prototype._constructRoute = function()
 		route.push(current);
 	}
 	
-	this._thrusterUsage.payOrFail(current.getThrustCost())
+	this._thrusterUsage.payOrFail(current.getThrustCost());
 	this._validateMoveAmount(actions, current.getSpeed());
 	this._route = route;
 };
@@ -82,7 +67,7 @@ model.movement.Route.prototype._validateMoveAmount = function(actions, speed)
 		return action instanceof model.movement.Action.Move;
 	}).length;
 	
-	if (moves != speed)
+	if (moves != Math.abs(speed))
 		throw new Error("Invalid route, amount of moves ("+moves+") does not match speed ("+speed+")");
 };
 

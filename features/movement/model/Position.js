@@ -88,7 +88,7 @@ model.movement.Position.prototype._turn =
 
 model.movement.Position.prototype.getThrusterDirection = function(dir)
 {
-	var diff = (Math.abs(this._direction - this._facing));
+	var diff = (Math.abs(this.getDirection() - this._facing));
 	var max = this._position.getNeighbours().length;
 	
 	if (max - diff < diff)

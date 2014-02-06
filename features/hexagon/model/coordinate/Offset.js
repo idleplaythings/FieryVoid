@@ -13,11 +13,11 @@ model.hexagon.coordinate.Offset = function Offset(q, r, layout)
         var offset = q;
         this.q = offset.q;
         this.r = offset.r;
-        this.layout = typeof q.layout === 'undefined' ? model.hexagon.coordinate.Offset.EVEN_R : q.layout;
+        this.layout = typeof q.layout === 'undefined' ? model.hexagon.coordinate.Offset.ODD_R : q.layout;
     } else {
         this.q = q;
         this.r = r;
-        this.layout = typeof layout === 'undefined' ? model.hexagon.coordinate.Offset.EVEN_R : layout;
+        this.layout = typeof layout === 'undefined' ? model.hexagon.coordinate.Offset.ODD_R : layout;
     }
 }
 

@@ -12,27 +12,29 @@ model.MovementManagement.prototype = Object.create(model.ShipStatusManager.proto
 
 model.MovementManagement.prototype.getCurrentPosition = function(currentTime)
 {
-    return {
-        x: 3,
-        y: 3
-    }
+    return this.getStartPosition().getPosition();
 }
 
 model.MovementManagement.prototype.getStartPosition = function(position)
 {
+	
 	if ( ! this._start)
 	{
+		/*
 		var entry = this._timeline.filter(function(entry){ return entry.name == 'startPosition'}).pop();
 		if ( ! entry)
 			throw new Error("Ships require a start position");
-			
+			*/
 		this._start = new model.movement.Position({
-			position: entry._position,
-			facing: entry._facing,
-			direction: entry._direction,
-			speed: entry._speed
+			position: new model.hexagon.coordinate.Offset(3, 3),
+			facing: 0,
+			direction: 0,
+			speed: 5
 		});
+		
+		console.log("startpos", this._start.getPosition());
 	}
+	
 	return this._start;
 }
 
@@ -40,6 +42,7 @@ model.MovementManagement.prototype.setStartPosition = function(position)
 {
     this._timeline.add('startPosition', position);
     this._start = position;
+    //this._timeline.persist();
 }
 
 model.MovementManagement.prototype.getFacing = function(currentTime)
@@ -70,7 +73,7 @@ model.MovementManagement.prototype._getMovementAbility = function()
 		this.getSpeedCost(),
 		this.getTurnCostSpeedFactor(),
 		this.getTurnDelaySpeedFactor(),
-		this._thrustManagement.getgetTotalThrustProduced(),
+		this._thrustManagement.getTotalThrustProduced(),
 		this._thrustManagement.getThrusters()
     );
 };

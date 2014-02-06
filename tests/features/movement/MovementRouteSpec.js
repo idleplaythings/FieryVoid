@@ -241,6 +241,27 @@ describe("MovementRoute", function() {
 		expect(route.getCurrent().getFacing()).toEqual(2);	
 		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, -1, 1));
     });
-	
+   
+	it("resets pivot (direction == facing) when deaccelerating to zero speed", function() 
+    {
+		start = new model.movement.Position({
+			position: new model.hexagon.coordinate.Cube(0,0,0),
+			facing: 4,
+			direction: 5,
+			speed: 1
+		});
+		
+		route = new model.movement.Route(
+			start, 
+			movementAbility,
+			[
+				new action.SpeedDeaccelerate()
+			]);
+		
+		expect(route.getCurrent().getSpeed()).toEqual(0);
+		expect(route.getCurrent().getDirection()).toEqual(4);
+		expect(route.getCurrent().getFacing()).toEqual(4);	
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, 0, 0));
+    });
 	
 });

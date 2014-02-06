@@ -34,9 +34,15 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 
 		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
 		
-		//ship.status.managers.movement.addStartPosition( {
-			//TODO: movement
-		//});
+		ship.status.managers.movement.setStartPosition( 
+			new model.movement.Position({
+				position: new model.hexagon.coordinate.Offset(
+					Math.floor(Math.random() * 10),
+					Math.floor(Math.random() * 10)
+				),
+				speed: 5
+			})
+		);
 		
 		
 		fleet.addShip(ship);
@@ -274,7 +280,7 @@ Game.prototype.onMouseMove = function(event)
 {
     var coordinates = this.gridService.resolveGridCoordinates(event.game);
     var origin = this.gridService.resolveGridCoordinates({ x: 0, y: 0 });
-    var path = this.gridService.getPathBetween(origin, coordinates);
+    var path = this.gridService.rayTrace(origin, coordinates);
     this.gridService.highlight(path);
 };
 

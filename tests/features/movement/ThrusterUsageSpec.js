@@ -11,7 +11,7 @@ describe("Thruster usage", function() {
 		]);
 		
 		
-		thrusterUsage = new model.movement.ThrusterUsage(movementAbility.getThrusters());
+		thrusterUsage = new model.movement.ThrusterUsage(movementAbility.getThrusters(), 10);
     });
     
     it("should pay for thrust", function() {

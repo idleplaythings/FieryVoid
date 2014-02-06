@@ -9,8 +9,15 @@ model.movement.Action.Speed.DEACCELERATE = -1;
 model.movement.Action.Speed.prototype = 
 	Object.create(model.movement.Action.prototype);
 
+
 model.movement.Action.Speed.prototype.getDirection = function(current, movementAbility)
 {
+	var newSpeed = current.getSpeed() + this._change;
+	
+	if (newSpeed === 0)
+	{
+		return current.getFacing();
+	};
 	if ((current.getSpeed() === 0 && this._change === -1) || (current.getSpeed() == -1 && this._change == 1))
 	{
 		var max = current.getPosition().getNeighbours().length;
