@@ -61,9 +61,9 @@ describe("MovementRoute", function() {
 			new action.Move(),
 			new action.Move(),
 			new action.TurnLeft(),
-			new action.Move(), // turn delay 1 satisified
-			new action.TurnRight(),
 			new action.Move(),
+			new action.Move(), // turn delay 2 satisified
+			new action.TurnRight(),
 			new action.Move()
 		];
 		expect(function() { new model.movement.Route(start, movementAbility, actions)}).not.toThrow();
