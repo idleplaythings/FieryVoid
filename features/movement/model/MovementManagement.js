@@ -45,10 +45,30 @@ model.MovementManagement.prototype._resolveRoute = function()
     var modifiers = [];
 
     while (movements--) {
+        if (movements == 3) {
+            modifiers.push(new model.movement.Action.TurnLeft());
+        }
+
+        if (movements == 0) {
+            modifiers.push(new model.movement.Action.TurnRight());
+        }
         modifiers.push(new model.movement.Action.Move());
     }
 
+    console.log(this._getMovementAbility())
+
     this._route = new model.movement.Route(this._start, this._getMovementAbility(), modifiers);
+
+    this._route.getRoute().reduce(function(last, position) {
+        if (last) {
+            this.gameScene.scene.add(new model.Line(
+                this.gridService.resolveGameCoordinates(last.getPosition().toOddR()),
+                this.gridService.resolveGameCoordinates(position.getPosition().toOddR())
+            ).get());
+        }
+
+        return position;
+    }.bind(this));
 }
 
 model.MovementManagement.prototype.setStartPosition = function(position)
@@ -83,10 +103,19 @@ model.MovementManagement.prototype._getMovementAbility = function()
 {
     return new model.movement.MovementAbility(
 		this.getSpeedCost(),
-		this.getTurnCostSpeedFactor(),
-		this.getTurnDelaySpeedFactor(),
-		this._thrustManager.getTotalThrustProduced(),
-		this._thrustManager.getThrusters()
+		// this.getTurnCostSpeedFactor(),
+        0.4,
+        0.4,
+		// this.getTurnDelaySpeedFactor(),
+		// this._thrustManager.getTotalThrustProduced(),
+        1000,
+		// this._thrustManager.getThrusters()
+        [
+            new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 30}),
+            new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 30}),
+            new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 30}),
+            new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 30})
+        ]
     );
 };
 
