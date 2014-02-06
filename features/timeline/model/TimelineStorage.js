@@ -55,23 +55,22 @@ model.TimelineStorage.prototype.load = function(id)
     var find = {_id: id};
 
     var timeline = TimelineCollection.findOne(find);
-    
+
     if ( ! timeline)
 		return [];
-    
+
     var entries = timeline.entries.map(function(entry){
-		console.log(entry);
 		return new model.TimelineEntry().deserialize(entry);
 	});
-	
+
 	entries.sort(function(a, b){return a.time - b.time});
-	
+
 	/*
 	var orders = TimelineCollectionGameOrders.findOne(find);
     entries = entries.concat = orders.entries.map(function(entry){
 		return new model.TimelineEntry().deserialize(entry.entry);
 	});
-	*/ 
+	*/
 
     return entries;
 };
@@ -82,15 +81,15 @@ model.TimelineStorage.prototype.persist = function(entries, id)
     {
         return;
     }
-    
+
     var timeline = TimelineCollection.findOne({_id: id});
-	
+
 	entries.forEach(function(entry)
 	{
 		if (entry.needsSaving())
 		{
 			entry.setSaved();;
-			
+
 			if ( ! timeline)
 			{
 				TimelineCollection.insert({_id: id, entries: [entry.serialize()]});
@@ -101,7 +100,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 				var exsists = TimelineCollection.findOne(
 					{$and: [{_id: id}, {'entries._id': entry._id}]}
 				);
-				
+
 				if (exsists)
 				{
 					TimelineCollection.update(
@@ -118,20 +117,20 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 				}
 			}
 		}
-		
+
 		if (entry.needsRemoving())
 		{
 			entry.setRemoved();
-			
+
 			if ( ! timeline)
 				return;
-				
+
 			TimelineCollection.update(
 				{_id: id},
 				{$pull:{ entries: {_id: entry._id}}}
 			);
 		}
-	}); 
+	});
 };
 
 model.TimelineStorage.prototype.persistOrders = function(entries, id, gameId, turn)
@@ -142,7 +141,7 @@ model.TimelineStorage.prototype.persistOrders = function(entries, id, gameId, tu
 	}).map(function(entry){
 		return entry.deserialize();
 	});
-	
+
     Meteor.call(
         'PersistTimelineOrders',
         entries,

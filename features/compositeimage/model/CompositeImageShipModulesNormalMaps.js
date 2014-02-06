@@ -13,7 +13,6 @@ model.CompositeImageShipModulesNormalMaps.prototype =
 
 model.CompositeImageShipModulesNormalMaps.prototype._createImage = function()
 {
-	console.log("create modules normal map");
     var dim = this.getDimensions();
     var width = dim.width;
     var height = dim.height;
@@ -30,8 +29,6 @@ model.CompositeImageShipModulesNormalMaps.prototype._createImage = function()
         //this._drawModuleImages(context, images);
         this._mergeNormalMaps(data, images);
     }, this);
-    
-    
 
     return data;
 };

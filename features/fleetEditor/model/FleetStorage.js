@@ -7,11 +7,11 @@ model.FleetStorage = function FleetStorage(shipStorage, timelineFactory)
 model.FleetStorage.prototype.createAndInsertEmptyFleetForMe = function()
 {
     var userId = Meteor.userId();
-		
+
 	if ( ! userId)
 		throw new Meteor.Error(
 			400, "You must be logged in to add a fleet");
-	
+
 	var fleet = new model.Fleet(
 		{owner: userId},
 		this.timelineFactory.getTimeline(),
@@ -30,13 +30,12 @@ model.FleetStorage.prototype.insert = function(fleet)
 
 model.FleetStorage.prototype.getFleet = function(fleetId)
 {
-	console.log("getting fleet id:", fleetId);
 	var doc = Fleets.findOne({_id: fleetId});
 	if ( ! doc)
 		return null;
-		
+
 	doc.ships = this.getShipsInFleet(doc._id);
-		
+
 	return new model.Fleet(
 		doc,
 		this.timelineFactory.getTimeline(doc.timeline),
@@ -47,13 +46,10 @@ model.FleetStorage.prototype.getFleet = function(fleetId)
 
 model.FleetStorage.prototype.getFleetsInGame = function(gameId)
 {
-	console.log("getting fleets in game", gameId);
 	var fleets = [];
 	var self = this;
 	Fleets.find({currentGame: gameId}).forEach(function(doc){
-		console.log("fleet in game", doc);
 		doc.ships = self.getShipsInFleet(doc._id);
-		console.log(doc.ships);
 		fleets.push(new model.Fleet(
 			doc,
 			self.timelineFactory.getTimeline(doc.timeline),
@@ -88,7 +84,7 @@ model.FleetStorage.prototype.getShipsInFleet = function(fleetId)
 	return this.shipStorage.getShipsInFleet(fleetId);
 };
 
-model.FleetStorage.prototype.getReactiveShipsInFleet = 
+model.FleetStorage.prototype.getReactiveShipsInFleet =
 	function(fleet, callback)
 {
     var self = this;

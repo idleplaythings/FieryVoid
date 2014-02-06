@@ -212,8 +212,6 @@ Game.prototype.getInitialInsert = function()
 
 Game.prototype.updated = function(doc)
 {
-    console.log('game updated', doc.currentGameTime);
-
     if (this.gameState.currentGametime < doc.currentGameTime)
     {
         this._changeTurn(doc.currentGameTime);
@@ -222,8 +220,6 @@ Game.prototype.updated = function(doc)
 
 Game.prototype._changeTurn = function(time)
 {
-    console.log('CHANGE TURN');
-    console.log(this);
     this.gameState.currentGametime = time;
     this.timelineFactory.reloadTimelines();
 };

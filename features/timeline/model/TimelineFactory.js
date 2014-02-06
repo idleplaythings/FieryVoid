@@ -11,8 +11,7 @@ model.TimelineFactory.prototype.getTimeline = function(id)
 {
 	if ( ! id)
 		id = new Meteor.Collection.ObjectID().toHexString();
-		
-	console.log("loading timeline with id", id);
+
     var timeline = new model.Timeline(
        id,
        this._storage,
@@ -32,7 +31,6 @@ model.TimelineFactory.prototype.reloadTimelines = function()
 
 model.TimelineFactory.prototype.persistAll = function()
 {
-    console.log("Persist all timelines");
     this._loadedTimelines.forEach(function(timeline){
         timeline.persist();
     }, this);

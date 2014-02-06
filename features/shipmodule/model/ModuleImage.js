@@ -2,7 +2,7 @@ model.ModuleImage = function ModuleImage(args)
 {
 	if ( ! args)
 		args = {};
-		
+
     this.inside = args.inside || false;
     this.outside = args.outside || false;
     this.hull = args.hull || false;
@@ -32,7 +32,7 @@ model.ModuleImage.prototype.getImageInside = function(){
 model.ModuleImage.prototype.getImageOutside = function(){
 	if ( ! this.outside )
 		return '/misc/x.png';
-		
+
     return '/module/' +this.outside;
 };
 
@@ -51,14 +51,14 @@ model.ModuleImage.prototype.getImageHullNormal = function(){
 };
 
 model.ModuleImage.prototype.getImageOutsideNormal = function(){
-    
+
     return '/module/bump/' + this.outside;
 };
 
 model.ModuleImage.prototype.getImageInsideNormal = function(){
     if ( ! this.inside)
         return this.getDefaultNormal();
-        
+
     return '/module/bump/' + this.outside;
 };
 
@@ -94,9 +94,9 @@ model.ModuleImage.prototype.getDefaultNormal = function(){
 //'inside','outside','hull','hullbump','outsidebump','overbump','over'
 
 
-model.ModuleImage.prototype.getNormalByType = function(type){
-	
-	console.log("get normal", type);
+model.ModuleImage.prototype.getNormalByType = function(type)
+{
+
     if (type == 'outside')
         return this.getImageOutsideNormal();
 
@@ -105,12 +105,12 @@ model.ModuleImage.prototype.getNormalByType = function(type){
 
 	if (type == 'inside')
         return this.getImageInsideNormal();
-        
+
     return null;
 };
 
-model.ModuleImage.prototype.getByType = function(type){
-	
+model.ModuleImage.prototype.getByType = function(type)
+{
     if (type == 'inside')
         return this.getImageInside();
 
@@ -131,10 +131,10 @@ model.ModuleImage.prototype.getByType = function(type){
 
     if (type == 'over')
         return this.getImageOver();
-        
+
 	if (type == 'under')
         return this.getImageUnder();
-        
+
 	if (type == 'ui')
         return this.getImageUi();
 

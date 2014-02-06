@@ -28,7 +28,7 @@ model.Sprite.prototype.createTexture = function(image, nearest)
 		tex.magFilter = THREE.LinearFilter; //THREE.NearestFilter;
 		tex.minFilter = THREE.LinearFilter; //THREE.NearestMipMapNearestFilter;
 	}
-    
+
     tex.image = texturedata;
     tex.needsUpdate = true;
 
@@ -51,9 +51,9 @@ model.Sprite.prototype.hide = function()
     this.getObject3d().traverse(function (object){
         object.visible = false;
     });
-    
+
     this.hidden = true;
-    
+
     return this;
 };
 
@@ -62,9 +62,9 @@ model.Sprite.prototype.show = function()
     this.getObject3d().traverse(function (object){
         object.visible = true;
     });
-    
+
     this.hidden = false;
-    
+
     return this;
 };
 
@@ -132,7 +132,6 @@ model.Sprite.prototype.getCircle = function(size, r, r1, r2, segments, gapratio)
     {
         drawingTool.drawDottedCircle(context, r, r, r1, r2, segments, gapratio);
     }
-	console.log(size, r, r1, r2, segments, gapratio);
     return {data:context.getImageData(0, 0, size, size)};
 };
 

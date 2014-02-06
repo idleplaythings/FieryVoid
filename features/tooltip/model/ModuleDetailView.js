@@ -1,6 +1,5 @@
 model.ModuleDetailView = function ModuleDetailView(target, dispatcher)
 {
-	console.log("disp", dispatcher);
     model.TooltipView.call(this, target, dispatcher);
     this.currentModule = null;
     this.htmlClass = 'moduledetailview';
@@ -32,7 +31,7 @@ model.ModuleDetailView.prototype.display = function(
     symbols.forEach(function(symbol){
 		if ( ! symbol.displayOnModuleView)
 			return;
-			
+
         var container = jQuery('<div></div>');
         container.appendTo(template);
         container.append(symbol.getHtmlElement())

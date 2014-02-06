@@ -1,6 +1,5 @@
 model.ShipTooltipView = function ShipTooltipView(target, dispatcher)
 {
-	console.log("disp", dispatcher);
     model.TooltipView.call(this, target, dispatcher);
     this.currentShip = null;
     this.shipPosition = null;
@@ -28,7 +27,7 @@ model.ShipTooltipView.prototype.display = function(
     var template = this.getTemplate();
     template.html('');
     template.append('<h4>'+ship.name+'</h4>');
-   
+
 	this.shipPosition = position;
     this.position(position);
 };
