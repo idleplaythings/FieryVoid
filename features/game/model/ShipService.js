@@ -91,7 +91,10 @@ model.ShipService.prototype.onScroll = function(event)
 
     var ship = this.getClosestShip();
     if (! ship)
+    {
         this.getShips().forEach(function(ship){ship.getIcon().showHull()});
+        return;
+    }
 
     if ( this.shipStatusView.targetId == ship._id)
         return;

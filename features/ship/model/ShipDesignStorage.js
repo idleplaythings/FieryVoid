@@ -44,6 +44,9 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
             var module = ModuleLayouts.findOne(
                 {'_id': moduleDetails.module});
 
+            if (! module)
+                console.log("module id", moduleDetails.module, " not found");
+
             module.setPosition(moduleDetails.position);
             module.setDirection(moduleDetails.direction);
 

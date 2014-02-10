@@ -36,8 +36,10 @@ model.movement.RouteDisplay.prototype.makeItSo = function(route)
 				end = this._offset(start, control, end);
 
 			occupiedPositions[this._serialize(end)] = end;
+            var path = new model.Path(start, control, end);
 
             this._gameScene.scene.add(new model.Curve(start, control, end, 0x00ff00).get());
+            this._gameScene.scene.add(new model.ParticlePath(path, 0x00ff00).get());
         }
 
         return end;
