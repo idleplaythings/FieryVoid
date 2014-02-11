@@ -84,7 +84,7 @@ model.MovementManagement.prototype._resolveRoute = function()
 
     this._route = new model.movement.Route(this._start, this._getMovementAbility(), modifiers);
 
-    new model.movement.RouteDisplay(this.gameScene, this.gridService).makeItSo(this._route);
+    new model.movement.RouteDisplay(this.gameScene, this.gridService, this.dispatcher).makeItSo(this._route);
 }
 
 model.MovementManagement.prototype.setStartPosition = function(position)

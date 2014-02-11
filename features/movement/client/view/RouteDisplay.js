@@ -1,8 +1,8 @@
-model.movement.RouteDisplay = function RouteDisplay(scene, gridService)
+model.movement.RouteDisplay = function RouteDisplay(scene, gridService, dispatcher)
 {
 	this._gameScene = scene;
 	this._gridService = gridService;
-
+    this._dispatcher = dispatcher;
 };
 
 model.movement.RouteDisplay.prototype.makeItSo = function(route)
@@ -39,7 +39,7 @@ model.movement.RouteDisplay.prototype.makeItSo = function(route)
             var path = new model.Path(start, control, end);
 
             this._gameScene.scene.add(new model.Curve(start, control, end, 0x00ff00).get());
-            this._gameScene.scene.add(new model.ParticlePath(path, 0x00ff00).get());
+            this._gameScene.scene.add(new model.ParticlePath(path, 0x00ff00, this._dispatcher).get());
         }
 
         return end;
