@@ -1,8 +1,6 @@
-model.CrewManagement = function CrewManagement(modules, timeline, shipId)
+model.CrewManagement = function CrewManagement(ship, modules, timeline)
 {
-	this.shipId = shipId;
-    this.timeline = timeline || null;
-    this.modules = modules;
+    model.ShipStatusManager.call(this, ship, modules, timeline);
 
     this.crew = [];
 

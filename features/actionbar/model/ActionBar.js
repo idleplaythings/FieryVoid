@@ -1,49 +1,50 @@
-model.ActionBar = function ActionBar(dispatcher)
+model.ActionBar = function ActionBar(dispatcher, uiResolver)
 {
-    this.dispatcher = dispatcher;
-    this.dispatcher.attach('ShipSelectedEvent', this.onShipSelected.bind(this));
-    this.ship = null;
-    this.container = null;
+    this._ship = null;
+    this._container = null;
+    this._dispatcher = dispatcher;
+    this._uiResolver = uiResolver;
+    this._buttons = [];
 };
 
-model.ActionBar.prototype.create = function(ship)
+model.ActionBar.prototype._create = function(ship, turn)
 {
-	var container = this.getContainer();
-	container.html('');
-	
-	var buttons = ship.status.getActionButtons();
-	console.log(buttons);
-	buttons.forEach(function(button){
-		button.get().appendTo(container);
-	});
+	var container = this._getContainer().html('');
+	this._buttons.forEach(function(button){button.destroy();});
+	this._buttons = [];
+	this._addWeapons(ship, turn);
 };
 
-model.ActionBar.prototype.onShipSelected = function(event)
-{
-	console.log("ship selected", event);
-    var ship = event.payload;
-    
-    if (! ship)
-		return;
-		
-	this.ship = ship;
-	this.create(ship);
+model.ActionBar.prototype._addWeapons = function(ship, turn)
+{ 
+	ship.status.managers.weapon.getWeapons().map(function(weapon){
+		return new model.ActionButtonWeapon(ship, weapon, this._dispatcher, this._uiResolver, turn);
+	}, this).forEach(function(button){
+		this._buttons.push(button);
+		button.get().appendTo(this._getContainer());
+	}, this);
 };
 
-model.ActionBar.prototype.getContainer = function(event)
+model.ActionBar.prototype.onShipSelected = function(ship, turn)
+{ 
+	this._ship = ship;
+	this._create(ship, turn);
+};
+
+model.ActionBar.prototype._getContainer = function(event)
 {
-	if ( this.container)
-		return this.container;
+	if ( this._container)
+		return this._container;
 		
 	var container = jQuery('#ActionBar');
     if (container.length == 0)
     {
-		this.container = jQuery('<div id="ActionBar"></div>').appendTo('#gameContainer');
+		this._container = jQuery('<div id="ActionBar"></div>').appendTo('#gameContainer');
 	}
 	else
 	{
-		this.container = container;
+		this._container = container;
 	}
 	
-	return this.container;
+	return this._container;
 };

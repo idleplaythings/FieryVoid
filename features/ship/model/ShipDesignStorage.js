@@ -37,7 +37,6 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
         return null;
     }
 
-
     doc.modules = doc.modules.map(
         function(moduleDetails)
         {

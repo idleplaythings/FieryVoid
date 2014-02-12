@@ -7,18 +7,25 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
 	this.managers = {};
 	this.gameScene, this.effectManager, this.dispatcher, this.uiResolver = null;
 
-    this.managers.power = new model.PowerManagement(modules);
-    this.managers.crew = new model.CrewManagement(modules, timeline);
-    this.managers.thrust = new model.ThrustManagement(modules, this.managers.power, this.managers.crew);
-    this.managers.movement = new model.MovementManagement(ship, timeline, this.managers.thrust);
+    this.managers.power = new model.PowerManagement(ship, modules, timeline);
+    this.managers.crew = new model.CrewManagement(ship, modules, timeline);
+    this.managers.thrust = new model.ThrustManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
+    this.managers.movement = new model.MovementManagement(ship, modules, timeline, this.managers.thrust);
     // this.managers.movement = new model.Movement(modules, timeline, ship);
-    this.managers.sensor = new model.SensorManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
-    this.managers.weapon = new model.WeaponManagement(modules, timeline, ship, this.managers.power, this.managers.crew);
-    this.managers.damage = new model.DamageManagement(modules, timeline, ship, this.managers.movement);
+    this.managers.sensor = new model.SensorManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
+    this.managers.weapon = new model.WeaponManagement(ship, modules, timeline, this.managers.power, this.managers.crew, this.managers.movement);
+    this.managers.damage = new model.DamageManagement(ship, modules, timeline, this.managers.movement);
+};
+
+model.ShipStatus.prototype.animate = function(gameTime)
+{
+	Object.keys(this.managers).forEach(function(key){
+		this.managers[key].animate(gameTime);
+	}, this);
 };
 
 model.ShipStatus.prototype.subscribeToScene = function(
-	gameScene, effectManager, dispatcher, uiResolver, gridService)
+	gameScene, effectManager, dispatcher, uiResolver, gridService, shipService)
 {
 	this.gameScene = gameScene;
 	this.effectManager = effectManager;
@@ -27,7 +34,7 @@ model.ShipStatus.prototype.subscribeToScene = function(
 
 	Object.keys(this.managers).forEach(function(key){
 		this.managers[key].subscribeToScene(
-			gameScene, effectManager, dispatcher, uiResolver, gridService);
+			gameScene, effectManager, dispatcher, uiResolver, gridService, shipService);
 	}, this);
 };
 

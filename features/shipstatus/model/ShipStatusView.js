@@ -3,7 +3,7 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
 	this.coordinateConverter = coordinateConverter;
 	this.moduleView = new model.ModuleDetailView(target, dispatcher);
 	this.target = target;
-    this.shipIcon = null;
+    this.positionService = null;
     this.hidden = false;
     this.targetId = null;
     this.dragging = false;
@@ -14,15 +14,15 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ShipStatusView.prototype.display = function(shipIcon, shipStatus)
+model.ShipStatusView.prototype.display = function(positionService, shipStatus)
 {
-    this.shipIcon = shipIcon;
+    this.positionService = positionService;
     this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
    
     shipStatus.modules.forEach(function(module){
-        this.createIcons(shipStatus, shipIcon, module, template);
+        this.createIcons(shipStatus, positionService, module, template);
     }, this);
 
     return this;
@@ -37,23 +37,23 @@ model.ShipStatusView.prototype.displayModuleView =
 	this.moduleView.display(module, modulePos, status);
 };
 
-model.ShipStatusView.prototype.unsetShipIcon = function()
+model.ShipStatusView.prototype.unsetPositionService = function()
 {
-    this.shipIcon = null;
+    this.positionService = null;
 };
 
 model.ShipStatusView.prototype.positionStatusView = function()
 {
-    if ( ! this.shipIcon)
+    if ( ! this.positionService)
         return;
 
     var template = this.getTemplate();
-    var position = this.coordinateConverter.fromGameToViewPort(this.shipIcon.getPosition());
+    var position = this.coordinateConverter.fromGameToViewPort(this.positionService.getPosition());
     template.css('left', position.x +'px');
     template.css('top', position.y +'px');
 };
 
-model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, module, template)
+model.ShipStatusView.prototype.createIcons = function(shipStatus, positionService, module, template)
 {
     var symbols = shipStatus.getSymbols(module);
     
@@ -68,11 +68,11 @@ model.ShipStatusView.prototype.createIcons = function(shipStatus, shipIcon, modu
         return;
 
     this.resolveIconDeploymentZone(module, symbols);
-    var modulePosition = shipIcon.getCustomModulePositionInIcon(module.getPosition());
+    var modulePosition = module.getPosition();
 
     var num = 0;
     symbols.forEach(function(symbol){
-        var position = this.getModulePosition(shipIcon, modulePosition, symbol);
+        var position = this.getModulePosition(positionService, modulePosition, symbol);
         var element = symbol.getHtmlElement();
         symbol.getPlacementOffset(position);
         
@@ -176,9 +176,11 @@ model.ShipStatusView.prototype.findValidTileFromTop = function(module, symbol, s
     return {x:0, y:0};
 };
 
-model.ShipStatusView.prototype.getModulePosition = function(shipIcon, modulePosition, symbol)
+model.ShipStatusView.prototype.getModulePosition = function(positionService, modulePosition, symbol)
 {
-    var position = {x:modulePosition.x, y:modulePosition.y};
+    var shipFacing = positionService.getFacing();
+    var position = positionService.normalize().getTilePositionInScene(modulePosition);
+
     position.x += symbol.iconSize.width / 2 * 30;
     position.y += symbol.iconSize.height / 2 * 30;
 
@@ -187,12 +189,11 @@ model.ShipStatusView.prototype.getModulePosition = function(shipIcon, modulePosi
     position.x += moduleTilePos.x * 30;
     position.y += moduleTilePos.y * 30;
 
-    var shipFacing = shipIcon.getAzimuth();
-
     position = MathLib.turnVector(position, shipFacing);
 
     return position;
     //return this.coordinateConverter.fromGameToViewPort(modulePosition);
+    
 };
 
 model.ShipStatusView.prototype.onScroll = function(event)

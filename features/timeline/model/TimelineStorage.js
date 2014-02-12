@@ -88,7 +88,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 	{
 		if (entry.needsSaving())
 		{
-			entry.setSaved();;
+			entry.setSaved();
 
 			if ( ! timeline)
 			{
@@ -131,23 +131,4 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 			);
 		}
 	});
-};
-
-model.TimelineStorage.prototype.persistOrders = function(entries, id, gameId, turn)
-{
-	entries = entries.filter(function(entry)
-	{
-		return entry.needsSaving();
-	}).map(function(entry){
-		return entry.deserialize();
-	});
-
-    Meteor.call(
-        'PersistTimelineOrders',
-        entries,
-        id,
-        gameId,
-        turn,
-        function(err, result){}
-    );
 };

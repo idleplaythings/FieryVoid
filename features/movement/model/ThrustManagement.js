@@ -1,5 +1,9 @@
-model.ThrustManagement = function ThrustManagement(modules)
+model.ThrustManagement = function ThrustManagement(
+	 ship, modules, timeline, power, crew)
 {
+	model.ShipStatusManager.call(this, ship, modules, timeline);
+	this.crew = crew;
+	this.power = power;
     this.modules = modules;
 };
 

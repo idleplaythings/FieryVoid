@@ -1,16 +1,18 @@
 model.DamageManagement = function DamageManagement(
-    modules, timeline, ship, movement)
+    ship, modules, timeline, movement)
 {
-    this.modules = modules;
-    this.timeline = timeline;
-    this.ship = ship;
-
+    model.ShipStatusManager.call(this, ship, modules, timeline);
     this.movement = movement;
 
     this.damageTile = new model.DamageTile();
 };
 
 model.DamageManagement.prototype = Object.create(model.ShipStatusManager.prototype);
+
+model.DamageManagement.prototype.isDestroyedTile = function(position)
+{
+    return false;
+};
 
 model.DamageManagement.prototype.generateDamageLookup = function()
 {
@@ -71,12 +73,13 @@ model.DamageManagement.prototype.addSmokeTrail = function(time, position)
     while(smokeCount--)
     {
         var currentTime = time + step * smokeCount;
+        var positionService = new model.ShipDesignPositionService(
+            this.ship.shipDesign,
+            this.movement.getScenePosition(currentTime),
+            this.movement.getSceneFacing(currentTime)
+        );
 
-        path.unshift(this.ship.getIcon().getPositionInIcon(
-            position,
-            this.movement.getCurrentPosition(currentTime),
-            this.movement.getFacing(currentTime)
-        ));
+        path.unshift(positionService.getTilePositionInScene(position));
     }
 
 

@@ -1,11 +1,10 @@
 model.SensorManagement = function SensorManagement(
-	modules, timeline, ship, power, crew)
+	ship, modules, timeline, power, crew)
 {
-	this.modules = modules;
+	model.ShipStatusManager.call(this, ship, modules, timeline);
+
 	this.crew = crew;
 	this.power = power;
-	this.timeline = timeline;
-	this.ship = ship;
 };
 
 model.SensorManagement.prototype = Object.create(model.ShipStatusManager.prototype);

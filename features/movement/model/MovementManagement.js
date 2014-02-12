@@ -1,8 +1,8 @@
-model.MovementManagement = function MovementManagement(ship, timeline, thrustManager)
+model.MovementManagement = function MovementManagement(
+    ship, modules, timeline, thrust)
 {
-	this._ship = ship;
-	this._timeline = timeline;
-	this._thrustManager = thrustManager
+    model.ShipStatusManager.call(this, ship, modules, timeline);
+	this.thrustManager = thrust;
 
 	this._start = null;
 	this._route = [];
@@ -20,7 +20,7 @@ model.MovementManagement.prototype.getStartPosition = function(position)
 
 	if ( ! this._start)
 	{
-		var entry = this._timeline.filter(function(entry){ return entry.name == 'startPosition'}).pop();
+		var entry = this.timeline.filter(function(entry){ return entry.name == 'startPosition'}).pop();
 		if ( ! entry)
 			throw new Error("Ships require a start position, timelineId",  this._timeline._id);
 
@@ -89,31 +89,44 @@ model.MovementManagement.prototype._resolveRoute = function()
 
 model.MovementManagement.prototype.setStartPosition = function(position)
 {
-    this._timeline.add('startPosition', position);
+    this.timeline.add('startPosition', position);
     this._start = position;
 }
 
-model.MovementManagement.prototype.getFacing = function(currentTime)
-{
-    return 0
-}
 
+/*
 model.MovementManagement.prototype.targetHex = function(hex)
 {
-    ship.setPosition(this._getScenePosition(gameTime));
-    ship.setAzimuth(this.getFacing(gameTime));
+    ship.setPosition(this.getScenePosition(gameTime));
+    ship.setAzimuth(this.getSceneFacing(gameTime));
 };
+*/
 
-model.MovementManagement.prototype.animate = function(ship, gameTime)
+model.MovementManagement.prototype.animate = function(gameTime)
 {
-    ship.setPosition(this._getScenePosition(gameTime));
-    ship.setAzimuth(this.getFacing(gameTime));
+    this.ship.setPosition(this.getScenePosition(gameTime));
+    this.ship.setAzimuth(this.getSceneFacing(gameTime));
 };
 
-model.MovementManagement.prototype._getScenePosition = function(gameTime)
+model.MovementManagement.prototype.getScenePosition = function(gameTime)
 {
     return this.gridService.resolveGameCoordinates(this.getCurrentPosition(gameTime).toOddR());
 };
+
+model.MovementManagement.prototype.getSceneFacing = function(currentTime)
+{
+    return 0;
+}
+
+model.MovementManagement.prototype.getScenePositionAtTurn = function(turn)
+{
+    return this.gridService.resolveGameCoordinates(this.getCurrentPosition(turn * 10000).toOddR());
+};
+
+model.MovementManagement.prototype.getSceneFacingAtTurn = function(turn)
+{
+    return 0;
+}
 
 model.MovementManagement.prototype._getMovementAbility = function()
 {
@@ -137,15 +150,15 @@ model.MovementManagement.prototype._getMovementAbility = function()
 
 model.MovementManagement.prototype.getTurnDelaySpeedFactor = function()
 {
-    return this._ship.shipDesign.hullLayout.baseTurnDelay;
+    return this.ship.shipDesign.hullLayout.baseTurnDelay;
 };
 
 model.MovementManagement.prototype.getTurnCostSpeedFactor = function()
 {
-    return this._ship.shipDesign.hullLayout.baseTurnCost;
+    return this.ship.shipDesign.hullLayout.baseTurnCost;
 };
 
 model.MovementManagement.prototype.getSpeedCost = function()
 {
-    return this._ship.shipDesign.hullLayout.baseSpeedCost;
+    return this.ship.shipDesign.hullLayout.baseSpeedCost;
 };

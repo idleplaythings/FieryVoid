@@ -1,7 +1,8 @@
 model.Display = function Display(icon, gameScene, dispatcher)
 {
-    this.dispatcher = dispatcher;
     this.icon = icon;
+    this.dispatcher = dispatcher;
+    
     this.gameScene = gameScene;
     this.uiEventResolver = null;
     this.scrolling = null;
@@ -30,7 +31,7 @@ model.Display.prototype.renderOn = function(target)
 
     this.uiEventResolver.registerListener(
         'keyup', function(payload){
-            this.dispatcher.dispatch({name:'keyup', keyCode: payload.keyCode});
+            this.dispatcher.dispatch({name:'keyup', key: payload.key});
         }.bind(this), 0);
 
     //this.scrolling = new model.Scrolling(this.dispatcher);
@@ -51,19 +52,14 @@ model.Display.prototype.animate = function()
 
 model.Display.prototype.onClicked = function(payload)
 {
-    var pos = this.icon.getTileOnPosition(payload.game);
-    this.dispatcher.dispatch({name:'click', position: pos});
+    this.dispatcher.dispatch({name:'click', position: payload});
 };
 
 model.Display.prototype.onMouseMove = function(payload)
 {
-    var pos = this.icon.getTileOnPosition(payload.game);
-    var tilePos = this.icon.getClosestTilePosition(payload.game);
     this.dispatcher.dispatch({
         name:'mousemove',
-        position: payload,
-        tile:pos,
-        tilePosition: tilePos
+        position: payload
     });
 };
 

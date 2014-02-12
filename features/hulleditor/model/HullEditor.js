@@ -36,25 +36,27 @@ model.HullEditor.prototype.onHullLayoutChanged = function(event)
 
 model.HullEditor.prototype.onClick = function(event)
 {
-    var pos = event.position;
     var hullLayout = this.reactiveHullLayout.get();
 
     if ( ! hullLayout)
         return;
+
+    var positionService = new model.HullLayoutPositionService(hullLayout);
+    var tile = positionService.getTileOnPosition(event.position.game);
     
     var height = Session.get('hullEditor_tileHeight');
     if ( ! height)
         height = 1;
 
-    var curHeight = hullLayout.getTileHeight(pos);
+    var curHeight = hullLayout.getTileHeight(tile);
 
-    if (height == curHeight || hullLayout.isDisabledTile(pos))
+    if (height == curHeight || hullLayout.isDisabledTile(tile))
     {
-        hullLayout.toggleDisabledTile(pos);
+        hullLayout.toggleDisabledTile(tile);
     }
     else
     {
-        hullLayout.setTileHeight(pos, height);
+        hullLayout.setTileHeight(tile, height);
     }
 };
 

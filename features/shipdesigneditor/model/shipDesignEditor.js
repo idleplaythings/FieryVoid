@@ -66,6 +66,8 @@ model.shipDesignEditor = function shipDesignEditor(
 
     this.possibleIconViewModes = ["hull", "grid"];
     this.iconViewMode = 0;
+
+    this.positionService = null;
     
     this.reactiveShipDesign = shipDesignStorage.getReactiveShipDesign(
 		shipDesignId, this.onShipDesignChange.bind(this));
@@ -155,8 +157,12 @@ model.shipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
         }
         this.icon.create(shipDesign);
         this.shipDesign = shipDesign;
+        this.positionService = new model.ShipDesignPositionService(this.shipDesign);
 
-        this.shipStatusView.display(this.icon, new model.ShipStatus(null, shipDesign.modules));
+        this.shipStatusView.display(
+            new model.ShipDesignPositionService(shipDesign), 
+            new model.ShipStatus(null, shipDesign.modules)
+        );
     }
 };
 
@@ -179,9 +185,13 @@ model.shipDesignEditor.prototype.onClick = function(event)
     if ( ! this.shipDesign)
         return;
 
+
+    var tile = this.positionService.getTileOnPosition(event.position.game);
+
+
     if (this.remove)
     {
-        this.shipDesign.removeModule(event.position);
+        this.shipDesign.removeModule(tile);
         return;
     }
 
@@ -190,29 +200,29 @@ model.shipDesignEditor.prototype.onClick = function(event)
         return;
 
     var moduleLowerLeftCorner = 
-        this.getModuleOffset(module, event.position);
+        this.getModuleOffset(module, tile);
 
     this.shipDesign.placeModule(module, moduleLowerLeftCorner);
 };
 
 model.shipDesignEditor.prototype.onKeyup = function(event)
 {
-    var key = event.keyCode;
-    switch (event.keyCode)
+    var key = event.key;
+
+    if (key instanceof model.Hotkey.Cancel)
     {
-        case 27:
-            this.unselectModule();
-            this.unselectRemove();
-            break;
-        case 37:
-            this.turnModule("left");
-            break;
-        case 39:
-            this.turnModule("right");
-            break;
-        default:
-            console.log(event.keyCode);
+        this.unselectModule();
+        this.unselectRemove();
     }
+    else if ( key instanceof model.Hotkey.Left)
+    {
+        this.turnModule("left");
+    }
+    else if ( key instanceof model.Hotkey.Right)
+    {
+        this.turnModule("right");
+    }
+     
 };
 
 model.shipDesignEditor.prototype.turnModule = function(direction)
@@ -276,8 +286,10 @@ model.shipDesignEditor.prototype.onMouseMove = function(event)
     else
     {
         this.moduleView.display(null);
-        var pos = this.getTileSnap(this.selectedModule, event.tilePosition);
-        this.displayPlacedModule(pos, event.tile);
+        
+
+        var pos = this.getTileSnap(this.selectedModule, this.positionService.getClosestTilePositionInScene(event.position.game));
+        this.displayPlacedModule(pos, this.positionService.getTileOnPosition(pos));
     }
 };
 
@@ -296,7 +308,7 @@ model.shipDesignEditor.prototype.displayPlacedModule = function(pos, tile)
 
 model.shipDesignEditor.prototype.showModuleView = function(pos)
 {
-    var module = this.icon.getModuleOnPosition(pos);
+    var module = this.positionService.getModuleOnPosition(pos);
     if (! module)
     {
         this.moduleView.display(null);
@@ -304,7 +316,7 @@ model.shipDesignEditor.prototype.showModuleView = function(pos)
     }
 
     var modulePos = this.coordinateConverter.fromGameToViewPort(
-        this.icon.getModulePositionInGame(module));
+        this.positionService.getModuleCenterPositionInScene(module));
 
     this.moduleView.display(module, modulePos, new model.ShipStatus(null, this.shipDesign.modules));
 };

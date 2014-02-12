@@ -40,6 +40,7 @@ model.ShipEditor = function ShipEditor(
     this.iconViewMode = 0;
     
     this.shipReactivityHandle = null
+    this.positionService = null;
 };
 
 model.ShipEditor.prototype.setShip = function(shipId)
@@ -58,7 +59,8 @@ model.ShipEditor.prototype.shipChanged = function(ship)
 		this.ship = ship;
         this.shipApperanceMenu.setShipDesign(ship.shipDesign);
         this.icon.create(ship.shipDesign);
-        this.shipStatusView.display(this.icon, ship.status);
+        this.positionService = new model.ShipDesignPositionService(ship.shipDesign);
+        this.shipStatusView.display(this.positionService, ship.status);
     };
 };
 
@@ -97,8 +99,12 @@ model.ShipEditor.prototype.toggleViewMode = function()
 
 model.ShipEditor.prototype.onMouseMove = function(event)
 {
-	var pos = event.position.game;
-    var module = this.icon.getModuleOnPosition(pos);
+    if ( ! this.ship)
+        return;
+
+    var module = this.positionService.getModuleOnPosition(event.position.game);
+
+
     if (! module)
     {
         this.shipStatusView.displayModuleView(null);
@@ -106,7 +112,7 @@ model.ShipEditor.prototype.onMouseMove = function(event)
     }
 
     var modulePos = this.coordinateConverter.fromGameToViewPort(
-        this.icon.getModulePositionInGame(module));
+        this.positionService.getModuleCenterPositionInScene(module));
 
 	this.shipStatusView.displayModuleView(module, modulePos, this.ship.status);
 };

@@ -1,3 +1,4 @@
+
 model.UiFocusResolver = function UiFocusResolver(
 	coordinateConverter, externalDispatcher, clickStrategyFactory)
 {
@@ -25,6 +26,7 @@ model.UiFocusResolver = function UiFocusResolver(
     this.clickStrategyStates = [];
 
     this._coordinateConverter = coordinateConverter;
+    this._hotkeys = new model.HotkeyFactory().getHotkeys();
 };
 
 model.UiFocusResolver.prototype.getCurrentClickStrategy = function()
@@ -40,7 +42,22 @@ model.UiFocusResolver.prototype.addClickStrategy = function(state)
 		current.deactivate();
 
 	this.clickStrategyStates.push(state);
-	state.activate();
+	state.activate(this);
+};
+
+model.UiFocusResolver.prototype.removeClickStrategy = function(state)
+{
+    while(true)
+    {
+        var current = this.getCurrentClickStrategy();
+        if (current != state)
+            break;
+
+        this.clickStrategyStates.pop();
+    };
+
+    state.deactivate();
+    this.getCurrentClickStrategy().activate();
 };
 
 model.UiFocusResolver.prototype.onZoom = function(event)
@@ -58,6 +75,9 @@ model.UiFocusResolver.prototype.getViewPortAndGameObject = function(v, g)
 
 model.UiFocusResolver.prototype.registerListener = function(event, callback, priority)
 {
+    if ( ! priority)
+        pritority = 0;
+
     if (! this.listeners[event])
         throw Error("Unrecognized event '" + event + "'");
 
@@ -65,6 +85,17 @@ model.UiFocusResolver.prototype.registerListener = function(event, callback, pri
         callback:callback,
         priority: priority
     })
+
+    this.listeners[event] = this.listeners[event].sort(this._sortByListenerPriority);
+
+    return callback;
+};
+
+model.UiFocusResolver.prototype.unregisterListener = function(event, callback)
+{
+    this.listeners[event] = this.listeners[event].filter(function(entry){
+        return entry.callback != callback;
+    });
 
     this.listeners[event] = this.listeners[event].sort(this._sortByListenerPriority);
 };
@@ -104,8 +135,14 @@ model.UiFocusResolver.prototype.keyup = function(event)
     if (event.originalEvent.fromUi)
         return;
 
+    var hotkey = this._hotkeys.getFromKeyCode(event.keyCode);
+    console.log("hotkey", hotkey);
+
+    if ( ! hotkey)
+        return;
+    
     this.fireEvent(
-        {keyCode: event.keyCode},
+        {key: hotkey},
         this.listeners.keyup
     );
 };

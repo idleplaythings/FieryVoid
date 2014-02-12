@@ -1,77 +1,96 @@
 model.WeaponManagement = function WeaponManagement(
-	modules, timeline, ship, power, crew)
+	ship, modules, timeline, power, crew, movement)
 {
-	this.modules = modules;
+	model.ShipStatusManager.call(this, ship, modules, timeline);
+	
 	this.crew = crew;
 	this.power = power;
-	this.timeline = timeline;
-	this.ship = ship;
+	this.movement = movement;
+
+	this.hitLocationService = new model.HitLocationService();
+	this.fireOrders = [];
+	this.loadFireOrdersFromTimeline();
 };
 
 model.WeaponManagement.prototype = Object.create(model.ShipStatusManager.prototype);
 
-model.WeaponManagement.prototype.getActionButtons = function()
+model.WeaponManagement.prototype.startTurn = function(turn)
+{
+	this.loadFireOrdersFromTimeline();
+};
+
+model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function()
+{
+	if ( ! this.timeline)
+		return;
+	
+	this.fireOrders = this.timeline.filter(function(entry){ 
+		return entry.name == 'fireOrder'
+	}).map(function(entry){
+		serialized = entry.payload;
+		return new model.FireOrder(
+			serialized.turn, 
+			serialized.targetId, 
+			serialized.targetTile, 
+			this.getModuleById(serialized.weaponId)
+		);
+	}, this);
+};
+
+model.WeaponManagement.prototype.getFireOrder = function(weapon, turn)
+{
+	return this.fireOrders.filter(function(order){return order.turn == turn && order.weapon == weapon;}).pop();
+};
+
+model.WeaponManagement.prototype.getFireOrders = function(turn)
+{
+	return this.fireOrders.filter(function(order){return order.turn == turn;});
+};
+
+model.WeaponManagement.prototype.getWeapons = function()
 {
 	var self = this;
     return this.modules.filter(function(module){
 			return module.weapon
-		}).map(function(module){
-			return new model.ActionButton('', function(){self.selectWeapon(module);}, {background: module.image.getByType('ui')});
-		}, this);
+		});
+};
+model.WeaponManagement.prototype.getTimelineFireOrderEntry = function(fireOrder)
+{
+	return this.timeline.filter(function(entry){ 
+		return entry.name == 'fireOrder' && entry.payload.weaponId == fireOrder.weapon.idOnShip && entry.payload.turn == fireOrder.turn;
+	}, this).pop();
 };
 
-model.WeaponManagement.prototype.selectWeapon = function(module)
+model.WeaponManagement.prototype.removeFireOrder = function(fireOrder)
 {
-	var current = this.uiResolver.getCurrentClickStrategy();
-	
-	if ( ! (current instanceof model.ClickStrategyWeapon))
-	{
-		current  = this.uiResolver.clickStrategyFactory.construct(
-			'ClickStrategyWeapon', {weaponManager: this});
-		this.uiResolver.addClickStrategy(current);
-	}
-	
-	current.addWeapon(module);
-};
-
-model.WeaponManagement.prototype.target = function(target, position, weapons)
-{
-
-	var targetPos = target.getIcon().getPositionInIcon(position);
-	
-	weapons.forEach(function(weapon){
-		var weaponPosition = this.ship.getIcon().getModulePositionInGame(weapon)
-		this.gameScene.scene.add(new model.Line(weaponPosition, targetPos).get());
+	this.fireOrders = this.fireOrders.filter(function(order){
+		return order != fireOrder;
 	}, this);
-	
-	console.log("targeting", target, "with", weapons);
+
+	var entry = this.getTimelineFireOrderEntry(fireOrder);
+
+	if (entry){
+		entry.remove()
+	}
 };
 
-/*
-model.WeaponManagement.prototype.setRandomTarget = function(module)
+model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 {
-	var hit = Math.random() > 0.5;
-	var start = {x: 0, y: 0};
-	
-	var pos = {
-		x:Math.floor(Math.random() * 1000 - 500),
-		y:Math.floor(Math.random() * 1000 - 500)
+	this.fireOrders = this.fireOrders.filter(function(order){
+		return  ! (order.weapon === fireOrder.weapon && order.turn === fireOrder.turn);
+	}, this);
+
+	this.fireOrders.push(fireOrder);
+
+	var entry = this.getTimelineFireOrderEntry(fireOrder);
+
+	if (entry && entry.canUpdate())
+	{
+		entry.update(fireOrder.serialize());
 	}
-	
-	var time = 0; //Math.floor(Math.random() * 10000);
-	
-	/*
-	this.timeline.add('fire', 
-		{
-			moduleId: module._id,
-			position: pos,
-			hit: hit,
-			time: time
-		}
-	);
-	
-	
-	this.effectManager.register(new model.Bolt(start, pos, time));
-	this.effectManager.createBatch(0);
+	else
+	{
+		this.timeline.add('fireOrder', fireOrder.serialize());
+	}
 };
-*/
+

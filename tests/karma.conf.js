@@ -22,6 +22,8 @@ module.exports = function(config) {
         'lib/math/Vector2.js',
         'lib/MathLib.js',
         'lib/CoordinateConverter.js',
+        'features/ship/model/ShipDesign.js',
+        'features/ship/model/HullLayout.js',
         'features/shipmodule/model/ModuleLayout.js',
         'features/shipstatus/model/lib/ShipStatusManager.js',
 
@@ -52,7 +54,13 @@ module.exports = function(config) {
         'features/lib/DIC/Factory.js',
         'features/lib/Extend/Extend.js',
 
-        'features/icon/model/lib/Icon.js'
+        'features/hotkey/lib/*.js',
+        'features/hotkey/model/*.js',
+        'features/componentposition/lib/*.js',
+        'features/componentposition/model/*.js',
+        'features/icon/model/lib/Icon.js',
+        'lib/Raytrace.js',
+        'features/damage/model/HitLocationService.js'
 
     ],
 
