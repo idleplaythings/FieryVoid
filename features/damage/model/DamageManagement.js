@@ -12,6 +12,11 @@ model.DamageManagement = function DamageManagement(
 
 model.DamageManagement.prototype = Object.create(model.ShipStatusManager.prototype);
 
+model.DamageManagement.prototype.isDestroyedTile = function(position)
+{
+    return false;
+};
+
 model.DamageManagement.prototype.generateDamageLookup = function()
 {
     var dim = {

@@ -23,18 +23,19 @@ model.ClickStrategy.prototype.mouseOverShip = function(ship, position, event)
 		return;
 	}
 	
+	var module = ship.shipDesign.getModuleInPosition(position);
 	
     if (this.zoom < 1)
     {
-        this.showShipView(ship, position, event);
+        this.showShipView(ship, position, module, event);
     }
     else
     {
-		this.showModuleView(ship, position, event);
+		this.showModuleView(ship, position, module, event);
 	}
 };
 
-model.ClickStrategy.prototype.showModuleView = function(ship, position, event)
+model.ClickStrategy.prototype.showModuleView = function(ship, position, module, event)
 {
 	this.shipView.display(null);
 	var module = ship.shipDesign.getModuleInPosition(position);
@@ -52,7 +53,7 @@ model.ClickStrategy.prototype.showModuleView = function(ship, position, event)
     event.stop();
 };
 
-model.ClickStrategy.prototype.showShipView = function(ship, position, event)
+model.ClickStrategy.prototype.showShipView = function(ship, position, module, event)
 {
 	this.moduleView.display(null);
     var position = this.coordinateConverter.fromGameToViewPort(
