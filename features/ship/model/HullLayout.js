@@ -70,7 +70,6 @@ model.HullLayout.prototype.isOutOfBounds = function(pos)
 model.HullLayout.prototype.getTileHeight = function(pos)
 {
     var i = pos.y * this.width + pos.x;
-
     for (var k in this.tileHeights)
     {
         var tileAndHeight = this.tileHeights[k];

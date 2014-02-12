@@ -1,7 +1,7 @@
 model.CompositeImageModule = function CompositeImageModule(args)
 {
     model.CompositeImage.call(this);
-    this.shadow = args.shadow || false;
+    this.shadow = false; //args.shadow || false;
     this.imageLoader = args.imageLoader || this.imageLoader;
     this.base =
         this.imageLoader.loadImage(args.imageSrc);
