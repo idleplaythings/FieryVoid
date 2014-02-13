@@ -32,14 +32,23 @@ model.movement.RouteDisplay.prototype.makeItSo = function(route)
         if (last) {
             var start = last;
 
-            if (occupiedPositions[this._serialize(end)])
-				end = this._offset(start, control, end);
+            // if (occupiedPositions[this._serialize(end)])
+				// this._offsetInPlace(start, control, end);
 
 			occupiedPositions[this._serialize(end)] = end;
             var path = new model.Path(start, control, end);
 
-            this._gameScene.scene.add(new model.Curve(start, control, end, 0x00ff00).get());
-            this._gameScene.scene.add(new model.ParticlePath(path, 0x00ff00, this._dispatcher).get());
+            var curve = new model.Curve(start, control, end, 0x005500);
+            var particlePath = new model.ParticlePath(path, 0x00ff00, this._dispatcher);
+
+            this._gameScene.scene.add(curve.get());
+            this._gameScene.scene.add(particlePath.get());
+            this._gameScene.animators.push(particlePath);
+
+            // particlePath.animate();
+            // particlePath.animate();
+            // particlePath.animate();
+
         }
 
         return end;
@@ -53,7 +62,7 @@ model.movement.RouteDisplay.prototype._serialize = function(position)
     return position.x + '_' + position.y;
 }
 
-model.movement.RouteDisplay.prototype._offset = function(start, control, end)
+model.movement.RouteDisplay.prototype._offsetInPlace = function(start, control, end)
 {
     var prototypeHex = this._gridService.getPrototypeHex();
     prototypeHex.setCentrePoint(control);
@@ -84,7 +93,6 @@ model.movement.RouteDisplay.prototype._offset = function(start, control, end)
         if (isPointBetween(end, corners[i], next)) {
             corner1 = corners[i];
             corner2 = next;
-            console.log(i);
             break;
         }
     }
@@ -95,8 +103,9 @@ model.movement.RouteDisplay.prototype._offset = function(start, control, end)
         var offSideCorner = corner2;
     }
 
-    return {
-        x: (offSideCorner.x + end.x) / 2,
-        y: (offSideCorner.y + end.y) / 2,
-    }
+    end.x = (offSideCorner.x + end.x) / 2;
+    end.y = (offSideCorner.y + end.y) / 2;
+
+    control.x = (control.x + start.x + end.x) / 3;
+    control.y = (control.y + start.y + end.y) / 3;
 };

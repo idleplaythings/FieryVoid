@@ -4,15 +4,40 @@ model.ParticlePath = function ParticlePath(path, color, dispatcher)
         color = 0x0000ff;
     }
 
-    var geometry = path.getSpacedGeometry(5);
+    var geometry = path.getSpacedGeometry(1);
 
-    this._object3d = this.createEmitter(geometry, dispatcher, color);
+    this._path = path;
+    this._emitter = this.createEmitter(geometry, dispatcher, color);
+    this._animationPosition = 0;
+    this._animationPositions = {};
 };
 
 model.ParticlePath.prototype.get = function()
 {
-    return this._object3d;
+    return this._emitter.getObject3d();
 };
+
+model.ParticlePath.prototype.animate = function()
+{
+    this._advanceAnimationPosition();
+
+
+    if (this._animationPositions[this._animationPosition] == undefined) {
+        this._animationPositions[this._animationPosition] =
+            this._path.get().getPointAt(this._animationPosition);
+    }
+
+    this._emitter.setParticlePosition(this._animationPositions[this._animationPosition]);
+}
+
+model.ParticlePath.prototype._advanceAnimationPosition = function()
+{
+    this._animationPosition += 0.02;
+
+    if (this._animationPosition > 1) {
+        this._animationPosition = 0;
+    }
+}
 
 model.ParticlePath.prototype.createEmitter = function(geometry, dispatcher, color)
 {
@@ -34,5 +59,5 @@ model.ParticlePath.prototype.createEmitter = function(geometry, dispatcher, colo
 
     var texture = THREE.ImageUtils.loadTexture("/misc/hull.png");
 
-    return new model.ParticlePathEmitter(geometry, attributes, texture).observeZoomLevelChange(dispatcher).getObject3d();
+    return new model.ParticlePathEmitter(geometry, attributes, texture).observeZoomLevelChange(dispatcher);
 };

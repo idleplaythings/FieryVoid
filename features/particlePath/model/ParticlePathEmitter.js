@@ -30,7 +30,7 @@ model.ParticlePathEmitter.prototype.observeZoomLevelChange = function(dispatcher
         var zoomLevel = callback(event);
         this.setZoomLevel(zoomLevel)
     }.bind(this));
-    
+
     return this;
 }
 
@@ -52,14 +52,25 @@ model.ParticlePathEmitter.prototype.getFreeParticle = function()
 
 model.ParticlePathEmitter.prototype.animate = function()
 {
-    for (var i = 0; i < this.particles.length; i++)
-    {
-        var particle = this.particles[i];
-        particle.animate(0.01);
-        particle.updateMaterial(this.particleMaterial, i);
-    }
-    this.particleGeometry.verticesNeedUpdate = true;
+    // console.log('hello')
+
+    // for (var i = 0; i < this.particles.length; i++)
+    // {
+    //     var particle = this.particles[i];
+    //     particle.animate(0.01);
+    //     particle.updateMaterial(this.particleMaterial, i);
+    // }
+    // this.particleGeometry.verticesNeedUpdate = true;
 };
+
+model.ParticlePathEmitter.prototype.setParticlePosition = function(position)
+{
+    this.particleGeometry.vertices[0].x = position.x;
+    this.particleGeometry.vertices[0].y = position.y;
+    this.particleGeometry.verticesNeedUpdate = true;
+    // this.particleGeometry.computeBoundingSphere();
+    // this.particleGeometry.computeBoundingBox();
+}
 
 model.ParticlePathEmitter.prototype.getObject3d = function()
 {
