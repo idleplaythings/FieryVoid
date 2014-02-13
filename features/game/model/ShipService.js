@@ -33,7 +33,6 @@ model.ShipService.prototype.selectShip = function(ship)
     this.selectedShip = ship;
     this.selectedShip.select();
 
-    console.trace();
     this.dispatcher.dispatch({name: 'ShipSelectedEvent', payload:ship});
 };
 
@@ -41,7 +40,7 @@ model.ShipService.prototype.subscribeToScene = function(scene, effectManager, di
 {
 	this.getShips().forEach(
         function(ship){
-            ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver, gridService);
+            ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver, gridService, this);
         }, this);
 
 	//this.selectShip(this.getClosestShip());

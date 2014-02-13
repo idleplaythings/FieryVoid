@@ -1,8 +1,7 @@
-model.FireOrder = function FireOrder(turn, shooter, target, targetTile, weapon)
+model.FireOrder = function FireOrder(turn, targetId, targetTile, weapon)
 {
 	this.turn = turn;
-	this.shooter = shooter;
-	this.target = target;
+	this.targetId = targetId;
 	this.targetTile = targetTile;
 	this.weapon = weapon;
 }
@@ -12,8 +11,7 @@ model.FireOrder.prototype.serialize = function()
 	return {
 		weaponId: this.weapon.idOnShip,
 		turn: this.turn,
-		shooterId: this.shooter._id,
-		targetId: this.target._id,
+		targetId: this.targetId,
 		targetTile: this.targetTile
 	};
 }

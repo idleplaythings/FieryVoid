@@ -7,5 +7,5 @@ model.TimelineRemoteSaver = function TimelineRemoteSaver(timeline, entries, time
 
 model.TimelineRemoteSaver.prototype.persist = function()
 {
-	timelineStorage.persist(this._timeline._id, this._entries);
+	this._timelineStorage.persist(this._entries, this._timeline._id);
 };

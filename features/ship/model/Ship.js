@@ -53,7 +53,7 @@ model.Ship.prototype.getIcon = function()
 };
 
 model.Ship.prototype.subscribeToScene =
-    function(gameScene, effectManager, eventDispatcher, uiResolver, gridService)
+    function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)
 {
 	this.icon = new model.ShipIcon(gameScene, eventDispatcher).create(this.shipDesign);
 
@@ -72,7 +72,7 @@ model.Ship.prototype.subscribeToScene =
         }
     }, this);
 
-	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService);
+	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService);
     this.gameScene.animators.push(this);
 };
 
@@ -88,7 +88,7 @@ model.Ship.prototype.deselect = function()
 
 model.Ship.prototype.animate = function(gameTime)
 {
-    this.status.managers.movement.animate(this, gameTime);
+    this.status.animate(gameTime);
 };
 
 model.Ship.prototype.setAzimuth = function(azimuth)

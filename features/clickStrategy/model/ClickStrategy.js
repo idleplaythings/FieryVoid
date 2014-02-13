@@ -65,7 +65,6 @@ model.ClickStrategy.prototype.showShipView = function(ship, position, module, ev
 
 model.ClickStrategy.prototype.remove = function()
 {
-	console.log("is ui event nön", this.uiEventResolver)
 	if (this.uiEventResolver)
 		this.uiEventResolver.removeClickStrategy(this);
 };

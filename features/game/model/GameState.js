@@ -1,9 +1,58 @@
-model.GameState = function GameState(currentTime)
+model.GameState = function GameState(turn, dispatcher)
 {
-    this.currentGametime = currentTime;
+    this.currentGameTurn = 0;
+    this.currentDisplayGameTime = 0;
+    this.currentDisplayTarget = 0;
 
-    this.currentDisplayGameTime = currentTime;
-    this.currentDisplayTarget = currentTime;
+    this._turnTime = 10000;
+    
+    this._dispatcher = null;
+    this._setTurn(turn);
+
+};
+
+model.GameState.prototype.subscribeToScene = function(dispatcher)
+{
+    this._dispatcher = dispatcher;
+};
+
+model.GameState.prototype.startTurn = function()
+{
+    this._dispatcher.dispatch({name: 'TurnEvent', type:'start', turn: this.currentGameTurn});
+};
+
+model.GameState.prototype.endTurn = function()
+{
+    this._dispatcher.dispatch({name: 'TurnEvent', type:'end', turn: this.currentGameTurn});
+};
+
+model.GameState.prototype.startAnimation = function()
+{
+    this._dispatcher.dispatch({name: 'TurnEvent', type:'animationStart', turn: this.currentGameTurn});
+};
+
+model.GameState.prototype.endAnimation = function()
+{
+    this._dispatcher.dispatch({name: 'TurnEvent', type:'animationEnd', turn: this.currentGameTurn});
+};
+
+model.GameState.prototype._setTurn = function(turn)
+{
+    this.currentGameTurn = turn;
+
+    this.currentDisplayGameTime = turn * this._turnTime;
+    this.currentDisplayTarget = turn * this._turnTime;
+};
+
+model.GameState.prototype.changeTurn = function(turn)
+{
+    this._setTurn(turn);
+    this.startTurn();
+};
+
+model.GameState.prototype.getTurnStartTime = function(turn)
+{
+    return turn * this._turnTime;
 };
 
 model.GameState.prototype.getCurrentGameTime = function()

@@ -23,6 +23,21 @@ model.WeaponIndicatorService.prototype.removeIndicators = function(weapons, type
 	}, this);
 };
 
+model.WeaponIndicatorService.prototype.removeAllIndicators = function(type)
+{
+	this._indicators = this._indicators.filter(function(entry){
+
+		if (! type || entry.type == type)
+		{
+			this._gameScene.scene.remove(entry.indicator.get());
+			return false;
+		}
+
+		return true;
+
+	}, this);
+};
+
 model.WeaponIndicatorService.prototype.addIndication = function(weapon, weaponPosition, targetPos, type)
 {
 

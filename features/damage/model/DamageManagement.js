@@ -1,10 +1,7 @@
 model.DamageManagement = function DamageManagement(
-    modules, timeline, ship, movement)
+    ship, modules, timeline, movement)
 {
-    this.modules = modules;
-    this.timeline = timeline;
-    this.ship = ship;
-
+    model.ShipStatusManager.call(this, ship, modules, timeline);
     this.movement = movement;
 
     this.damageTile = new model.DamageTile();
@@ -79,8 +76,8 @@ model.DamageManagement.prototype.addSmokeTrail = function(time, position)
 
         path.unshift(this.ship.getIcon().getPositionInIcon(
             position,
-            this.movement.getCurrentPosition(currentTime),
-            this.movement.getFacing(currentTime)
+            this.movement.getScenePosition(currentTime),
+            this.movement.getSceneFacing(currentTime)
         ));
     }
 

@@ -49,14 +49,12 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 
 model.ClickStrategyWeapon.prototype.activate = function(uiEventResolver)
 {
-	console.log("activate weapon", uiEventResolver);
 	this.uiEventResolver = uiEventResolver;
 	jQuery("#gameContainer").addClass('weaponCursor');
 };
 
 model.ClickStrategyWeapon.prototype.deactivate = function()
 {
-	console.log("deactivating weapon click strategy");
 	jQuery("#gameContainer").removeClass('weaponCursor');
 };
 

@@ -1,6 +1,8 @@
-model.PowerManagement = function PowerManagement(modules)
+model.PowerManagement = function PowerManagement(ship, modules, timeline)
 {
-     this.powerStatuses = modules.map(function(module){
+    model.ShipStatusManager.call(this, ship, modules, timeline);
+    
+    this.powerStatuses = this.modules.map(function(module){
         return {module:module, status: null};
     });
     this.resolvePowerStatus();

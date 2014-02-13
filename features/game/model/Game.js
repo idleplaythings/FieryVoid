@@ -65,7 +65,7 @@ Game.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-    this.gameState = new model.GameState(args.currentGameTime || 0);
+    this.gameState = new model.GameState(args.currentGameTurn || 0);
     this.created = args.created || null;
 };
 
@@ -181,6 +181,10 @@ Game.prototype._initGameState = function(container)
     );
 
     this.timelineFactory.startGameSaveInterval(this._id);
+
+    this.gameState.subscribeToScene(this.dispatcher);
+    this.gameState.startTurn();
+    
     this.animate();
 };
 
@@ -207,23 +211,18 @@ Game.prototype.getInitialInsert = function()
         name: this.name,
         terrainSeed: this.terrainSeed,
         created: this.created,
-        currentGameTime: this.gameState.currentGametime,
+        currentGameTurn: this.gameState.currentGameTurn,
         players: this.players
     };
 };
 
 Game.prototype.updated = function(doc)
 {
-    if (this.gameState.currentGametime < doc.currentGameTime)
+    if (this.gameState.currentGameTurn < doc.currentGameTurn)
     {
-        this._changeTurn(doc.currentGameTime);
+        this.timelineFactory.reloadTimelines();
+        this.gameState.changeTurn(doc.currentGameTurn);
     }
-};
-
-Game.prototype._changeTurn = function(time)
-{
-    this.gameState.currentGametime = time;
-    this.timelineFactory.reloadTimelines();
 };
 
 Game.prototype.onScroll = function(event)

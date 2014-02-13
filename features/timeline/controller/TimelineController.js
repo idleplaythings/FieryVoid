@@ -2,12 +2,15 @@ controller.TimelineController = function(gameStorage, timelineFactory, timelineS
 {
     this.SaveGameTimelines = function(gameId, timelineEntries)
     {
+        if (this.isSimulation)
+            return;
+
         //TODO: load game, and check current player is alloved to persist these timelines
         context = {gameId: gameId};
 
         timelineEntries.forEach(function(entry){
             console.log(entry);
-            var timeline = this.timelineFactory.getTimeline(entry.id);
+            var timeline = timelineFactory.getTimeline(entry.id);
             var entries = entry.entries.map(function(entry){
                 entry.context = context;
                 return new model.TimelineEntry(entry);

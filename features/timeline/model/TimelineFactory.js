@@ -62,6 +62,7 @@ model.TimelineFactory.prototype.startGameSaveInterval = function(gameid)
     var self = this;
     setTimeout(function(){
 
+        console.log("savegame tick");
         var entries = self.getAllSerializedTimelineEntriesForSave();
         if (entries.length == 0)
         {
@@ -75,8 +76,39 @@ model.TimelineFactory.prototype.startGameSaveInterval = function(gameid)
         gameid, entries,
         function(err, result){
             console.log(result);
+            self.processSavedEntries(entries, result);
+            self.startGameSaveInterval(gameid);
         }
     );
     },1000);
 };
+
+model.TimelineFactory.prototype.processSavedEntries = function(orginalEntries, savedEntries)
+{
+    var orginalEntries = orginalEntries.reduce(function(list, current){
+        return list.concat(current.entries);
+    }, []);
+
+    var savedEntries = savedEntries.reduce(function(list, current){
+        return list.concat(current.entries.map(function(entry){
+            return new model.TimelineEntry(entry);
+        }));
+    }, []);
+
+    orginalEntries.forEach(function(orginalEntry){
+        var savedEntry = savedEntries.filter(function(entry){ return entry._id == orginalEntry._id;})[0];
+
+        if ( ! savedEntry)
+            return;
+
+        console.log("matching saves", orginalEntry, savedEntry);
+
+        if (orginalEntry.needsSaving() &&  ! savedEntry.needsSaving())
+            orginalEntry.setSaved();
+
+        if (orginalEntry.needsRemoving() &&  ! savedEntry.needsRemoving())
+            orginalEntry.setRemoved();
+    });
+}
+
 
