@@ -7,6 +7,7 @@ model.WeaponManagement = function WeaponManagement(
 	this.timeline = timeline;
 	this.ship = ship;
 	this.hitLocationService = new model.HitLocationService();
+	this.fireOrders = [];
 };
 
 model.WeaponManagement.prototype = Object.create(model.ShipStatusManager.prototype);
@@ -35,6 +36,11 @@ model.WeaponManagement.prototype.selectWeapon = function(module)
 	current.addWeapon(module);
 };
 
+model.WeaponManagement.prototype.getTurn = function()
+{
+	return 1;
+}
+
 model.WeaponManagement.prototype.getClosestValidTarget = function(target, position, weaponPosition)
 {
 	var gamePosition = target.getIcon().getPositionInIcon(position);
@@ -44,21 +50,43 @@ model.WeaponManagement.prototype.getClosestValidTarget = function(target, positi
 
 model.WeaponManagement.prototype.target = function(target, position, weapons)
 {
-	/*
-	this.getClosestValidTarget(target, position, weapon);
-	this.weaponIndicatorService.hideTarget(weapons);
+	this.hideTarget(weapons, null);
+	this.showTarget(target, position, weapons, null);
 
-	var targetPos = this.getClosestValidTarget(
-		target,
-		target.getIcon().getPositionInIcon(position),
-		weapon
-	);
+	weapons.forEach(function(weapon){
+		var weaponPosition = this.ship.getIcon().getModulePositionInGame(weapon);
+		var targetPos = this.getClosestValidTarget(
+			target,
+			position,
+			weaponPosition
+		);
 
-	this.showTarget(target, position, weapons);
-	*/
+		var fireOrder = new model.FireOrder(this.getTurn(), this.ship, target, targetPos, weapon);
+		this.addFireOrder(fireOrder);
+
+	}, this);
 };
 
-model.WeaponManagement.prototype.showTarget = function(target, position, weapons)
+model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
+{
+	this.fireOrders = this.fireOrders.filter(function(order){
+		return order.weapon != fireOrder.weapon && turn != this.getTurn();
+	});
+
+	this.fireOrders.push(fireOrder);
+
+	var entry = this.timeline.filter(function(entry){ 
+		return entry.name == 'fireOrder' && entry.payload.weaponId == fireOrder.weapon.idOnShip && entry.payload.turn == this.getTurn();
+	}).pop();
+
+	if (entry && entry.canUpdate())
+		entry.update(fireOrder.serialize());
+	else
+		this.timeline.add('fireOrder', fireOrder.serialize());
+};
+
+
+model.WeaponManagement.prototype.showTarget = function(target, position, weapons, type)
 {
 	weapons.forEach(function(weapon){
 		var weaponPosition = this.ship.getIcon().getModulePositionInGame(weapon);
@@ -72,13 +100,13 @@ model.WeaponManagement.prototype.showTarget = function(target, position, weapons
 		targetPos.x += 15;
 		targetPos.y += 15;
 
-		this.weaponIndicatorService.addIndication(weapon, weaponPosition, targetPos);
+		this.weaponIndicatorService.addIndication(weapon, weaponPosition, targetPos, type);
 	}, this);
 };
 
-model.WeaponManagement.prototype.hideTarget = function(weapons)
+model.WeaponManagement.prototype.hideTarget = function(weapons, type)
 {
-	this.weaponIndicatorService.removeIndicators(weapons);
+	this.weaponIndicatorService.removeIndicators(weapons, type);
 };
 
 model.WeaponManagement.prototype.subscribeToScene = function(

@@ -1,19 +1,22 @@
 if ( typeof model === 'undefined')
     model = {};
 
-model.TimelineEntry = function TimelineEntry(name, payload, context)
+model.TimelineEntry = function TimelineEntry(args)
 {
-	this._id = new Meteor.Collection.ObjectID().toHexString();
-    this.name = name;
-    this.payload = payload;
-    this.time = new Date().getTime();
-    this.context = context || null;
+    if (! args)
+        args = {};
+
+	this._id = args._id || new Meteor.Collection.ObjectID().toHexString();
+    this.name = args.name || "";
+    this.payload = args.payload || null;
+    this.time = args.time || new Date().getTime();
+    this.context = args.context || null;
     
-    this._saved = false;
-    this._locked = false;
+    this._saved = args._saved ||false;
+    this._locked = args._locked || false;
     
-    this._remove = false;
-    this._removed = false;
+    this._remove = args._remove || false;
+    this._removed = args._removed || false;
 };
 
 model.TimelineEntry.prototype.canUpdate = function(payload)

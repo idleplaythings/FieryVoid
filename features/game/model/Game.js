@@ -169,6 +169,7 @@ Game.prototype._initGameState = function(container)
         this.terrainSeed,
         this.gridService
     ).createRandom();
+
     this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
 	this.effectManager.createExplosion();
     this.shipService.subscribeToScene(
@@ -179,6 +180,7 @@ Game.prototype._initGameState = function(container)
         this.gridService
     );
 
+    this.timelineFactory.startGameSaveInterval(this._id);
     this.animate();
 };
 

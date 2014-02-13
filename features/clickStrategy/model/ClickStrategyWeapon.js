@@ -3,6 +3,7 @@ model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
 	model.ClickStrategy.call(this, args);
 	this.weaponManager = args.weaponManager;
 	this.weapons = [];
+	this.uiEventResolver = null;
 };
 
 
@@ -16,14 +17,15 @@ model.ClickStrategyWeapon.prototype.addWeapon = function(weapon)
 
 model.ClickStrategyWeapon.prototype.clickShip = function(ship, position, event)
 {
+	this.weaponManager.hideTarget(this.weapons, 'targeting');
 	this.weaponManager.target(ship, position, this.weapons);
-	
+	this.remove();
 	event.stop();
 };
 
 model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, event)
 {
-	this.weaponManager.hideTarget(this.weapons);
+	this.weaponManager.hideTarget(this.weapons, 'targeting');
 	
 	if (! ship)
 	{
@@ -33,7 +35,7 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	}
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
-	this.weaponManager.showTarget(ship, position, this.weapons);
+	this.weaponManager.showTarget(ship, position, this.weapons, 'targeting');
 
     if (this.zoom < 1)
     {
@@ -45,13 +47,16 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	}
 };
 
-model.ClickStrategyWeapon.prototype.activate = function()
+model.ClickStrategyWeapon.prototype.activate = function(uiEventResolver)
 {
+	console.log("activate weapon", uiEventResolver);
+	this.uiEventResolver = uiEventResolver;
 	jQuery("#gameContainer").addClass('weaponCursor');
 };
 
 model.ClickStrategyWeapon.prototype.deactivate = function()
 {
+	console.log("deactivating weapon click strategy");
 	jQuery("#gameContainer").removeClass('weaponCursor');
 };
 

@@ -5,11 +5,11 @@ model.WeaponIndicatorService = function WeaponIndicatorService(gameScene, dispat
 	this._indicators = [];
 }
 
-model.WeaponIndicatorService.prototype.removeIndicators = function(weapons)
+model.WeaponIndicatorService.prototype.removeIndicators = function(weapons, type)
 {
 	this._indicators = this._indicators.filter(function(entry){
 		var found = weapons.some(function(weapon){
-			return weapon == entry.weapon;
+			return weapon == entry.weapon && entry.type == type;
 		});
 
 		if (found)
@@ -23,16 +23,19 @@ model.WeaponIndicatorService.prototype.removeIndicators = function(weapons)
 	}, this);
 };
 
-model.WeaponIndicatorService.prototype.addIndication = function(weapon, weaponPosition, targetPos)
+model.WeaponIndicatorService.prototype.addIndication = function(weapon, weaponPosition, targetPos, type)
 {
 
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPos, weaponPosition);
 
 	var line = new model.Line(weaponPosition, targetPos);
-	this._indicators.push({weapon: weapon, indicator: line});
+	this._indicators.push({weapon: weapon, indicator: line, type: type});
 	this._gameScene.scene.add(line.get());
 
-	var ellipse = new model.Ellipse(targetPos, 45, 90, weaponDirection);
-	this._indicators.push({weapon: weapon, indicator: ellipse});
-	this._gameScene.scene.add(ellipse.get());
+	if (type == "targeting")
+	{
+		var ellipse = new model.Ellipse(targetPos, 45, 90, weaponDirection);
+		this._indicators.push({weapon: weapon, indicator: ellipse, type: type});
+		this._gameScene.scene.add(ellipse.get());
+	}
 };

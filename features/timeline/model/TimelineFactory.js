@@ -5,6 +5,7 @@ model.TimelineFactory = function TimelineFactory(storage)
 {
     this._storage = storage;
     this._loadedTimelines = [];
+    this._gameSaveInterval = null;
 };
 
 model.TimelineFactory.prototype.getTimeline = function(id)
@@ -40,3 +41,42 @@ model.TimelineFactory.prototype.cleanUp = function()
 {
     this._loadedTimelines = [];
 };
+
+model.TimelineFactory.prototype.getAllSerializedTimelineEntriesForSave = function(gameid)
+{
+    var entries = [];
+    this._loadedTimelines.forEach(function(timeline){
+
+        var entry = timeline.serializeForRemoteSaving();
+        if (entry)
+            entries.push(entry);
+
+    }, this);
+
+    return entries;
+};
+
+model.TimelineFactory.prototype.startGameSaveInterval = function(gameid)
+{
+
+    var self = this;
+    setTimeout(function(){
+
+        var entries = self.getAllSerializedTimelineEntriesForSave();
+        if (entries.length == 0)
+        {
+            self.startGameSaveInterval(gameid);
+            return;
+        }
+
+        console.log("persisting timelines from interval");
+        Meteor.call(
+        'SaveGameTimelines',
+        gameid, entries,
+        function(err, result){
+            console.log(result);
+        }
+    );
+    },1000);
+};
+

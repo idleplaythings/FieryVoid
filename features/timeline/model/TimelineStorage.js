@@ -88,7 +88,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 	{
 		if (entry.needsSaving())
 		{
-			entry.setSaved();;
+			entry.setSaved();
 
 			if ( ! timeline)
 			{
