@@ -103,19 +103,21 @@ model.ModuleEditor.prototype.onClick = function(event)
 {
 	if (this.icon.sprites.grid.hidden)
 		return;
-		
-    var pos = event.position;
+
     var module = this.reactiveModuleLayout.get();
 
     if ( ! module)
         return;
 
+    var positionService = new model.ModuleLayoutPositionService(module);
+    var tile = positionService.getTileOnPosition(event.position.game);
+
     var type = Session.get('moduleEditor_brushType');
 
     if ( ! type)
-        module.toggleDisabledTile(pos);
+        module.toggleDisabledTile(tile);
     else if (type == 'outside')
-        module.toggleOutsideTile(pos);
+        module.toggleOutsideTile(tile);
 
 };
 

@@ -73,12 +73,13 @@ model.DamageManagement.prototype.addSmokeTrail = function(time, position)
     while(smokeCount--)
     {
         var currentTime = time + step * smokeCount;
-
-        path.unshift(this.ship.getIcon().getPositionInIcon(
-            position,
+        var positionService = new model.ShipDesignPositionService(
+            this.ship.shipDesign,
             this.movement.getScenePosition(currentTime),
             this.movement.getSceneFacing(currentTime)
-        ));
+        );
+
+        path.unshift(positionService.getTilePositionInScene(position));
     }
 
 

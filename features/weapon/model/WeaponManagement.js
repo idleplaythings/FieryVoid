@@ -1,7 +1,7 @@
 model.WeaponManagement = function WeaponManagement(
-	shipService, gameState, ship, modules, timeline, power, crew, movement)
+	ship, modules, timeline, power, crew, movement)
 {
-	model.ShipStatusManager.call(this, shipService, gameState, ship, modules, timeline);
+	model.ShipStatusManager.call(this, ship, modules, timeline);
 	
 	this.crew = crew;
 	this.power = power;
@@ -75,7 +75,8 @@ model.WeaponManagement.prototype.selectWeapon = function(module)
 
 model.WeaponManagement.prototype.getClosestValidTarget = function(target, position, weaponPosition)
 {
-	var gamePosition = target.getIcon().getPositionInIcon(position);
+	var positionService = new model.ShipPositionService(target, this.currentTurn);
+	var gamePosition = positionService.getTilePositionInScene(position);
 	var weaponDirection = MathLib.getAzimuthFromTarget(gamePosition, weaponPosition);
 	return this.hitLocationService.getClosestValidTarget(weaponDirection, position, target.shipDesign, target.status.managers.damage);
 };
@@ -84,9 +85,10 @@ model.WeaponManagement.prototype.target = function(target, position, weapons)
 {
 	this.hideTarget(weapons, null);
 	this.showTarget(target, position, weapons, null);
+	var positionService = new model.ShipPositionService(this.ship, this.currentTurn);
 
 	weapons.forEach(function(weapon){
-		var weaponPosition = this.ship.getIcon().getModulePositionInGame(
+		var weaponPosition = positionService.getModuleCenterPositionInScene(
 			weapon,
 			this.movement.getScenePositionAtTurn(this.currentTurn),
 			this.movement.getSceneFacingAtTurn(this.currentTurn)
@@ -107,8 +109,8 @@ model.WeaponManagement.prototype.target = function(target, position, weapons)
 model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 {
 	this.fireOrders = this.fireOrders.filter(function(order){
-		return order.weapon != fireOrder.weapon && turn != this.getTurn();
-	});
+		return order.weapon != fireOrder.weapon && order.turn != this.getTurn();
+	}, this);
 
 	this.fireOrders.push(fireOrder);
 
@@ -126,26 +128,22 @@ model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 model.WeaponManagement.prototype.showTarget = function(target, position, weapons, type)
 {
 	weapons = [].concat(weapons);
+	var positionService = new model.ShipPositionService(this.ship, this.currentTurn);
 
 	weapons.forEach(function(weapon){
-		var weaponPosition = this.ship.getIcon().getModulePositionInGame(
+		var weaponPosition = positionService.getModuleCenterPositionInScene(
 			weapon,
 			this.movement.getScenePositionAtTurn(this.currentTurn),
 			this.movement.getSceneFacingAtTurn(this.currentTurn)
 		);
 
-		console.log("weaponPosition", weaponPosition, weapon);
 		var targetPos = this.getClosestValidTarget(
 			target,
 			position,
 			weaponPosition
 		);
 
-		targetPos = target.getIcon().getPositionInIcon(
-			targetPos
-			this.movement.getScenePositionAtTurn(this.currentTurn),
-			this.movement.getSceneFacingAtTurn(this.currentTurn)
-		),
+		targetPos = new model.ShipPositionService(target, this.currentTurn).getTilePositionInScene(targetPos);
 
 		targetPos.x += 15;
 		targetPos.y += 15;

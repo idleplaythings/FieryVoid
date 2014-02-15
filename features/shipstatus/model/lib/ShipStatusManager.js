@@ -83,3 +83,12 @@ model.ShipStatusManager.prototype.getModuleById = function(id)
 		return module.idOnShip == id;
 	}).pop();
 };
+
+model.ShipStatusManager.prototype.getPositionService = function(ship)
+{
+    return new model.ShipDesignPositionService(
+        ship.shipDesign,
+        ship.status.managers.movement.getScenePositionAtTurn(this.currentTurn),
+        ship.status.managers.movement.getSceneFacingAtTurn(this.currentTurn)
+    );
+}

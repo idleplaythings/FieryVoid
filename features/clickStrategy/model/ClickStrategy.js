@@ -24,21 +24,21 @@ model.ClickStrategy.prototype.mouseOverShip = function(ship, position, event)
 	}
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
+	var positionService = new model.ShipPositionService(ship);
 	
     if (this.zoom < 1)
     {
-        this.showShipView(ship, position, module, event);
+        this.showShipView(ship, positionService, module, event);
     }
     else
     {
-		this.showModuleView(ship, position, module, event);
+		this.showModuleView(ship, positionService, module, event);
 	}
 };
 
-model.ClickStrategy.prototype.showModuleView = function(ship, position, module, event)
+model.ClickStrategy.prototype.showModuleView = function(ship, positionService, module, event)
 {
 	this.shipView.display(null);
-	var module = ship.shipDesign.getModuleInPosition(position);
 
     if (! module)
     {
@@ -47,17 +47,16 @@ model.ClickStrategy.prototype.showModuleView = function(ship, position, module, 
     }
 
     var modulePos = this.coordinateConverter.fromGameToViewPort(
-        ship.getIcon().getModulePositionInGame(module));
+        positionService.getModuleCenterPositionInScene(module));
 
     this.moduleView.display(module, modulePos, ship.status);
     event.stop();
 };
 
-model.ClickStrategy.prototype.showShipView = function(ship, position, module, event)
+model.ClickStrategy.prototype.showShipView = function(ship, positionService, module, event)
 {
 	this.moduleView.display(null);
-    var position = this.coordinateConverter.fromGameToViewPort(
-        ship.getIcon().getPosition());
+    var position = this.coordinateConverter.fromGameToViewPort(positionService.getPosition());
      
     this.shipView.display(ship, position);
     event.stop();

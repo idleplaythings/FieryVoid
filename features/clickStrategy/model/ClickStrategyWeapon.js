@@ -36,16 +36,18 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
 	this.weaponManager.showTarget(ship, position, this.weapons, 'targeting');
-
+	var positionService = new model.ShipPositionService(ship);
+	
     if (this.zoom < 1)
     {
-        this.showShipView(ship, position, module, event);
+        this.showShipView(ship, positionService, module, event);
     }
     else
     {
-		this.showModuleView(ship, position, module, event);
+		this.showModuleView(ship, positionService, module, event);
 	}
 };
+
 
 model.ClickStrategyWeapon.prototype.activate = function(uiEventResolver)
 {

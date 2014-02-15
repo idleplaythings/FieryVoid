@@ -15,7 +15,8 @@ model.ShipService = function ShipService(
 
 	this.selectedShip = null;
 	this.zoom = 1;
-	this.scroll = {x:0, y:0};;
+	this.scroll = {x:0, y:0};
+    this.currentTurn = 0;
 
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
@@ -98,10 +99,11 @@ model.ShipService.prototype.onScroll = function(event)
     if ( this.shipStatusView.targetId == ship._id)
         return;
 
+    var positionService = new model.ShipPositionService(ship, this.currentTurn);
     this.getShips().forEach(function(ship){ship.getIcon().showHull()});
     ship.getIcon().hideHull();
     this.shipStatusView.targetId = ship._id;
-    this.shipStatusView.display(ship.getIcon(), ship.status).show();
+    this.shipStatusView.display(positionService, ship.status).show();
 };
 
 model.ShipService.prototype.onZoom = function(event)
@@ -118,13 +120,15 @@ model.ShipService.prototype.onZoom = function(event)
             return;
 
         ship.getIcon().hideHull();
+        var positionService = new model.ShipPositionService(ship, this.currentTurn);
+
         this.shipStatusView.targetId = ship._id;
-        this.shipStatusView.display(ship.getIcon(), ship.status).show();
+        this.shipStatusView.display(positionService, ship.status).show();
     }
     else
     {
         this.getShips().forEach(function(ship){ship.getIcon().showHull()});
-        this.shipStatusView.unsetShipIcon();
+        this.shipStatusView.unsetPositionService();
         this.shipStatusView.targetId = null;
         this.shipStatusView.hide();
     }
@@ -139,14 +143,12 @@ model.ShipService.prototype.onClick = function(event)
     if (! ship)
         return;
 
-	var position = ship.getIcon().getTileOnPosition(event.game);
+    var positionService = new model.ShipPositionService(ship, this.currentTurn);
+    var position = positionService.getTileOnPosition(event.game)
 
-	if (! ship.getIcon().occupiesPosition(position))
-		return;
+    if (! positionService.occupiesPosition(event.game))
+        return;
 
-    //var module = ship.getIcon().getModuleOnPosition(event.game);
-
-    //if (! module)
     event.clickStrategy.clickShip(ship, position, event);
 };
 
@@ -163,14 +165,15 @@ model.ShipService.prototype.onMouseMove = function(event)
         return;
 	}
 
-	var position = ship.getIcon().getTileOnPosition(event.game);
+    var positionService = new model.ShipPositionService(ship, this.currentTurn);
+	var position = positionService.getTileOnPosition(event.game)
 
-	if (! ship.getIcon().occupiesPosition(position))
+	if (! positionService.occupiesPosition(event.game))
 	{
 		event.clickStrategy.mouseOverShip(null);
         return;
 	}
 	
-	event.clickStrategy.mouseOverShip(ship, position, event);
+	event.clickStrategy.mouseOverShip(ship, positionService.getTileOnPosition(event.game), event);
 };
 

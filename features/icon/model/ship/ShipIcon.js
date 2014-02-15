@@ -88,6 +88,7 @@ model.ShipIcon.prototype.createSprites = function()
 
 };
 
+/*
 model.ShipIcon.prototype.getModulePositionInIcon = function(module)
 {
     if ( ! module)
@@ -156,10 +157,12 @@ model.ShipIcon.prototype.getPositionInIcon = function(position, shipPosition, sh
 
     return new THREE.Vector3( shipPosition.x + position.x, shipPosition.y + position.y, 0);
 };
+*/
 
 model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
 {
     var shipDesign = this.getShipDesign();
+    var positionService = new model.ShipDesignPositionService(shipDesign);
 
     list.forEach(function(entry){entry.remove = true});
     var newModules = [];
@@ -187,7 +190,7 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
                 _id: module._id,
                 remove: false,
                 icon: new model.ModuleSprite(module, type, z)
-                    .setPosition(this.getModulePositionInIcon(module))
+                    .setPosition(positionService.getModuleCenterPositionInScene(module))
             };
             newModules.push(newEntry);
             module.icon[type] = newEntry.icon;
@@ -215,6 +218,7 @@ model.ShipIcon.prototype.setDamageLookup = function(type, data, data2)
 	this.sprites[type].setDamageOverlay(data, data2);
 };
 
+/*
 model.ShipIcon.prototype.occupiesPosition = function(pos)
 {
     if ( ! this.iconObject)
@@ -240,6 +244,7 @@ model.ShipIcon.prototype.getModuleOnPosition = function(pos)
 
     return null;
 };
+*/
 
 
 model.ShipIcon.prototype.select = function()
