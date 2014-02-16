@@ -11,6 +11,11 @@ model.GameState = function GameState(turn, dispatcher)
 
 };
 
+model.GameState.prototype.getTurn = function()
+{
+    return this.currentGameTurn;
+};
+
 model.GameState.prototype.subscribeToScene = function(dispatcher)
 {
     this._dispatcher = dispatcher;
@@ -55,6 +60,7 @@ model.GameState.prototype.getTurnStartTime = function(turn)
     return turn * this._turnTime;
 };
 
+/*
 model.GameState.prototype.getCurrentGameTime = function()
 {
     return this.currentGametime;
@@ -64,6 +70,7 @@ model.GameState.prototype.getCurrentGameTimeInSeconds = function()
 {
     return this.currentGametime / 1000;
 };
+*/
 
 model.GameState.prototype.advanceGameTimeTo = function(target)
 {

@@ -101,7 +101,9 @@ Game.prototype.play = function()
 		this.dispatcher,
 		this.coordinateConverter,
 		new model.ModuleDetailView(container, this.dispatcher),
-		new model.ShipTooltipView(container, this.dispatcher)
+		new model.ShipTooltipView(container, this.dispatcher),
+        this.gameScene,
+        this.gameState
 	);
 
     this.uiEventResolver = new model.UiFocusResolver(
@@ -155,6 +157,12 @@ Game.prototype.play = function()
 	);
 
 
+    this.situationDisplayService = new model.SituationDisplayService(
+        this.gameScene,
+        this.gameState,
+        this.shipService,
+        this.dispatcher
+        );
 
 	this.actionBar = new model.ActionBar(this.dispatcher);
 

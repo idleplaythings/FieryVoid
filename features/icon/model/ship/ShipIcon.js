@@ -88,77 +88,6 @@ model.ShipIcon.prototype.createSprites = function()
 
 };
 
-/*
-model.ShipIcon.prototype.getModulePositionInIcon = function(module)
-{
-    if ( ! module)
-        return null;
-
-    return this.getCustomModulePositionInIcon(module.getCenterPosition());
-};
-
-model.ShipIcon.prototype.getCustomModulePositionInIcon = function(modulepos)
-{
-    var scale = 30;
-    var dimensions = {x:this.width * scale, y:this.height * scale};
-    var origo = {
-        x: (dimensions.x/-2),
-        y: (dimensions.y/-2)
-    };
-
-    return {
-        x: modulepos.x * scale + origo.x,
-        y: modulepos.y * scale + origo.y
-    };
-};
-
-model.ShipIcon.prototype.getModuleTopLeftPosition = function(module)
-{
-    var modulePosition = this.getCustomModulePositionInIcon(module.getTopLeftPosition());
-    var iconPosition = this.getThreeObject().position;
-
-    return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
-};
-
-model.ShipIcon.prototype.getModulePosition = function(module)
-{
-    var modulePosition = this.getModulePositionInIcon(module);
-    var iconPosition = this.getThreeObject().position;
-
-    return {x: iconPosition.x + modulePosition.x, y: iconPosition.y + modulePosition.y};
-};
-
-model.ShipIcon.prototype.getModulePositionInGame = function(module, shipPosition, shipFacing)
-{
-    var modulePosition = this.getModulePositionInIcon(module);
-    
-    if ( ! shipPosition)
-		shipPosition = this.getThreeObject().position;
-
-    if ( ! shipFacing)
-		shipFacing = this.getAzimuth();
-    modulePosition = MathLib.turnVector(modulePosition, shipFacing);
-
-    return new THREE.Vector3(shipPosition.x + modulePosition.x, shipPosition.y + modulePosition.y, 0);
-};
-
-
-model.ShipIcon.prototype.getPositionInIcon = function(position, shipPosition, shipFacing)
-{
-	position = this.getCustomModulePositionInIcon(position);
-	
-    if ( ! shipPosition)
-		shipPosition = this.getThreeObject().position;
-
-    if ( ! shipFacing)
-		shipFacing = this.getAzimuth();
-		
-    position = MathLib.turnVector(position, shipFacing);
-
-    return new THREE.Vector3( shipPosition.x + position.x, shipPosition.y + position.y, 0);
-};
-*/
-
 model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
 {
     var shipDesign = this.getShipDesign();
@@ -217,35 +146,6 @@ model.ShipIcon.prototype.setDamageLookup = function(type, data, data2)
 {
 	this.sprites[type].setDamageOverlay(data, data2);
 };
-
-/*
-model.ShipIcon.prototype.occupiesPosition = function(pos)
-{
-    if ( ! this.iconObject)
-        return false;
-
-    var tile = this.getTileOnPosition(pos);
-    return  ! this.getShipDesign().hullLayout.isUnavailableTile(pos);
-};
-
-model.ShipIcon.prototype.getModuleOnPosition = function(pos)
-{
-    if ( ! this.iconObject)
-        return null;
-
-    var tile = this.getTileOnPosition(pos);
-    var modules = this.getShipDesign().modules;
-    for (var i in modules)
-    {
-        var module = modules[i];
-        if (module.occupiesPosition(tile))
-            return module;
-    }
-
-    return null;
-};
-*/
-
 
 model.ShipIcon.prototype.select = function()
 {

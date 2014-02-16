@@ -9,22 +9,19 @@ model.WeaponManagement = function WeaponManagement(
 
 	this.hitLocationService = new model.HitLocationService();
 	this.fireOrders = [];
-	this.weaponIndicatorService = null;
 };
 
 model.WeaponManagement.prototype = Object.create(model.ShipStatusManager.prototype);
 
 model.WeaponManagement.prototype.startTurn = function(turn)
 {
-	this.weaponIndicatorService.removeAllIndicators(null);
-	this.loadFireOrdersFromTimeline(turn);
-	this.displayFireOrders();
+	this.loadFireOrdersFromTimeline();
 };
 
-model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function(turn)
+model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function()
 {
 	this.fireOrders = this.timeline.filter(function(entry){ 
-		return entry.name == 'fireOrder' && entry.payload.turn == turn;
+		return entry.name == 'fireOrder'
 	}).map(function(entry){
 		serialized = entry.payload;
 		console.log(serialized);
@@ -34,18 +31,6 @@ model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function(turn)
 			serialized.targetTile, 
 			this.getModuleById(serialized.weaponId)
 		);
-	}, this);
-};
-
-model.WeaponManagement.prototype.displayFireOrders = function()
-{
-	this.fireOrders.forEach(function(fireOrder){
-		console.log("displaying", fireOrder);
-		this.showTarget(
-			this.shipService.getShipById(fireOrder.targetId),
-			fireOrder.targetTile,
-			fireOrder.weapon,
-			null);
 	}, this);
 };
 
@@ -73,18 +58,21 @@ model.WeaponManagement.prototype.selectWeapon = function(module)
 	current.addWeapon(module);
 };
 
-model.WeaponManagement.prototype.getClosestValidTarget = function(target, position, weaponPosition)
+model.WeaponManagement.prototype.getClosestValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
-	var positionService = new model.ShipPositionService(target, this.currentTurn);
-	var gamePosition = positionService.getTilePositionInScene(position);
-	var weaponDirection = MathLib.getAzimuthFromTarget(gamePosition, weaponPosition);
-	return this.hitLocationService.getClosestValidTarget(weaponDirection, position, target.shipDesign, target.status.managers.damage);
+	var positionServiceShooter = new model.ShipPositionService(shooter, turn);
+	var positionServiceTarget = new model.ShipPositionService(target, turn);
+
+	var weaponPosition = positionServiceShooter.getModuleCenterPositionInScene(weapon);
+	var targetPosition = positionServiceTarget.getTilePositionInScene(targetTile);
+
+	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
+
+	return this.hitLocationService.getClosestValidTarget(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
 };
 
 model.WeaponManagement.prototype.target = function(target, position, weapons)
 {
-	this.hideTarget(weapons, null);
-	this.showTarget(target, position, weapons, null);
 	var positionService = new model.ShipPositionService(this.ship, this.currentTurn);
 
 	weapons.forEach(function(weapon){
@@ -124,40 +112,3 @@ model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 		this.timeline.add('fireOrder', fireOrder.serialize());
 };
 
-
-model.WeaponManagement.prototype.showTarget = function(target, position, weapons, type)
-{
-	weapons = [].concat(weapons);
-	var positionService = new model.ShipPositionService(this.ship, this.currentTurn);
-
-	weapons.forEach(function(weapon){
-		var weaponPosition = positionService.getModuleCenterPositionInScene(
-			weapon,
-			this.movement.getScenePositionAtTurn(this.currentTurn),
-			this.movement.getSceneFacingAtTurn(this.currentTurn)
-		);
-
-		var targetPos = this.getClosestValidTarget(
-			target,
-			position,
-			weaponPosition
-		);
-
-		targetPos = new model.ShipPositionService(target, this.currentTurn).getTilePositionInScene(targetPos);
-
-		targetPos.x += 15;
-		targetPos.y += 15;
-
-		this.weaponIndicatorService.addIndication(weapon, weaponPosition, targetPos, type);
-	}, this);
-};
-
-model.WeaponManagement.prototype.hideTarget = function(weapons, type)
-{
-	this.weaponIndicatorService.removeIndicators(weapons, type);
-};
-
-model.WeaponManagement.prototype.onSubscribedToScene = function()
-{
-    this.weaponIndicatorService = new model.WeaponIndicatorService(this.gameScene, this.dispatcher);
-};

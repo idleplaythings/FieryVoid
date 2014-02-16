@@ -4,6 +4,7 @@ model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
 	this.weaponManager = args.weaponManager;
 	this.weapons = [];
 	this.uiEventResolver = null;
+	this.weaponIndicatorService = new model.WeaponIndicatorService(this.gameScene, this.dispatcher, this.gameState)
 };
 
 
@@ -25,17 +26,19 @@ model.ClickStrategyWeapon.prototype.clickShip = function(ship, position, event)
 
 model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, event)
 {
-	this.weaponManager.hideTarget(this.weapons, 'targeting');
-	
+	this.weaponIndicatorService.removeAll(); 
+
 	if (! ship)
 	{
+
 		this.moduleView.display(null);
 		this.shipView.display(null);
 		return;
 	}
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
-	this.weaponManager.showTarget(ship, position, this.weapons, 'targeting');
+	this.displayWeaponTargeting(this.weaponManager.ship, ship, position);
+
 	var positionService = new model.ShipPositionService(ship);
 	
     if (this.zoom < 1)
@@ -48,6 +51,13 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	}
 };
 
+model.ClickStrategyWeapon.prototype.displayWeaponTargeting = function(shooter, target, tile)
+{
+	this.weapons.forEach(function(weapon){
+		var targetTile = this.weaponManager.getClosestValidTarget(shooter, weapon, target, tile, this.gameState.getTurn())
+		this.weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, targetTile, {});
+	}, this);
+};
 
 model.ClickStrategyWeapon.prototype.activate = function(uiEventResolver)
 {

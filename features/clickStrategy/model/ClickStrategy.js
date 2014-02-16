@@ -5,6 +5,8 @@ model.ClickStrategy = function ClickStrategy(args)
 	this.zoom = args.zoom;
 	this.moduleView = args.moduleView;
 	this.shipView = args.shipView;
+	this.gameScene = args.gameScene;
+	this.gameState = args.gameState;
 	
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };

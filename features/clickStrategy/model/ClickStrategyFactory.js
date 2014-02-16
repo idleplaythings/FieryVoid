@@ -2,9 +2,13 @@ model.ClickStrategyFactory = function ClickStrategyFactory(
 	dispatcher,
 	coordinateConverter,
 	moduleView,
-	shipView)
+	shipView,
+	gameScene,
+	gameState)
 {
 	this.coordinateConverter = coordinateConverter;
+	this.gameScene = gameScene;
+	this.gameState = gameState;
 	this.dispatcher = dispatcher;
 	dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 	this.zoom = 1.0;
@@ -29,6 +33,8 @@ model.ClickStrategyFactory.prototype.construct = function(className, args)
 	args.zoom = this.zoom;
 	args.moduleView = this.moduleView;
 	args.shipView = this.shipView;
+	args.gameScene = this.gameScene;
+	args.gameState = this.gameState;
 	
 	return new model[className](args);
 };

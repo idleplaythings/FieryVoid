@@ -115,7 +115,7 @@ model.MovementManagement.prototype.getScenePosition = function(gameTime)
 
 model.MovementManagement.prototype.getSceneFacing = function(currentTime)
 {
-    return 80;
+    return 0;
 }
 
 model.MovementManagement.prototype.getScenePositionAtTurn = function(turn)
@@ -125,7 +125,7 @@ model.MovementManagement.prototype.getScenePositionAtTurn = function(turn)
 
 model.MovementManagement.prototype.getSceneFacingAtTurn = function(turn)
 {
-    return 80;
+    return 0;
 }
 
 model.MovementManagement.prototype._getMovementAbility = function()

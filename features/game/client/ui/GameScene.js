@@ -166,3 +166,13 @@ model.GameScene.prototype.camPosInGame = function()
 {
     return {x: this.camera.position.x * 2, y:this.camera.position.y * -2};
 };
+
+model.GameScene.prototype.addToScene = function(element)
+{
+    this.scene.add(element);
+};
+
+model.GameScene.prototype.removeFromScene = function(element)
+{
+    this.scene.remove(element);
+};
