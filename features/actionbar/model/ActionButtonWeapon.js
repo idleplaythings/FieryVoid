@@ -29,7 +29,7 @@ model.ActionButtonWeapon.prototype.onWeaponClick = function()
 
 	if ( this._selected && current instanceof model.ClickStrategyWeapon)
 	{
-		current.removeWeapon();
+		current.removeWeapon(this._weapon);
 		this.deselect();
 		return;
 	}

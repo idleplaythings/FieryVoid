@@ -51,6 +51,8 @@ model.WeaponIndicatorService.prototype._addIndication = function(shooter, target
 
 	var weaponPosition = positionServiceShooter.getModuleCenterPositionInScene(weapon);
 	var targetPosition = positionServiceTarget.getTilePositionInScene(targetTile);
+		targetPosition.x += 15;
+		targetPosition.y += 15;
 
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
 
@@ -72,7 +74,6 @@ model.WeaponIndicatorService.prototype._addIndication = function(shooter, target
 
 model.WeaponIndicatorService.prototype.displayFireOrders = function(shooter, fireOrders, shipService)
 {
-	console.log('fireOrders', fireOrders);
 	fireOrders.forEach(function(order){
 		this.addLine(
 			shooter,

@@ -3,34 +3,36 @@ model.HitLocationService = function HitLocationService()
 	
 };
 
-model.HitLocationService.prototype.applyScatter = function(scatter, weaponDirection, targetLocation, shipDesign, damageService)
+model.HitLocationService.prototype.applyScatter = function(shooter, target, weapon, targetTile)
 {
-	var position = {
-		x: targetLocation.x + ((Math.random() * scatter * 2) - scatter),
-		y: targetLocation.x + ((Math.random() * scatter * 2) - scatter)
-	};
-
-	if (shipDesign.hullLayout.isUnavailableTile(position))
-		return null;
-
-	return this.getClosestValidTarget(weaponDirection, position, shipDesign, damageService);
+	//TODO
 };
 
-model.HitLocationService.prototype.isValidTarget = function(weaponDirection, targetLocation, shipDesign, damageService)
+model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
-	var tiles = this.getValidTargetTiles(weaponDirection, targetLocation, shipDesign, damageService);
+	var weaponPosition = shooter.getPositionService(turn).getModuleCenterPositionInScene(weapon);
+	var targetPosition = target.getPositionService(turn).getTilePositionInScene(targetTile);
+	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
+
+	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
 	var tile = tiles.filter(function(tile){
-		return tile.x == targetLocation.x && tile.y == targetLocation.y;
+		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
 
 	return (tile) ? true : false;
 };
 
-model.HitLocationService.prototype.getClosestValidTarget = function(weaponDirection, targetLocation, shipDesign, damageService)
+model.HitLocationService.prototype.getClosestValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
-	var tiles = this.getValidTargetTiles(weaponDirection, targetLocation, shipDesign, damageService);
+
+	var weaponPosition = shooter.getPositionService(turn).getModuleCenterPositionInScene(weapon);
+	var targetPosition = target.getPositionService(turn).getTilePositionInScene(targetTile);
+	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
+
+	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
+
 	var tile = tiles.filter(function(tile){
-		return tile.x == targetLocation.x && tile.y == targetLocation.y;
+		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
 
 	if (tile)
@@ -39,25 +41,25 @@ model.HitLocationService.prototype.getClosestValidTarget = function(weaponDirect
 	return tiles.pop();
 };
 
-model.HitLocationService.prototype.getHitTilePercentage = function(scatter, targetLocation, shipDesign)
+model.HitLocationService.prototype.getHitTilePercentage = function(scatter, targetTile, shipDesign)
 {
-	var tiles = this.getTilesOnScatterRadius(scatter, targetLocation, shipDesign);
+	var tiles = this.getTilesOnScatterRadius(scatter, targetTile, shipDesign);
 	var all = tiles.length;
 	var hits = tiles.filter(function(tile){return tile.height > 0}).length;
 
 	return hits / all;
 };
 
-model.HitLocationService.prototype.getTilesOnScatterRadius = function(scatter, targetLocation, shipDesign)
+model.HitLocationService.prototype.getTilesOnScatterRadius = function(scatter, targetTile, shipDesign)
 {
 	var start = {
-		x: Math.floor(targetLocation.x - scatter),
-		y: Math.floor(targetLocation.y - scatter)
+		x: Math.floor(targetTile.x - scatter),
+		y: Math.floor(targetTile.y - scatter)
 	};
 
 	var end = {
-		x: Math.ceil(targetLocation.x + scatter),
-		y: Math.ceil(targetLocation.y + scatter)
+		x: Math.ceil(targetTile.x + scatter),
+		y: Math.ceil(targetTile.y + scatter)
 	};
 
 	var tiles = [];
@@ -67,7 +69,7 @@ model.HitLocationService.prototype.getTilesOnScatterRadius = function(scatter, t
 		for (var y = start.y; y <= end.y; y++)
 		{
 			var position = {x:x, y:y};
-			if (MathLib.distance(targetLocation, position) > scatter)
+			if (MathLib.distance(targetTile, position) > scatter)
 				continue;
 
 			var height = 0;
@@ -95,12 +97,12 @@ model.HitLocationService.prototype.getValidTargetTiles = function(weaponDirectio
 	);
 };
 
-model.HitLocationService.prototype.getTilesInLine = function(weaponDirection, position, shipDesign)
+model.HitLocationService.prototype.getTilesInLine = function(weaponDirection, targetTile, shipDesign)
 {
-	var start = MathLib.getPointInDirectionInvertY(100, weaponDirection, position.x, position.y);
-	var end = MathLib.getPointInDirectionInvertY(100, MathLib.addToAzimuth(weaponDirection, 180), position.x, position.y);
-	var tiles = new model.Raytrace(start, position).get();
-	tiles = tiles.concat(new model.Raytrace(position, end).get());
+	var start = MathLib.getPointInDirectionInvertY(100, weaponDirection, targetTile.x, targetTile.y);
+	var end = MathLib.getPointInDirectionInvertY(100, MathLib.addToAzimuth(weaponDirection, 180), targetTile.x, targetTile.y);
+	var tiles = new model.Raytrace(start, targetTile).get();
+	tiles = tiles.concat(new model.Raytrace(targetTile, end).get());
 	return tiles.filter(function(tile){return ! shipDesign.hullLayout.isUnavailableTile(tile)});
 	
 };

@@ -38,6 +38,8 @@ model.SituationDisplayService.prototype.onShipSelected = function(event)
 
 model.SituationDisplayService.prototype._displayIndicators = function(ship)
 {
+	console.log("display");
+	ship.shipDesign.modules.forEach(function(module){console.log(module.idOnShip)});
 	this._weaponIndicatorService.displayFireOrders(ship, ship.status.managers.weapon.getFireOrders(this._gameState.getTurn()), this._shipService);
 };
 

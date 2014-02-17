@@ -47,6 +47,11 @@ model.Ship.prototype.serialize = function()
     return doc;
 };
 
+model.Ship.prototype.getPositionService = function(turn)
+{
+    return new model.ShipPositionService(this, turn);
+};
+
 model.Ship.prototype.getIcon = function()
 {
     return this.icon;
