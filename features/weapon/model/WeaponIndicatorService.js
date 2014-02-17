@@ -1,8 +1,6 @@
-model.WeaponIndicatorService = function WeaponIndicatorService(gameScene, dispatcher, gameState)
+model.WeaponIndicatorService = function WeaponIndicatorService(gameScene)
 {
 	this._gameScene = gameScene;
-	this._dispatcher = dispatcher;
-	this._gameState = gameState;
 	this._indicators = [];
 }
 
@@ -34,22 +32,22 @@ model.WeaponIndicatorService.prototype.removeAll = function()
 };
 
 
-model.WeaponIndicatorService.prototype.addLine = function(shooter, target, weapon, targetTile, args)
+model.WeaponIndicatorService.prototype.addLine = function(shooter, target, weapon, targetTile, turn, args)
 {
 	this.remove(shooter, weapon);
-	this._addIndication(shooter, target, weapon, targetTile, args, [this._addLine]);
+	this._addIndication(shooter, target, weapon, targetTile, turn, args, [this._addLine]);
 };
 
-model.WeaponIndicatorService.prototype.addLineAndEllipse = function(shooter, target, weapon, targetTile, args)
+model.WeaponIndicatorService.prototype.addLineAndEllipse = function(shooter, target, weapon, targetTile, turn, args)
 {
 	this.remove(shooter, weapon);
-	this._addIndication(shooter, target, weapon, targetTile, args, [this._addLine, this._addEllipse]);
+	this._addIndication(shooter, target, weapon, targetTile, turn, args, [this._addLine, this._addEllipse]);
 };
 
-model.WeaponIndicatorService.prototype._addIndication = function(shooter, target, weapon, targetTile, args, actionsToDo)
+model.WeaponIndicatorService.prototype._addIndication = function(shooter, target, weapon, targetTile, turn, args, actionsToDo)
 {
-	var positionServiceShooter = new model.ShipPositionService(shooter, this._gameState.getTurn());
-	var positionServiceTarget = new model.ShipPositionService(target, this._gameState.getTurn());
+	var positionServiceShooter = new model.ShipPositionService(shooter, turn);
+	var positionServiceTarget = new model.ShipPositionService(target, turn);
 
 	var weaponPosition = positionServiceShooter.getModuleCenterPositionInScene(weapon);
 	var targetPosition = positionServiceTarget.getTilePositionInScene(targetTile);
@@ -69,6 +67,21 @@ model.WeaponIndicatorService.prototype._addIndication = function(shooter, target
 
 	indicators.forEach(function(indicator){
 		this._gameScene.addToScene(indicator.get());
+	}, this);
+};
+
+model.WeaponIndicatorService.prototype.displayFireOrders = function(shooter, fireOrders, shipService)
+{
+	console.log('fireOrders', fireOrders);
+	fireOrders.forEach(function(order){
+		this.addLine(
+			shooter,
+			shipService.getShipById(order.targetId),
+			order.weapon,
+			order.targetTile,
+			order.turn,
+			{})
+		;
 	}, this);
 };
 

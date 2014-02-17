@@ -1,10 +1,10 @@
 model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
 {
 	model.ClickStrategy.call(this, args);
-	this.weaponManager = args.weaponManager;
+	this.ship = args.ship;
 	this.weapons = [];
 	this.uiEventResolver = null;
-	this.weaponIndicatorService = new model.WeaponIndicatorService(this.gameScene, this.dispatcher, this.gameState)
+	this.weaponIndicatorService = new model.WeaponIndicatorService(this.gameScene, this.gameState)
 };
 
 
@@ -18,8 +18,14 @@ model.ClickStrategyWeapon.prototype.addWeapon = function(weapon)
 
 model.ClickStrategyWeapon.prototype.clickShip = function(ship, position, event)
 {
-	this.weaponManager.hideTarget(this.weapons, 'targeting');
-	this.weaponManager.target(ship, position, this.weapons);
+	this.weaponIndicatorService.removeAll(); 
+	var weaponManager = this.ship.status.managers.weapon;
+	weaponManager.target(ship, position, this.weapons, this.gameState.getTurn());
+
+	this.weapons.forEach(function(weapon){
+		this.dispatcher.dispatch({name: 'ModuleDeselectedEvent', module:weapon});
+	}, this);
+
 	this.remove();
 	event.stop();
 };
@@ -37,7 +43,7 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	}
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
-	this.displayWeaponTargeting(this.weaponManager.ship, ship, position);
+	this.displayWeaponTargeting(this.ship, ship, position);
 
 	var positionService = new model.ShipPositionService(ship);
 	
@@ -53,9 +59,11 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 
 model.ClickStrategyWeapon.prototype.displayWeaponTargeting = function(shooter, target, tile)
 {
+	var weaponManager = this.ship.status.managers.weapon;
+
 	this.weapons.forEach(function(weapon){
-		var targetTile = this.weaponManager.getClosestValidTarget(shooter, weapon, target, tile, this.gameState.getTurn())
-		this.weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, targetTile, {});
+		var targetTile = weaponManager.getClosestValidTarget(shooter, weapon, target, tile, this.gameState.getTurn())
+		this.weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, targetTile, this.gameState.getTurn(), {});
 	}, this);
 };
 

@@ -161,10 +161,9 @@ Game.prototype.play = function()
         this.gameScene,
         this.gameState,
         this.shipService,
-        this.dispatcher
-        );
-
-	this.actionBar = new model.ActionBar(this.dispatcher);
+        this.dispatcher,
+        this.uiEventResolver
+    );
 
     this._initGameState(container);
 };
