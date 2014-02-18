@@ -10,7 +10,6 @@ model.ClickStrategySelect.prototype = Object.create(model.ClickStrategy.prototyp
 
 model.ClickStrategySelect.prototype.clickShip = function(ship, position, event)
 {
-	console.log("select ship", ship);
 	this.shipService.selectShip(ship);
 	
 	event.stop();

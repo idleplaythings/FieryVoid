@@ -132,15 +132,6 @@ describe("HitLocationService", function() {
 		);
 	});
 
-	it("should resolve target validity correctly", function() {
-		var target = {x:1, y:1};
-		var weaponDirection = MathLib.getAzimuthFromTarget(target, {x: 1, y: -500});
-
-		expect(hitLocationService.isValidTarget(weaponDirection, target, shipDesign, damageService)).toBe(true);
-		expect(hitLocationService.isValidTarget(weaponDirection, {x:1, y:2}, shipDesign, damageService)).toBe(false);
-		expect(hitLocationService.getClosestValidTarget(weaponDirection, {x:1, y:2}, shipDesign, damageService)).toEqual({ x : 1, y : 1 });
-	});
-
 	function hasHeight(list, height, number)
 	{
 		expect(list.filter(function(entry){return entry.height == height;}).length).toEqual(number);

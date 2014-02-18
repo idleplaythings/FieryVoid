@@ -207,22 +207,22 @@ model.shipDesignEditor.prototype.onClick = function(event)
 
 model.shipDesignEditor.prototype.onKeyup = function(event)
 {
-    var key = event.keyCode;
-    switch (event.keyCode)
+    var key = event.key;
+
+    if (key instanceof model.Hotkey.Cancel)
     {
-        case 27:
-            this.unselectModule();
-            this.unselectRemove();
-            break;
-        case 37:
-            this.turnModule("left");
-            break;
-        case 39:
-            this.turnModule("right");
-            break;
-        default:
-            console.log(event.keyCode);
+        this.unselectModule();
+        this.unselectRemove();
     }
+    else if ( key instanceof model.Hotkey.Left)
+    {
+        this.turnModule("left");
+    }
+    else if ( key instanceof model.Hotkey.Right)
+    {
+        this.turnModule("right");
+    }
+     
 };
 
 model.shipDesignEditor.prototype.turnModule = function(direction)

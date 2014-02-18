@@ -23,3 +23,4 @@ model.ActionButton.prototype.isSelected = function()
 {
 	return this._selected;
 };
+

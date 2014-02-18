@@ -29,6 +29,16 @@ model.ClickStrategyWeapon.prototype.addWeapon = function(weapon)
 		throw new Error("Trying to add weapon twice");
 
 	this.weapons = this.weapons.concat(weapon);
+	var turn = this.gameState.getTurn();
+	var fireOrder = this.ship.status.managers.weapon.getFireOrder(weapon, turn);
+
+	if (fireOrder)
+	{
+		console.log("has fireOrder");
+		this.ship.status.managers.weapon.removeFireOrder(fireOrder, turn);
+		this.dispatcher.dispatch({name: 'FireOrdersChangedEvent', ship:this.ship, turn:turn});
+	}
+
 	return this;
 };
 
@@ -56,6 +66,8 @@ model.ClickStrategyWeapon.prototype.clickShip = function(ship, position, event)
 
 		this.removeWeapon(weapon);
 	}, this);
+
+	this.dispatcher.dispatch({name: 'FireOrdersChangedEvent', ship:this.ship, turn:turn});
 
 	this.removeIfEmpty();
 
@@ -101,11 +113,21 @@ model.ClickStrategyWeapon.prototype.displayWeaponTargeting = function(shooter, t
 model.ClickStrategyWeapon.prototype.activate = function(uiEventResolver)
 {
 	this.uiEventResolver = uiEventResolver;
+	this.cancelCallback = uiEventResolver.registerListener('keyup', this.onKeyUp.bind(this));
 	jQuery("#gameContainer").addClass('weaponCursor');
 };
 
 model.ClickStrategyWeapon.prototype.deactivate = function()
 {
+	this.uiEventResolver.unregisterListener('keyup', this.cancelCallback);
 	jQuery("#gameContainer").removeClass('weaponCursor');
+};
+
+model.ClickStrategyWeapon.prototype.onKeyUp = function(event)
+{
+	var key = event.key;
+
+	if (key instanceof model.Hotkey.Cancel)
+		this.remove();
 };
 

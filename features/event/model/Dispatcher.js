@@ -11,7 +11,17 @@ model.EventDispatcher.prototype.attach = function(eventName, listener, priority)
 
     listener.__priority = priority;
     this._attachListener(eventName, listener);
+
+    return listener;
 };
+
+model.EventDispatcher.prototype.detach = function(eventName, listener)
+{
+    this.listeners[eventName] = this.listeners[eventName].filter(function(entry){
+        return entry != listener;
+    });
+};
+
 
 model.EventDispatcher.prototype._attachListener = function(eventName, listener)
 {

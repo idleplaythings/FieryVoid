@@ -62,7 +62,6 @@ model.TimelineFactory.prototype.startGameSaveInterval = function(gameid)
     var self = this;
     setTimeout(function(){
 
-        console.log("savegame tick");
         var entries = self.getAllSerializedTimelineEntriesForSave();
         if (entries.length == 0)
         {
@@ -109,6 +108,10 @@ model.TimelineFactory.prototype.processSavedEntries = function(orginalEntries, s
         if (orginalEntry.needsRemoving() &&  ! savedEntry.needsRemoving())
             orginalEntry.setRemoved();
     });
+
+     this._loadedTimelines.forEach(function(timeline){
+        timeline.deleteRemoved();
+    }, this);
 }
 
 

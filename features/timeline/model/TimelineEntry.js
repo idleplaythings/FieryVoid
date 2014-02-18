@@ -34,6 +34,11 @@ model.TimelineEntry.prototype.update = function(payload)
     this._saved = false;
 };
 
+model.TimelineEntry.prototype.isActive = function()
+{
+    return ! this.needsRemoving() && ! this.isRemoved();
+};
+
 model.TimelineEntry.prototype.needsSaving = function()
 {
     return this._saved === false;
@@ -53,7 +58,7 @@ model.TimelineEntry.prototype.remove = function()
 
 model.TimelineEntry.prototype.needsRemoving = function()
 {
-    return this._remove;
+    return this._remove &&  ! this._removed;
 };
 
 model.TimelineEntry.prototype.setRemoved = function()

@@ -21,6 +21,9 @@ model.WeaponManagement.prototype.startTurn = function(turn)
 
 model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function()
 {
+	if ( ! this.timeline)
+		return;
+	
 	this.fireOrders = this.timeline.filter(function(entry){ 
 		return entry.name == 'fireOrder'
 	}).map(function(entry){
@@ -32,6 +35,11 @@ model.WeaponManagement.prototype.loadFireOrdersFromTimeline = function()
 			this.getModuleById(serialized.weaponId)
 		);
 	}, this);
+};
+
+model.WeaponManagement.prototype.getFireOrder = function(weapon, turn)
+{
+	return this.fireOrders.filter(function(order){return order.turn == turn && order.weapon == weapon;}).pop();
 };
 
 model.WeaponManagement.prototype.getFireOrders = function(turn)
@@ -46,6 +54,25 @@ model.WeaponManagement.prototype.getWeapons = function()
 			return module.weapon
 		});
 };
+model.WeaponManagement.prototype.getTimelineFireOrderEntry = function(fireOrder)
+{
+	return this.timeline.filter(function(entry){ 
+		return entry.name == 'fireOrder' && entry.payload.weaponId == fireOrder.weapon.idOnShip && entry.payload.turn == fireOrder.turn;
+	}, this).pop();
+};
+
+model.WeaponManagement.prototype.removeFireOrder = function(fireOrder)
+{
+	this.fireOrders = this.fireOrders.filter(function(order){
+		return order != fireOrder;
+	}, this);
+
+	var entry = this.getTimelineFireOrderEntry(fireOrder);
+
+	if (entry){
+		entry.remove()
+	}
+};
 
 model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 {
@@ -55,13 +82,15 @@ model.WeaponManagement.prototype.addFireOrder = function(fireOrder)
 
 	this.fireOrders.push(fireOrder);
 
-	var entry = this.timeline.filter(function(entry){ 
-		return entry.name == 'fireOrder' && entry.payload.weaponId == fireOrder.weapon.moduleIdOnShip && entry.payload.turn == fireOrder.turn;
-	}, this).pop();
+	var entry = this.getTimelineFireOrderEntry(fireOrder);
 
 	if (entry && entry.canUpdate())
+	{
 		entry.update(fireOrder.serialize());
+	}
 	else
+	{
 		this.timeline.add('fireOrder', fireOrder.serialize());
+	}
 };
 

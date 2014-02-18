@@ -70,11 +70,16 @@ model.Timeline.prototype.persist = function()
 		
     this._storage.persist(entries, this._id);
     
-    this._entries = this._entries.filter(function(entry){
-		return ! entry.isRemoved(); 
-	});
+    this.deleteRemoved();
    
     return this;
+};
+
+model.Timeline.prototype.deleteRemoved = function()
+{
+    this._entries = this._entries.filter(function(entry){
+        return ! entry.isRemoved(); 
+    });
 };
 
 model.Timeline.prototype.add = function(name, payload)
@@ -91,7 +96,7 @@ model.Timeline.prototype.get = function()
 {
     this.ensureLoaded();
     return this._entries.filter(function(entry){
-		return ! entry.needsRemoving();
+		return entry.isActive();
 	});
 };
 

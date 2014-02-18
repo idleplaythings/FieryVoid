@@ -31,7 +31,7 @@ model.Display.prototype.renderOn = function(target)
 
     this.uiEventResolver.registerListener(
         'keyup', function(payload){
-            this.dispatcher.dispatch({name:'keyup', keyCode: payload.keyCode});
+            this.dispatcher.dispatch({name:'keyup', key: payload.key});
         }.bind(this), 0);
 
     //this.scrolling = new model.Scrolling(this.dispatcher);
