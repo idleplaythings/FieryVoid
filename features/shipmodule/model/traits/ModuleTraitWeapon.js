@@ -22,11 +22,24 @@ model.ModuleTraitWeapon.prototype.extend = function(module)
 
 model.ModuleTraitWeapon.prototype.buildVariables = function()
 {
-    var variables = [];
-    variables = variables.concat(this.getTargetStrategyVariables());
-    variables = variables.concat(this.getRangeStrategyVariables());
+    var variables = [].concat(this.getTargetStrategyVariables())
+    	.concat(this.getRangeStrategyVariables())
+    	.concat(this.getArcStrategyVarialbes())
+    	.concat(this.getScatterVariables());
+
     return variables;
 };
+
+model.ModuleTraitWeapon.prototype.getArcStrategyVarialbes = function()
+{
+	return new model.TraitVariable(
+		'weaponArc', 
+		'Arc strategy',
+		false,
+		60
+	);
+};
+
 
 model.ModuleTraitWeapon.prototype.getRangeStrategyVariables = function()
 {
@@ -41,6 +54,23 @@ model.ModuleTraitWeapon.prototype.getRangeStrategyVariables = function()
 			.setCondition(function(){return rangeStrategy.get() == 'RangePenaltyStrategy';}),
 		new model.TraitVariable('maxRange', 'Maximum range', false, 50)
 			.setCondition(function(){return rangeStrategy.get() == 'FixedRangeStrategy';})
+	];
+};
+
+model.ModuleTraitWeapon.prototype.getScatterVariables = function()
+{
+    return [
+	    new model.TraitVariable(
+			'baseScatter', 
+			'Base Scatter in tiles',
+			false,
+			2),
+
+	    new model.TraitVariable(
+			'rangeScatter', 
+			'Scatter modifier pre hex in tiles',
+			false,
+			1)
 	];
 };
 

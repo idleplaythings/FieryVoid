@@ -8,13 +8,23 @@ model.HitLocationService.prototype.applyScatter = function(shooter, target, weap
 	//TODO
 };
 
-model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
+model.HitLocationService.prototype._getWeaponDirection = function(shooter, weapon, target, targetTile, turn)
 {
 	var weaponPosition = shooter.getPositionService(turn).getModuleCenterPositionInScene(weapon);
 	var targetPosition = target.getPositionService(turn).getTilePositionInScene(targetTile);
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
 
+	return weaponDirection;
+};
+
+model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
+{
+	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
 	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
+	
+	console.log("targetTile", targetTile);
+	console.log(tiles);
+
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
@@ -25,12 +35,9 @@ model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, tar
 model.HitLocationService.prototype.getClosestValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
 
-	var weaponPosition = shooter.getPositionService(turn).getModuleCenterPositionInScene(weapon);
-	var targetPosition = target.getPositionService(turn).getTilePositionInScene(targetTile);
-	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
-
+	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
 	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
-
+	console.log(tiles);
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
@@ -99,12 +106,11 @@ model.HitLocationService.prototype.getValidTargetTiles = function(weaponDirectio
 
 model.HitLocationService.prototype.getTilesInLine = function(weaponDirection, targetTile, shipDesign)
 {
-	var start = MathLib.getPointInDirectionInvertY(100, weaponDirection, targetTile.x, targetTile.y);
-	var end = MathLib.getPointInDirectionInvertY(100, MathLib.addToAzimuth(weaponDirection, 180), targetTile.x, targetTile.y);
-	var tiles = new model.Raytrace(start, targetTile).get();
-	tiles = tiles.concat(new model.Raytrace(targetTile, end).get());
+	var tiles = new model.DirectionalRaytrace(targetTile, weaponDirection, 100).get().reverse();
+	tiles.concat(targetTile);
+	tiles = tiles.concat( new model.DirectionalRaytrace(targetTile,  MathLib.addToAzimuth(weaponDirection, 180), 100).get());
+
 	return tiles.filter(function(tile){return ! shipDesign.hullLayout.isUnavailableTile(tile)});
-	
 };
 
 model.HitLocationService.prototype.discountUnreachableTiles = function(tilePositions, shipDesign, damageService)

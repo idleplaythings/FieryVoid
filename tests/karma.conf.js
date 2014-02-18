@@ -55,6 +55,10 @@ module.exports = function(config) {
         'features/lib/DIC/Factory.js',
         'features/lib/Extend/Extend.js',
 
+        'features/weapon/model/*.js',
+
+        'features/raytrace/model/*.js',
+
         'features/hotkey/lib/*.js',
         'features/hotkey/model/*.js',
         'features/componentposition/lib/*.js',

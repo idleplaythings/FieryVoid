@@ -2,16 +2,12 @@ model.ShipService = function ShipService(
 	fleets,
 	shipStatusView,
 	dispatcher,
-	uiEventResolver,
 	coordinateConverter)
 {
 	this.fleets = fleets;
 	this.dispatcher = dispatcher;
-	this.uiEventResolver = uiEventResolver;
 	this.shipStatusView = shipStatusView;
 	this.coordinateConverter = coordinateConverter
-
-
 
 	this.selectedShip = null;
 	this.zoom = 1;
@@ -21,8 +17,6 @@ model.ShipService = function ShipService(
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
 
-    this.uiEventResolver.registerListener('click', this.onClick.bind(this), 1);
-    this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
     window.ships = this.getShips();
 }
 
@@ -134,46 +128,28 @@ model.ShipService.prototype.onZoom = function(event)
     }
 };
 
-model.ShipService.prototype.onClick = function(event)
+model.ShipService.prototype.getShipOnScenePosition = function(scenePosition, turn)
 {
-	if ( ! event.clickStrategy.clickShip)
-		return;
-		
-    var ship = this.getClosestShip(event.game);
-    if (! ship)
-        return;
+    var shipAndTile = this.getShipAndTileOnScenePosition(scenePosition, turn);
 
-    var positionService = new model.ShipPositionService(ship, this.currentTurn);
-    var position = positionService.getTileOnPosition(event.game)
+    if (shipAndTile == null)
+        return null;
 
-    if (! positionService.occupiesPosition(event.game))
-        return;
-
-    event.clickStrategy.clickShip(ship, position, event);
+    return shipAndTile.ship;
 };
 
-
-model.ShipService.prototype.onMouseMove = function(event)
+model.ShipService.prototype.getShipAndTileOnScenePosition = function(scenePosition, turn)
 {
-	if ( ! event.clickStrategy.mouseOverShip)
-		return;
-		
-	var ship = this.getClosestShip(event.game);
+    var ship = this.getClosestShip(scenePosition);
+
     if (! ship)
-    {
-		event.clickStrategy.mouseOverShip(null);
-        return;
-	}
+        return null;
 
-    var positionService = new model.ShipPositionService(ship, this.currentTurn);
-	var position = positionService.getTileOnPosition(event.game)
+    var positionService = new model.ShipPositionService(ship, turn);
+    var tile = positionService.getTileOnPosition(scenePosition)
 
-	if (! positionService.occupiesPosition(event.game))
-	{
-		event.clickStrategy.mouseOverShip(null);
+    if (! positionService.occupiesPosition(scenePosition))
         return;
-	}
-	
-	event.clickStrategy.mouseOverShip(ship, positionService.getTileOnPosition(event.game), event);
+
+    return {ship: ship, tile: tile}
 };
-

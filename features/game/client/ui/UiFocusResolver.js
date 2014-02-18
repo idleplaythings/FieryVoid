@@ -39,7 +39,7 @@ model.UiFocusResolver.prototype.addClickStrategy = function(state)
 	var current = this.getCurrentClickStrategy();
 
 	if (current)
-		current.deactivate();
+		current.deactivate(this);
 
 	this.clickStrategyStates.push(state);
 	state.activate(this);
@@ -56,8 +56,8 @@ model.UiFocusResolver.prototype.removeClickStrategy = function(state)
         this.clickStrategyStates.pop();
     };
 
-    state.deactivate();
-    this.getCurrentClickStrategy().activate();
+    state.deactivate(this);
+    this.getCurrentClickStrategy().activate(this);
 };
 
 model.UiFocusResolver.prototype.onZoom = function(event)

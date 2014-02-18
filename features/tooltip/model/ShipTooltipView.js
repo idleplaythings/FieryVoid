@@ -8,14 +8,18 @@ model.ShipTooltipView = function ShipTooltipView(target, dispatcher)
 
 model.ShipTooltipView.prototype = Object.create(model.TooltipView.prototype);
 
+model.ShipTooltipView.prototype.remove  = function()
+{
+    this.currentShip = null;
+    this.hide();
+};
 
 model.ShipTooltipView.prototype.display = function(
 	ship, position)
 {
     if (ship === null)
     {
-        this.currentShip = null;
-        this.hide();
+        this.remove();
         return;
     }
 

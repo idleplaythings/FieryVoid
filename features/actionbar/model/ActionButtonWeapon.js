@@ -1,4 +1,4 @@
-model.ActionButtonWeapon = function ActionButtonWeapon(ship, weapon, dispatcher, uiResolver, turn)
+model.ActionButtonWeapon = function ActionButtonWeapon(ship, weapon, dispatcher, uiResolver, gameScene, turn)
 {
 	this._ship = ship;
 	this._weapon = weapon;
@@ -20,6 +20,8 @@ model.ActionButtonWeapon = function ActionButtonWeapon(ship, weapon, dispatcher,
 	this._deselectListener = this._dispatcher.attach("ModuleDeselectedEvent", this.onDeselected.bind(this));
 	this._fireOrderListener = this._dispatcher.attach("FireOrdersChangedEvent", this.onFireOrdersChanged.bind(this));
 	this.setFireOrderClassIfApplicaple(turn);
+	this._positionService = ship.getPositionService(turn);
+	this._arcIndicator = new model.ArcIndicatorService(gameScene);
 };
 
 model.ActionButtonWeapon.prototype = Object.create(model.ActionButton.prototype);
@@ -88,6 +90,19 @@ model.ActionButtonWeapon.prototype.onFireOrdersChanged = function(event)
 
 model.ActionButtonWeapon.prototype.destroy = function()
 {
+	this._arcIndicator.removeAll();
 	this._dispatcher.detach('ModuleDeselectedEvent', this._deselectListener); 
 	this._dispatcher.detach('FireOrdersChangedEvent', this._fireOrderListener);
+};
+
+model.ActionButtonWeapon.prototype.onMouseover = function()
+{
+	this._arcIndicator.display(this._positionService.getFacing(), this._weapon, this._positionService.getPosition());
+	console.log("mouseover");
+};
+
+model.ActionButtonWeapon.prototype.onMouseout = function()
+{
+	this._arcIndicator.removeAll();
+	console.log("mouseout");
 };
