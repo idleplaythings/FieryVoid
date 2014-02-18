@@ -22,11 +22,23 @@ model.ModuleTraitWeapon.prototype.extend = function(module)
 
 model.ModuleTraitWeapon.prototype.buildVariables = function()
 {
-    var variables = [];
-    variables = variables.concat(this.getTargetStrategyVariables());
-    variables = variables.concat(this.getRangeStrategyVariables());
+    var variables = [].concat(this.getTargetStrategyVariables())
+    	.concat(this.getRangeStrategyVariables())
+    	.concat(this.getArcStrategyVarialbes());
+
     return variables;
 };
+
+model.ModuleTraitWeapon.prototype.getArcStrategyVarialbes = function()
+{
+	return new model.TraitVariable(
+		'weaponArc', 
+		'Arc strategy',
+		false,
+		60
+	);
+};
+
 
 model.ModuleTraitWeapon.prototype.getRangeStrategyVariables = function()
 {

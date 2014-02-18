@@ -7,6 +7,8 @@ model.ClickStrategy = function ClickStrategy(args)
 	this.shipView = args.shipView;
 	this.gameScene = args.gameScene;
 	this.gameState = args.gameState;
+
+	this._arcIndicator = new model.ArcIndicatorService(this.gameScene);
 	
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
@@ -22,11 +24,17 @@ model.ClickStrategy.prototype.mouseOverShip = function(ship, position, event)
 	{
 		this.moduleView.display(null);
 		this.shipView.display(null);
+		this._arcIndicator.display(null);
 		return;
 	}
 	
 	var module = ship.shipDesign.getModuleInPosition(position);
-	var positionService = new model.ShipPositionService(ship);
+	var positionService = new model.ShipPositionService(ship, this.gameState.getTurn());
+
+	if (module)
+		this._arcIndicator.display(module, positionService.getModuleCenterPositionInScene(module));
+	else
+		this._arcIndicator.display(null);
 	
     if (this.zoom < 1)
     {

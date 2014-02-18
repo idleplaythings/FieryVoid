@@ -88,7 +88,7 @@ model.ClickStrategyWeapon.prototype.mouseOverShip = function(ship, position, eve
 	var module = ship.shipDesign.getModuleInPosition(position);
 	this.displayWeaponTargeting(this.ship, ship, position);
 
-	var positionService = new model.ShipPositionService(ship);
+	var positionService = new model.ShipPositionService(ship, this.gameState.getTurn());
 	
     if (this.zoom < 1)
     {
