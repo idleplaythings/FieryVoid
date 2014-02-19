@@ -197,6 +197,23 @@ model.ModuleLayout.prototype.getCenterPosition = function()
     };
 };
 
+model.ModuleLayout.prototype.getPositionHeight = function(hullLayout)
+{
+    var height = 1;
+
+    for (var x = 0; x < this.getWidth(); x++)
+    {
+        for (var y = 0; y < this.getHeight(); y++)
+        {
+            var posHeight = hullLayout.getTileHeight({x:this.position.x + x, y:this.position.y + y});
+            if (posHeight > height)
+                height = posHeight;
+        }
+    }
+
+    return height;
+};
+
 model.ModuleLayout.prototype.isValidPosition = function(ship, pos)
 {
     for (var x = 0; x < this.getWidth(); x++)

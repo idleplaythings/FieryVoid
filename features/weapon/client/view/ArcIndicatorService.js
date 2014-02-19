@@ -19,24 +19,20 @@ model.ArcIndicatorService.prototype.removeAll = function()
 model.ArcIndicatorService.prototype.display = function(module, center)
 {
 	if (module === null)
+	{
 		this.removeAll();
+		this._currentModule = null;
+		return;
+	}
 
 	if ( this._currentModule == module)
 		return;
 
 	this.removeAll();
+	this._currentModule = module;
 
-	var point1 = {
-		x:center.x + 200,
-		y:center.y + 100
-	};
 
-	var point2 = {
-		x:center.x + 200,
-		y:center.y - 100
-	};
-
-	var arc = new model.Arc(center, point1, point2);
+	var arc = new model.Arc(center, 1000, 270, 90);
 	this._gameScene.addToScene(arc.get());
 	this._indicators.push({module: module, indicators: [arc]});
 };
