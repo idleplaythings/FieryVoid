@@ -14,6 +14,16 @@ model.ShipDesign = function ShipDesign(args)
     this.public = args.public || false;
 };
 
+model.ShipDesign.prototype.calcucalteWeaponArcs = function()
+{
+    this.modules.filter(function(module){
+        return module.weapon;
+    }).forEach(function(module){
+        module.weapon.calcucalteWeaponArcs(this);
+    }, this);
+};
+
+
 model.ShipDesign.prototype.getModuleByOnShipId = function(id)
 {
     return this.modules.filter(function(module){return module.idOnShip == id;})[0];

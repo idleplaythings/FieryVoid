@@ -30,9 +30,18 @@ model.ArcIndicatorService.prototype.display = function(module, center)
 
 	this.removeAll();
 	this._currentModule = module;
+	var arcs = module.weapon.getArcs();
+	console.log(arcs);
 
+	var indicators = [];
 
-	var arc = new model.Arc(center, 1000, 270, 90);
-	this._gameScene.addToScene(arc.get());
-	this._indicators.push({module: module, indicators: [arc]});
+	arcs.forEach(function(arc){
+		var arcIndicator = new model.Arc(center, 1000, arc.start, arc.end);
+		//var arcIndicator = new model.Arc(center, 1000, 45, 180);
+		this._gameScene.addToScene(arcIndicator.get());
+		indicators.push(arcIndicator);
+	}, this);
+
+	
+	this._indicators.push({module: module, indicators: indicators});
 };

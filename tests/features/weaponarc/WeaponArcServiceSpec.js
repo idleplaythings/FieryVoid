@@ -10,6 +10,8 @@ describe("WeaponArcService", function() {
 			{visible:false, angle:310}
 		]);
 
+		arcs = arcs.map(function(arc){return {start:arc.start, end: arc.end}});
+
 		expect(arcs).toEqual( [ { start : 0, end : 90 }, { start : 270, end : 310 } ]);
 	});
 
@@ -22,6 +24,8 @@ describe("WeaponArcService", function() {
 			{visible:true, angle:270}
 		]);
 
+		arcs = arcs.map(function(arc){return {start:arc.start, end: arc.end}});
+		
 		expect(arcs).toEqual([ { start : 270, end : 90 } ]);
 	});
 

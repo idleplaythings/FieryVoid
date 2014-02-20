@@ -68,6 +68,8 @@ model.shipDesignEditor = function shipDesignEditor(
     this.iconViewMode = 0;
 
     this.positionService = null;
+
+    this.arcIndicator = new model.ArcIndicatorService(this.gameScene);
     
     this.reactiveShipDesign = shipDesignStorage.getReactiveShipDesign(
 		shipDesignId, this.onShipDesignChange.bind(this));
@@ -159,6 +161,7 @@ model.shipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
         this.shipDesign = shipDesign;
         this.positionService = new model.ShipDesignPositionService(this.shipDesign);
 
+        shipDesign.calcucalteWeaponArcs();
         this.shipStatusView.display(
             new model.ShipDesignPositionService(shipDesign), 
             new model.ShipStatus(null, shipDesign.modules)
@@ -312,11 +315,16 @@ model.shipDesignEditor.prototype.showModuleView = function(pos)
     if (! module)
     {
         this.moduleView.display(null);
+        this.arcIndicator.display(null);
         return;
     }
 
     var modulePos = this.coordinateConverter.fromGameToViewPort(
         this.positionService.getModuleCenterPositionInScene(module));
+
+    if (module && module.weapon)
+        this.arcIndicator.display(module, this.positionService.getPosition());
+
 
     this.moduleView.display(module, modulePos, new model.ShipStatus(null, this.shipDesign.modules));
 };
