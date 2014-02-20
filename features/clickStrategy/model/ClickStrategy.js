@@ -31,8 +31,8 @@ model.ClickStrategy.prototype.mouseOverShip = function(ship, position, event)
 	var module = ship.shipDesign.getModuleInPosition(position);
 	var positionService = new model.ShipPositionService(ship, this.gameState.getTurn());
 
-	if (module)
-		this._arcIndicator.display(module, positionService.getPosition());
+	if (module && module.weapon && this.zoom > 0.5)
+		this._arcIndicator.display(positionService.getFacing(), module, positionService.getPosition());
 	else
 		this._arcIndicator.display(null);
 	

@@ -5,37 +5,35 @@ model.WeaponArcService = function WeaponArcService()
 
 model.WeaponArcService.prototype.calculateWeaponArc = function (module, shipDesign)
 {
-	var center = module.getCenterPosition();
-	var height = module.getPositionHeight(shipDesign.hullLayout);
-	if ( this.hasTurret(module))
-		height += 1;
-
-
 	var currentVisible = false;
 
 	var arcs = [];
 
-	//console.log("module height is ", height);
-
 	for (var i = 0; i <= this._rayTraceCount; i++)
 	{
 		var theta = 360 / this._rayTraceCount * i;
-		var target = MathLib.getPointInDirectionInvertY(50, theta, center.x, center.y);
-		var tiles = new model.Raytrace(center, target).get();
-		//console.log("module pos", center, "target", target, "theta", theta, tiles);
-		var visible = this.checkTiles(module, tiles, shipDesign, height);
+		var visible = this.isOnArc(module, shipDesign, theta);
 
-		//console.log("visible", visible)
+
 		if (currentVisible != visible)
 		{
-			console.log("module pos", center, "target", target, "target from module", {x:target.x - center.x, y: target.y - center.y}, "theta", theta, tiles, "visible", visible);
-			//console.log("visible different than previous", visible);
 			arcs.push({angle: theta, visible: visible});
 			currentVisible = visible;
 		}
 	}
 
 	return this._evaluateArcs(arcs);
+};
+
+model.WeaponArcService.prototype.isOnArc = function(module, shipDesign, direction)
+{
+	var center = module.getCenterPosition();
+	var height = module.getPositionHeight(shipDesign.hullLayout);
+	if ( this.hasTurret(module))
+		height += 1;
+
+	var tiles = new model.DirectionalRaytrace(center, direction, 50).get();
+	return this.checkTiles(module, tiles, shipDesign, height);
 };
 
 model.WeaponArcService.prototype._evaluateArcs = function (arcs)

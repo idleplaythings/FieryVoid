@@ -12,6 +12,7 @@ model.ShipDesign = function ShipDesign(args)
     this.modules = args.modules || [];
 
     this.public = args.public || false;
+    this.calcucalteWeaponArcs();
 };
 
 model.ShipDesign.prototype.calcucalteWeaponArcs = function()

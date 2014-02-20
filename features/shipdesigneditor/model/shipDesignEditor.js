@@ -315,7 +315,7 @@ model.shipDesignEditor.prototype.showModuleView = function(pos)
     if (! module)
     {
         this.moduleView.display(null);
-        this.arcIndicator.display(null);
+        this.arcIndicator.removeAll();
         return;
     }
 
@@ -323,7 +323,7 @@ model.shipDesignEditor.prototype.showModuleView = function(pos)
         this.positionService.getModuleCenterPositionInScene(module));
 
     if (module && module.weapon)
-        this.arcIndicator.display(module, this.positionService.getPosition());
+        this.arcIndicator.display(this.positionService.getFacing(), module, this.positionService.getPosition());
 
 
     this.moduleView.display(module, modulePos, new model.ShipStatus(null, this.shipDesign.modules));

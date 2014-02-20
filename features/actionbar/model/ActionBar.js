@@ -1,9 +1,10 @@
-model.ActionBar = function ActionBar(dispatcher, uiResolver)
+model.ActionBar = function ActionBar(dispatcher, uiResolver, gameScene)
 {
     this._ship = null;
     this._container = null;
     this._dispatcher = dispatcher;
     this._uiResolver = uiResolver;
+    this._gameScene = gameScene;
     this._buttons = [];
 };
 
@@ -18,7 +19,7 @@ model.ActionBar.prototype._create = function(ship, turn)
 model.ActionBar.prototype._addWeapons = function(ship, turn)
 { 
 	ship.status.managers.weapon.getWeapons().map(function(weapon){
-		return new model.ActionButtonWeapon(ship, weapon, this._dispatcher, this._uiResolver, turn);
+		return new model.ActionButtonWeapon(ship, weapon, this._dispatcher, this._uiResolver, this._gameScene, turn);
 	}, this).forEach(function(button){
 		this._buttons.push(button);
 		button.get().appendTo(this._getContainer());

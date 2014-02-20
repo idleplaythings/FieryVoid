@@ -7,7 +7,7 @@ model.SituationDisplayService = function SituationDisplayService(gameScene, game
 	this._uiResolver = uiResolver;
 
 	this._selectedShip = null;
-	this._actionBar = new model.ActionBar(dispatcher, uiResolver);
+	this._actionBar = new model.ActionBar(dispatcher, uiResolver, gameScene);
 
 	this._weaponIndicatorService = new model.WeaponIndicatorService(this._gameScene, this._gameState)
 	
