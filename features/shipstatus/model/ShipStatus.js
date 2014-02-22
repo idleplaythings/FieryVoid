@@ -11,6 +11,7 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
     this.managers.crew = new model.CrewManagement(ship, modules, timeline);
     this.managers.thrust = new model.ThrustManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
     this.managers.movement = new model.MovementManagement(ship, modules, timeline, this.managers.thrust);
+
     // this.managers.movement = new model.Movement(modules, timeline, ship);
     this.managers.sensor = new model.SensorManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
     this.managers.weapon = new model.WeaponManagement(ship, modules, timeline, this.managers.power, this.managers.crew, this.managers.movement);

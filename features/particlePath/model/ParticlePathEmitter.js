@@ -21,19 +21,6 @@ model.ParticlePathEmitter = function ParticlePathEmitter(geometry, attributes, t
     this.particleMesh = null;
 };
 
-model.ParticlePathEmitter.prototype.observeZoomLevelChange = function(dispatcher, callback)
-{
-    if ( ! callback)
-        callback = function(event){return event.zoom};
-
-    dispatcher.attach('ZoomEvent', function(event) {
-        var zoomLevel = callback(event);
-        this.setZoomLevel(zoomLevel)
-    }.bind(this));
-
-    return this;
-}
-
 model.ParticlePathEmitter.prototype.setZoomLevel = function(zoomLevel)
 {
     this.particleMaterial.uniforms.zoomLevel.value = zoomLevel;
@@ -50,26 +37,14 @@ model.ParticlePathEmitter.prototype.getFreeParticle = function()
     return null;
 };
 
-model.ParticlePathEmitter.prototype.animate = function()
+model.ParticlePathEmitter.prototype.setParticleParameters = function(parameters)
 {
-    // console.log('hello')
-
-    // for (var i = 0; i < this.particles.length; i++)
-    // {
-    //     var particle = this.particles[i];
-    //     particle.animate(0.01);
-    //     particle.updateMaterial(this.particleMaterial, i);
-    // }
-    // this.particleGeometry.verticesNeedUpdate = true;
-};
-
-model.ParticlePathEmitter.prototype.setParticlePosition = function(position)
-{
-    this.particleGeometry.vertices[0].x = position.x;
-    this.particleGeometry.vertices[0].y = position.y;
+    this.particleGeometry.vertices[0].x = parameters.position.x;
+    this.particleGeometry.vertices[0].y = parameters.position.y;
     this.particleGeometry.verticesNeedUpdate = true;
-    // this.particleGeometry.computeBoundingSphere();
-    // this.particleGeometry.computeBoundingBox();
+
+    this.particleMaterial.attributes.customAngle.value[0] = parameters.rotation;
+    this.particleMaterial.attributes.customAngle.needsUpdate = true;
 }
 
 model.ParticlePathEmitter.prototype.getObject3d = function()

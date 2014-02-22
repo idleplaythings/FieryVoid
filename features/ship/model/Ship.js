@@ -93,7 +93,7 @@ model.Ship.prototype.deselect = function()
 
 model.Ship.prototype.animate = function(gameTime)
 {
-    this.status.animate(gameTime);
+    this.status.managers.movement.animate(gameTime);
 };
 
 model.Ship.prototype.setAzimuth = function(azimuth)

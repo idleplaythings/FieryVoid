@@ -1,15 +1,17 @@
-model.ParticlePath = function ParticlePath(path, color, dispatcher)
+model.ParticlePath = function ParticlePath(path, color, facingOffset /*, dispatcher */)
 {
     if (typeof color === 'undefined') {
         color = 0x0000ff;
     }
 
-    var geometry = path.getSpacedGeometry(1);
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(0, 0, 0));
 
     this._path = path;
-    this._emitter = this.createEmitter(geometry, dispatcher, color);
+    this._facingOffset = facingOffset;
+    this._emitter = this.createEmitter(geometry, /* dispatcher, */ color);
     this._animationPosition = 0;
-    this._animationPositions = {};
+    this._animationParameters = {};
 };
 
 model.ParticlePath.prototype.get = function()
@@ -21,25 +23,31 @@ model.ParticlePath.prototype.animate = function()
 {
     this._advanceAnimationPosition();
 
+    var parameters = this._animationParameters[this._animationPosition];
 
-    if (this._animationPositions[this._animationPosition] == undefined) {
-        this._animationPositions[this._animationPosition] =
-            this._path.get().getPointAt(this._animationPosition);
+    if (parameters == undefined) {
+        parameters = {};
+        parameters.position = this._path.getShape().getPointAt(
+            this._animationPosition / 100
+        );
+        parameters.rotation = - model.VectorUtils.getVectorAngle(
+            this._path.getShape().getTangentAt(this._animationPosition / 100)
+        );
     }
 
-    this._emitter.setParticlePosition(this._animationPositions[this._animationPosition]);
+    this._emitter.setParticleParameters(parameters);
 }
 
 model.ParticlePath.prototype._advanceAnimationPosition = function()
 {
-    this._animationPosition += 0.02;
+    this._animationPosition += 2;
 
-    if (this._animationPosition > 1) {
+    if (this._animationPosition > 100) {
         this._animationPosition = 0;
     }
 }
 
-model.ParticlePath.prototype.createEmitter = function(geometry, dispatcher, color)
+model.ParticlePath.prototype.createEmitter = function(geometry, /* dispatcher, */ color)
 {
     var attributes = {
         customAngle:    { type: 'f',  value: [] },
@@ -59,5 +67,10 @@ model.ParticlePath.prototype.createEmitter = function(geometry, dispatcher, colo
 
     var texture = THREE.ImageUtils.loadTexture("/misc/hull.png");
 
-    return new model.ParticlePathEmitter(geometry, attributes, texture).observeZoomLevelChange(dispatcher);
+    return new model.ParticlePathEmitter(geometry, attributes, texture);
 };
+
+model.ParticlePath.prototype.setZoomLevel = function(zoomLevel)
+{
+    this._emitter.setZoomLevel(zoomLevel);
+}

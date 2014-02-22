@@ -125,14 +125,14 @@ describe("Cube Coordinate", function() {
         expect(cube.toString()).toEqual('(1,1,-2)');
     });
 
-    it("returns facing for a neighbouring cube", function() {
+    it("returns the index of neighbouring cube as facing", function() {
         var cube = new Cube(0, 0, 0);
         var neighbour = new Cube(-1, 0, 1);
 
         expect(cube.getFacing(neighbour)).toEqual(4);
     });
 
-    it("returns -1 for a non-neighbouring cube", function() {
+    it("returns -1 as facing for a non-neighbouring cube", function() {
         var cube = new Cube(0, 0, 0);
         var neighbour = new Cube(-2, 0, 2);
 
