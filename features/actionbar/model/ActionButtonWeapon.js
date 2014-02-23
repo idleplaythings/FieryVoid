@@ -28,23 +28,23 @@ model.ActionButtonWeapon.prototype = Object.create(model.ActionButton.prototype)
 
 model.ActionButtonWeapon.prototype.onWeaponClick = function()
 {
-	var current = this._uiResolver.getCurrentClickStrategy();
+	var current = this._uiResolver.getCurrentInputMode();
 
-	if ( this._selected && current instanceof model.ClickStrategyWeapon)
+	if ( this._selected && current instanceof model.InputModeWeapon)
 	{
 		current.removeWeapon(this._weapon);
 		this.deselect();
 		return;
 	}
-	
-	
-	if ( ! (current instanceof model.ClickStrategyWeapon))
+
+
+	if ( ! (current instanceof model.InputModeWeapon))
 	{
-		current  = this._uiResolver.clickStrategyFactory.construct(
-			'ClickStrategyWeapon', {ship: this._ship});
-		this._uiResolver.addClickStrategy(current);
+		current  = this._uiResolver.InputModeFactory.construct(
+			'InputModeWeapon', {ship: this._ship});
+		this._uiResolver.addInputMode(current);
 	}
-	
+
 	current.addWeapon(this._weapon);
 
 	this.select();
@@ -91,7 +91,7 @@ model.ActionButtonWeapon.prototype.onFireOrdersChanged = function(event)
 model.ActionButtonWeapon.prototype.destroy = function()
 {
 	this._arcIndicator.removeAll();
-	this._dispatcher.detach('ModuleDeselectedEvent', this._deselectListener); 
+	this._dispatcher.detach('ModuleDeselectedEvent', this._deselectListener);
 	this._dispatcher.detach('FireOrdersChangedEvent', this._fireOrderListener);
 };
 

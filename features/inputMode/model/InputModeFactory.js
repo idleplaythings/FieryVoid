@@ -1,4 +1,4 @@
-model.ClickStrategyFactory = function ClickStrategyFactory(
+model.InputModeFactory = function InputModeFactory(
 	dispatcher,
 	coordinateConverter,
 	moduleView,
@@ -14,22 +14,22 @@ model.ClickStrategyFactory = function ClickStrategyFactory(
 	this.shipService = shipService;
 	dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 	this.zoom = 1.0;
-	
+
 	this.moduleView = moduleView;
 	this.shipView = shipView;
-	
+
 };
 
-model.ClickStrategyFactory.prototype.onZoom = function(event)
+model.InputModeFactory.prototype.onZoom = function(event)
 {
 	this.zoom = event.zoom;
 };
 
-model.ClickStrategyFactory.prototype.construct = function(className, args)
+model.InputModeFactory.prototype.construct = function(className, args)
 {
 	if ( ! args)
 		args = {};
-		
+
 	args.coordinateConverter = this.coordinateConverter;
 	args.dispatcher = this.dispatcher;
 	args.zoom = this.zoom;
@@ -38,7 +38,7 @@ model.ClickStrategyFactory.prototype.construct = function(className, args)
 	args.gameScene = this.gameScene;
 	args.gameState = this.gameState;
 	args.shipService = this.shipService;
-	
+
 	return new model[className](args);
 };
 

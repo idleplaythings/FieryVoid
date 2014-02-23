@@ -1,4 +1,4 @@
-model.ClickStrategy = function ClickStrategy(args)
+model.InputMode = function InputMode(args)
 {
 	this.dispatcher = args.dispatcher;
 	this.coordinateConverter = args.coordinateConverter;
@@ -10,16 +10,16 @@ model.ClickStrategy = function ClickStrategy(args)
 	this.shipService = args.shipService;
 
 	this._arcIndicator = new model.ArcIndicatorService(this.gameScene);
-	
+
 	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ClickStrategy.prototype.onZoom = function(event)
+model.InputMode.prototype.onZoom = function(event)
 {
 	this.zoom = event.zoom;
 };
 
-model.ClickStrategy.prototype.showMouseOverView = function(ship, module)
+model.InputMode.prototype.showMouseOverView = function(ship, module)
 {
 	var positionService = ship ? new model.ShipPositionService(ship, this.gameState.getTurn()) : null;
 
@@ -29,7 +29,7 @@ model.ClickStrategy.prototype.showMouseOverView = function(ship, module)
 
 };
 
-model.ClickStrategy.prototype.showWeaponArc = function(ship, positionService, module)
+model.InputMode.prototype.showWeaponArc = function(ship, positionService, module)
 {
 	if (! ship || ! module || ! module.weapon || this.zoom < 0.5)
 	{
@@ -40,7 +40,7 @@ model.ClickStrategy.prototype.showWeaponArc = function(ship, positionService, mo
 	this._arcIndicator.display(positionService.getFacing(), module, positionService.getPosition());
 };
 
-model.ClickStrategy.prototype.showModuleView = function(ship, positionService, module)
+model.InputMode.prototype.showModuleView = function(ship, positionService, module)
 {
     if (! ship || ! module ||  this.zoom != 1)
     {
@@ -54,7 +54,7 @@ model.ClickStrategy.prototype.showModuleView = function(ship, positionService, m
     this.moduleView.display(module, modulePos, ship.status);
 };
 
-model.ClickStrategy.prototype.showShipView = function(ship, positionService, module)
+model.InputMode.prototype.showShipView = function(ship, positionService, module)
 {
 	if (! ship || this.zoom == 1)
     {
@@ -66,8 +66,8 @@ model.ClickStrategy.prototype.showShipView = function(ship, positionService, mod
     this.shipView.display(ship, position);
 };
 
-model.ClickStrategy.prototype.remove = function()
+model.InputMode.prototype.remove = function()
 {
 	if (this.uiEventResolver)
-		this.uiEventResolver.removeClickStrategy(this);
+		this.uiEventResolver.removeInputMode(this);
 };

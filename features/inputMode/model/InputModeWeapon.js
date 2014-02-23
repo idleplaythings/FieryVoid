@@ -1,6 +1,6 @@
-model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
+model.InputModeWeapon = function InputModeWeapon(args)
 {
-	model.ClickStrategy.call(this, args);
+	model.InputMode.call(this, args);
 	this.ship = args.ship;
 	this.weapons = [];
 	this.uiEventResolver = null;
@@ -10,20 +10,20 @@ model.ClickStrategyWeapon = function ClickStrategyWeapon(args)
 };
 
 
-model.ClickStrategyWeapon.prototype = Object.create(model.ClickStrategy.prototype);
+model.InputModeWeapon.prototype = Object.create(model.InputMode.prototype);
 
-model.ClickStrategyWeapon.prototype.removeIfEmpty = function()
+model.InputModeWeapon.prototype.removeIfEmpty = function()
 {
 	if (this.weapons.length == 0)
 		this.remove();
 };
 
-model.ClickStrategyWeapon.prototype.hasWeapon = function(weapon)
+model.InputModeWeapon.prototype.hasWeapon = function(weapon)
 {
 	return this.weapons.filter(function(entry){return entry === weapon;})[0];
 };
 
-model.ClickStrategyWeapon.prototype.addWeapon = function(weapon)
+model.InputModeWeapon.prototype.addWeapon = function(weapon)
 {
 	if (this.hasWeapon(weapon))
 		throw new Error("Trying to add weapon twice");
@@ -42,7 +42,7 @@ model.ClickStrategyWeapon.prototype.addWeapon = function(weapon)
 	return this;
 };
 
-model.ClickStrategyWeapon.prototype.removeWeapon = function(weapon)
+model.InputModeWeapon.prototype.removeWeapon = function(weapon)
 {
 	this.weapons = this.weapons.filter(function(entry){ return entry != weapon;});
 	this.removeIfEmpty();
@@ -50,7 +50,7 @@ model.ClickStrategyWeapon.prototype.removeWeapon = function(weapon)
 	return this;
 };
 
-model.ClickStrategyWeapon.prototype.onClick = function(event)
+model.InputModeWeapon.prototype.onClick = function(event)
 {
 	var scenePosition = event.game;
 	var shipAndTile = this.shipService.getShipAndTileOnScenePosition(scenePosition);
@@ -62,7 +62,7 @@ model.ClickStrategyWeapon.prototype.onClick = function(event)
 	}
 };
 
-model.ClickStrategyWeapon.prototype.onMouseMove = function(event)
+model.InputModeWeapon.prototype.onMouseMove = function(event)
 {
 	var scenePosition = event.game;
 
@@ -85,13 +85,13 @@ model.InputMode.WeaponShipTargeting.prototype.displayWeaponTargeting = function(
 	var shooter, target, tile, selectedWeapons
 };
 
-model.ClickStrategyWeapon.prototype.target = function(target, tile)
+model.InputModeWeapon.prototype.target = function(target, tile)
 {
 	this.weaponIndicatorService.removeAll();
 
 	var shooter = this.ship;
 	var turn = this.gameState.getTurn();
-	
+
 	this.weapons.forEach(function(weapon){
 		var targetTile = this.hitLocationService.getClosestValidTarget(shooter, weapon, target, tile, turn);
 		console.log(this.hitLocationService.isValidTarget(shooter, weapon, target, targetTile, turn));
@@ -109,7 +109,7 @@ model.ClickStrategyWeapon.prototype.target = function(target, tile)
 	event.stop();
 };
 
-model.ClickStrategyWeapon.prototype.displayWeaponTargeting = function(target, tile)
+model.InputModeWeapon.prototype.displayWeaponTargeting = function(target, tile)
 {
 	this.weaponIndicatorService.removeAll();
 
@@ -125,7 +125,7 @@ model.ClickStrategyWeapon.prototype.displayWeaponTargeting = function(target, ti
 	}, this);
 };
 
-model.ClickStrategyWeapon.prototype.activate = function(uiResolver)
+model.InputModeWeapon.prototype.activate = function(uiResolver)
 {
 	this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
     this.mouseMovekCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
@@ -133,7 +133,7 @@ model.ClickStrategyWeapon.prototype.activate = function(uiResolver)
 	jQuery("#gameContainer").addClass('weaponCursor');
 };
 
-model.ClickStrategyWeapon.prototype.deactivate = function(uiResolver)
+model.InputModeWeapon.prototype.deactivate = function(uiResolver)
 {
 	uiResolver.unregisterListener('click', this.mouseClickCallback);
     uiResolver.unregisterListener('mousemove', this.mouseMovekCallback);
@@ -141,7 +141,7 @@ model.ClickStrategyWeapon.prototype.deactivate = function(uiResolver)
 	jQuery("#gameContainer").removeClass('weaponCursor');
 };
 
-model.ClickStrategyWeapon.prototype.onKeyUp = function(event)
+model.InputModeWeapon.prototype.onKeyUp = function(event)
 {
 	var key = event.key;
 
