@@ -75,6 +75,16 @@ model.ClickStrategyWeapon.prototype.onMouseMove = function(event)
 	this.displayWeaponTargeting(ship, tile);
 };
 
+model.InputMode.WeaponShipTargeting.prototype.target = function(target, tile)
+{
+
+};
+
+model.InputMode.WeaponShipTargeting.prototype.displayWeaponTargeting = function(target, tile)
+{
+	var shooter, target, tile, selectedWeapons
+};
+
 model.ClickStrategyWeapon.prototype.target = function(target, tile)
 {
 	this.weaponIndicatorService.removeAll();

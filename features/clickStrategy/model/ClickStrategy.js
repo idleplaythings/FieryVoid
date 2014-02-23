@@ -42,8 +42,6 @@ model.ClickStrategy.prototype.showWeaponArc = function(ship, positionService, mo
 
 model.ClickStrategy.prototype.showModuleView = function(ship, positionService, module)
 {
-	this.shipView.display(null);
-
     if (! ship || ! module ||  this.zoom != 1)
     {
         this.moduleView.remove();

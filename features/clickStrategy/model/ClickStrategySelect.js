@@ -32,13 +32,13 @@ model.ClickStrategySelect.prototype.onMouseMove = function(event)
 model.ClickStrategySelect.prototype.activate = function(uiResolver)
 {
 	this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
-    this.mouseMovekCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
+    this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
 	jQuery("#gameContainer").addClass('selectCursor');
 };
 
 model.ClickStrategySelect.prototype.deactivate = function(uiResolver)
 {
 	uiResolver.unregisterListener('click', this.mouseClickCallback);
-    uiResolver.unregisterListener('mousemove', this.mouseMovekCallback);
+    uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);
 	jQuery("#gameContainer").removeClass('selectCursor');
 };
