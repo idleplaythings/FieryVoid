@@ -41,6 +41,7 @@ module.exports = function(config) {
         'features/movement/model/action/SpeedDeaccelerate.js',
         'features/movement/model/ThrustCost.js',
         'features/movement/model/Route.js',
+        'features/movement/model/PositionHelper.js',
         'features/game/client/ui/UiFocusResolver.js',
 
         'features/hexagon/model/coordinate/Cube.js',
