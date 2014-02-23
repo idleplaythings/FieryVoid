@@ -22,6 +22,7 @@ module.exports = function(config) {
         'lib/math/Vector2.js',
         'lib/MathLib.js',
         'lib/CoordinateConverter.js',
+        'lib/CoordinateConverterViewPort.js',
         'features/ship/model/ShipDesign.js',
         'features/ship/model/HullLayout.js',
         'features/shipmodule/model/ModuleLayout.js',
