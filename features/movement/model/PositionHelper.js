@@ -18,9 +18,9 @@ model.movement.PositionHelper.prototype.getAngleBetweenPositions = function(posi
     var w = Math.sqrt(3) / 2 * h;
     var dh = w;
 
-    var x = new THREE.Vector2(w/2, dv);
-    var y = new THREE.Vector2(-w/2, dv);
-    var z = new THREE.Vector2(w, 0);
+    var x = new Vector2(w/2, dv);
+    var y = new Vector2(-w/2, dv);
+    var z = new Vector2(w, 0);
 
     var axis = null;
     var normal = null;
