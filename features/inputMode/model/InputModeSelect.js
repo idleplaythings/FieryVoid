@@ -1,11 +1,11 @@
-model.ClickStrategySelect = function ClickStrategySelect(args)
+model.InputModeSelect = function InputModeSelect(args)
 {
-	model.ClickStrategy.call(this, args);
+	model.InputMode.call(this, args);
 };
 
-model.ClickStrategySelect.prototype = Object.create(model.ClickStrategy.prototype);
+model.InputModeSelect.prototype = Object.create(model.InputMode.prototype);
 
-model.ClickStrategySelect.prototype.onClick = function(event)
+model.InputModeSelect.prototype.onClick = function(event)
 {
 	var scenePosition = event.game;
 	var ship = this.shipService.getShipOnScenePosition(scenePosition);
@@ -17,7 +17,7 @@ model.ClickStrategySelect.prototype.onClick = function(event)
 	}
 };
 
-model.ClickStrategySelect.prototype.onMouseMove = function(event)
+model.InputModeSelect.prototype.onMouseMove = function(event)
 {
 	var scenePosition = event.game;
 
@@ -29,14 +29,14 @@ model.ClickStrategySelect.prototype.onMouseMove = function(event)
 	this.showMouseOverView(ship, module, tile);
 };
 
-model.ClickStrategySelect.prototype.activate = function(uiResolver)
+model.InputModeSelect.prototype.activate = function(uiResolver)
 {
 	this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
     this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
 	jQuery("#gameContainer").addClass('selectCursor');
 };
 
-model.ClickStrategySelect.prototype.deactivate = function(uiResolver)
+model.InputModeSelect.prototype.deactivate = function(uiResolver)
 {
 	uiResolver.unregisterListener('click', this.mouseClickCallback);
     uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);

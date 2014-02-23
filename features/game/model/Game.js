@@ -110,7 +110,7 @@ Game.prototype.play = function()
         this.coordinateConverter
     );
 
-	this.clickStrategyFactory = new model.ClickStrategyFactory(
+	this.InputModeFactory = new model.InputModeFactory(
 		this.dispatcher,
 		this.coordinateConverter,
 		new model.ModuleDetailView(container, this.dispatcher),
@@ -121,7 +121,7 @@ Game.prototype.play = function()
 	);
 
     this.uiEventResolver = new model.UiFocusResolver(
-        this.coordinateConverter, this.dispatcher, this.clickStrategyFactory);
+        this.coordinateConverter, this.dispatcher, this.InputModeFactory);
 
     //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
@@ -147,9 +147,9 @@ Game.prototype.play = function()
     new model.ReplayUI(this.gameState).create();
     new model.TurnUi(this._id, this.gameState).create();
 
-	this.uiEventResolver.addClickStrategy(
-		this.clickStrategyFactory.construct(
-			'ClickStrategySelect',
+	this.uiEventResolver.addInputMode(
+		this.InputModeFactory.construct(
+			'InputModeSelect',
 			{
 				shipService: this.shipService
 			})
@@ -189,7 +189,7 @@ Game.prototype._initGameState = function(container)
 
     this.gameState.subscribeToScene(this.dispatcher);
     this.gameState.startTurn();
-    
+
     this.animate();
 };
 

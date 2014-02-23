@@ -1,6 +1,6 @@
 
 model.UiFocusResolver = function UiFocusResolver(
-	coordinateConverter, externalDispatcher, clickStrategyFactory)
+	coordinateConverter, externalDispatcher, InputModeFactory)
 {
     this.listeners = {
         click: [],
@@ -22,42 +22,42 @@ model.UiFocusResolver = function UiFocusResolver(
     this.distanceDragged = 0;
     this.draggingDistanceTreshold = 10;
 
-	this.clickStrategyFactory = clickStrategyFactory;
-    this.clickStrategyStates = [];
+	this.InputModeFactory = InputModeFactory;
+    this.InputModeStates = [];
 
     this._coordinateConverter = coordinateConverter;
     this._hotkeys = new model.HotkeyFactory().getHotkeys();
 };
 
-model.UiFocusResolver.prototype.getCurrentClickStrategy = function()
+model.UiFocusResolver.prototype.getCurrentInputMode = function()
 {
-	return this.clickStrategyStates[this.clickStrategyStates.length-1];
+	return this.InputModeStates[this.InputModeStates.length-1];
 };
 
-model.UiFocusResolver.prototype.addClickStrategy = function(state)
+model.UiFocusResolver.prototype.addInputMode = function(state)
 {
-	var current = this.getCurrentClickStrategy();
+	var current = this.getCurrentInputMode();
 
 	if (current)
 		current.deactivate(this);
 
-	this.clickStrategyStates.push(state);
+	this.InputModeStates.push(state);
 	state.activate(this);
 };
 
-model.UiFocusResolver.prototype.removeClickStrategy = function(state)
+model.UiFocusResolver.prototype.removeInputMode = function(state)
 {
     while(true)
     {
-        var current = this.getCurrentClickStrategy();
+        var current = this.getCurrentInputMode();
         if (current != state)
             break;
 
-        this.clickStrategyStates.pop();
+        this.InputModeStates.pop();
     };
 
     state.deactivate(this);
-    this.getCurrentClickStrategy().activate(this);
+    this.getCurrentInputMode().activate(this);
 };
 
 model.UiFocusResolver.prototype.onZoom = function(event)
@@ -140,7 +140,7 @@ model.UiFocusResolver.prototype.keyup = function(event)
 
     if ( ! hotkey)
         return;
-    
+
     this.fireEvent(
         {key: hotkey},
         this.listeners.keyup
@@ -264,8 +264,8 @@ model.UiFocusResolver.prototype.fireEvent = function(payload, listeners)
 {
     payload.stopped = false;
     payload.stop = function(){this.stopped = true;};
-	payload.clickStrategy = this.getCurrentClickStrategy();
-	
+	payload.InputMode = this.getCurrentInputMode();
+
     for (var i in listeners)
     {
         var listener = listeners[i];
