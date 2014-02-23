@@ -4,8 +4,7 @@ model.MovementManagement = function MovementManagement(ship, modules, timeline, 
     this.thrustManager = thrust;
 	this._ship = ship;
 	this._timeline = timeline;
-	this._thrustManager = thrustManager
-    this._pathResolver = pathResolver;
+    this._pathResolver = new model.movement.PathResolver();
     this._pathRenderer = null;
 
 	this._start = null;
@@ -152,7 +151,7 @@ model.MovementManagement.prototype._advanceAnimationPosition = function()
 
 
 
-model.MovementManagement.prototype._getScenePosition = function(gameTime)
+model.MovementManagement.prototype.getScenePosition = function(gameTime)
 {
     return this.gridService.resolveGameCoordinates(this.getCurrentPosition(gameTime).toOddR());
 };
