@@ -9,6 +9,7 @@ model.WeaponFactory.prototype.getWeapon = function(args, module)
 	weaponArgs.rangeStrategy = new model[args.rangeStrategy](args);
 	weaponArgs.targetStrategy = new model[args.targetStrategy](args);
 	weaponArgs.arcStrategy  = new model.WeaponArcStrategy(args);
+	weaponArgs.scatterStrategy = new model.WeaponScatterStrategy(args);
 	
 	var valid = Object.keys(weaponArgs).every(function(key){
 		return weaponArgs[key].isValid();

@@ -13,11 +13,17 @@ model.WeaponArc.prototype.setEnd = function(end)
 model.WeaponArc.prototype.isClosed = function()
 {
 	return this.end !== null;
-	return this;
 };
 
 model.WeaponArc.prototype.combine = function(weaponArc)
 {
-	return this.start = weaponArc.start;
+	this.start = weaponArc.start;
+	return this;
+};
+
+model.WeaponArc.prototype.close = function(weaponArc)
+{
+	this.start = 0;
+	this.end = 360;
 	return this;
 };

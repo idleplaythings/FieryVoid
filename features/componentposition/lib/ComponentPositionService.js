@@ -26,14 +26,15 @@ model.ComponentPositionService.prototype.getTilePositionInScene = function(tileP
     	x:this._width * scale,
     	y:this._height * scale
     };
-    var origo = {
+    
+    var origin = {
         x: (dimensions.x/-2),
         y: (dimensions.y/-2)
     };
 
     var modulePosition = {
-        x: tilePosition.x * scale + origo.x,
-        y: tilePosition.y * scale + origo.y
+        x: tilePosition.x * scale + origin.x,
+        y: tilePosition.y * scale + origin.y
     };
 
     modulePosition = MathLib.turnVector(modulePosition, this._facing);

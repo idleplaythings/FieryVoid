@@ -7,14 +7,19 @@ model.ModuleDetailView = function ModuleDetailView(target, dispatcher)
 
 model.ModuleDetailView.prototype = Object.create(model.TooltipView.prototype);
 
+model.ModuleDetailView.prototype.remove  = function()
+{
+    this.currentModule = null;
+    this.hide();
+};
 
 model.ModuleDetailView.prototype.display = function(
 	module, position, shipStatus)
 {
     if (module === null)
     {
-        this.currentModule = null;
-        this.hide();
+        this.remove();
+        return;
     }
 
     if (module == this.currentModule)

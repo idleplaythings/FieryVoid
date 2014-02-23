@@ -97,18 +97,31 @@ Game.prototype.play = function()
 
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
+    var shipStatusView = new model.ShipStatusView(
+        container,
+        this.coordinateConverter,
+        this.dispatcher
+    ).hide();
+
+    this.shipService = new model.ShipService(
+        this.fleets,
+        shipStatusView,
+        this.dispatcher,
+        this.coordinateConverter
+    );
+
 	this.clickStrategyFactory = new model.ClickStrategyFactory(
 		this.dispatcher,
 		this.coordinateConverter,
 		new model.ModuleDetailView(container, this.dispatcher),
 		new model.ShipTooltipView(container, this.dispatcher),
         this.gameScene,
-        this.gameState
+        this.gameState,
+        this.shipService
 	);
 
     this.uiEventResolver = new model.UiFocusResolver(
         this.coordinateConverter, this.dispatcher, this.clickStrategyFactory);
-
 
     //this.coordinateConverter.setTarget(container);
     this.gameScene.init(container);
@@ -134,20 +147,6 @@ Game.prototype.play = function()
     new model.ReplayUI(this.gameState).create();
     new model.TurnUi(this._id, this.gameState).create();
 
-	var shipStatusView = new model.ShipStatusView(
-        container,
-        this.coordinateConverter,
-        this.dispatcher
-    ).hide();
-
-	this.shipService = new model.ShipService(
-		this.fleets,
-		shipStatusView,
-		this.dispatcher,
-		this.uiEventResolver,
-		this.coordinateConverter
-	);
-
 	this.uiEventResolver.addClickStrategy(
 		this.clickStrategyFactory.construct(
 			'ClickStrategySelect',
@@ -155,7 +154,6 @@ Game.prototype.play = function()
 				shipService: this.shipService
 			})
 	);
-
 
     this.situationDisplayService = new model.SituationDisplayService(
         this.gameScene,

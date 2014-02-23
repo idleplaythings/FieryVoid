@@ -55,10 +55,12 @@ model.WeaponArcService.prototype._combineArcs = function (arcs)
 			combinedArcs.push(combinedArcs.pop().setEnd(arc.angle));
 	}, this);
 
-	//console.log(combinedArcs);
 	if (! combinedArcs[combinedArcs.length-1].isClosed())
 	{
-		combinedArcs[0].combine(combinedArcs.pop());
+		if (combinedArcs.length > 1)
+			combinedArcs[0].combine(combinedArcs.pop());
+		else
+			combinedArcs[0].close();
 	}
 
 	return combinedArcs;
