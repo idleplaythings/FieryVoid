@@ -5,7 +5,12 @@ model.movement.PositionHelper = function PositionHelper()
 {
 };
 
-model.movement.PositionHelper.prototype.angleBetweenPositions = function(positionA, positionB)
+model.movement.PositionHelper.prototype.getDistanceBetweenPositions = function(positionA, positionB)
+{
+    return positionA.getPosition().distanceTo(positionB.getPosition());
+}
+
+model.movement.PositionHelper.prototype.getAngleBetweenPositions = function(positionA, positionB)
 {
     var h = 2;
     var dv = 3/4 * h;
