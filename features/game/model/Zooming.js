@@ -1,4 +1,4 @@
-model.Zooming = function Zooming(element, dispatcher, scrolling, converter)
+model.Zooming = function Zooming(dispatcher)
 {
     this.wheeltimer = null;
     this.wheelzoom = 0;
@@ -6,18 +6,23 @@ model.Zooming = function Zooming(element, dispatcher, scrolling, converter)
     this.zoom = 1;
     this.dispatcher = dispatcher;
     this.zoomTarget = null;
-    this.zoomPositionTarget = null;
-    this.coordinateConverter = converter;
-    this.scrolling = scrolling;
 
-    this.element = element;
+    this.element = null;
 };
 
 model.Zooming.prototype.constructor = model.Zooming;
 
-model.Zooming.prototype.init = function()
+
+model.Zooming.prototype.getCurrentZoom = function()
 {
-    this.bindEvent(this.element);
+    return this.zoom;
+};
+
+
+model.Zooming.prototype.init = function(element)
+{
+    this.element = element;
+    this.bindEvent(element);
     this.animate();
 };
 
@@ -30,21 +35,10 @@ model.Zooming.prototype.animate = function()
         if (Math.abs(change) < 0.00001 || (this.zoomTarget == 1 && Math.abs(change) < 0.01))
         {
             this.dispatchZoom(this.zoomTarget);
-            if (this.zoomPositionTarget)
-            {
-                //this.scrolling.scrollTo(this.zoomPositionTarget);
-                this.zoomPositionTarget = null;
-            }
         }
         else
         {
             this.dispatchZoom(this.zoom + change*0.1);
-            if (this.zoomPositionTarget)
-            {
-                //this.scrolling.scrollTo(
-                //    MathLib.getPointBetween(
-                //        this.scrolling.position, this.zoomPositionTarget, 0.1));
-            }
         }
     }
 };
@@ -66,7 +60,6 @@ model.Zooming.prototype.mouseWheel = function(e)
     var x = e.pageX - offsetLeft;
     var y = e.pageY - offsetTop;
 
-    this.zoomPositionTarget = this.coordinateConverter.fromViewPortToGame({x:x, y:y});
     this.changeZoom(step);
     return this.cancelEvent(e);
 };

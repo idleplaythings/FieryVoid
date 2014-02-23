@@ -1,4 +1,4 @@
-model.GameState = function GameState(turn, dispatcher)
+model.GameState = function GameState(dispatcher)
 {
     this.currentGameTurn = 0;
     this.currentDisplayGameTime = 0;
@@ -6,9 +6,7 @@ model.GameState = function GameState(turn, dispatcher)
 
     this._turnTime = 10000;
     
-    this._dispatcher = null;
-    this._setTurn(turn);
-
+    this._dispatcher = dispatcher;
 };
 
 model.GameState.prototype.getTurn = function()
@@ -16,13 +14,9 @@ model.GameState.prototype.getTurn = function()
     return this.currentGameTurn;
 };
 
-model.GameState.prototype.subscribeToScene = function(dispatcher)
+model.GameState.prototype.startTurn = function(turn)
 {
-    this._dispatcher = dispatcher;
-};
-
-model.GameState.prototype.startTurn = function()
-{
+    this.currentGameTurn = turn;
     this._dispatcher.dispatch({name: 'TurnEvent', type:'start', turn: this.currentGameTurn});
 };
 
@@ -41,7 +35,7 @@ model.GameState.prototype.endAnimation = function()
     this._dispatcher.dispatch({name: 'TurnEvent', type:'animationEnd', turn: this.currentGameTurn});
 };
 
-model.GameState.prototype._setTurn = function(turn)
+model.GameState.prototype.setTurn = function(turn)
 {
     this.currentGameTurn = turn;
 
@@ -105,7 +99,12 @@ model.GameState.prototype._changeGameTime = function(lastTime)
             this._changeGameTime.bind(this, lastTime));
 };
 
-model.GameState.prototype.getCurrentDisplayTimeForUI = function()
+model.GameState.prototype.getCurrentDisplayTurn = function()
+{
+    return this.currentGameTurn;
+};
+
+model.GameState.prototype.getCurrentDisplayTime = function()
 {
     return this.currentDisplayGameTime;
 };

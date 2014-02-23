@@ -1,14 +1,15 @@
-model.GameTerrain = function GameTerrain(gameScene, container, seed, gridService)
+model.GameTerrain = function GameTerrain(gameScene, gameContainer, gridService)
 {
     this.gameScene = gameScene;
-    this.container = container;
-    this.seed = seed;
+    this.gameContainer = gameContainer;
+    this.seed = null;
     this._gridService = gridService;
     this.asteroidBelt = null;
 };
 
-model.GameTerrain.prototype.createRandom = function()
+model.GameTerrain.prototype.createRandom = function(seed)
 {
+    this.seed = seed;
     Math.seedrandom(this.seed);
 
     this._createBackdrop();
@@ -20,8 +21,8 @@ model.GameTerrain.prototype.createRandom = function()
 
 model.GameTerrain.prototype._createBackdrop = function()
 {
-    this.container.css('background-color', 'black');
-    this.container.css('background-image', 'url(/background/bluespace3.jpg)');
+    this.gameContainer.get().css('background-color', 'black');
+    this.gameContainer.get().css('background-image', 'url(/background/bluespace3.jpg)');
 }
 
 model.GameTerrain.prototype._createStarField = function()

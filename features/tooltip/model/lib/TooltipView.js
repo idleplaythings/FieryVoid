@@ -1,6 +1,6 @@
-model.TooltipView = function TooltipView(target, dispatcher)
+model.TooltipView = function TooltipView(gameContainer, dispatcher)
 {
-    this.target = target;
+    this._gameContainer = gameContainer;
     this.htmlClass = 'tooltip';
     
     this.zoom = 1.0;
@@ -29,11 +29,11 @@ model.TooltipView.prototype.position = function()
 
 model.TooltipView.prototype.getTemplate = function()
 {
-    var template = jQuery('.tooltipView.'+ this.htmlClass, this.target);
+    var template = jQuery('.tooltipView.'+ this.htmlClass,  this._gameContainer.get());
 
     if (template.length == 0)
     {
-        template = jQuery('<div class="tooltipView '+ this.htmlClass+'" style="display:none;position:absolute;left:0px;top:0px;"></div>').appendTo(this.target);
+        template = jQuery('<div class="tooltipView '+ this.htmlClass+'" style="display:none;position:absolute;left:0px;top:0px;"></div>').appendTo( this._gameContainer.get());
     }
 
     return template;

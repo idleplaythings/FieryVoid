@@ -15,10 +15,11 @@ ShipsInGameCollection.allow({
 });
 
 
-model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage)
+model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage, shipStatusFactory)
 {
     this.timelineFactory = timelineFactory;
     this.shipDesignStorage = shipDesignStorage;
+    this._shipStatusFactory = shipStatusFactory;
 };
 
 model.ShipStorage.prototype.getShip = function(id)
@@ -66,18 +67,17 @@ model.ShipStorage.prototype.createFromDesignId =
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
 	var timeline = this.timelineFactory.getTimeline();
-	var status = new model.ShipStatus(shipId, shipDesign.modules, timeline);
 		
-		
-	status.setOwner(owner);
-		
-	return ship.setState({
+	ship.setState({
 		_id: shipId,
-        shipDesign: shipDesign,
-        status: status
+        shipDesign: shipDesign
 		},
 		timeline
 	);
+
+	ship.getStatus().setOwner(owner);
+
+    return ship;
 };
 
 model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
@@ -92,13 +92,9 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
         throw Error("Unable to construct ship design for ship");
 	
 	var timeline = this.timelineFactory.getTimeline(shipdoc.timeline);
-        
-    shipdoc.status = new model.ShipStatus(
-		ship,
-		shipdoc.shipDesign.modules,
-		timeline
-    );
 	
-	return ship.setState(shipdoc, timeline);
+	ship.setState(shipdoc, timeline);
+
+    return ship;
 };
 

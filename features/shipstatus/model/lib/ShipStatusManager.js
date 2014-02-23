@@ -9,21 +9,6 @@ model.ShipStatusManager = function ShipStatusManager(ship, modules, timeline)
 	this.currentTurn = null;
 }
 
-model.ShipStatusManager.prototype.subscribeToScene = function(
-    gameScene, effectManager, dispatcher, uiResolver, gridService, shipService, gameState)
-{
-    this.gameScene = gameScene;
-    this.effectManager = effectManager;
-    this.dispatcher = dispatcher;
-    this.uiResolver = uiResolver;
-    this.gridService = gridService;
-    this.shipService = shipService;
-    this.gameState = gameState;
-
-   	this.dispatcher.attach("TurnEvent", this.onTurnEvent.bind(this));
-    this.onSubscribedToScene();
-};
-
 model.ShipStatusManager.prototype.animate = function(gameTime)
 {
 	

@@ -1,8 +1,7 @@
-model.ShipStatusView = function ShipStatusView(target, coordinateConverter, dispatcher)
+model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverter, dispatcher)
 {
 	this.coordinateConverter = coordinateConverter;
-	this.moduleView = new model.ModuleDetailView(target, dispatcher);
-	this.target = target;
+	this._gameContainer = gameContainer;
     this.positionService = null;
     this.hidden = false;
     this.targetId = null;
@@ -14,20 +13,20 @@ model.ShipStatusView = function ShipStatusView(target, coordinateConverter, disp
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ShipStatusView.prototype.display = function(positionService, shipStatus)
+model.ShipStatusView.prototype.display = function(positionService, modules)
 {
     this.positionService = positionService;
     this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
    
-    shipStatus.modules.forEach(function(module){
-        this.createIcons(shipStatus, positionService, module, template);
+    modules.forEach(function(module){
+        this.createIcons(positionService, module, template);
     }, this);
 
     return this;
 };
-
+/*
 model.ShipStatusView.prototype.displayModuleView = 
 	function(module, modulePos, status)
 {
@@ -36,6 +35,7 @@ model.ShipStatusView.prototype.displayModuleView =
 		
 	this.moduleView.display(module, modulePos, status);
 };
+*/
 
 model.ShipStatusView.prototype.unsetPositionService = function()
 {
@@ -49,13 +49,14 @@ model.ShipStatusView.prototype.positionStatusView = function()
 
     var template = this.getTemplate();
     var position = this.coordinateConverter.fromGameToViewPort(this.positionService.getPosition());
+    
     template.css('left', position.x +'px');
     template.css('top', position.y +'px');
 };
 
-model.ShipStatusView.prototype.createIcons = function(shipStatus, positionService, module, template)
+model.ShipStatusView.prototype.createIcons = function(positionService, module, template)
 {
-    var symbols = shipStatus.getSymbols(module);
+    var symbols = module.getStatusSymbols();
     
 	symbols.forEach(function(symbol){
 		symbol.enableDrag(
@@ -67,8 +68,9 @@ model.ShipStatusView.prototype.createIcons = function(shipStatus, positionServic
     if (symbols.length == 0)
         return;
 
-    this.resolveIconDeploymentZone(module, symbols);
-    var modulePosition = module.getPosition();
+    var moduleLayout = module.getModuleLayout();
+    this.resolveIconDeploymentZone(moduleLayout, symbols);
+    var modulePosition = moduleLayout.getPosition();
 
     var num = 0;
     symbols.forEach(function(symbol){
@@ -222,11 +224,11 @@ model.ShipStatusView.prototype.hide = function()
 
 model.ShipStatusView.prototype.getTemplate = function()
 {
-	var template = jQuery('#shipStatusViewParent', this.target);
+	var template = jQuery('#shipStatusViewParent', this._gameContainer.get());
 
 	if (template.length == 0)
 	{
-		template = jQuery('<div id="shipStatusViewParent" style="position:absolute;left:0px;top:0px;width:1px;height:1px;"></div>').appendTo(this.target);
+		template = jQuery('<div id="shipStatusViewParent" style="position:absolute;left:0px;top:0px;width:1px;height:1px;"></div>').appendTo(this._gameContainer.get());
 	}
 
 	return template;

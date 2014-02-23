@@ -28,6 +28,8 @@ model.ShipIcon.prototype.create = function(shipDesign)
         height
     );
 
+    this.gameScene.addToScene(this.getThreeObject());
+
     return this;
 };
 

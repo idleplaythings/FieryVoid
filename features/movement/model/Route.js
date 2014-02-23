@@ -1,5 +1,6 @@
-model.movement.Route = function Route(startPosition, movementAbility, modifiers)
+model.movement.Route = function Route(turn, startPosition, movementAbility, modifiers)
 {
+	this._turn = turn;
 	this._movementAbility = movementAbility;
 	this._startPosition = startPosition;
 	
@@ -10,6 +11,7 @@ model.movement.Route = function Route(startPosition, movementAbility, modifiers)
 		movementAbility.getThrusters(),
 		movementAbility.getAvailableThrust()
 	);
+	
 	this._constructRoute();
 };
 
@@ -18,6 +20,28 @@ model.movement.Route.INVALID_TOO_MANY_MOVES = 2;
 model.movement.Route.INVALID_BREAKS_TURN_DELAY = 3;
 model.movement.Route.INVALID_BREAKS_SLIP_DELAY = 4;
 model.movement.Route.INVALID_TOO_EXPENSIVE = 5;
+
+model.movement.Route.deserialize = function(serialized)
+{
+	return new model.movement.Route(
+		serialized.turn,
+		model.movement.Position.deserialize(serialized.startPosition),
+		model.movement.MovementAbility.deserialize(serialized.movementAbility),
+		serialized.modifiers.map(function(mod){ 
+			return model.movement.Action.deserialize(mod);
+		})
+	);
+}
+
+model.movement.Route.prototype.serialize = function()
+{
+	return {
+		turn: this._turn,
+		startPosition: this._startPosition.serialize(),
+		movementAbility: this._movementAbility.serialize(),
+		modifiers: this._modifiers.map(function(action){return action.serialize()})
+	}
+}
 
 model.movement.Route.prototype.getRoute = function()
 {

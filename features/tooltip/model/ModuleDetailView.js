@@ -1,6 +1,6 @@
-model.ModuleDetailView = function ModuleDetailView(target, dispatcher)
+model.ModuleDetailView = function ModuleDetailView(gameContainer, dispatcher)
 {
-    model.TooltipView.call(this, target, dispatcher);
+    model.TooltipView.call(this, gameContainer, dispatcher);
     this.currentModule = null;
     this.htmlClass = 'moduledetailview';
 };
@@ -14,7 +14,7 @@ model.ModuleDetailView.prototype.remove  = function()
 };
 
 model.ModuleDetailView.prototype.display = function(
-	module, position, shipStatus)
+	module, position)
 {
     if (module === null)
     {
@@ -29,10 +29,10 @@ model.ModuleDetailView.prototype.display = function(
 
     var template = this.getTemplate();
     template.html('');
-    template.append('<h4>'+module.name+'</h4>');
-    template.append('<p>'+module.description+'</p>');
+    template.append('<h4>'+module.getName()+'</h4>');
+    template.append('<p>'+module.getDescription()+'</p>');
 
-    var symbols = shipStatus.getSymbols(module);
+    var symbols = module.getStatusSymbols();
     symbols.forEach(function(symbol){
 		if ( ! symbol.displayOnModuleView)
 			return;

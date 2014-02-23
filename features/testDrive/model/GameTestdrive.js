@@ -1,6 +1,4 @@
 
-model.GameTestdrive = Extend.register(GameTestdrive, "Game");
-
 function GameTestdrive(dispatcher, hexgrid, shipStorage, fleetStorage, timelineFactory, args) {
     this.super.apply(this, arguments);
     this.type = "GameTestdrive";

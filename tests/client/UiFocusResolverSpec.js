@@ -1,4 +1,4 @@
-describe("UiFocusResolver", function() {
+describe("UiEventManager", function() {
 
     var coordinateConverter = {
         fromViewPortToGame: function(pos)
@@ -9,7 +9,7 @@ describe("UiFocusResolver", function() {
 
     it("should register listeners in correct order", function() {
 
-        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
+        var resolver = new model.UiEventManager(null, coordinateConverter, {attach: function(){}});
         resolver.registerListener('click', function(){return false}, 1);
         resolver.registerListener('click', function(){return false}, 0);
         resolver.registerListener('click', function(){return true}, 5);
@@ -19,7 +19,7 @@ describe("UiFocusResolver", function() {
 
     it("should capture a click", function() {
 
-        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
+        var resolver = new model.UiEventManager(null, coordinateConverter, {attach: function(){}});
 
         resolver._getMousePositionInObservedElement = function(e){return {x:100, y:100};};
 
@@ -36,7 +36,7 @@ describe("UiFocusResolver", function() {
 
     it("should consider a mouseUp a click if moved less than threshold", function() {
 
-        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
+        var resolver = new model.UiEventManager(null, coordinateConverter, {attach: function(){}});
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:105, y:105}, {x:106, y:106}];
@@ -58,7 +58,7 @@ describe("UiFocusResolver", function() {
     });
 
     it("should consider mouseUp a drag when moved more than threshold", function() {
-        var resolver = new model.UiFocusResolver(coordinateConverter, {attach: function(){}});
+        var resolver = new model.UiEventManager(null, coordinateConverter, {attach: function(){}});
 
         var i = -1;
         var positions = [{x:100, y:100}, {x:120, y:120}];

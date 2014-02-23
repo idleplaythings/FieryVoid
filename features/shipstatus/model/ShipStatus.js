@@ -1,42 +1,6 @@
-model.ShipStatus = function ShipStatus(ship, modules, timeline)
+model.ShipStatus = function ShipStatus(timeline)
 {
-	this.ship = ship;
-	this.modules = modules;
-	this._timeline = timeline;
-
-	this.managers = {};
-	this.gameScene, this.effectManager, this.dispatcher, this.uiResolver = null;
-
-    this.managers.power = new model.PowerManagement(ship, modules, timeline);
-    this.managers.crew = new model.CrewManagement(ship, modules, timeline);
-    this.managers.thrust = new model.ThrustManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
-    this.managers.movement = new model.MovementManagement(ship, modules, timeline, this.managers.thrust);
-
-    // this.managers.movement = new model.Movement(modules, timeline, ship);
-    this.managers.sensor = new model.SensorManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
-    this.managers.weapon = new model.WeaponManagement(ship, modules, timeline, this.managers.power, this.managers.crew, this.managers.movement);
-    this.managers.damage = new model.DamageManagement(ship, modules, timeline, this.managers.movement);
-};
-
-model.ShipStatus.prototype.animate = function(gameTime)
-{
-	Object.keys(this.managers).forEach(function(key){
-		this.managers[key].animate(gameTime);
-	}, this);
-};
-
-model.ShipStatus.prototype.subscribeToScene = function(
-	gameScene, effectManager, dispatcher, uiResolver, gridService, shipService)
-{
-	this.gameScene = gameScene;
-	this.effectManager = effectManager;
-	this.dispatcher = dispatcher;
-	this.uiResolver = uiResolver;
-
-	Object.keys(this.managers).forEach(function(key){
-		this.managers[key].subscribeToScene(
-			gameScene, effectManager, dispatcher, uiResolver, gridService, shipService);
-	}, this);
+    this._timeline = timeline;
 };
 
 model.ShipStatus.prototype.setOwner = function(owner)
@@ -70,7 +34,7 @@ model.ShipStatus.prototype.getName = function()
 	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipName'}).pop();
 	return entry ? entry.payload.name : null;
 };
-
+/*
 model.ShipStatus.prototype.getSymbols = function(module)
 {
     var symbols = [];
@@ -119,3 +83,4 @@ model.ShipStatus.prototype.getActionButtons = function()
 
 	return buttons;
 };
+*/

@@ -1,5 +1,13 @@
 describe("Viewport Coordinate converter spec", function() {
 
+    var dispatcher;
+    
+    beforeEach(function() {
+        
+        dispatcher = {attach: function(){}};
+        
+    });
+
     it("Zoom 1, Clicked point corresponds directly to game location",
         function()
     {
@@ -8,9 +16,11 @@ describe("Viewport Coordinate converter spec", function() {
 
         var clickPosition = {x:100, y:100};
 
-        var converter = new model.CoordinateConverterViewPort(
-            {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-        );
+        var converter = new model.CoordinateConverterViewPort(dispatcher);
+        converter._position = cameraPos;
+        converter._zoom = zoom;
+        converter._width = 1000;
+        converter._height = 1000;
 
         var pos = converter.fromViewPortToGame(clickPosition);
         expect(pos).toEqual({x:100, y:-100});
@@ -35,10 +45,12 @@ describe("Viewport Coordinate converter spec", function() {
             var zoom = 2;
 
             var clickPosition = {x:100, y:100};
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
 
             var pos = converter.fromViewPortToGame(clickPosition);
             expect(pos).toEqual({x:300, y:-300});
@@ -52,9 +64,11 @@ describe("Viewport Coordinate converter spec", function() {
 
             var clickPosition = {x:100, y:100};
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
             var pos = converter.fromViewPortToGame(clickPosition);
             expect(pos).toEqual({x:4600, y:-4600});
@@ -69,9 +83,11 @@ describe("Viewport Coordinate converter spec", function() {
 
             var clickPosition = {x:100, y:100};
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
             var pos = converter.fromViewPortToGame(clickPosition);
             expect(pos).toEqual({x:-300, y:300});
@@ -86,9 +102,11 @@ describe("Viewport Coordinate converter spec", function() {
 
             var clickPosition = {x:50, y:100};
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
             var pos = converter.fromViewPortToGame(clickPosition);
             expect(pos).toEqual({x:50, y:-100});
@@ -103,9 +121,11 @@ describe("Viewport Coordinate converter spec", function() {
 
             var gamePosition = {x:100, y:-100};
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
             var pos = converter.fromGameToViewPort(gamePosition);
             expect(pos).toEqual({x:100, y:100});
@@ -120,9 +140,11 @@ describe("Viewport Coordinate converter spec", function() {
 
             var gamePosition = {x:100, y:-100};
 
-            var converter = new model.CoordinateConverterViewPort(
-                {camera: {position: cameraPos}, zoom: zoom, width: 1000, height: 1000}
-            );
+            var converter = new model.CoordinateConverterViewPort(dispatcher);
+            converter._position = cameraPos;
+            converter._zoom = zoom;
+            converter._width = 1000;
+            converter._height = 1000;
 
             var pos = converter.fromGameToViewPort(gamePosition);
             expect(pos).toEqual({x:300, y:300});

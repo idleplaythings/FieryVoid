@@ -16,3 +16,18 @@ Factory.prototype.create = function(key)
 
     return this._registry[key];
 };
+
+Factory.createFactoryFromTags = function (tag)
+{
+	var factory = new Factory();
+
+    var classes = dic.getTagged(tag);
+
+    classes.forEach(function(modelName) {
+        factory.add(modelName, function() {
+            return dic.get(modelName);
+        });
+    });
+
+    return factory;
+};

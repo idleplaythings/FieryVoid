@@ -1,6 +1,9 @@
-model.movement.ThrustCost = function ThrustCost()
+model.movement.ThrustCost = function ThrustCost(args)
 {
-	this.costs = {
+	if ( ! args)
+		args = {};
+	
+	this.costs = args.costs ||  {
 		0: 0,
 		90: 0,
 		180: 0,

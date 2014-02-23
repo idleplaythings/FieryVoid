@@ -22,28 +22,17 @@ module.exports = function(config) {
         'lib/math/Vector2.js',
         'lib/MathLib.js',
         'lib/CoordinateConverter.js',
-        'lib/CoordinateConverterViewPort.js',
+        'features/coordinateconverter/model/*.js',
         'features/ship/model/ShipDesign.js',
         'features/ship/model/HullLayout.js',
         'features/shipmodule/model/ModuleLayout.js',
         'features/shipstatus/model/lib/ShipStatusManager.js',
 
-        'features/movement/model/MovementAbility.js',
-        'features/movement/model/Thruster.js',
-        'features/movement/model/ThrusterUsage.js',
+        'features/movement/model/*.js',
         'features/movement/model/action/lib/Action.js',
-        'features/movement/model/Position.js',
-        'features/movement/model/action/Move.js',
-        'features/movement/model/action/Turn.js',
-        'features/movement/model/action/TurnLeft.js',
-        'features/movement/model/action/TurnRight.js',
-        'features/movement/model/action/Speed.js',
-        'features/movement/model/action/SpeedAccelerate.js',
-        'features/movement/model/action/SpeedDeaccelerate.js',
-        'features/movement/model/ThrustCost.js',
-        'features/movement/model/Route.js',
-        'features/movement/model/PositionHelper.js',
-        'features/game/client/ui/UiFocusResolver.js',
+        'features/movement/model/action/*.js',
+        
+        'features/game/model/*.js',
 
         'features/hexagon/model/coordinate/Cube.js',
         'features/hexagon/model/coordinate/Axial.js',
@@ -54,7 +43,6 @@ module.exports = function(config) {
 
         'features/lib/DIC/DIC.js',
         'features/lib/DIC/Factory.js',
-        'features/lib/Extend/Extend.js',
 
         'features/weapon/model/*.js',
 
@@ -62,6 +50,7 @@ module.exports = function(config) {
 
         'features/hotkey/lib/*.js',
         'features/hotkey/model/*.js',
+        'features/position/model/*.js',
         'features/componentposition/lib/*.js',
         'features/componentposition/model/*.js',
         'features/icon/model/lib/Icon.js',

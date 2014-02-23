@@ -15,7 +15,6 @@ model.Ship.prototype.setState = function(args, timeline)
     this.gameId = args.gameId || null;
 
 	this.shipDesign = args.shipDesign || null;
-    this.status = args.status;
 
     this.timeline = timeline;
 
@@ -57,6 +56,51 @@ model.Ship.prototype.getIcon = function()
     return this.icon;
 };
 
+model.Ship.prototype.setIcon = function(shipIcon)
+{
+    this.icon = shipIcon;
+    this.icon.create(this.shipDesign);
+};
+
+model.Ship.prototype.getMovement = function()
+{
+    return new model.movement.ShipMovementStatus(this.timeline);
+};
+
+model.Ship.prototype.getPower = function()
+{
+    return new model.power.ShipPowerStatus(this.shipDesign.modules);
+};
+
+model.Ship.prototype.getStatus = function()
+{
+    return new model.ShipStatus(this.timeline);
+};
+
+model.Ship.prototype.getModules = function()
+{
+    return this.shipDesign.modules.map(function(moduleLayout){
+        return this._createModuleFromModuleLayout(moduleLayout);
+    }, this);
+};
+
+model.Ship.prototype.getModuleOnPosition = function(tile)
+{
+    var moduleLayout = this.shipDesign.getModuleInPosition(tile);
+
+    if (! moduleLayout)
+        return null;
+    
+    return this._createModuleFromModuleLayout(moduleLayout);
+};
+
+model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
+{
+    return new model.Module(moduleLayout, this.getPower());
+};
+
+
+/*
 model.Ship.prototype.subscribeToScene =
     function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)
 {
@@ -80,6 +124,7 @@ model.Ship.prototype.subscribeToScene =
 	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService);
     this.gameScene.animators.push(this);
 };
+*/
 
 model.Ship.prototype.select = function()
 {

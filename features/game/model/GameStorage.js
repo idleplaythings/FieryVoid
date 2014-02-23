@@ -5,7 +5,7 @@ model.GameStorage = function GameStorage(gameFactory)
 
 model.GameStorage.prototype.create = function()
 {
-    return this._gameFactory.create('model.Game');
+    return this._gameFactory.create('model.server.Game');
 }
 
 model.GameStorage.prototype.insert = function(payload)
@@ -17,9 +17,11 @@ model.GameStorage.prototype.getGame = function(gameId)
 {
     console.log("getting game with id " + gameId);
 
+    var context = Meteor.isClient ? 'client' : 'server'
+
     var gameDoc = Games.findOne({_id: gameId});
 
-    var game = this._gameFactory.create('model.' + gameDoc.type);
+    var game = this._gameFactory.create('model.' + context + '.' + gameDoc.type);
 
     game.load(gameDoc);
 

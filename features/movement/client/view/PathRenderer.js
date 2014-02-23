@@ -1,6 +1,7 @@
-model.movement.PathRenderer = function PathRenderer(dispatcher /* scene, gridService,  */ )
+model.movement.PathRenderer = function PathRenderer(dispatcher, gameScene, animationLoop)
 {
-    // this._gameScene = scene;
+    this._gameScene = gameScene;
+    this._animationLoop = animationLoop;
     // this._gridService = gridService;
     this._dispatcher = dispatcher;
 
@@ -21,13 +22,13 @@ model.movement.PathRenderer.prototype.init = function()
     }.bind(this));
 }
 
-model.movement.PathRenderer.prototype.renderPath = function(gameScene, path)
+model.movement.PathRenderer.prototype.renderPath = function(path)
 {
     var offsetPath = this._offsetPath(path);
 
     path.forEach(function(step) {
-        this._renderPathStep(gameScene, step);
-        this._renderMovementVisualisation(gameScene, step);
+        this._renderPathStep(step);
+        this._renderMovementVisualisation(step);
     }, this);
 }
 
@@ -88,20 +89,20 @@ model.movement.PathRenderer.prototype._offsetPath = function(path)
 
 }
 
-model.movement.PathRenderer.prototype._renderPathStep = function(gameScene, step)
+model.movement.PathRenderer.prototype._renderPathStep = function(step)
 {
     // console.log(step)
     var curve = new model.Curve(step, 0x005500);
-    gameScene.scene.add(curve.get());
+    this._gameScene.addToScene(curve.get());
 
     this._curves.push(curve);
 }
 
-model.movement.PathRenderer.prototype._renderMovementVisualisation = function(gameScene, step)
+model.movement.PathRenderer.prototype._renderMovementVisualisation = function(step)
 {
     var particlePath = new model.ParticlePath(step, 0x00ff00, 0);
-    gameScene.scene.add(particlePath.get());
-    gameScene.animators.push(particlePath);
+    this._gameScene.addToScene(particlePath.get());
+    this._animationLoop.register(particlePath);
 
     this._particlePaths.push(particlePath);
 }
