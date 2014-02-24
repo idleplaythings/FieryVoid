@@ -1,4 +1,4 @@
-model.GameScene = function GameScene(dispatcher)
+model.GameScene = function GameScene(dispatcher, gameContainer)
 {
     this.width = 1000;
     this.height = 800;
@@ -14,21 +14,20 @@ model.GameScene = function GameScene(dispatcher)
 
     this.gameTime = 0;
 
-    this.target = null;
     this.dispatcher = dispatcher;
+    this._gameContainer = gameContainer;
 };
 
 model.GameScene.prototype.constructor = model.GameScene;
 
-model.GameScene.prototype.init = function(target)
+model.GameScene.prototype.init = function()
 {
-    this.target = target;
-    jQuery(window).resize(this.resize.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+    this.dispatcher.attach("WindowResizeEvent", this.onResize.bind(this));
 
-    var width = this.target.innerWidth();
-    var height = this.target.innerHeight();
+    var width = this._gameContainer.width();
+    var height = this._gameContainer.height();
     this.width = width;
     this.height = height;
     var zoom = 1;
@@ -57,30 +56,18 @@ model.GameScene.prototype.init = function(target)
 
     $(this.renderer.domElement)
         .on('contextmenu', function(e){e.stopPropagation(); return false; })
-        .addClass("webglCanvas").appendTo(this.target);
+        .addClass("webglCanvas").appendTo(this._gameContainer.get());
 
     this.dispatcher.dispatch({
         name: 'scene.init',
         scene: this.scene
     });
     
-    this._addStats();
+    this._stats = this._gameContainer.addStats();
 
     return this;
 };
 
-model.GameScene.prototype._addStats = function()
-{
-    var stats = new Stats();
-	stats.setMode(0); // 0: fps, 1: ms
-
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.left = '0px';
-	stats.domElement.style.top = '0px';
-
-	this.target.append(stats.domElement);
-	this._stats = stats;
-};
 
 model.GameScene.prototype.animate = function(displayTime)
 {
@@ -105,27 +92,13 @@ model.GameScene.prototype.render = function()
     this.renderer.render( this.scene, this.camera );
 };
 
-model.GameScene.prototype.resize = function()
+model.GameScene.prototype.onResize = function(event)
 {
     this.zoomCamera(this.zoom);
-    this.width = this.target.innerWidth();
-    this.height = this.target.innerHeight();
+    this.width = event.width;
+    this.height = event.height;
 
     this.renderer.setSize(this.width, this.height);
-};
-
-model.GameScene.prototype.zoomCamera = function(zoom)
-{
-    this.zoom = zoom;
-    var width = this.width;
-    var height = this.height;
-
-    this.camera.left = width / (-this.scale*2*zoom);
-    this.camera.right = width / (this.scale*2*zoom);
-    this.camera.top = height / (this.scale*2*zoom);
-    this.camera.bottom = height / (-this.scale*2*zoom);
-
-    this.camera.updateProjectionMatrix();
 };
 
 model.GameScene.prototype.moveCameraToPosition = function(pos)
@@ -150,6 +123,20 @@ model.GameScene.prototype.moveCamera = function(pos)
 {
     this.camera.position.x = pos.x/this.scale;
     this.camera.position.y = pos.y/this.scale;
+};
+
+model.GameScene.prototype.zoomCamera = function(zoom)
+{
+    this.zoom = zoom;
+    var width = this.width;
+    var height = this.height;
+
+    this.camera.left = width / (-this.scale*2*zoom);
+    this.camera.right = width / (this.scale*2*zoom);
+    this.camera.top = height / (this.scale*2*zoom);
+    this.camera.bottom = height / (-this.scale*2*zoom);
+
+    this.camera.updateProjectionMatrix();
 };
 
 model.GameScene.prototype.camPosInWindow = function()

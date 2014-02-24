@@ -1,9 +1,8 @@
-model.SituationDisplayService = function SituationDisplayService(gameScene, gameState, shipService, dispatcher, uiResolver)
+model.UIComponentViewService = function UIComponentViewService(dispatcher, shipStatusView)
 {
-	this._gameScene = gameScene;
-	this._gameState = gameState;
-	this._shipService = shipService;
 	this._dispatcher = dispatcher;
+	this._shipStatusView = shipStatusView;
+	/*
 	this._uiResolver = uiResolver;
 
 	this._selectedShip = null;
@@ -14,19 +13,20 @@ model.SituationDisplayService = function SituationDisplayService(gameScene, game
 	this._dispatcher.attach("TurnEvent", this.onTurnEvent.bind(this));
 	this._dispatcher.attach("ShipSelectedEvent", this.onShipSelected.bind(this));
 	this._dispatcher.attach("FireOrdersChangedEvent", this.onFireOrdersChanged.bind(this));
+	*/
 };
 
-model.SituationDisplayService.prototype.animate = function(gameTime)
+model.UIComponentViewService.prototype.animate = function(gameTime)
 {
 	
 };
 
-model.SituationDisplayService.prototype.onTurnEvent = function(event)
+model.UIComponentViewService.prototype.onTurnEvent = function(event)
 {
 	
 };
 
-model.SituationDisplayService.prototype.onShipSelected = function(event)
+model.UIComponentViewService.prototype.onShipSelected = function(event)
 {
 	var ship = event.payload;
 
@@ -38,12 +38,12 @@ model.SituationDisplayService.prototype.onShipSelected = function(event)
 	this._actionBar.onShipSelected(ship, this._gameState.getTurn());
 };
 
-model.SituationDisplayService.prototype._displayIndicators = function(ship)
+model.UIComponentViewService.prototype._displayIndicators = function(ship)
 {
 	this.displayFireOrders(ship);
 };
 
-model.SituationDisplayService.prototype.onFireOrdersChanged = function(event)
+model.UIComponentViewService.prototype.onFireOrdersChanged = function(event)
 {
 	var ship = event.ship;
 
@@ -53,7 +53,7 @@ model.SituationDisplayService.prototype.onFireOrdersChanged = function(event)
 	}
 };
 
-model.SituationDisplayService.prototype.displayFireOrders = function(ship)
+model.UIComponentViewService.prototype.displayFireOrders = function(ship)
 {
 
 	this._weaponIndicatorService.removeAll();

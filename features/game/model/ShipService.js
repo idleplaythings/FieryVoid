@@ -1,24 +1,24 @@
-model.ShipService = function ShipService(
-	fleets,
-	shipStatusView,
-	dispatcher,
-	coordinateConverter)
+model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage)
 {
-	this.fleets = fleets;
-	this.dispatcher = dispatcher;
-	this.shipStatusView = shipStatusView;
-	this.coordinateConverter = coordinateConverter
+	this._dispatcher = dispatcher;
+    this._shipStorage = shipStorage;
+    this._fleetStorage = fleetStorage;
 
 	this.selectedShip = null;
 	this.zoom = 1;
 	this.scroll = {x:0, y:0};
     this.currentTurn = 0;
 
-	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
-    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
+	this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+    this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
 
-    window.ships = this.getShips();
+    this._fleets = [];
 }
+
+model.ShipService.prototype.loadFleets = function(gameId)
+{
+     this._fleets = this._fleetStorage.getFleetsInGame(gameId);
+};
 
 model.ShipService.prototype.selectShip = function(ship)
 {
@@ -31,7 +31,8 @@ model.ShipService.prototype.selectShip = function(ship)
     this.dispatcher.dispatch({name: 'ShipSelectedEvent', payload:ship});
 };
 
-model.ShipService.prototype.subscribeToScene = function(scene, effectManager, dispatcher, eventResolver, gridService)
+model.ShipService.prototype.subscribeToScene = function(
+    scene, effectManager, dispatcher, eventResolver, gridService)
 {
 	this.getShips().forEach(
         function(ship){
@@ -43,7 +44,7 @@ model.ShipService.prototype.subscribeToScene = function(scene, effectManager, di
 
 model.ShipService.prototype.getShips = function()
 {
-    return this.fleets.reduce(function(value, fleet){
+    return this._fleets.reduce(function(value, fleet){
 		return value.concat(fleet.ships);
 	}, []);
 };
@@ -74,58 +75,6 @@ model.ShipService.prototype.getClosestShip = function(center)
         return null;
 
     return ship;
-};
-
-model.ShipService.prototype.onScroll = function(event)
-{
-	this.scroll = event.position;
-
-    if (this.zoom < 1)
-        return;
-
-    var ship = this.getClosestShip();
-    if (! ship)
-    {
-        this.getShips().forEach(function(ship){ship.getIcon().showHull()});
-        return;
-    }
-
-    if ( this.shipStatusView.targetId == ship._id)
-        return;
-
-    var positionService = new model.ShipPositionService(ship, this.currentTurn);
-    this.getShips().forEach(function(ship){ship.getIcon().showHull()});
-    ship.getIcon().hideHull();
-    this.shipStatusView.targetId = ship._id;
-    this.shipStatusView.display(positionService, ship.status).show();
-};
-
-model.ShipService.prototype.onZoom = function(event)
-{
-	this.zoom = event.zoom;
-
-    if (event.oldZoom < 1 && event.zoom < 1)
-        return;
-
-    if ( event.zoom == 1)
-    {
-        var ship = this.getClosestShip();
-        if (! ship)
-            return;
-
-        ship.getIcon().hideHull();
-        var positionService = new model.ShipPositionService(ship, this.currentTurn);
-
-        this.shipStatusView.targetId = ship._id;
-        this.shipStatusView.display(positionService, ship.status).show();
-    }
-    else
-    {
-        this.getShips().forEach(function(ship){ship.getIcon().showHull()});
-        this.shipStatusView.unsetPositionService();
-        this.shipStatusView.targetId = null;
-        this.shipStatusView.hide();
-    }
 };
 
 model.ShipService.prototype.getShipOnScenePosition = function(scenePosition, turn)

@@ -1,15 +1,26 @@
 model.Game = Extend.register(Game);
 
-function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactory, args) {
+function Game(
+    dispatcher,
+    gridService,
+    shipService,
+    timelineFactory,
+    gameScene,
+    gameContainer,
+    uiEventManager,
+    args) {
+
     if ( ! args)
         args = {};
 
     this.type = 'Game';
     this.dispatcher = dispatcher;
     this.gridService = gridService;
-    this.shipStorage = shipStorage;
-    this.fleetStorage = fleetStorage;
     this.timelineFactory = timelineFactory;
+    this.shipService = shipService;
+    this.gameScene = gameScene;
+    this.gameContainer = gameContainer;
+    this.uiEventManager = uiEventManager;
 
     this.setState(args);
 
@@ -18,9 +29,9 @@ function Game(dispatcher, gridService, shipStorage, fleetStorage, timelineFactor
     this.terrainSeed = Math.random();
 }
 
-Game.prototype.getRandomFleetForPlayer = function(playerId) {
+Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipStorage) {
 
-	var fleet = this.fleetStorage.createAndInsertEmptyFleetForMe();
+	var fleet = fleetStorage.createAndInsertEmptyFleetForMe();
 
 	var shipCount = 1;
 
@@ -32,7 +43,7 @@ Game.prototype.getRandomFleetForPlayer = function(playerId) {
 			return false;
 		}
 
-		var ship = this.shipStorage.createFromDesignId(shipDesignId, playerId);
+		var ship = shipStorage.createFromDesignId(shipDesignId, playerId);
 
 		ship.status.managers.movement.setStartPosition(
 			new model.movement.Position({
@@ -92,9 +103,12 @@ Game.prototype.getPlayer = function(id)
 Game.prototype.play = function()
 {
 	var container = $('#gameContainer');
-	this.gameScene = new model.GameScene(this.dispatcher, this.gameState);
+    this.gameContainer.set(container);
     this.gridService.init(100, 100, 300);
+    this.uiEventManager.init();
+    this.gameScene.init();
 
+    /*
     this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
 
     var shipStatusView = new model.ShipStatusView(
@@ -102,14 +116,17 @@ Game.prototype.play = function()
         this.coordinateConverter,
         this.dispatcher
     ).hide();
-
+    */
+    /*
     this.shipService = new model.ShipService(
         this.fleets,
         shipStatusView,
         this.dispatcher,
         this.coordinateConverter
     );
+    */
 
+/*
 	this.InputModeFactory = new model.InputModeFactory(
 		this.dispatcher,
 		this.coordinateConverter,
@@ -119,12 +136,12 @@ Game.prototype.play = function()
         this.gameState,
         this.shipService
 	);
-
-    this.uiEventResolver = new model.UiFocusResolver(
-        this.coordinateConverter, this.dispatcher, this.InputModeFactory);
+*/
+/*
+    this.uiEventResolver = new model.UiFocusResolver(this.coordinateConverter, this.dispatcher);
 
     //this.coordinateConverter.setTarget(container);
-    this.gameScene.init(container);
+    
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
 
@@ -147,6 +164,7 @@ Game.prototype.play = function()
     new model.ReplayUI(this.gameState).create();
     new model.TurnUi(this._id, this.gameState).create();
 
+    /*
 	this.uiEventResolver.addInputMode(
 		this.InputModeFactory.construct(
 			'InputModeSelect',
@@ -154,6 +172,7 @@ Game.prototype.play = function()
 				shipService: this.shipService
 			})
 	);
+    
 
     this.situationDisplayService = new model.SituationDisplayService(
         this.gameScene,
@@ -168,6 +187,7 @@ Game.prototype.play = function()
 
 Game.prototype._initGameState = function(container)
 {
+*/
     this.terrain = new model.GameTerrain(
         this.gameScene,
         container,
@@ -203,7 +223,8 @@ Game.prototype.animate = function()
 Game.prototype.load = function(doc)
 {
     this.setState(doc);
-    this.fleets = this.fleetStorage.getFleetsInGame(this._id);
+    this.shipService.loadFleets(this._id);
+    //this.fleets = this.fleetStorage.getFleetsInGame(this._id);
 
     return this;
 };
@@ -230,6 +251,7 @@ Game.prototype.updated = function(doc)
     }
 };
 
+/*
 Game.prototype.onScroll = function(event)
 {
 
@@ -265,6 +287,7 @@ Game.prototype.onClick = function(event)
 
     this.gridService.select(coordinates);
 };
+*/
 
 Game.prototype._validateTerrain = function(coordinates)
 {
@@ -278,6 +301,7 @@ Game.prototype._validateTerrain = function(coordinates)
     return this._terrainMap[coordinates.q + ',' + coordinates.r] !== true;
 };
 
+/*
 Game.prototype.onMouseMove = function(event)
 {
     var coordinates = this.gridService.resolveGridCoordinates(event.game);
@@ -291,3 +315,4 @@ Game.prototype._highlightMouseOverHex = function(event)
 {
     this.gridService.highlightHexAt(event.game);
 };
+*/

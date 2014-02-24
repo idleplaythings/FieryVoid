@@ -6,8 +6,11 @@ controller.GameController = function(gameStorage)
 
         game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });
 
-        var fleet1 = game.getRandomFleetForPlayer(player1Id);
-        var fleet2 = game.getRandomFleetForPlayer(player2Id);
+        var fleetStorage = dic.get('model.FleetStorage');
+        var shipStorage = dic.get('model.ShipStorage');
+
+        var fleet1 = game.getRandomFleetForPlayer(player1Id, fleetStorage, shipStorage);
+        var fleet2 = game.getRandomFleetForPlayer(player2Id, fleetStorage, shipStorage);
 
         if ( ! fleet1 || ! fleet2) {
             throw new Error("Fleets not found while creating a random game");

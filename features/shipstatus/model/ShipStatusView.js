@@ -1,8 +1,7 @@
-model.ShipStatusView = function ShipStatusView(target, coordinateConverter, dispatcher)
+model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverter, dispatcher)
 {
 	this.coordinateConverter = coordinateConverter;
-	this.moduleView = new model.ModuleDetailView(target, dispatcher);
-	this.target = target;
+	this._gameContainer = gameContainer;
     this.positionService = null;
     this.hidden = false;
     this.targetId = null;
@@ -222,7 +221,7 @@ model.ShipStatusView.prototype.hide = function()
 
 model.ShipStatusView.prototype.getTemplate = function()
 {
-	var template = jQuery('#shipStatusViewParent', this.target);
+	var template = jQuery('#shipStatusViewParent', this._gameContainer.get());
 
 	if (template.length == 0)
 	{

@@ -1,10 +1,5 @@
 model.InputModeFactory = function InputModeFactory(
 	dispatcher,
-	coordinateConverter,
-	moduleView,
-	shipView,
-	gameScene,
-	gameState,
 	shipService)
 {
 	this.coordinateConverter = coordinateConverter;
@@ -23,6 +18,11 @@ model.InputModeFactory = function InputModeFactory(
 model.InputModeFactory.prototype.onZoom = function(event)
 {
 	this.zoom = event.zoom;
+};
+
+model.InputModeFactory.prototype.getSelectInputMode = function()
+{
+	return new model.InputModeSelect(this._dispatcher, this._shipService);
 };
 
 model.InputModeFactory.prototype.construct = function(className, args)
