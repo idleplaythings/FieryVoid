@@ -13,7 +13,7 @@ model.InputMode.prototype.activate = function(uiResolver)
     this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
 	//this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
     //this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
-	//jQuery("#gameContainer").addClass('selectCursor');
+	this._delegate('onActivate');
 };
 
 model.InputMode.prototype.deactivate = function(uiResolver)
@@ -22,7 +22,7 @@ model.InputMode.prototype.deactivate = function(uiResolver)
 	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
 	//uiResolver.unregisterListener('click', this.mouseClickCallback);
     //uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);
-	//jQuery("#gameContainer").removeClass('selectCursor');
+	this._delegate('onDeactivate');
 };
 
 model.InputMode.prototype.onScroll = function(event)

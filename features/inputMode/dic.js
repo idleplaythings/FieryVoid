@@ -4,7 +4,8 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
-                dic.get('model.inputAction.ShowShipStatusView')
+                dic.get('model.inputAction.ShowShipStatusView'),
+                dic.get('model.inputAction.LightBlueArrowCursor')
             ],
             1
         );  
@@ -33,5 +34,11 @@ dic.register('model.inputAction.ShowShipStatusView', function(dic) {
         dic.get('model.Zooming'),
         dic.get('model.Scrolling'),
         dic.get('model.ShipStatusView')
+    );
+});
+
+dic.register('model.inputAction.LightBlueArrowCursor', function(dic) {
+    return new model.inputAction.LightBlueArrowCursor(
+        dic.get('model.GameHtmlContainer')
     );
 });
