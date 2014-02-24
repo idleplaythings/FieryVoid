@@ -12,7 +12,7 @@ model.GameHtmlContainer.prototype.set = function(container)
 
 	this._dispatcher.dispatch({
         name: "GameContainerInitEvent",
-        {}
+        container: this.get()
     });
 };
 

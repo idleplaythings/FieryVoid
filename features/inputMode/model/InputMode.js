@@ -1,70 +1,50 @@
-model.InputMode = function InputMode(args)
+model.InputMode = function InputMode(dispatcher, actions, priority)
 {
-	this.dispatcher = args.dispatcher;
-	this.coordinateConverter = args.coordinateConverter;
-	this.zoom = args.zoom;
-	this.moduleView = args.moduleView;
-	this.shipView = args.shipView;
-	this.gameScene = args.gameScene;
-	this.gameState = args.gameState;
-	this.shipService = args.shipService;
+	this._dispatcher = dispatcher;
+	this._actions = actions;
+	this._priority = priority || 0;
 
-	this._arcIndicator = new model.ArcIndicatorService(this.gameScene);
+	this._uiResolver = null;
+};
 
-	this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
+model.InputMode.prototype.activate = function(uiResolver)
+{
+	this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
+    this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
+	//this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
+    //this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
+	//jQuery("#gameContainer").addClass('selectCursor');
+};
+
+model.InputMode.prototype.deactivate = function(uiResolver)
+{
+	this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
+	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
+	//uiResolver.unregisterListener('click', this.mouseClickCallback);
+    //uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);
+	//jQuery("#gameContainer").removeClass('selectCursor');
+};
+
+model.InputMode.prototype.onScroll = function(event)
+{
+	this._delegate('onScroll', event);
 };
 
 model.InputMode.prototype.onZoom = function(event)
 {
-	this.zoom = event.zoom;
+	this._delegate('onZoom', event);
 };
 
-model.InputMode.prototype.showMouseOverView = function(ship, module)
+model.InputMode.prototype._delegate = function(handlerName, event)
 {
-	var positionService = ship ? new model.ShipPositionService(ship, this.gameState.getTurn()) : null;
-
-	this.showWeaponArc(ship, positionService, module);
-	this.showModuleView(ship, positionService, module);
-	this.showShipView(ship, positionService, module);
-
+	this._actions.forEach(function(action){
+		if (action[handlerName])
+			action[handlerName](event);
+	}, this);
 };
 
-model.InputMode.prototype.showWeaponArc = function(ship, positionService, module)
-{
-	if (! ship || ! module || ! module.weapon || this.zoom < 0.5)
-	{
-		this._arcIndicator.removeAll();
-		return;
-	}
 
-	this._arcIndicator.display(positionService.getFacing(), module, positionService.getPosition());
-};
 
-model.InputMode.prototype.showModuleView = function(ship, positionService, module)
-{
-    if (! ship || ! module ||  this.zoom != 1)
-    {
-        this.moduleView.remove();
-        return;
-    }
-
-    var modulePos = this.coordinateConverter.fromGameToViewPort(
-        positionService.getModuleCenterPositionInScene(module));
-
-    this.moduleView.display(module, modulePos, ship.status);
-};
-
-model.InputMode.prototype.showShipView = function(ship, positionService, module)
-{
-	if (! ship || this.zoom == 1)
-    {
-        this.shipView.remove();
-        return;
-    }
-
-    var position = this.coordinateConverter.fromGameToViewPort(positionService.getPosition());
-    this.shipView.display(ship, position);
-};
 
 model.InputMode.prototype.remove = function()
 {

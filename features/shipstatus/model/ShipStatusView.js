@@ -48,6 +48,7 @@ model.ShipStatusView.prototype.positionStatusView = function()
 
     var template = this.getTemplate();
     var position = this.coordinateConverter.fromGameToViewPort(this.positionService.getPosition());
+    
     template.css('left', position.x +'px');
     template.css('top', position.y +'px');
 };
@@ -225,7 +226,7 @@ model.ShipStatusView.prototype.getTemplate = function()
 
 	if (template.length == 0)
 	{
-		template = jQuery('<div id="shipStatusViewParent" style="position:absolute;left:0px;top:0px;width:1px;height:1px;"></div>').appendTo(this.target);
+		template = jQuery('<div id="shipStatusViewParent" style="position:absolute;left:0px;top:0px;width:1px;height:1px;"></div>').appendTo(this._gameContainer.get());
 	}
 
 	return template;

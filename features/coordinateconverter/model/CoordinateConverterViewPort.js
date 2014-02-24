@@ -12,7 +12,7 @@ model.CoordinateConverterViewPort = function CoordinateConverterViewPort(dispatc
 
 model.CoordinateConverterViewPort.prototype.onScroll = function(event)
 {
-    this.position = event.position;
+    this._position = event.position;
 };
 
 model.CoordinateConverterViewPort.prototype.onZoom = function(event)

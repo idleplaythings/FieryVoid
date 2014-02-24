@@ -8,7 +8,8 @@ dic.register(
             dic.get('model.TimelineFactory'),
             dic.get('model.GameScene'),
             dic.get('model.GameHtmlContainer'),
-            dic.get('model.UiEventManager')
+            dic.get('model.UiEventManager'),
+            dic.get('model.GameActionManager')
         );  
     }, {
         tags: [ 'game.type' ]

@@ -8,6 +8,7 @@ function Game(
     gameScene,
     gameContainer,
     uiEventManager,
+    gameActionManager,
     args) {
 
     if ( ! args)
@@ -21,6 +22,7 @@ function Game(
     this.gameScene = gameScene;
     this.gameContainer = gameContainer;
     this.uiEventManager = uiEventManager;
+    this.gameActionManager = gameActionManager;
 
     this.setState(args);
 
@@ -106,6 +108,7 @@ Game.prototype.play = function()
     this.gameContainer.set(container);
     this.gridService.init(100, 100, 300);
     this.uiEventManager.init();
+    this.gameActionManager.init();
     this.gameScene.init();
 
     /*
@@ -197,6 +200,7 @@ Game.prototype._initGameState = function(container)
 
     this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
 	this.effectManager.createExplosion();
+    
     this.shipService.subscribeToScene(
         this.gameScene,
         this.effectManager,

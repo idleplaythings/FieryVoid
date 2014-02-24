@@ -1,4 +1,4 @@
-model.InputMode.ShowShipStatusView = function InputModeShowShipStatusView(shipService, zooming, scrolling, shipStatusView)
+model.inputAction.ShowShipStatusView = function InputActionShowShipStatusView(shipService, zooming, scrolling, shipStatusView)
 {
 	this._shipService = shipService;
 	this._zooming = zooming;
@@ -6,14 +6,12 @@ model.InputMode.ShowShipStatusView = function InputModeShowShipStatusView(shipSe
 	this._shipStatusView = shipStatusView;
 }
 
-model.InputMode.ShowShipStatusView.prototype.onScroll = function(event)
+model.inputAction.ShowShipStatusView.prototype.onScroll = function(event)
 {
-	var position = event.position;
-
     if (this._zooming.getCurrentZoom() < 1)
         return;
 
-    var ship = this._shipService.getClosestShip();
+    var ship = this._shipService.getClosestShip(this._scrolling.getCurrentPosition());
 
     if (! ship)
     {
@@ -21,40 +19,38 @@ model.InputMode.ShowShipStatusView.prototype.onScroll = function(event)
         return;
     }
 
-    if ( this.shipStatusView.targetId == ship._id)
+    if ( this._shipStatusView.targetId == ship._id)
         return;
 
-    var positionService = new model.ShipPositionService(ship, this.currentTurn);
-    this.getShips().forEach(function(ship){ship.getIcon().showHull()});
+    var positionService = new model.ShipPositionService(ship);
+    this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
     ship.getIcon().hideHull();
-    this.shipStatusView.targetId = ship._id;
-    this.shipStatusView.display(positionService, ship.status).show();
+    this._shipStatusView.targetId = ship._id;
+    this._shipStatusView.display(positionService, ship.status).show();
 };
 
-model.ShipService.prototype.onZoom = function(event)
+model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
 {
-	this.zoom = event.zoom;
-
     if (event.oldZoom < 1 && event.zoom < 1)
         return;
 
     if ( event.zoom == 1)
     {
-        var ship = this.getClosestShip();
+        var ship = this._shipService.getClosestShip(this._scrolling.getCurrentPosition());
         if (! ship)
             return;
 
         ship.getIcon().hideHull();
-        var positionService = new model.ShipPositionService(ship, this.currentTurn);
+        var positionService = new model.ShipPositionService(ship);
 
-        this.shipStatusView.targetId = ship._id;
-        this.shipStatusView.display(positionService, ship.status).show();
+        this._shipStatusView.targetId = ship._id;
+        this._shipStatusView.display(positionService, ship.status).show();
     }
     else
     {
-        this.getShips().forEach(function(ship){ship.getIcon().showHull()});
-        this.shipStatusView.unsetPositionService();
-        this.shipStatusView.targetId = null;
-        this.shipStatusView.hide();
+        this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
+        this._shipStatusView.unsetPositionService();
+        this._shipStatusView.targetId = null;
+        this._shipStatusView.hide();
     }
 };

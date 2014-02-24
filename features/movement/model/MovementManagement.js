@@ -132,7 +132,7 @@ model.MovementManagement.prototype.animate = function(gameTime)
 {
     this._advanceAnimationPosition();
 
-    this._shipAnimator.positionShipAlongPath(this._ship, this._path, this._animationPosition);
+    this._shipAnimator.positionShipAlongPath(this._ship, this._path, 0);// this._animationPosition);
 
     // ship.setPosition(this._getScenePosition(gameTime));
     // ship.setAzimuth(this.getFacing(gameTime));
@@ -158,7 +158,7 @@ model.MovementManagement.prototype.getScenePosition = function(gameTime)
 
 model.MovementManagement.prototype.getSceneFacing = function(currentTime)
 {
-    return 80;
+    return 0;
 }
 
 model.MovementManagement.prototype.getScenePositionAtTurn = function(turn)
@@ -168,7 +168,7 @@ model.MovementManagement.prototype.getScenePositionAtTurn = function(turn)
 
 model.MovementManagement.prototype.getSceneFacingAtTurn = function(turn)
 {
-    return 80;
+    return 0;
 }
 
 model.MovementManagement.prototype._getMovementAbility = function()

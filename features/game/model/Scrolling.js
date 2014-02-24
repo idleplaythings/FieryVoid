@@ -16,6 +16,11 @@ model.Scrolling.prototype.registerTo = function(uiEventRegister)
     uiEventRegister.registerListener('drag', this.scroll.bind(this), 0);
 };
 
+model.Scrolling.prototype.getCurrentPosition = function()
+{
+    return this.position;
+};
+
 model.Scrolling.prototype.onZoom = function(event)
 {
     if (event.zoom)

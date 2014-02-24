@@ -3,12 +3,10 @@ dic.register(
     function(dic) {
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
-            dic.get('model.GridService'),
-            dic.get('model.ShipService'),
-            dic.get('model.TimelineFactory'),
-            dic.get('model.GameScene'),
-            dic.get('model.GameHtmlContainer'),
-            dic.get('model.UiEventManager')
+            [
+                dic.get('model.inputAction.ShowShipStatusView')
+            ],
+            1
         );  
     }, {
         tags: [ 'inputMode' ]
@@ -27,4 +25,13 @@ dic.register('model.InputModeFactory', function(dic) {
     });
 
     return factory;
+});
+
+dic.register('model.inputAction.ShowShipStatusView', function(dic) {
+    return new model.inputAction.ShowShipStatusView(
+        dic.get('model.ShipService'),
+        dic.get('model.Zooming'),
+        dic.get('model.Scrolling'),
+        dic.get('model.ShipStatusView')
+    );
 });

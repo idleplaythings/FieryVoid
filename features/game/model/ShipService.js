@@ -5,12 +5,7 @@ model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage)
     this._fleetStorage = fleetStorage;
 
 	this.selectedShip = null;
-	this.zoom = 1;
-	this.scroll = {x:0, y:0};
     this.currentTurn = 0;
-
-	this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
-    this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
 
     this._fleets = [];
 }
@@ -58,9 +53,6 @@ model.ShipService.prototype.getShipById = function(id)
 
 model.ShipService.prototype.getClosestShip = function(center)
 {
-	if ( ! center)
-		center = this.scroll;
-
     var ships = this.getShips().slice(0).filter(function(ship){return ! ship.isHidden()});
 
     ships.sort(function(a, b){
