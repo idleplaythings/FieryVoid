@@ -25,20 +25,6 @@ model.ShipStatus.prototype.animate = function(gameTime)
 	}, this);
 };
 
-model.ShipStatus.prototype.subscribeToScene = function(
-	gameScene, effectManager, dispatcher, uiResolver, gridService, shipService)
-{
-	this.gameScene = gameScene;
-	this.effectManager = effectManager;
-	this.dispatcher = dispatcher;
-	this.uiResolver = uiResolver;
-
-	Object.keys(this.managers).forEach(function(key){
-		this.managers[key].subscribeToScene(
-			gameScene, effectManager, dispatcher, uiResolver, gridService, shipService);
-	}, this);
-};
-
 model.ShipStatus.prototype.setOwner = function(owner)
 {
 	var entry = this._timeline.filter(function(entry){ return entry.name == 'shipOwner'}).pop();

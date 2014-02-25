@@ -45,5 +45,5 @@ model.HexGridRenderer.prototype._getMeshPosition = function(hexGrid)
 
 model.HexGridRenderer.prototype._render = function(mesh)
 {
-    this._scene.add(mesh);
+    this._scene.addToScene(mesh);
 };

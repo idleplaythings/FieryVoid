@@ -60,7 +60,7 @@ model.GameScene.prototype.init = function()
 
     this.dispatcher.dispatch({
         name: 'scene.init',
-        scene: this.scene
+        scene: this
     });
     
     this._stats = this._gameContainer.addStats();

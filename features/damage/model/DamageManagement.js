@@ -60,7 +60,7 @@ model.DamageManagement.prototype.subscribeToScene = function(
     this.uiResolver = uiResolver;
     this.gridService = gridService;
 
-    this.generateDamageLookup();
+    //this.generateDamageLookup();
 };
 
 

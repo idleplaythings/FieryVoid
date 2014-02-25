@@ -43,15 +43,15 @@ model.HexHighlighter.prototype._createTextureFromCanvas = function(canvas)
     return new THREE.Texture(canvas);
 }
 
-model.HexHighlighter.prototype.setScene = function(scene)
+model.HexHighlighter.prototype.setScene = function(gameScene)
 {
-    this._scene = scene;
+    this._scene = gameScene;
 
     this._createMaterial();
     this._createGeometry();
     this._createMesh();
 
-    this._scene.add(this.mesh);
+    this._scene.addToScene(this.mesh);
 }
 
 model.HexHighlighter.prototype._createMaterial = function()

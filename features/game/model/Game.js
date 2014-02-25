@@ -1,28 +1,14 @@
 model.Game = Extend.register(Game);
 
-function Game(
-    dispatcher,
-    gridService,
-    shipService,
-    timelineFactory,
-    gameScene,
-    gameContainer,
-    uiEventManager,
-    gameActionManager,
-    args) {
+function Game(gridService, shipService, gameTerrain, args) {
 
     if ( ! args)
         args = {};
 
     this.type = 'Game';
-    this.dispatcher = dispatcher;
     this.gridService = gridService;
-    this.timelineFactory = timelineFactory;
     this.shipService = shipService;
-    this.gameScene = gameScene;
-    this.gameContainer = gameContainer;
-    this.uiEventManager = uiEventManager;
-    this.gameActionManager = gameActionManager;
+    this.gameTerrain = gameTerrain;
 
     this.setState(args);
 
@@ -102,128 +88,6 @@ Game.prototype.getPlayer = function(id)
     return null;
 };
 
-Game.prototype.play = function()
-{
-	var container = $('#gameContainer');
-    this.gameContainer.set(container);
-    this.gridService.init(100, 100, 300);
-    this.uiEventManager.init();
-    this.gameActionManager.init();
-    this.gameScene.init();
-
-    /*
-    this.coordinateConverter = new model.CoordinateConverterViewPort(this.gameScene);
-
-    var shipStatusView = new model.ShipStatusView(
-        container,
-        this.coordinateConverter,
-        this.dispatcher
-    ).hide();
-    */
-    /*
-    this.shipService = new model.ShipService(
-        this.fleets,
-        shipStatusView,
-        this.dispatcher,
-        this.coordinateConverter
-    );
-    */
-
-/*
-	this.InputModeFactory = new model.InputModeFactory(
-		this.dispatcher,
-		this.coordinateConverter,
-		new model.ModuleDetailView(container, this.dispatcher),
-		new model.ShipTooltipView(container, this.dispatcher),
-        this.gameScene,
-        this.gameState,
-        this.shipService
-	);
-*/
-/*
-    this.uiEventResolver = new model.UiFocusResolver(this.coordinateConverter, this.dispatcher);
-
-    //this.coordinateConverter.setTarget(container);
-    
-    this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
-    this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
-
-    this.uiEventResolver.observeDomElement(container);
-
-    this.scrolling = new model.Scrolling(this.dispatcher);
-    this.scrolling.registerTo(this.uiEventResolver);
-
-    this.zooming = new model.Zooming(
-        container,
-        this.dispatcher,
-        this.scrolling,
-        this.coordinateConverter);
-
-    this.zooming.init();
-
-    this.uiEventResolver.registerListener('click', this.onClick.bind(this), 0);
-    this.uiEventResolver.registerListener('mousemove', this.onMouseMove.bind(this), 0);
-
-    new model.ReplayUI(this.gameState).create();
-    new model.TurnUi(this._id, this.gameState).create();
-
-    /*
-	this.uiEventResolver.addInputMode(
-		this.InputModeFactory.construct(
-			'InputModeSelect',
-			{
-				shipService: this.shipService
-			})
-	);
-    
-
-    this.situationDisplayService = new model.SituationDisplayService(
-        this.gameScene,
-        this.gameState,
-        this.shipService,
-        this.dispatcher,
-        this.uiEventResolver
-    );
-
-    this._initGameState(container);
-};
-
-Game.prototype._initGameState = function(container)
-{
-*/
-    this.terrain = new model.GameTerrain(
-        this.gameScene,
-        container,
-        this.terrainSeed,
-        this.gridService
-    ).createRandom();
-
-    this.effectManager = new model.EffectManager(this.gameScene, this.dispatcher);
-	this.effectManager.createExplosion();
-    
-    this.shipService.subscribeToScene(
-        this.gameScene,
-        this.effectManager,
-        this.dispatcher,
-        this.uiEventResolver,
-        this.gridService
-    );
-
-    this.timelineFactory.startGameSaveInterval(this._id);
-
-    this.gameState.subscribeToScene(this.dispatcher);
-    this.gameState.startTurn();
-
-    this.animate();
-};
-
-Game.prototype.animate = function()
-{
-    requestAnimationFrame( this.animate.bind(this) );
-
-    this.gameScene.animate(this.gameState.currentDisplayGameTime);
-};
-
 Game.prototype.load = function(doc)
 {
     this.setState(doc);
@@ -245,16 +109,6 @@ Game.prototype.getInitialInsert = function()
         players: this.players
     };
 };
-
-Game.prototype.updated = function(doc)
-{
-    if (this.gameState.currentGameTurn < doc.currentGameTurn)
-    {
-        this.timelineFactory.reloadTimelines();
-        this.gameState.changeTurn(doc.currentGameTurn);
-    }
-};
-
 /*
 Game.prototype.onScroll = function(event)
 {
@@ -291,7 +145,7 @@ Game.prototype.onClick = function(event)
 
     this.gridService.select(coordinates);
 };
-*/
+
 
 Game.prototype._validateTerrain = function(coordinates)
 {
@@ -305,7 +159,7 @@ Game.prototype._validateTerrain = function(coordinates)
     return this._terrainMap[coordinates.q + ',' + coordinates.r] !== true;
 };
 
-/*
+
 Game.prototype.onMouseMove = function(event)
 {
     var coordinates = this.gridService.resolveGridCoordinates(event.game);

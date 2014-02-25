@@ -26,9 +26,10 @@ model.GridService.prototype.init = function(width, height, hexSize)
 
 model.GridService.prototype.onSceneInit = function(event)
 {
-    this._renderer.setScene(event.scene);
-    this._selector.setScene(event.scene);
-    this._highlighter.setScene(event.scene);
+    var gameScene = event.scene;
+    this._renderer.setScene(gameScene);
+    this._selector.setScene(gameScene);
+    this._highlighter.setScene(gameScene);
 
     this._renderer.renderGrid(this._grid);
 };

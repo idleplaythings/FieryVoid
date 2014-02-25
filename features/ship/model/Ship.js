@@ -57,6 +57,12 @@ model.Ship.prototype.getIcon = function()
     return this.icon;
 };
 
+model.Ship.prototype.setIcon = function(shipIcon)
+{
+    this.icon = shipIcon;
+    this.icon.create(this.shipDesign);
+};
+/*
 model.Ship.prototype.subscribeToScene =
     function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)
 {
@@ -80,6 +86,7 @@ model.Ship.prototype.subscribeToScene =
 	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService);
     this.gameScene.animators.push(this);
 };
+*/
 
 model.Ship.prototype.select = function()
 {

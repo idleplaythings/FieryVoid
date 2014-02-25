@@ -130,9 +130,12 @@ model.MovementManagement.prototype.targetHex = function(hex)
 
 model.MovementManagement.prototype.animate = function(gameTime)
 {
+    if ( this._start === null)
+        this.getStartPosition();
+    
     this._advanceAnimationPosition();
 
-    this._shipAnimator.positionShipAlongPath(this._ship, this._path, 0);// this._animationPosition);
+    this._shipAnimator.positionShipAlongPath(this._ship, this._path, this._animationPosition);
 
     // ship.setPosition(this._getScenePosition(gameTime));
     // ship.setAzimuth(this.getFacing(gameTime));

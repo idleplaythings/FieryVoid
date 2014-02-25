@@ -2,6 +2,9 @@ controller.GameController = function(gameStorage)
 {
     this.StartGame = function(player1Id, player2Id)
     {
+        if (this.isSimulation)
+            return;
+        
         var game = gameStorage.create();
 
         game.setState({ _id: new Meteor.Collection.ObjectID().toHexString() });

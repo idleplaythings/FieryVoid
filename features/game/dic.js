@@ -1,7 +1,7 @@
 dic.register(
-    'model.Game',
+    'model.client.Game',
     function(dic) {
-        return new model.Game(
+        return new model.GameClient(
             dic.get('model.EventDispatcher'),
             dic.get('model.GridService'),
             dic.get('model.ShipService'),
@@ -9,7 +9,21 @@ dic.register(
             dic.get('model.GameScene'),
             dic.get('model.GameHtmlContainer'),
             dic.get('model.UiEventManager'),
-            dic.get('model.GameActionManager')
+            dic.get('model.GameActionManager'),
+            dic.get('model.GameTerrain')
+        );  
+    }, {
+        tags: [ 'game.type' ]
+    }
+);
+
+dic.register(
+    'model.server.Game',
+    function(dic) {
+        return new model.Game(
+            dic.get('model.GridService'),
+            dic.get('model.ShipService'),
+            dic.get('model.GameTerrain')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -42,7 +56,8 @@ dic.register('model.ShipService', function(dic) {
     return new model.ShipService(
         dic.get('model.EventDispatcher'),
         dic.get('model.ShipStorage'),
-        dic.get('model.FleetStorage')
+        dic.get('model.FleetStorage'),
+        dic.get('model.IconFactory')
     )
 }, {
     shared: true

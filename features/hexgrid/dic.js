@@ -7,6 +7,8 @@ dic.register('model.GridService', function(dic) {
         dic.get('model.EventDispatcher'),
         dic.get('model.HexGridCoordinateResolver')
     );
+}, {
+    shared: true
 });
 
 dic.register('model.HexGrid', function(dic) {

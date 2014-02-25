@@ -1,13 +1,16 @@
-model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage)
+model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage, iconFactory)
 {
 	this._dispatcher = dispatcher;
     this._shipStorage = shipStorage;
     this._fleetStorage = fleetStorage;
+    this._iconFactory = iconFactory;
 
 	this.selectedShip = null;
     this.currentTurn = 0;
 
     this._fleets = [];
+
+    this._dispatcher.attach('scene.init', this.onSceneInit.bind(this));
 }
 
 model.ShipService.prototype.loadFleets = function(gameId)
@@ -26,15 +29,11 @@ model.ShipService.prototype.selectShip = function(ship)
     this.dispatcher.dispatch({name: 'ShipSelectedEvent', payload:ship});
 };
 
-model.ShipService.prototype.subscribeToScene = function(
-    scene, effectManager, dispatcher, eventResolver, gridService)
+model.ShipService.prototype.onSceneInit = function(event)
 {
-	this.getShips().forEach(
-        function(ship){
-            ship.subscribeToScene(scene, effectManager, dispatcher, eventResolver, gridService, this);
-        }, this);
-
-	//this.selectShip(this.getClosestShip());
+	this.getShips().forEach(function(ship){
+        ship.setIcon(this._iconFactory.create('model.ShipIcon'));
+    }, this);
 };
 
 model.ShipService.prototype.getShips = function()
