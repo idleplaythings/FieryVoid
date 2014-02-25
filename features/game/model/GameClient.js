@@ -8,6 +8,7 @@ model.GameClient = function GameClient(
     uiEventManager,
     gameActionManager,
     gameTerrain,
+    gameState,
     args) {
 
     if ( ! args)
@@ -23,6 +24,7 @@ model.GameClient = function GameClient(
     this.uiEventManager = uiEventManager;
     this.gameActionManager = gameActionManager;
     this.gameTerrain = gameTerrain;
+    this.gameState = gameState;
 
     this.setState(args);
 
@@ -46,7 +48,7 @@ model.GameClient.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-    this.gameState = new model.GameState(args.currentGameTurn || 0);
+    this.gameState.startTurn(args.currentGameTurn || 0);
     this.created = args.created || null;
 };
 
@@ -73,10 +75,6 @@ model.GameClient.prototype.play = function()
     this.gameTerrain.createRandom(this.terrainSeed);
 
     this.timelineFactory.startGameSaveInterval(this._id);
-
-    this.gameState.subscribeToScene(this.dispatcher);
-    this.gameState.startTurn();
-
     this.animate();
 };
 

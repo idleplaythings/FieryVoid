@@ -18,6 +18,25 @@ model.movement.THRUSTER_RIGHT = 90;
 model.movement.THRUSTER_REAR = 180;
 model.movement.THRUSTER_LEFT = 270;
 
+model.movement.Position.prototype.serialize = function()
+{
+	return {
+		position: this._position,
+		facing: this._facing,
+		direction: this._direction,
+		speed: this._speed,
+		turnDelay: this._turnDelay,
+		slipDelay: this._slipDelay,
+		thrustCost: this._thrustCost
+	};
+};
+
+model.movement.Position.deserialize = function(serialized)
+{
+	serialized.thrustCost = new model.movement.ThrustCost(serialized.thrustCost);
+	return new model.movement.Position(serialized);
+};
+
 model.movement.Position.prototype.occupiesSamePosition = function(position)
 {
 	return this.getPosition().equals(position.getPosition());

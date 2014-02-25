@@ -62,6 +62,11 @@ model.Ship.prototype.setIcon = function(shipIcon)
     this.icon = shipIcon;
     this.icon.create(this.shipDesign);
 };
+
+model.Ship.prototype.getMovement = function()
+{
+    return this.status.getMovement();
+};
 /*
 model.Ship.prototype.subscribeToScene =
     function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)

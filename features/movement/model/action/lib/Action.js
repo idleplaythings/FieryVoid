@@ -14,6 +14,11 @@ model.movement.Action.THRUSTER_RIGHT = 90;
 model.movement.Action.THRUSTER_REAR = 180;
 model.movement.Action.THRUSTER_LEFT = 270;
 
+model.movement.Action.deserialize = function(serialized)
+{
+	return new model.movement.Action[serialized.className](serialized.args);
+};
+
 model.movement.Action.prototype.apply = 
 	function(current, movementAbility)
 {

@@ -1,6 +1,6 @@
-model.movement.Action.Turn = function Turn(turnDirection)
+model.movement.Action.Turn = function Turn(args)
 {
-	this._turnDirection = turnDirection;
+	this._turnDirection = args.turnDirection;
 	this._validateTurnDirection();
 };
 
@@ -58,4 +58,9 @@ model.movement.Action.Turn.prototype.validateInContextOrFail = function(current)
 {
 	if (current.getTurnDelay() > 0)
 		throw new Error("Unable to turn within turn delay");
+};
+
+model.movement.Action.Turn.prototype.serialize = function()
+{
+	return {className: 'Turn', args: {turnDirection: this._turnDirection}};
 };

@@ -6,7 +6,7 @@ describe("MovementRoute", function() {
 		
 		action = model.movement.Action;
 		
-		movementAbility = new model.movement.MovementAbility(1, 0.4, 0.4, 10, [
+		movementAbility = getMovementAbility(1, 0.4, 0.4, 10, [
 			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
@@ -28,7 +28,7 @@ describe("MovementRoute", function() {
 			new action.Move(),
 		];
 	
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
 	});
 	
 	 it("should throw if too many moves", function() {	
@@ -41,7 +41,24 @@ describe("MovementRoute", function() {
 			new action.Move(),
 		];
 	
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
+	});
+
+	it("should serialize and deserialize", function() {	
+		actions = [
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move(),
+			new action.Move()
+		];
+
+		var route = new model.movement.Route(0, start, movementAbility, actions);
+		var serialized = route.serialize();
+		var route2 = null;
+	
+		expect(function() {route2 = model.movement.Route.deserialize(serialized)}).not.toThrow();
+		expect(route2.serialize()).toEqual(serialized);
 	});
 	
 	it("should throw if not observing turn delay", function() {	
@@ -55,7 +72,7 @@ describe("MovementRoute", function() {
 			new action.Move()
 		];
 	
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
 		
 		actions = [
 			new action.Move(),
@@ -66,11 +83,11 @@ describe("MovementRoute", function() {
 			new action.TurnRight(),
 			new action.Move()
 		];
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).not.toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).not.toThrow();
     });
     
     it("should throw if not enough thrust to pay", function() {	
-		movementAbility = new model.movement.MovementAbility(1, 0.4, 0.4, 1, [
+		movementAbility = getMovementAbility(1, 0.4, 0.4, 1, [
 			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
@@ -86,11 +103,11 @@ describe("MovementRoute", function() {
 			new action.Move()
 		];
 	
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
     });
     
      it("should throw if not enough thruster capacity to pay", function() {	
-		movementAbility = new model.movement.MovementAbility(1, 1, 1, 10, [
+		movementAbility = getMovementAbility(1, 1, 1, 10, [
 			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 1}),
 			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 1}),
 			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 1}),
@@ -106,13 +123,14 @@ describe("MovementRoute", function() {
 			new action.Move()
 		];
 	
-		expect(function() { new model.movement.Route(start, movementAbility, actions)}).toThrow();
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
     });
 	
 	it("should be able to take actions", function() {
 		
 		var move = new action.Move();
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -130,6 +148,7 @@ describe("MovementRoute", function() {
     it("should be able to apply moves together", function() {
 		
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -146,6 +165,7 @@ describe("MovementRoute", function() {
     it("should be able to apply moves and turns together", function() {
 
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -164,6 +184,7 @@ describe("MovementRoute", function() {
     it("should be able to evaluate its cost", function() {
 
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -182,6 +203,7 @@ describe("MovementRoute", function() {
     it("should be able to deaccelerate", function() {
 
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -200,6 +222,7 @@ describe("MovementRoute", function() {
     it("should be able to accelerate", function() {
 
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -227,6 +250,7 @@ describe("MovementRoute", function() {
 		});
 		
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -252,6 +276,7 @@ describe("MovementRoute", function() {
 		});
 		
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -267,6 +292,7 @@ describe("MovementRoute", function() {
     it("merges route positions that are in the same hex", function() 
     {
 		route = new model.movement.Route(
+			0, 
 			start, 
 			movementAbility,
 			[
@@ -283,5 +309,16 @@ describe("MovementRoute", function() {
 		
 		expect(route.getRoute().length).toEqual(7);	
     });
+
+    function getMovementAbility(accelerationCost, turnCostSpeedFactor, turnDelaySpeedFactor, thrustAvailable, thrusters)
+    {
+    	return new model.movement.MovementAbility({
+    		accelerationCost: accelerationCost,
+    		turnCostSpeedFactor: turnCostSpeedFactor,
+    		turnDelaySpeedFactor: turnDelaySpeedFactor,
+    		thrustAvailable: thrustAvailable,
+    		thrusters: thrusters
+    	});
+    }
 	
 });

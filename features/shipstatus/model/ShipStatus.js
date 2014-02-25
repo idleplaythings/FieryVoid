@@ -1,5 +1,8 @@
-model.ShipStatus = function ShipStatus(ship, modules, timeline)
+model.ShipStatus = function ShipStatus(shipStatusFactory)
 {
+    this._statusFactory = shipStatusFactory;
+    this._timeline = null;
+    /*
 	this.ship = ship;
 	this.modules = modules;
 	this._timeline = timeline;
@@ -16,13 +19,19 @@ model.ShipStatus = function ShipStatus(ship, modules, timeline)
     this.managers.sensor = new model.SensorManagement(ship, modules, timeline, this.managers.power, this.managers.crew);
     this.managers.weapon = new model.WeaponManagement(ship, modules, timeline, this.managers.power, this.managers.crew, this.managers.movement);
     this.managers.damage = new model.DamageManagement(ship, modules, timeline, this.managers.movement);
+    */
 };
 
-model.ShipStatus.prototype.animate = function(gameTime)
+model.ShipStatus.prototype.setTimeline = function(timeline)
 {
-	Object.keys(this.managers).forEach(function(key){
-		this.managers[key].animate(gameTime);
-	}, this);
+    this._timeline = timeline;
+};
+
+model.ShipStatus.prototype.getMovement = function()
+{
+    var movement = this._statusFactory.create('model.movement.ShipMovementStatus');
+    movement.setTimeline(this._timeline);
+    return movement;
 };
 
 model.ShipStatus.prototype.setOwner = function(owner)

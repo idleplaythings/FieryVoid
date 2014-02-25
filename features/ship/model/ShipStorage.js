@@ -15,10 +15,11 @@ ShipsInGameCollection.allow({
 });
 
 
-model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage)
+model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage, shipStatusFactory)
 {
     this.timelineFactory = timelineFactory;
     this.shipDesignStorage = shipDesignStorage;
+    this._shipStatusFactory = shipStatusFactory;
 };
 
 model.ShipStorage.prototype.getShip = function(id)
@@ -66,7 +67,8 @@ model.ShipStorage.prototype.createFromDesignId =
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
 	var timeline = this.timelineFactory.getTimeline();
-	var status = new model.ShipStatus(shipId, shipDesign.modules, timeline);
+	var status = this._shipStatusFactory.create('model.ShipStatus');
+	status.setTimeline(timeline);
 		
 		
 	status.setOwner(owner);
@@ -93,11 +95,8 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 	
 	var timeline = this.timelineFactory.getTimeline(shipdoc.timeline);
         
-    shipdoc.status = new model.ShipStatus(
-		ship,
-		shipdoc.shipDesign.modules,
-		timeline
-    );
+    shipdoc.status = this._shipStatusFactory.create('model.ShipStatus');
+    shipdoc.status.setTimeline(timeline);
 	
 	return ship.setState(shipdoc, timeline);
 };

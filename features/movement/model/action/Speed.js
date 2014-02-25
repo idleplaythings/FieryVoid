@@ -1,6 +1,6 @@
-model.movement.Action.Speed = function Speed(change)
+model.movement.Action.Speed = function Speed(args)
 {
-	this._change = change;
+	this._change = args.change;
 };
 
 model.movement.Action.Speed.ACCELERATE = 1;
@@ -47,5 +47,10 @@ model.movement.Action.Speed.prototype.getThrustCost =
 model.movement.Action.Speed.prototype.validateInContextOrFail = function(current)
 {
 	return;
+};
+
+model.movement.Action.Speed.prototype.serialize = function()
+{
+	return {className: 'Speed', args: {change: this._change}};
 };
 

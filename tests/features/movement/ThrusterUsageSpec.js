@@ -3,7 +3,7 @@ describe("Thruster usage", function() {
 	var movementAbility, cost, thrusterUsage;
 	
 	beforeEach(function() {
-		movementAbility = new model.movement.MovementAbility(1, 0.4, 0.4, 10, [
+		movementAbility = getMovementAbility(1, 0.4, 0.4, 10, [
 			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
 			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
@@ -38,4 +38,15 @@ describe("Thruster usage", function() {
 		
 		expect(thrusterUsage._thrusters[1].use).toEqual(3);
 	});
+
+	function getMovementAbility(accelerationCost, turnCostSpeedFactor, turnDelaySpeedFactor, thrustAvailable, thrusters)
+    {
+    	return new model.movement.MovementAbility({
+    		accelerationCost: accelerationCost,
+    		turnCostSpeedFactor: turnCostSpeedFactor,
+    		turnDelaySpeedFactor: turnDelaySpeedFactor,
+    		thrustAvailable: thrustAvailable,
+    		thrusters: thrusters
+    	});
+    }
 });

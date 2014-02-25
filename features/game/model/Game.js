@@ -1,6 +1,5 @@
-model.Game = Extend.register(Game);
 
-function Game(gridService, shipService, gameTerrain, args) {
+function Game(gridService, shipService, gameTerrain, gameState, shipMovementHandler, args) {
 
     if ( ! args)
         args = {};
@@ -9,6 +8,8 @@ function Game(gridService, shipService, gameTerrain, args) {
     this.gridService = gridService;
     this.shipService = shipService;
     this.gameTerrain = gameTerrain;
+    this.gameState = gameState;
+    
 
     this.setState(args);
 
@@ -33,7 +34,7 @@ Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipSt
 
 		var ship = shipStorage.createFromDesignId(shipDesignId, playerId);
 
-		ship.status.managers.movement.setStartPosition(
+		ship.getMovement().setStartPosition(
 			new model.movement.Position({
 				position: new model.hexagon.coordinate.Offset(
 					Math.floor(Math.random() * 10),
@@ -64,7 +65,7 @@ Game.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-    this.gameState = new model.GameState(args.currentGameTurn || 0);
+    this.gameState.startTurn(args.currentGameTurn || 0);
     this.created = args.created || null;
 };
 

@@ -54,6 +54,7 @@ model.WeaponManagement.prototype.getWeapons = function()
 			return module.weapon
 		});
 };
+
 model.WeaponManagement.prototype.getTimelineFireOrderEntry = function(fireOrder)
 {
 	return this.timeline.filter(function(entry){ 

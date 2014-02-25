@@ -32,3 +32,8 @@ model.movement.Action.Move.prototype.validateInContextOrFail = function(current)
 {
 	return;
 };
+
+model.movement.Action.Move.prototype.serialize = function()
+{
+	return {className: 'Move'};
+};

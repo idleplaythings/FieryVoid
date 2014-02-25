@@ -1,6 +1,6 @@
 model.movement.Action.SpeedDeaccelerate = function SpeedDeaccelerate()
 {
-	model.movement.Action.Speed.call(this, model.movement.Action.Speed.DEACCELERATE);
+	model.movement.Action.Speed.call(this, {change: model.movement.Action.Speed.DEACCELERATE});
 }
 
 model.movement.Action.SpeedDeaccelerate.prototype = 

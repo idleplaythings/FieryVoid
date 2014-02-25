@@ -29,3 +29,4 @@ model.movement.Thruster.prototype.getThrustDirection = function()
 {
 	return this.direction;
 }
+

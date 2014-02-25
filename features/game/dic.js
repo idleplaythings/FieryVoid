@@ -10,7 +10,8 @@ dic.register(
             dic.get('model.GameHtmlContainer'),
             dic.get('model.UiEventManager'),
             dic.get('model.GameActionManager'),
-            dic.get('model.GameTerrain')
+            dic.get('model.GameTerrain'),
+            dic.get('model.GameState')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -23,7 +24,8 @@ dic.register(
         return new model.Game(
             dic.get('model.GridService'),
             dic.get('model.ShipService'),
-            dic.get('model.GameTerrain')
+            dic.get('model.GameTerrain'),
+            dic.get('model.GameState')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -50,6 +52,14 @@ dic.register('model.GameFactory', function(dic) {
 
 dic.register('GameController', function(dic) {
     return new controller.GameController(dic.get('model.GameStorage'));
+});
+
+dic.register('model.GameState', function(dic) {
+    return new model.GameState(
+        dic.get('model.EventDispatcher')
+    )
+}, {
+    shared: true
 });
 
 dic.register('model.ShipService', function(dic) {
