@@ -9,4 +9,8 @@ dic.register('model.movement.ShipMovementHandler', function(dic) {
     	dic.get('model.GameState'),
     	dic.get('model.GridService')
 	);
+}, {
+    shared: true
 });
+
+

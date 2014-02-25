@@ -62,22 +62,8 @@ model.GameScene.prototype.init = function()
         name: 'scene.init',
         scene: this
     });
-    
-    this._stats = this._gameContainer.addStats();
 
     return this;
-};
-
-
-model.GameScene.prototype.animate = function(displayTime)
-{
-	this._stats.begin();
-    this.animators.forEach(function(a){
-        a.animate(displayTime);
-    });
-
-    this.render();
-    this._stats.end();
 };
 
 model.GameScene.prototype.removeAnimator = function(object)

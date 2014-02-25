@@ -99,7 +99,12 @@ model.GameState.prototype._changeGameTime = function(lastTime)
             this._changeGameTime.bind(this, lastTime));
 };
 
-model.GameState.prototype.getCurrentDisplayTimeForUI = function()
+model.GameState.prototype.getCurrentDisplayTurn = function()
+{
+    return this.currentGameTurn;
+};
+
+model.GameState.prototype.getCurrentDisplayTime = function()
 {
     return this.currentDisplayGameTime;
 };

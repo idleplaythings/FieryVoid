@@ -20,4 +20,4 @@ model.movement.ShipAnimator.prototype.positionShipAlongPath = function(ship, pat
 
     ship.setPosition(parameters.position);
     ship.setAzimuth(parameters.rotation * 180 / Math.PI);
-}
+};

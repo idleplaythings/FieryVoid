@@ -11,7 +11,8 @@ dic.register(
             dic.get('model.UiEventManager'),
             dic.get('model.GameActionManager'),
             dic.get('model.GameTerrain'),
-            dic.get('model.GameState')
+            dic.get('model.GameState'),
+            dic.get('model.GameAnimationLoop')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -109,6 +110,17 @@ dic.register('model.UiEventManager', function(dic) {
         dic.get('model.EventDispatcher'),
         dic.get('model.Scrolling'),
         dic.get('model.Zooming')
+    )
+}, {
+    shared: true
+});
+
+
+dic.register('model.GameAnimationLoop', function(dic) {
+    return new model.GameAnimationLoop(
+        dic.get('model.GameState'),
+        dic.get('model.GameScene'),
+        dic.get('model.GameHtmlContainer')
     )
 }, {
     shared: true

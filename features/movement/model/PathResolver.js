@@ -1,19 +1,20 @@
 if ( typeof model.movement === 'undefined')
     model.movement = {};
 
-model.movement.PathResolver = function PathResolver()
+model.movement.PathResolver = function PathResolver(gridService)
 {
+    this._gridService = gridService;
 };
 
-model.movement.PathResolver.prototype.resolvePathForRoute = function(gridService, route)
+model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
 {
     var path = [];
 
     route.getRoute().reduce(function(last, position, i, a) {
-        var currentCenter = gridService.resolveGameCoordinates(position.getPosition().toOddR());
+        var currentCenter = this._gridService.resolveGameCoordinates(position.getPosition().toOddR());
 
         if (a[i+1] !== undefined) {
-            var nextCenter = gridService.resolveGameCoordinates(a[i+1].getPosition().toOddR());
+            var nextCenter = this._gridService.resolveGameCoordinates(a[i+1].getPosition().toOddR());
         } else {
             var nextCenter = currentCenter;
         }

@@ -9,6 +9,7 @@ model.GameClient = function GameClient(
     gameActionManager,
     gameTerrain,
     gameState,
+    gameAnimationLoop,
     args) {
 
     if ( ! args)
@@ -25,6 +26,7 @@ model.GameClient = function GameClient(
     this.gameActionManager = gameActionManager;
     this.gameTerrain = gameTerrain;
     this.gameState = gameState;
+    this.gameAnimationLoop = gameAnimationLoop;
 
     this.setState(args);
 
@@ -75,14 +77,8 @@ model.GameClient.prototype.play = function()
     this.gameTerrain.createRandom(this.terrainSeed);
 
     this.timelineFactory.startGameSaveInterval(this._id);
-    this.animate();
-};
 
-model.GameClient.prototype.animate = function()
-{
-    requestAnimationFrame( this.animate.bind(this) );
-
-    this.gameScene.animate(this.gameState.currentDisplayGameTime);
+    this.gameAnimationLoop.start();
 };
 
 model.GameClient.prototype.load = function(doc)
