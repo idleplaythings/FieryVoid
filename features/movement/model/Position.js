@@ -4,6 +4,10 @@ model.movement.Position = function Position(args)
 		args = {};
 
 	this._position = args.position;
+
+	if (this._position.toCube)
+		this._position = this._position.toCube();
+
 	this._facing = args.facing || 0;
 	this._direction = args.direction || 0;
 	this._speed = args.speed || 0;

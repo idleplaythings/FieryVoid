@@ -25,7 +25,8 @@ dic.register(
             dic.get('model.GridService'),
             dic.get('model.ShipService'),
             dic.get('model.GameTerrain'),
-            dic.get('model.GameState')
+            dic.get('model.GameState'),
+            dic.get('model.movement.ShipMovementHandler')
         );  
     }, {
         tags: [ 'game.type' ]

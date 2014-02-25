@@ -1,5 +1,5 @@
 
-function Game(gridService, shipService, gameTerrain, gameState, shipMovementHandler, args) {
+model.Game = function Game(gridService, shipService, gameTerrain, gameState, shipMovementHandler, args) {
 
     if ( ! args)
         args = {};
@@ -9,6 +9,7 @@ function Game(gridService, shipService, gameTerrain, gameState, shipMovementHand
     this.shipService = shipService;
     this.gameTerrain = gameTerrain;
     this.gameState = gameState;
+    this.shipMovementHandler = shipMovementHandler;
     
 
     this.setState(args);
@@ -18,7 +19,7 @@ function Game(gridService, shipService, gameTerrain, gameState, shipMovementHand
     this.terrainSeed = Math.random();
 }
 
-Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipStorage) {
+model.Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipStorage) {
 
 	var fleet = fleetStorage.createAndInsertEmptyFleetForMe();
 
@@ -34,7 +35,8 @@ Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipSt
 
 		var ship = shipStorage.createFromDesignId(shipDesignId, playerId);
 
-		ship.getMovement().setStartPosition(
+		this.shipMovementHandler.setStartPosition(
+            ship,
 			new model.movement.Position({
 				position: new model.hexagon.coordinate.Offset(
 					Math.floor(Math.random() * 10),
@@ -51,7 +53,7 @@ Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, shipSt
 	return fleet;
 };
 
-Game.prototype.setState = function(args)
+model.Game.prototype.setState = function(args)
 {
     if ( ! args)
         args = {};
@@ -69,7 +71,7 @@ Game.prototype.setState = function(args)
     this.created = args.created || null;
 };
 
-Game.prototype.addPlayer = function(id)
+model.Game.prototype.addPlayer = function(id)
 {
     var players = [].concat(id).map(function(id){
         return {id:id, orderTime:-1}
@@ -77,7 +79,7 @@ Game.prototype.addPlayer = function(id)
     this.players = this.players.concat(players);
 };
 
-Game.prototype.getPlayer = function(id)
+model.Game.prototype.getPlayer = function(id)
 {
     var players = this.players.filter(function(player){
         return player.id == id;
@@ -89,7 +91,7 @@ Game.prototype.getPlayer = function(id)
     return null;
 };
 
-Game.prototype.load = function(doc)
+model.Game.prototype.load = function(doc)
 {
     this.setState(doc);
     this.shipService.loadFleets(this._id);
@@ -98,7 +100,7 @@ Game.prototype.load = function(doc)
     return this;
 };
 
-Game.prototype.getInitialInsert = function()
+model.Game.prototype.getInitialInsert = function()
 {
     return {
         _id: this._id,

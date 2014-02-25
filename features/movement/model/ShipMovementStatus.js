@@ -21,13 +21,13 @@ model.movement.ShipMovementStatus.prototype.addRoute = function(route)
     }
 	else
 	{
-		this.timeline.add('movementRoute', route.serialize());
+		this._timeline.add('movementRoute', route.serialize());
 	}
 };
 
 model.movement.ShipMovementStatus.prototype.getRoutes = function()
 {
-    return this.timeline.filter(function(entry){
+    return this._timeline.filter(function(entry){
     	return entry.name == 'movementRoute';
     }).map( function(entry) { 
     	return model.movement.Route.deserialize(entry.payload);
@@ -36,7 +36,7 @@ model.movement.ShipMovementStatus.prototype.getRoutes = function()
 
 model.movement.ShipMovementStatus.prototype._getTimelineRouteEntry = function(route)
 {
-	return this.timeline.filter(function(entry){ 
+	return this._timeline.filter(function(entry){ 
 		return entry.name == 'movementRoute' && entry.payload.turn == route.turn;
 	}, this).pop();
 };
