@@ -5,7 +5,8 @@ dic.register('model.GridService', function(dic) {
         dic.get('model.HexHighlighter.highlight'),
         dic.get('model.HexHighlighter.select'),
         dic.get('model.EventDispatcher'),
-        dic.get('model.HexGridCoordinateResolver')
+        dic.get('model.HexGridCoordinateResolver'),
+        dic.get('model.GameScene')
     );
 }, {
     shared: true

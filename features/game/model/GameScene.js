@@ -22,6 +22,7 @@ model.GameScene.prototype.constructor = model.GameScene;
 
 model.GameScene.prototype.init = function()
 {
+    console.log("scene init");
     this.dispatcher.attach("ScrollEvent", this.onScroll.bind(this));
     this.dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
     this.dispatcher.attach("WindowResizeEvent", this.onResize.bind(this));

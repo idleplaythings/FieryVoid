@@ -68,12 +68,12 @@ model.GameClient.prototype.getPlayer = function(id)
 
 model.GameClient.prototype.play = function()
 {
-	var container = $('#gameContainer');
-    this.gameContainer.set(container);
+    this.gameContainer.set($('#gameContainer'));
+    this.gameScene.init();
     this.gridService.init(100, 100, 300);
     this.uiEventManager.init();
     this.gameActionManager.init();
-    this.gameScene.init();
+    
     this.gameTerrain.createRandom(this.terrainSeed);
 
     this.timelineFactory.startGameSaveInterval(this._id);

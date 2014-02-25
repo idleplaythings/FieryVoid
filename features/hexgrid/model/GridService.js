@@ -1,5 +1,5 @@
 model.GridService = function GridService(
-    grid, renderer, highlighter, selector, eventDispathcer, coordinateResolver
+    grid, renderer, highlighter, selector, eventDispathcer, coordinateResolver, gameScene
 )
 {
     this._grid = grid;
@@ -8,6 +8,7 @@ model.GridService = function GridService(
     this._selector = selector;
     this._eventDispatcher = eventDispathcer;
     this._coordinateResolver = coordinateResolver;
+    this._gameScene = gameScene;
 }
 
 model.GridService.prototype.init = function(width, height, hexSize)
@@ -21,9 +22,16 @@ model.GridService.prototype.init = function(width, height, hexSize)
         hexSize: hexSize
     });
 
-    this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
+    this._renderer.setScene(this._gameScene);
+    this._selector.setScene(this._gameScene);
+    this._highlighter.setScene(this._gameScene);
+
+    this._renderer.renderGrid(this._grid);
+
+    //this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
 };
 
+/*
 model.GridService.prototype.onSceneInit = function(event)
 {
     var gameScene = event.scene;
@@ -33,6 +41,7 @@ model.GridService.prototype.onSceneInit = function(event)
 
     this._renderer.renderGrid(this._grid);
 };
+*/
 
 model.GridService.prototype.getPrototypeHex = function()
 {

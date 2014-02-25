@@ -14,7 +14,9 @@ dic.register('model.movement.PathResolver', function(dic) {
 });
 
 dic.register('model.movement.ShipAnimator', function(dic) {
-    return new model.movement.ShipAnimator(dic.get('model.GameAnimationLoop'));
+    return new model.movement.ShipAnimator();
+}, {
+    shared: true
 });
 
 dic.register('model.movement.PathRenderer', function(dic) {
@@ -29,7 +31,8 @@ dic.register('model.movement.ShipAnimationDetails', function(dic) {
     return new model.movement.ShipAnimationDetails(
         dic.get('model.movement.PathResolver'),
         dic.get('model.movement.PathRenderer'),
-        dic.get('model.movement.ShipAnimator')
+        dic.get('model.movement.ShipAnimator'),
+        dic.get('model.GameAnimationLoop')
     );
 }, {
     tags: ['ShipAnimationDetails']

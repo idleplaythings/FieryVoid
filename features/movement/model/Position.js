@@ -38,6 +38,7 @@ model.movement.Position.prototype.serialize = function()
 model.movement.Position.deserialize = function(serialized)
 {
 	serialized.thrustCost = new model.movement.ThrustCost(serialized.thrustCost);
+	serialized.position = new model.hexagon.coordinate.Cube(serialized.position);
 	return new model.movement.Position(serialized);
 };
 

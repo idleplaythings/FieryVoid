@@ -19,13 +19,14 @@ model.GameAnimationLoop.prototype._animate = function()
 {
     requestAnimationFrame( this._animate.bind(this) );
 
+    var turn = this._gameState.getCurrentDisplayTurn();
+    var time = this._gameState.getCurrentDisplayTime();
+
     this._stats.begin();
 
     this._animators.forEach(function(animator){
-    	animator.animate(
-    		this._gameState.getCurrentDisplayTurn(), 
-    		this._gameState.getCurrentDisplayTime());
-    });
+    	animator.animate(turn, time);
+    }, this);
 
     this._gameScene.render();
     this._stats.end();
