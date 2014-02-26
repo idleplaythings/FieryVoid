@@ -16,7 +16,7 @@ model.inputAction.ShowShipStatusView.prototype.onScroll = function(event)
 
     if (! ship)
     {
-        this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
+        //this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
         return;
     }
 
@@ -24,8 +24,8 @@ model.inputAction.ShowShipStatusView.prototype.onScroll = function(event)
         return;
 
     var positionService = this._positionService.getComponentPositionService(ship);
-    this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
-    ship.getIcon().hideHull();
+    //this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
+    //ship.getIcon().hideHull();
     this._shipStatusView.targetId = ship._id;
     this._shipStatusView.display(positionService, ship.getModules()).show();
 };
@@ -41,7 +41,7 @@ model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
         if (! ship)
             return;
 
-        ship.getIcon().hideHull();
+        //ship.getIcon().hideHull();
         var positionService = this._positionService.getComponentPositionService(ship);
 
         this._shipStatusView.targetId = ship._id;
@@ -49,7 +49,7 @@ model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
     }
     else
     {
-        this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
+        //this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
         this._shipStatusView.unsetPositionService();
         this._shipStatusView.targetId = null;
         this._shipStatusView.hide();

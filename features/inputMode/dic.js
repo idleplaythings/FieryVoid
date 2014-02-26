@@ -6,7 +6,8 @@ dic.register(
             [
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
-                dic.get('model.inputAction.ShowModuleDetailView')
+                dic.get('model.inputAction.ShowModuleDetailView'),
+                dic.get('model.inputAction.HideHullAtZoom')
             ],
             1
         );  
@@ -42,5 +43,12 @@ dic.register('model.inputAction.ShowModuleDetailView', function(dic) {
         dic.get('model.ModuleDetailView'),
         dic.get('model.PositionService'),
         dic.get('model.CoordinateConverterViewPort')
+    );
+});
+
+dic.register('model.inputAction.HideHullAtZoom', function(dic) {
+    return new model.inputAction.HideHullAtZoom(
+        dic.get('model.ShipService'),
+        dic.get('model.Zooming')
     );
 });
