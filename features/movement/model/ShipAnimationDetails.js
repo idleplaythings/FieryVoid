@@ -10,20 +10,13 @@ model.movement.ShipAnimationDetails = function ShipAnimationDetails(pathResolver
     this._animationLoop.register(this);
 
 	this._paths = [];
-	/*
-	this._path = this._pathResolver.resolvePathForRoute(this.gridService, this._route);
-
-    // console.log(this._path)
-
-    this._pathRenderer = new model.movement.PathRenderer(this.dispatcher);
-    this._pathRenderer.renderPath(this.gameScene, this._path);
-
-
-
-    this._animationPosition = 0;
-    this._shipAnimator = new model.movement.ShipAnimator();
-    */
 }
+
+model.movement.ShipAnimationDetails.prototype.getShip = function()
+{
+	return this._ship;
+};
+
 
 model.movement.ShipAnimationDetails.prototype.resolve = function(ship)
 {
@@ -48,7 +41,6 @@ model.movement.ShipAnimationDetails.prototype.animate = function(turn, time)
 
 model.movement.ShipAnimationDetails.prototype.renderPath = function(turn)
 {
-
 	if ( ! turn)
 		turn = 0;
 

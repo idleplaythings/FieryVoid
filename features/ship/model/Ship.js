@@ -15,7 +15,6 @@ model.Ship.prototype.setState = function(args, timeline)
     this.gameId = args.gameId || null;
 
 	this.shipDesign = args.shipDesign || null;
-    this.status = args.status;
 
     this.timeline = timeline;
 
@@ -65,8 +64,26 @@ model.Ship.prototype.setIcon = function(shipIcon)
 
 model.Ship.prototype.getMovement = function()
 {
-    return this.status.getMovement();
+    return new model.movement.ShipMovementStatus(this.timeline);
 };
+
+model.Ship.prototype.getPower = function()
+{
+    return new model.power.ShipPowerStatus(this.shipDesign.modules);
+};
+
+model.Ship.prototype.getStatus = function()
+{
+    return new model.ShipStatus(this.timeline);
+};
+
+model.Ship.prototype.getModules = function()
+{
+    return this.shipDesign.modules.map(function(moduleLayout){
+        return new model.Module(moduleLayout, this.getPower());
+    }, this);
+};
+
 /*
 model.Ship.prototype.subscribeToScene =
     function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)

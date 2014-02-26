@@ -1,16 +1,16 @@
 if ( typeof model.movement === 'undefined')
     model.movement = {};
 
-model.movement.PositionHelper = function PositionHelper()
+model.GridPositionComparison = function GridPositionComparison()
 {
 };
 
-model.movement.PositionHelper.prototype.getDistanceBetweenPositions = function(positionA, positionB)
+model.GridPositionComparison.prototype.getDistanceBetweenPositions = function(positionA, positionB)
 {
     return positionA.getPosition().distanceTo(positionB.getPosition());
 }
 
-model.movement.PositionHelper.prototype.getAngleBetweenPositions = function(positionA, positionB)
+model.GridPositionComparison.prototype.getAngleBetweenPositions = function(positionA, positionB)
 {
     var h = 2;
     var dv = 3/4 * h;

@@ -1,6 +1,5 @@
 dic.register('model.movement.ShipMovementAnimationService', function(dic) {
     return new model.movement.ShipMovementAnimationService(
-    	dic.get('model.ShipService'),
         dic.get('model.ShipAnimationDetailsFactory')
 	);
 }, {

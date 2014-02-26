@@ -1,9 +1,10 @@
-model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage, iconFactory)
+model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage, iconFactory, positionService)
 {
 	this._dispatcher = dispatcher;
     this._shipStorage = shipStorage;
     this._fleetStorage = fleetStorage;
     this._iconFactory = iconFactory;
+    this._positonService = positionService;
 
 	this.selectedShip = null;
     this.currentTurn = 0;
@@ -50,25 +51,27 @@ model.ShipService.prototype.getShipById = function(id)
     })[0];
 };
 
-model.ShipService.prototype.getClosestShip = function(center)
+model.ShipService.prototype.getClosestShip = function(scenePosition)
 {
     var ships = this.getShips().slice(0).filter(function(ship){return ! ship.isHidden()});
 
+    var posService = this._positonService;
+
     ships.sort(function(a, b){
-       return MathLib.distance(center, a.getPosition()) - MathLib.distance(center, b.getPosition());
+       return MathLib.distance(scenePosition, posService.getScenePosition(a)) - MathLib.distance(scenePosition, posService.getScenePosition(a));
     });
 
     if (ships.length == 0)
         return null;
 
     var ship = ships[0];
-    if (MathLib.distance(center, ship.getPosition()) > 2000)
+    if (MathLib.distance(scenePosition, posService.getScenePosition(ship)) > 2000)
         return null;
 
     return ship;
 };
 
-model.ShipService.prototype.getShipOnScenePosition = function(scenePosition, turn)
+model.ShipService.prototype.getShipOnScenePosition = function(scenePosition)
 {
     var shipAndTile = this.getShipAndTileOnScenePosition(scenePosition, turn);
 
@@ -78,7 +81,7 @@ model.ShipService.prototype.getShipOnScenePosition = function(scenePosition, tur
     return shipAndTile.ship;
 };
 
-model.ShipService.prototype.getShipAndTileOnScenePosition = function(scenePosition, turn)
+model.ShipService.prototype.getShipAndTileOnScenePosition = function(scenePosition)
 {
     var ship = this.getClosestShip(scenePosition);
 
@@ -86,9 +89,9 @@ model.ShipService.prototype.getShipAndTileOnScenePosition = function(scenePositi
         return null;
 
     var positionService = new model.ShipPositionService(ship, turn);
-    var tile = positionService.getTileOnPosition(scenePosition)
+    var tile =  this._positonService.getShipTileOnScenePosition(ship, scenePosition)
 
-    if (! positionService.occupiesPosition(scenePosition))
+    if (! this._positonService.shipOccupiesScenePosition(ship, scenePosition))
         return;
 
     return {ship: ship, tile: tile}

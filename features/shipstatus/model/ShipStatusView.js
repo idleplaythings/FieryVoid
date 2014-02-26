@@ -13,20 +13,20 @@ model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverte
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ShipStatusView.prototype.display = function(positionService, shipStatus)
+model.ShipStatusView.prototype.display = function(positionService, modules)
 {
     this.positionService = positionService;
     this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
    
-    shipStatus.modules.forEach(function(module){
-        this.createIcons(shipStatus, positionService, module, template);
+    modules.forEach(function(module){
+        this.createIcons(positionService, module, template);
     }, this);
 
     return this;
 };
-
+/*
 model.ShipStatusView.prototype.displayModuleView = 
 	function(module, modulePos, status)
 {
@@ -35,6 +35,7 @@ model.ShipStatusView.prototype.displayModuleView =
 		
 	this.moduleView.display(module, modulePos, status);
 };
+*/
 
 model.ShipStatusView.prototype.unsetPositionService = function()
 {
@@ -53,9 +54,9 @@ model.ShipStatusView.prototype.positionStatusView = function()
     template.css('top', position.y +'px');
 };
 
-model.ShipStatusView.prototype.createIcons = function(shipStatus, positionService, module, template)
+model.ShipStatusView.prototype.createIcons = function(positionService, module, template)
 {
-    var symbols = shipStatus.getSymbols(module);
+    var symbols = module.getStatusSymbols();
     
 	symbols.forEach(function(symbol){
 		symbol.enableDrag(
@@ -67,8 +68,9 @@ model.ShipStatusView.prototype.createIcons = function(shipStatus, positionServic
     if (symbols.length == 0)
         return;
 
-    this.resolveIconDeploymentZone(module, symbols);
-    var modulePosition = module.getPosition();
+    var moduleLayout = module.getModuleLayout();
+    this.resolveIconDeploymentZone(moduleLayout, symbols);
+    var modulePosition = moduleLayout.getPosition();
 
     var num = 0;
     symbols.forEach(function(symbol){

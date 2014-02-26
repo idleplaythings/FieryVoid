@@ -67,19 +67,15 @@ model.ShipStorage.prototype.createFromDesignId =
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
 	var timeline = this.timelineFactory.getTimeline();
-	var status = this._shipStatusFactory.create('model.ShipStatus');
-	status.setTimeline(timeline);
 		
-		
-	status.setOwner(owner);
-		
-	return ship.setState({
+	ship.setState({
 		_id: shipId,
-        shipDesign: shipDesign,
-        status: status
+        shipDesign: shipDesign
 		},
 		timeline
 	);
+
+	ship.getStatus().setOwner(owner);
 };
 
 model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
@@ -94,9 +90,6 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
         throw Error("Unable to construct ship design for ship");
 	
 	var timeline = this.timelineFactory.getTimeline(shipdoc.timeline);
-        
-    shipdoc.status = this._shipStatusFactory.create('model.ShipStatus');
-    shipdoc.status.setTimeline(timeline);
 	
 	return ship.setState(shipdoc, timeline);
 };

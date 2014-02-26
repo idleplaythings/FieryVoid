@@ -23,7 +23,8 @@ dic.register('model.inputAction.ShowShipStatusView', function(dic) {
         dic.get('model.ShipService'),
         dic.get('model.Zooming'),
         dic.get('model.Scrolling'),
-        dic.get('model.ShipStatusView')
+        dic.get('model.ShipStatusView'),
+        dic.get('model.PositionService')
     );
 });
 

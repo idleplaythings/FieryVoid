@@ -1,12 +1,7 @@
-model.movement.ShipMovementStatus = function ShipMovementStatus()
-{
-	this._timeline = null;
-}
-
-model.movement.ShipMovementStatus.prototype.setTimeline = function(timeline)
+model.movement.ShipMovementStatus = function ShipMovementStatus(timeline)
 {
 	this._timeline = timeline;
-};
+}
 
 model.movement.ShipMovementStatus.prototype.addRoute = function(route)
 {

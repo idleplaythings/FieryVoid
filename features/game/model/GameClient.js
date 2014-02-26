@@ -10,6 +10,7 @@ model.GameClient = function GameClient(
     gameTerrain,
     gameState,
     gameAnimationLoop,
+    shipMovementAnimationService,
     args) {
 
     if ( ! args)
@@ -27,6 +28,7 @@ model.GameClient = function GameClient(
     this.gameTerrain = gameTerrain;
     this.gameState = gameState;
     this.gameAnimationLoop = gameAnimationLoop;
+    this.shipMovementAnimationService = shipMovementAnimationService;
 
     this.setState(args);
 
@@ -72,6 +74,7 @@ model.GameClient.prototype.play = function()
     this.gameScene.init();
     this.gridService.init(100, 100, 300);
     this.uiEventManager.init();
+    this.shipMovementAnimationService.init(this.shipService.getShips());
     this.gameActionManager.init();
     
     this.gameTerrain.createRandom(this.terrainSeed);
