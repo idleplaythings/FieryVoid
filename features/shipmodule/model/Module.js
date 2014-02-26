@@ -13,3 +13,25 @@ model.Module.prototype.getModuleLayout = function()
 {
     return this._moduleLayout;
 };
+
+model.Module.prototype.getWidth = function()
+{
+    return this._moduleLayout.getWidth();
+};
+
+model.Module.prototype.getHeight = function()
+{
+    return this._moduleLayout.getHeight();
+};
+
+model.Module.prototype.getName = function()
+{
+    return this._moduleLayout.name;
+};
+
+model.Module.prototype.getDescription = function()
+{
+    return this._moduleLayout.description;
+};
+
+

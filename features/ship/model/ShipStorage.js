@@ -76,6 +76,8 @@ model.ShipStorage.prototype.createFromDesignId =
 	);
 
 	ship.getStatus().setOwner(owner);
+
+    return ship;
 };
 
 model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
@@ -91,6 +93,8 @@ model.ShipStorage.prototype.createShipFromDoc = function(shipdoc)
 	
 	var timeline = this.timelineFactory.getTimeline(shipdoc.timeline);
 	
-	return ship.setState(shipdoc, timeline);
+	ship.setState(shipdoc, timeline);
+
+    return ship;
 };
 

@@ -5,7 +5,8 @@ dic.register(
             dic.get('model.EventDispatcher'),
             [
                 dic.get('model.inputAction.ShowShipStatusView'),
-                dic.get('model.inputAction.LightBlueArrowCursor')
+                dic.get('model.inputAction.LightBlueArrowCursor'),
+                dic.get('model.inputAction.ShowModuleDetailView')
             ],
             1
         );  
@@ -31,5 +32,15 @@ dic.register('model.inputAction.ShowShipStatusView', function(dic) {
 dic.register('model.inputAction.LightBlueArrowCursor', function(dic) {
     return new model.inputAction.LightBlueArrowCursor(
         dic.get('model.GameHtmlContainer')
+    );
+});
+
+dic.register('model.inputAction.ShowModuleDetailView', function(dic) {
+    return new model.inputAction.ShowModuleDetailView(
+        dic.get('model.ShipService'),
+        dic.get('model.Zooming'),
+        dic.get('model.ModuleDetailView'),
+        dic.get('model.PositionService'),
+        dic.get('model.CoordinateConverterViewPort')
     );
 });

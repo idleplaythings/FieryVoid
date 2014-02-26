@@ -12,7 +12,7 @@ model.InputMode.prototype.activate = function(uiResolver)
 	this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
     this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
 	//this.mouseClickCallback = uiResolver.registerListener('click', this.onClick.bind(this), 1);
-    //this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
+    this.mouseMoveCallback = uiResolver.registerListener('mousemove', this.onMouseMove.bind(this), 1);
 	this._delegate('onActivate');
 };
 
@@ -21,8 +21,13 @@ model.InputMode.prototype.deactivate = function(uiResolver)
 	this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
 	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
 	//uiResolver.unregisterListener('click', this.mouseClickCallback);
-    //uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);
+    uiResolver.unregisterListener('mousemove', this.mouseMoveCallback);
 	this._delegate('onDeactivate');
+};
+
+model.InputMode.prototype.onMouseMove = function(event)
+{
+	this._delegate('onMouseMove', event);
 };
 
 model.InputMode.prototype.onScroll = function(event)

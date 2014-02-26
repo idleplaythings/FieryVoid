@@ -50,6 +50,7 @@ module.exports = function(config) {
 
         'features/hotkey/lib/*.js',
         'features/hotkey/model/*.js',
+        'features/position/model/*.js',
         'features/componentposition/lib/*.js',
         'features/componentposition/model/*.js',
         'features/icon/model/lib/Icon.js',

@@ -34,7 +34,8 @@ model.Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, 
 		}
 
 		var ship = shipStorage.createFromDesignId(shipDesignId, playerId);
-
+        console.log(ship);
+        
 		this.shipMovementHandler.setStartPosition(
             ship,
 			new model.movement.Position({

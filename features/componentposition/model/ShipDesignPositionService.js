@@ -26,6 +26,9 @@ model.ShipDesignPositionService.prototype.occupiesPosition = function(scenePosit
 
 model.ShipDesignPositionService.prototype.getModuleCenterPositionInScene = function(module)
 {
+    if (! (module instanceof model.ModuleLayout))
+        module = module.getModuleLayout();
+
 	return this.getTilePositionInScene(module.getCenterPosition(), this._position, this._facing);
 };
 

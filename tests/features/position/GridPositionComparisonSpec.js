@@ -1,9 +1,9 @@
-describe("PositionHelper", function() {
+describe("GridPositionComparison", function() {
     var positionHelper;
     var startPosition;
 
     beforeEach(function() {
-        positionHelper = new model.movement.PositionHelper();
+        positionHelper = new model.GridPositionComparison();
 
         startPosition = new model.movement.Position({
             position: new model.hexagon.coordinate.Cube(1, -1, 0),

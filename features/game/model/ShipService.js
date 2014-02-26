@@ -73,7 +73,7 @@ model.ShipService.prototype.getClosestShip = function(scenePosition)
 
 model.ShipService.prototype.getShipOnScenePosition = function(scenePosition)
 {
-    var shipAndTile = this.getShipAndTileOnScenePosition(scenePosition, turn);
+    var shipAndTile = this.getShipAndTileOnScenePosition(scenePosition);
 
     if (shipAndTile == null)
         return null;
@@ -86,13 +86,12 @@ model.ShipService.prototype.getShipAndTileOnScenePosition = function(scenePositi
     var ship = this.getClosestShip(scenePosition);
 
     if (! ship)
-        return null;
+        return {ship: null, tile: null};
 
-    var positionService = new model.ShipPositionService(ship, turn);
     var tile =  this._positonService.getShipTileOnScenePosition(ship, scenePosition)
 
     if (! this._positonService.shipOccupiesScenePosition(ship, scenePosition))
-        return;
+        return {ship: null, tile: null};
 
     return {ship: ship, tile: tile}
 };

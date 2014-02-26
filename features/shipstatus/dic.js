@@ -17,4 +17,6 @@ dic.register('model.ShipStatusView', function(dic) {
     	dic.get('model.CoordinateConverterViewPort'),
     	dic.get('model.EventDispatcher')
 	)
+}, {
+    shared: true
 });

@@ -1,5 +1,3 @@
-if ( typeof model.movement === 'undefined')
-    model.movement = {};
 
 model.GridPositionComparison = function GridPositionComparison()
 {
@@ -42,8 +40,8 @@ model.GridPositionComparison.prototype.getAngleBetweenPositions = function(posit
             axis = x.clone().multiplyScalar(-1);
             break;
         case 5:
-            axis = y.clone().multiplyScalar(-1)
-;            break;
+            axis = y.clone().multiplyScalar(-1);
+            break;
     }
 
     var startPosition = positionA.getPosition();

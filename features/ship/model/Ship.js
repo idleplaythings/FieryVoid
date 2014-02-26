@@ -80,9 +80,25 @@ model.Ship.prototype.getStatus = function()
 model.Ship.prototype.getModules = function()
 {
     return this.shipDesign.modules.map(function(moduleLayout){
-        return new model.Module(moduleLayout, this.getPower());
+        return this._createModuleFromModuleLayout(moduleLayout);
     }, this);
 };
+
+model.Ship.prototype.getModuleOnPosition = function(tile)
+{
+    var moduleLayout = this.shipDesign.getModuleInPosition(tile);
+
+    if (! moduleLayout)
+        return null;
+    
+    return this._createModuleFromModuleLayout(moduleLayout);
+};
+
+model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
+{
+    return new model.Module(moduleLayout, this.getPower());
+};
+
 
 /*
 model.Ship.prototype.subscribeToScene =
