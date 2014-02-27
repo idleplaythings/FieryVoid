@@ -24,6 +24,11 @@ model.movement.ShipMovementAnimationService.prototype.renderPathForAll = functio
 	});
 };
 
+model.movement.ShipMovementAnimationService.prototype.getShipAnimations = function()
+{
+	return this._shipAnimations;
+}
+
 model.movement.ShipMovementAnimationService.prototype.getShipScenePosition = function(ship, turn, time)
 {
 	var shipAnimation = this._getShipAnimation(ship);

@@ -39,7 +39,7 @@ model.movement.ShipAnimationDetails.prototype.animate = function(turn, time)
 	this._shipAnimator.positionShipAlongPath(this._ship, path, time);
 };
 
-model.movement.ShipAnimationDetails.prototype.renderPath = function(turn)
+model.movement.ShipAnimationDetails.prototype.showRoute = function(turn)
 {
 	if ( ! turn)
 		turn = 0;

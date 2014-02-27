@@ -6,13 +6,14 @@ dic.register(
             [
                 dic.get('model.inputAction.SelectShipOnClick'),
                 dic.get('model.inputAction.SelectedShipMarker'),
+                dic.get('model.inputAction.DisplayRoutes'),
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
                 dic.get('model.inputAction.HideHullAtZoom')
             ],
             1
-        );  
+        );
     }, {
         tags: [ 'inputMode' ]
     }
@@ -20,6 +21,26 @@ dic.register(
 
 dic.register('model.InputModeFactory', function(dic) {
     return Factory.createFactoryFromTags('inputMode');
+});
+
+dic.register('model.inputAction.SelectShipOnClick', function(dic) {
+    return new model.inputAction.SelectShipOnClick(
+        dic.get('model.ShipService'),
+        dic.get('model.SelectedShip')
+    );
+});
+
+dic.register('model.inputAction.SelectedShipMarker', function(dic) {
+    return new model.inputAction.SelectedShipMarker(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.SelectedShip')
+    );
+});
+
+dic.register('model.inputAction.DisplayRoutes', function(dic) {
+    return new model.inputAction.DisplayRoutes(
+        dic.get('model.movement.ShipMovementAnimationService')
+    );
 });
 
 dic.register('model.inputAction.ShowShipStatusView', function(dic) {
@@ -55,19 +76,6 @@ dic.register('model.inputAction.HideHullAtZoom', function(dic) {
     );
 });
 
-dic.register('model.inputAction.SelectShipOnClick', function(dic) {
-    return new model.inputAction.SelectShipOnClick(
-        dic.get('model.ShipService'),
-        dic.get('model.SelectedShip')
-    );
-});
-
-dic.register('model.inputAction.SelectedShipMarker', function(dic) {
-    return new model.inputAction.SelectedShipMarker(
-        dic.get('model.EventDispatcher'),
-        dic.get('model.SelectedShip')
-    );
-});
 
 dic.register('model.SelectedShip', function(dic) {
     return new model.SelectedShip(
