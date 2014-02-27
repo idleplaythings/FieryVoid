@@ -58,7 +58,7 @@ model.ShipService.prototype.getClosestShip = function(scenePosition)
     var posService = this._positonService;
 
     ships.sort(function(a, b){
-       return MathLib.distance(scenePosition, posService.getScenePosition(a)) - MathLib.distance(scenePosition, posService.getScenePosition(a));
+       return MathLib.distance(scenePosition, posService.getScenePosition(a)) - MathLib.distance(scenePosition, posService.getScenePosition(b));
     });
 
     if (ships.length == 0)
