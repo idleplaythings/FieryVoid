@@ -32,6 +32,10 @@ model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
         if (last) {
             path.push(new model.Path(last, control, end));
         }
+        else
+        {
+            path.push(new model.Path(control, control, end));
+        }
 
         return end;
 
