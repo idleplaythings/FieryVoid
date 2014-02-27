@@ -18,6 +18,7 @@ model.UiEventManager = function UiEventManager(
 
     externalDispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 
+    this._dispatcher = externalDispatcher;
     this.dragging = false;
     this.draggingStartPosition = null;
     this.lastDraggingPosition = null;
@@ -33,7 +34,6 @@ model.UiEventManager = function UiEventManager(
 model.UiEventManager.prototype.init = function()
 {
     var element = this._gameContainer.get();
-    this._scrolling.registerTo(this);
     this._zooming.init(element);
 
     element.on("mousedown",  this.mouseDown.bind(this));
@@ -106,35 +106,6 @@ model.UiEventManager.prototype.getViewPortAndGameObject = function(v, g)
     };
 };
 
-model.UiEventManager.prototype.registerListener = function(event, callback, priority)
-{
-    if ( ! priority)
-        pritority = 0;
-
-    if (! this.listeners[event])
-        throw Error("Unrecognized event '" + event + "'");
-
-    this.listeners[event].push({
-        callback:callback,
-        priority: priority
-    })
-
-    this.listeners[event] = this.listeners[event].sort(this._sortByListenerPriority);
-
-    return callback;
-};
-
-model.UiEventManager.prototype.unregisterListener = function(event, callback)
-{
-    this.listeners[event] = this.listeners[event].filter(function(entry){
-        return entry.callback != callback;
-    });
-
-    this.listeners[event] = this.listeners[event].sort(this._sortByListenerPriority);
-};
-
-
-
 model.UiEventManager.prototype.keyup = function(event)
 {
     if (event.originalEvent.fromUi)
@@ -147,8 +118,8 @@ model.UiEventManager.prototype.keyup = function(event)
         return;
 
     this.fireEvent(
-        {key: hotkey},
-        this.listeners.keyup
+        'KeyUpEvent',
+        {key: hotkey}
     );
 };
 
@@ -172,7 +143,7 @@ model.UiEventManager.prototype.mouseDown = function(event)
             payload.stopped = true;
         }
     };
-    this.fireEvent(payload, this.listeners.drag);
+    this.fireEvent('DragEvent', payload);
 };
 
 model.UiEventManager.prototype.mouseUp = function(event)
@@ -191,9 +162,9 @@ model.UiEventManager.prototype.mouseOut = function(e)
 {
 
     if (this.dragging)
-        this.fireEvent({release:true}, this.listeners.drag);
-    else
-        this.fireEvent({}, this.listeners.mouseout);
+        this.fireEvent('DragEvent', {release:true});
+    
+    this.fireEvent('MouseOutEvent', {});
 
     this.distanceDragged = 0;
     this.dragging = false;
@@ -218,8 +189,8 @@ model.UiEventManager.prototype.doMouseMove = function(event)
     var gamePos = this._coordinateConverter.fromViewPortToGame(pos);
 
     this.fireEvent(
-        this.getViewPortAndGameObject(pos, gamePos),
-        this.listeners.mousemove
+        'MouseMoveEvent',
+        this.getViewPortAndGameObject(pos, gamePos)
     );
 
 };
@@ -260,22 +231,16 @@ model.UiEventManager.prototype.click = function(event)
 	var payload = this.getViewPortAndGameObject(pos, gamePos);
 
     this.fireEvent(
-        payload,
-        this.listeners.click
+        'ClickEvent',
+        payload
     );
 };
 
-model.UiEventManager.prototype.fireEvent = function(payload, listeners)
+model.UiEventManager.prototype.fireEvent = function(eventName, payload)
 {
-    payload.stopped = false;
-    payload.stop = function(){this.stopped = true;};
-	payload.InputMode = this.getCurrentInputMode();
+    payload.name = eventName;
 
-    for (var i in listeners)
-    {
-        var listener = listeners[i];
-        listener.callback(payload);
-    }
+    this._dispatcher.dispatch(payload);
 };
 
 model.UiEventManager.prototype._sortByListenerPriority = function(a,b)
