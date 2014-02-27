@@ -4,6 +4,8 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
+                dic.get('model.inputAction.SelectShipOnClick'),
+                dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
@@ -51,4 +53,26 @@ dic.register('model.inputAction.HideHullAtZoom', function(dic) {
         dic.get('model.ShipService'),
         dic.get('model.Zooming')
     );
+});
+
+dic.register('model.inputAction.SelectShipOnClick', function(dic) {
+    return new model.inputAction.SelectShipOnClick(
+        dic.get('model.ShipService'),
+        dic.get('model.SelectedShip')
+    );
+});
+
+dic.register('model.inputAction.SelectedShipMarker', function(dic) {
+    return new model.inputAction.SelectedShipMarker(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.SelectedShip')
+    );
+});
+
+dic.register('model.SelectedShip', function(dic) {
+    return new model.SelectedShip(
+        dic.get('model.EventDispatcher')
+    );
+}, {
+    shared: true
 });

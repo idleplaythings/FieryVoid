@@ -11,6 +11,9 @@ model.SelectedShip.prototype.getShip = function()
 
 model.SelectedShip.prototype.selectShip = function(ship)
 {
+	if (this._ship)
+		this._dispatcher.dispatch({name: 'ShipDeselectedEvent', ship:this._ship});
+
 	this._ship = ship;
 	this._dispatcher.dispatch({name: 'ShipSelectedEvent', ship:ship});
 };
