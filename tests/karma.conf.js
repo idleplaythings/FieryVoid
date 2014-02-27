@@ -47,6 +47,9 @@ module.exports = function(config) {
         'features/weapon/model/*.js',
 
         'features/raytrace/model/*.js',
+        'features/inputMode/model/inputaction/lib/*.js',
+        'features/inputMode/model/inputaction/*.js',
+        'features/inputMode/model/*.js',
 
         'features/hotkey/lib/*.js',
         'features/hotkey/model/*.js',
