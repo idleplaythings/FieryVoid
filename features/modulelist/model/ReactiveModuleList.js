@@ -1,6 +1,6 @@
-model.ReactiveModuleList = function ReactiveModuleList(target, dispatcher, findCriteria)
+model.ReactiveModuleList = function ReactiveModuleList(dispatcher, findCriteria)
 {
-    model.ModuleList.call(this, target, dispatcher);
+    model.ModuleList.call(this, dispatcher);
     this.findCriteria = findCriteria || {'published': true};
     this.reactivityHandle = null;
 };

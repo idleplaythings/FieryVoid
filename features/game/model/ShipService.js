@@ -1,22 +1,20 @@
-model.ShipService = function ShipService(dispatcher, shipStorage, fleetStorage, iconFactory, positionService)
+model.ShipService = function ShipService(dispatcher, iconFactory, positionService)
 {
 	this._dispatcher = dispatcher;
-    this._shipStorage = shipStorage;
-    this._fleetStorage = fleetStorage;
     this._iconFactory = iconFactory;
     this._positonService = positionService;
 
 	this.selectedShip = null;
     this.currentTurn = 0;
 
-    this._fleets = [];
+    this._ships = [];
 
     this._dispatcher.attach('scene.init', this.onSceneInit.bind(this));
 }
 
-model.ShipService.prototype.loadFleets = function(gameId)
+model.ShipService.prototype.setShips = function(ships)
 {
-     this._fleets = this._fleetStorage.getFleetsInGame(gameId);
+     this._ships = ships;
 };
 
 model.ShipService.prototype.selectShip = function(ship)
@@ -39,9 +37,7 @@ model.ShipService.prototype.onSceneInit = function(event)
 
 model.ShipService.prototype.getShips = function()
 {
-    return this._fleets.reduce(function(value, fleet){
-		return value.concat(fleet.ships);
-	}, []);
+    return this._ships;
 };
 
 model.ShipService.prototype.getShipById = function(id)

@@ -11,6 +11,18 @@ dic.register(
     }
 );
 
+dic.register(
+    'model.ShipIconEditor',
+    function(dic) {
+        return new model.ShipIconEditor(
+            dic.get('model.GameScene'),
+            dic.get('model.EventDispatcher')
+        );  
+    }, {
+        tags: [ 'icon' ]
+    }
+);
+
 dic.register('model.IconFactory', function(dic) {
     return Factory.createFactoryFromTags('icon');
 });

@@ -10,6 +10,9 @@ Factory.prototype.add = function(key, value)
 
 Factory.prototype.create = function(key)
 {
+    if (typeof this._registry[key] === 'undefined')
+        throw new Error("Trying to create unrecognized product, key: '"+key+"'");
+
     if (typeof this._registry[key] === 'function') {
         return this._registry[key].call(undefined);
     }

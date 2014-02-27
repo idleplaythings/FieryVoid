@@ -59,6 +59,8 @@ model.ComponentPositionService.prototype.getTileOnPosition = function(scenePosit
 
     var delta = {x: centerDelta.x + (dimensions.x/2), y: centerDelta.y + (dimensions.y/2)};
 
+    //console.log(scenePosition, dimensions, shipPosition, this._facing, centerDelta, delta);
+
     return {x: Math.floor(delta.x / scale), y: Math.floor(delta.y / scale) };
 };
 

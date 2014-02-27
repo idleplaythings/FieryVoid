@@ -1,6 +1,6 @@
-model.ShipIconEditor = function ShipIconEditor()
+model.ShipIconEditor = function ShipIconEditor(gameScene, dispatcher)
 {
-    model.ShipIcon.call(this);
+    model.ShipIcon.call(this, gameScene, dispatcher);
     this.modulesInside = [];
     this.modulesOutside = [];
     this.modulesOver = [];
@@ -58,6 +58,7 @@ model.ShipIconEditor.prototype.sethullMode = function()
 
 model.ShipIconEditor.prototype.setInsideMode = function()
 {
+    console.log("insideMode");
     this.modulesOutside.forEach(function(entry){entry.icon.hide()});
     this.sprites.hull.hide();
     this.sprites.grid.hide();

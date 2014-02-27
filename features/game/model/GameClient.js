@@ -11,6 +11,7 @@ model.GameClient = function GameClient(
     gameState,
     gameAnimationLoop,
     shipMovementAnimationService,
+    fleetStorage,
     args) {
 
     if ( ! args)
@@ -29,6 +30,7 @@ model.GameClient = function GameClient(
     this.gameState = gameState;
     this.gameAnimationLoop = gameAnimationLoop;
     this.shipMovementAnimationService = shipMovementAnimationService;
+    this.fleetStorage = fleetStorage;
 
     this.setState(args);
 
@@ -87,8 +89,13 @@ model.GameClient.prototype.play = function()
 model.GameClient.prototype.load = function(doc)
 {
     this.setState(doc);
-    this.shipService.loadFleets(this._id);
-    //this.fleets = this.fleetStorage.getFleetsInGame(this._id);
+    this._fleets = this.fleetStorage.getFleetsInGame(this._id);
+
+    var ships = this._fleets.reduce(function(value, fleet){
+        return value.concat(fleet.ships);
+    }, []);
+
+    this.shipService.setShips(ships);
 
     return this;
 };

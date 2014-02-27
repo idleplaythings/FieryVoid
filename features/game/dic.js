@@ -13,7 +13,8 @@ dic.register(
             dic.get('model.GameTerrain'),
             dic.get('model.GameState'),
             dic.get('model.GameAnimationLoop'),
-            dic.get('model.movement.ShipMovementAnimationService')
+            dic.get('model.movement.ShipMovementAnimationService'),
+            dic.get('model.FleetStorage')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -28,7 +29,8 @@ dic.register(
             dic.get('model.ShipService'),
             dic.get('model.GameTerrain'),
             dic.get('model.GameState'),
-            dic.get('model.movement.ShipMovementHandler')
+            dic.get('model.movement.ShipMovementHandler'),
+            dic.get('model.FleetStorage')
         );  
     }, {
         tags: [ 'game.type' ]
@@ -68,8 +70,6 @@ dic.register('model.GameState', function(dic) {
 dic.register('model.ShipService', function(dic) {
     return new model.ShipService(
         dic.get('model.EventDispatcher'),
-        dic.get('model.ShipStorage'),
-        dic.get('model.FleetStorage'),
         dic.get('model.IconFactory'),
         dic.get('model.PositionService')
     )

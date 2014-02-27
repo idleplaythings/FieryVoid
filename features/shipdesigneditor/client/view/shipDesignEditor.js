@@ -7,15 +7,20 @@ Template.shipDesignEditor.rendered = function()
 {
     if ( ! Template.shipDesignEditor.controller)
     {
-        var shipDesignId = Session.get("selected_shipDesign");
-        var leftmenu = jQuery('.sidemenu.left');
-        var shipview = jQuery('div.displayLarge');
-        var modulelist = jQuery('.sidemenu.right .modulelist');
-        var shipapperance = jQuery('.sidemenu.right .shipapperance');
+        var editor = dic.get('model.ShipDesignEditor');
 
-        Template.shipDesignEditor.controller =
-            new model.shipDesignEditor(
-                shipDesignId, leftmenu, shipview, modulelist, shipapperance, dic.get('model.ShipDesignStorage'));
+        editor.init(
+            Session.get("selected_shipDesign"),
+            jQuery('.sidemenu.left'),
+            jQuery('div.displayLarge'),
+            jQuery('.sidemenu.right .modulelist'),
+            jQuery('.sidemenu.right .shipapperance')
+        );
+
+        Template.shipDesignEditor.controller = editor;
+
+        //new model.shipDesignEditor(
+        //    shipDesignId, leftmenu, shipview, modulelist, shipapperance, dic.get('model.ShipDesignStorage'));
     }
 };
 

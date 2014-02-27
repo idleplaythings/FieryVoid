@@ -1,6 +1,5 @@
 model.Ship = function Ship(args, timeline)
 {
-	this.gameScene = null;
     this.icon = null;
     this.setState(args, timeline);
 };
@@ -98,33 +97,6 @@ model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
 {
     return new model.Module(moduleLayout, this.getPower());
 };
-
-
-/*
-model.Ship.prototype.subscribeToScene =
-    function(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService)
-{
-	this.icon = new model.ShipIcon(gameScene, eventDispatcher).create(this.shipDesign);
-
-    this.gameScene = gameScene;
-    this.gameScene.scene.add(this.getIcon().getThreeObject());
-
-    this.shipDesign.modules.forEach(function(module){
-        module.ship = this;
-        module.dispatcher = eventDispatcher;
-        module.gameScene = gameScene;
-
-        if (module.animators.length > 0)
-        {
-            this.gameScene.animators.push(module);
-            module.initAnimators();
-        }
-    }, this);
-
-	this.status.subscribeToScene(gameScene, effectManager, eventDispatcher, uiResolver, gridService, shipService);
-    this.gameScene.animators.push(this);
-};
-*/
 
 model.Ship.prototype.select = function()
 {

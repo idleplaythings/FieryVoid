@@ -1,24 +1,23 @@
-model.inputAction.ShowModuleDetailView = function ShowModuleDetailView(shipService, zooming, shipModuleView, positionService, coordinateConverter)
+model.inputAction.ShowModuleDetailViewEditor = function ShowModuleDetailViewEditor(editorShip, zooming, shipModuleView, coordinateConverter)
 {
-	this._shipService = shipService;
+	this._editorShip = editorShip;
 	this._shipModuleView = shipModuleView;
-    this._positionService = positionService;
     this._coordinateConverter = coordinateConverter;
     this._zooming = zooming;
 };
 
-
-model.inputAction.ShowModuleDetailView.prototype.onMouseMove = function(event)
+model.inputAction.ShowModuleDetailViewEditor.prototype.onMouseMove = function(event)
 {
-    //console.log("mouseMove", this._zooming.getCurrentZoom());
+	/*
     if (this._zooming.getCurrentZoom() < 1)
     {
         this._shipModuleView.remove();
         return;
     }
-
-    var shipAndTile = this._shipService.getShipAndTileOnScenePosition(event.game);
-    //console.log(shipAndTile);
+	*/
+	
+    var shipAndTile = this._editorShip.getShipAndTileOnScenePosition(event.game);
+    
     var ship = shipAndTile.ship;
     var tile = shipAndTile.tile;
 
@@ -28,7 +27,7 @@ model.inputAction.ShowModuleDetailView.prototype.onMouseMove = function(event)
         return;
     }
 
-    var positionService = this._positionService.getComponentPositionService(ship);
+    var positionService = new model.ShipDesignPositionService(ship.shipDesign);
     var module = ship.getModuleOnPosition(tile);
 
     if (! module)

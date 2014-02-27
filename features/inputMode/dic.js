@@ -105,6 +105,96 @@ dic.register('model.ActiveTile', function(dic) {
     return new model.ActiveTile(
         dic.get('model.EventDispatcher')
     );
-}, {
-    shared: true
+}, {shared: true});
+
+
+// SHIP DESIGN EDITOR 
+
+
+dic.register(
+    'model.InputModeShipEditorDefault',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.AllowShipHullVisibilityTogleInEditor'),
+                dic.get('model.inputAction.ShowShipStatusView'),
+                dic.get('model.inputAction.LightBlueArrowCursor'),
+                dic.get('model.inputAction.ShowModuleDetailViewEditor')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeShipEditorPlaceModule',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.ShowShipStatusView'),
+                dic.get('model.inputAction.LightBlueArrowCursor'),
+                dic.get('model.inputAction.ShowModuleDetailViewEditor')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeShipEditorRemoveModule',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.ShowShipStatusView'),
+                dic.get('model.inputAction.LightBlueArrowCursor'),
+                dic.get('model.inputAction.ShowModuleDetailViewEditor')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register('model.inputAction.ShowModuleDetailViewEditor', function(dic) {
+    return new model.inputAction.ShowModuleDetailViewEditor(
+        dic.get('model.EditorShip'),
+        dic.get('model.Zooming'),
+        dic.get('model.ModuleDetailView'),
+        dic.get('model.CoordinateConverterViewPort')
+    );
+});
+
+dic.register('model.inputAction.AllowShipHullVisibilityTogleInEditor', function(dic) {
+    return new model.inputAction.EditorShipHullVisibility(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.EditorShip'),
+        false,
+        false
+    );
+});
+
+dic.register('model.inputAction.EnforceShipHullHiddenInEditor', function(dic) {
+    return new model.inputAction.EditorShipHullVisibility(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.EditorShip'),
+        true,
+        false
+    );
+});
+
+dic.register('model.inputAction.EnforceShipHullVisibleInEditor', function(dic) {
+    return new model.inputAction.EditorShipHullVisibility(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.EditorShip'),
+        false,
+        true
+    );
 });

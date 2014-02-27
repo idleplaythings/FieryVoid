@@ -1,11 +1,17 @@
-model.ModuleList = function ModuleList(target, dispatcher)
+model.ModuleList = function ModuleList(dispatcher)
 {
-    this.target = target;
+    this.target = null;
     this.modules = [];
     this.template = null;
     this.dispatcher = dispatcher;
 
     this.selectedModule = null;
+};
+
+model.ModuleList.prototype.init = function(target)
+{
+    this.target = target;
+    return this;
 };
 
 model.ModuleList.prototype.hide = function(modules)

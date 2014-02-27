@@ -1,11 +1,15 @@
-model.ShipApperanceMenu = function ShipApperanceMenu(target, dispatcher)
+model.ShipApperanceMenu = function ShipApperanceMenu()
 {
-    this.target = target;
+    this.target = null;
     this.template = null;
-    this.dispatcher = dispatcher;
     this.spectrum = null;
     this.shipDesign = null;
 };
+
+model.ShipApperanceMenu.prototype.init = function(target)
+{
+    this.target = target;
+}
 
 model.ShipApperanceMenu.prototype.create = function()
 {
