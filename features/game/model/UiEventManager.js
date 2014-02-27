@@ -239,14 +239,8 @@ model.UiEventManager.prototype.click = function(event)
 model.UiEventManager.prototype.fireEvent = function(eventName, payload)
 {
     payload.name = eventName;
-
     this._dispatcher.dispatch(payload);
 };
-
-model.UiEventManager.prototype._sortByListenerPriority = function(a,b)
-{
-    return b.priority - a.priority;
-}
 
 model.UiEventManager.prototype._getMousePositionInObservedElement = function(event)
 {
