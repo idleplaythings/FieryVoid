@@ -34,6 +34,17 @@ describe("Offset Coordinate", function() {
         expect(cube.z).toEqual(0);
     });
 
+    it("compares itself to another offset coordinate", function() {
+        var offset1 = new Offset(10, 10);
+        var offset2 = new Offset(10, 10);
+        var offset3 = new Offset(20, 20);
+
+        expect(offset1.equals(offset2)).toEqual(true);
+        expect(offset2.equals(offset1)).toEqual(true);
+        expect(offset1.equals(offset3)).toEqual(false);
+        expect(offset3.equals(offset1)).toEqual(false);
+    });
+
     it("returns neighbouring coordinates on even row", function() {
         var offset = new Offset(0, 0, Offset.ODD_R);
         var neighbours = offset.getNeighbours();

@@ -70,6 +70,13 @@ model.hexagon.coordinate.Offset.prototype.add = function(offset)
     return new model.hexagon.coordinate.Offset(q, r, this.layout);
 }
 
+model.hexagon.coordinate.Offset.prototype.equals = function(offset)
+{
+    return this.q === offset.q &&
+           this.r === offset.r &&
+           this.layout === offset.layout;
+}
+
 model.hexagon.coordinate.Offset.prototype.toCube = function()
 {
     switch (this.layout) {
