@@ -1,22 +1,18 @@
 describe("SelectShipOnClick", function() {
 
-    var shipService, selectedShip;
+    var shipService, selectedShip, event, selectAction;
 
     beforeEach(function() {
-        selectedShip = jasmine.createSpyObj(
-            'selectedShip',
-            ['selectShip' ]
-        );
+        shipService = { getShipOnScenePosition: function() { }};
+        selectedShip = jasmine.createSpyObj('selectedShip', [ 'selectShip' ]);
+        event = {game: 2, stopped: false};
 
+        selectAction = new model.inputAction.SelectShipOnClick(shipService, selectedShip);
     });
 
     it("should select closest ship", function() {
-        shipService = {getShipOnScenePosition: function(){}};
         spyOn(shipService, 'getShipOnScenePosition').andReturn(1);
 
-        var event = {game: 2, stopped: false};
-
-        var selectAction = new model.inputAction.SelectShipOnClick(shipService, selectedShip);
         selectAction.onClick(event);
 
         expect(selectedShip.selectShip).toHaveBeenCalledWith(1);
@@ -24,16 +20,11 @@ describe("SelectShipOnClick", function() {
     });
 
     it("should not select ship if no ship found", function() {
-        shipService = {getShipOnScenePosition: function(){}};
         spyOn(shipService, 'getShipOnScenePosition').andReturn(null);
 
-        var event = {game: 2, stopped: false};
-
-        var selectAction = new model.inputAction.SelectShipOnClick(shipService, selectedShip);
         selectAction.onClick(event);
 
         expect(selectedShip.selectShip).not.toHaveBeenCalled();
         expect(event.stopped).toBe(false);
     });
-
 });
