@@ -4,6 +4,7 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
+                dic.get('model.inputAction.ActivateTileOnMouseMove'),
                 dic.get('model.inputAction.SelectShipOnClick'),
                 dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.DisplayRoutes'),
@@ -22,6 +23,13 @@ dic.register(
 
 dic.register('model.InputModeFactory', function(dic) {
     return Factory.createFactoryFromTags('inputMode');
+});
+
+dic.register('model.inputAction.ActivateTileOnMouseMove', function(dic) {
+    return new model.inputAction.ActivateTileOnMouseMove(
+        dic.get('model.GridService'),
+        dic.get('model.ActiveTile')
+    );
 });
 
 dic.register('model.inputAction.SelectShipOnClick', function(dic) {
@@ -85,9 +93,16 @@ dic.register('model.inputAction.HideHullAtZoom', function(dic) {
     );
 });
 
-
 dic.register('model.SelectedShip', function(dic) {
     return new model.SelectedShip(
+        dic.get('model.EventDispatcher')
+    );
+}, {
+    shared: true
+});
+
+dic.register('model.ActiveTile', function(dic) {
+    return new model.ActiveTile(
         dic.get('model.EventDispatcher')
     );
 }, {
