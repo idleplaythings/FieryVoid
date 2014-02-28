@@ -47,17 +47,6 @@ model.MovementManagement.prototype._resolveRoute = function()
     var movements = this._start.getSpeed();
     var modifiers = [];
 
-    // while (movements--) {
-    //     if (movements == 3) {
-    //         modifiers.push(new model.movement.Action.TurnLeft());
-    //     }
-
-    //     if (movements == 0) {
-    //         modifiers.push(new model.movement.Action.TurnRight());
-    //     }
-    //     modifiers.push(new model.movement.Action.Move());
-    // }
-
     modifiers.push(new model.movement.Action.SpeedAccelerate());
     modifiers.push(new model.movement.Action.SpeedAccelerate());
     modifiers.push(new model.movement.Action.SpeedAccelerate());
@@ -88,25 +77,11 @@ model.MovementManagement.prototype._resolveRoute = function()
     this._route = new model.movement.Route(this._start, this._getMovementAbility(), modifiers);
     this._path = this._pathResolver.resolvePathForRoute(this.gridService, this._route);
 
-    // console.log(this._path)
-
     this._pathRenderer = new model.movement.PathRenderer(this.dispatcher);
     this._pathRenderer.renderPath(this.gameScene, this._path);
 
-
-
     this._animationPosition = 0;
     this._shipAnimator = new model.movement.ShipAnimator();
-
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-    // this.animate2(this._ship)
-
-    // new model.movement.RouteDisplay(this.gameScene, this.gridService, this.dispatcher).makeItSo(this._route);
 }
 
 model.MovementManagement.prototype.setStartPosition = function(position)
@@ -120,27 +95,15 @@ model.MovementManagement.prototype.getFacing = function(currentTime)
     return 0;
 }
 
-/*
-model.MovementManagement.prototype.targetHex = function(hex)
-{
-    ship.setPosition(this.getScenePosition(gameTime));
-    ship.setAzimuth(this.getSceneFacing(gameTime));
-};
-*/
-
 model.MovementManagement.prototype.animate = function(gameTime)
 {
     if ( this._start === null)
         this.getStartPosition();
-    
+
     this._advanceAnimationPosition();
 
     this._shipAnimator.positionShipAlongPath(this._ship, this._path, this._animationPosition);
-
-    // ship.setPosition(this._getScenePosition(gameTime));
-    // ship.setAzimuth(this.getFacing(gameTime));
 };
-
 
 model.MovementManagement.prototype._advanceAnimationPosition = function()
 {
@@ -150,9 +113,6 @@ model.MovementManagement.prototype._advanceAnimationPosition = function()
         this._animationPosition = 0;
     }
 }
-
-
-
 
 model.MovementManagement.prototype.getScenePosition = function(gameTime)
 {

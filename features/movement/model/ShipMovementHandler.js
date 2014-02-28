@@ -1,15 +1,13 @@
 
-model.movement.ShipMovementHandler = function ShipMovementHandler(gameState, gridService)
+model.movement.ShipMovementHandler = function ShipMovementHandler()
 {
-	this._gameState = gameState;
-	this._gridService = gridService;	
 };
 
 model.movement.ShipMovementHandler.prototype.setStartPosition = function(ship, movementPosition)
 {
 	if (movementPosition.toCube)
 		movementPosition = movementPosition.toCube();
-	
+
 	var route = this.generateDefaultRoute(ship, 0, movementPosition);
 	ship.getMovement().addRoute(route);
 };
@@ -44,20 +42,3 @@ model.movement.ShipMovementHandler.prototype._getMovementAbility = function(ship
         ]
     });
 };
-
-/*
-model.movement.ShipMovementHandler.prototype.getTurnDelaySpeedFactor = function()
-{
-    return this.ship.shipDesign.hullLayout.baseTurnDelay;
-};
-
-model.movement.ShipMovementHandler.prototype.getTurnCostSpeedFactor = function()
-{
-    return this.ship.shipDesign.hullLayout.baseTurnCost;
-};
-
-model.movement.ShipMovementHandler.prototype.getSpeedCost = function()
-{
-    return this.ship.shipDesign.hullLayout.baseSpeedCost;
-};
-*/
