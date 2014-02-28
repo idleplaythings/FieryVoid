@@ -3,11 +3,7 @@ describe("SelectedShip", function() {
     var eventDispatcherMock;
 
     beforeEach(function() {
-        eventDispatcherMock = jasmine.createSpyObj(
-            'Dispatcher',
-            ['dispatch' ]
-        );
-
+        eventDispatcherMock = jasmine.createSpyObj('Dispatcher', ['dispatch' ]);
     });
 
     it("should dispatch SelectedShipEvent", function() {
