@@ -7,6 +7,7 @@ dic.register(
                 dic.get('model.inputAction.SelectShipOnClick'),
                 dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.DisplayRoutes'),
+                dic.get('model.inputAction.HighlightActiveRoute'),
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
@@ -39,6 +40,14 @@ dic.register('model.inputAction.SelectedShipMarker', function(dic) {
 
 dic.register('model.inputAction.DisplayRoutes', function(dic) {
     return new model.inputAction.DisplayRoutes(
+        dic.get('model.movement.ShipMovementAnimationService')
+    );
+});
+
+dic.register('model.inputAction.HighlightActiveRoute', function(dic) {
+    return new model.inputAction.HighlightActiveRoute(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.SelectedShip'),
         dic.get('model.movement.ShipMovementAnimationService')
     );
 });

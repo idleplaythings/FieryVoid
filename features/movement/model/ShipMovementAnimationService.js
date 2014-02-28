@@ -14,20 +14,33 @@ model.movement.ShipMovementAnimationService.prototype.init = function(ships)
 	}, this);
 };
 
-model.movement.ShipMovementAnimationService.prototype.renderPathForAll = function()
+model.movement.ShipMovementAnimationService.prototype.showAllRoutes = function()
 {
 	if (this._shipAnimations.length === 0)
 		return;
 
 	this._shipAnimations.forEach(function(animation){
-		animation.renderPath();
+		animation.showRoute();
+	});
+};
+
+model.movement.ShipMovementAnimationService.prototype.highlightRouteFor = function(ship)
+{
+	var animation = this._getShipAnimation(ship);
+	animation.highlight();
+};
+
+model.movement.ShipMovementAnimationService.prototype.clearRouteHighlights = function()
+{
+	this._shipAnimations.forEach(function(animation){
+		animation.clearHighlight();
 	});
 };
 
 model.movement.ShipMovementAnimationService.prototype.getShipAnimations = function()
 {
 	return this._shipAnimations;
-}
+};
 
 model.movement.ShipMovementAnimationService.prototype.getShipScenePosition = function(ship, turn, time)
 {

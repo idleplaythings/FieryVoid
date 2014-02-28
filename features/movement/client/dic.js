@@ -26,10 +26,20 @@ dic.register('model.movement.PathRenderer', function(dic) {
     );
 });
 
+dic.register('model.movement.MovementVisualizer', function(dic) {
+    return new model.movement.MovementVisualizer(
+        dic.get('model.EventDispatcher'),
+        dic.get('model.GameScene'),
+        dic.get('model.GameAnimationLoop'),
+        dic.get('model.Zooming')
+    );
+});
+
 dic.register('model.movement.ShipAnimationDetails', function(dic) {
     return new model.movement.ShipAnimationDetails(
         dic.get('model.movement.PathResolver'),
         dic.get('model.movement.PathRenderer'),
+        dic.get('model.movement.MovementVisualizer'),
         dic.get('model.movement.ShipAnimator'),
         dic.get('model.GameAnimationLoop')
     );

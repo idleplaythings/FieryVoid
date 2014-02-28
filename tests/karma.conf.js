@@ -14,6 +14,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        'tests/matchers/*.js',
+
         'tests/**/*Spec.js',
         'tests/**/*Mock.js',
         'tests/lib/*.js',
@@ -31,7 +33,7 @@ module.exports = function(config) {
         'features/movement/model/*.js',
         'features/movement/model/action/lib/Action.js',
         'features/movement/model/action/*.js',
-        
+
         'features/game/model/*.js',
 
         'features/hexagon/model/coordinate/Cube.js',
