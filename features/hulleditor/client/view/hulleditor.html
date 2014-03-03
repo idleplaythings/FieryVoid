@@ -1,5 +1,8 @@
 <template name="hullEditor">
     <div class="mainContainer" style="height:calc(100% - 37px)">
+        {{#if choosingHull}}
+            {{> hullImageList}}
+        {{/if}}
         {{> hullmenu}}
 
         <div class="displayLarge" style="width:calc(100% - 400px);height:100%;">
@@ -12,27 +15,27 @@
 <template name="hullmenu">
     <div class="sidemenu left hullmenu" style="height:100%;">
         <div>Hull name:</div>
-        <input type="text" name="name" value="{{hullName}}"/>
+        <input type="text" name="name" value="{{hullLayout.name}}"/>
         <div>Width:</div>
-        <input type="text" name="width" value="{{tileWidth}}"/>
+        <input type="text" name="width" value="{{hullLayout.width}}"/>
         <div>Height:</div>
-        <input type="text" name="height" value="{{tileHeight}}"/>
+        <input type="text" name="height" value="{{hullLayout.height}}"/>
         <div>Hull scale:</div>
-        <input type="text" name="hullScale" value="{{hullScale}}"/>
+        <input type="text" name="hullScale" value="{{hullLayout.hullScale}}"/>
         
         <div>Base turn cost (speed * x):</div>
-        <input type="text" name="baseTurnCost" value="{{baseTurnCost}}"/>
+        <input type="text" name="baseTurnCost" value="{{hullLayout.baseTurnCost}}"/>
         
         <div>Base turn delay (speed * x):</div>
-        <input type="text" name="baseTurnDelay" value="{{baseTurnDelay}}"/>
+        <input type="text" name="baseTurnDelay" value="{{hullLayout.baseTurnDelay}}"/>
         
         <div>Base acceleration cost:</div>
-        <input type="text" name="baseSpeedCost" value="{{baseSpeedCost}}"/>
+        <input type="text" name="baseSpeedCost" value="{{hullLayout.baseSpeedCost}}"/>
         
         <div>Color:</div>
-        <input type="text" name="color" value="{{color}}"/>
+        <input type="text" name="color" value="{{hullLayout.color}}"/>
         <div>
-            <div class="button publish {{publishedClass}}">Publish</div>
+            <div class="button publish {{#if hullLayout.published}}active{{/if}}">Publish</div>
 
             <h3>Tile height</h3>
             <div class="button tileheight {{heightClass1}}" data-tileheight="1">Height 1</div>
@@ -43,28 +46,18 @@
 
 <template name="hullListing">
     <div class="sidemenu right" style="height:100%;">
-        {{#each hullImages}}
-            {{> hullImage}}
+        {{#each hullLayouts}}
+            {{> hullLayout}}
         {{/each}}
-    </div>
-</template>
-
-<template name="hullImage">
-    <div class="img-entry hull {{selected}}">
-        {{> smallHullImage}}
-        {{#if isSelected}}
-            {{#each hullLayouts}}
-                {{> hullLayout}}
-            {{/each}}
-            <div class="create button">
-                CREATE NEW
-            </div>
-        {{/if}}
+        <div class="create button">
+            CREATE NEW
+        </div>
     </div>
 </template>
 
 <template name="hullLayout">
+    {{> smallHullImage}}
     <div class="hullLayout {{selected}} list-entry {{activeClass}}">
-        {{layoutName}}
+        {{name}}
     </div>
 </template>

@@ -2,17 +2,14 @@ Router.map(function() {
     this.route('shipMenu', {
         path: '/'
     });
-    this.route('hullEditor', {
-        path: '/editor/hull'
-    });
-    this.route('moduleEditor', {
-        path: '/editor/module'
-    });
     this.route('createShip', {
         path: '/ship/create'
     });
 });
 
+Router.configure({
+    layoutTemplate: 'page'
+});
 
 
 //

@@ -10,7 +10,7 @@ model.ModuleLayoutOnShip.prototype = Object.create(model.ModuleLayout.prototype)
 model.ModuleLayoutOnShip.prototype.serialize = function()
 {
     return {
-    	moduleIdOnShip: this.idOnShip,
+        moduleIdOnShip: this.idOnShip,
         module: this._id,
         position: this.position,
         direction: this.direction

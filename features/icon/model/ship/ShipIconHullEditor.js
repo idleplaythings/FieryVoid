@@ -1,6 +1,6 @@
-model.ShipIconHullEditor = function ShipIconHull()
+model.ShipIconHullEditor = function ShipIconHull(gameScene, dispatcher)
 {
-    model.ShipIcon.call(this);
+    model.ShipIcon.call(this, gameScene, dispatcher);
 };
 
 model.ShipIconHullEditor.prototype =

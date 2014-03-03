@@ -1,42 +1,22 @@
 
 Template.moduleEditor.created = function()
 {
-    Meteor.subscribe("ModuleImages");
-    Meteor.subscribe("ModuleLayoutsAdmin");
-}
-
-Template.moduleEditor.destroyed = function()
-{
-    if (Template.moduleEditor.controller)
-    {
-        Template.moduleEditor.controller.destroy();
-        Template.moduleEditor.controller = null;
-    }
+    this.data.moduleEditor = dic.get("model.ModuleEditor");
 }
 
 Template.moduleEditor.rendered = function()
 {
-	var sub = Meteor.subscribe('ModuleLayoutsAdmin', function(){
-		createController();
-	});
-}
-
-function createController()
-{
-	if ( ! Template.moduleEditor.controller)
-	{
-		var target = jQuery('div.displayLarge');
-		var modulelist = jQuery('div.modulelist');
-		var modulesImageContainer = jQuery('div.moduleImageChooser');
-
-		Template.moduleEditor.controller =
-			new model.ModuleEditor(
-				target, modulelist, modulesImageContainer, dic.get('model.ModuleImageStorage'));
-	}
+    this.data.moduleEditor.init(
+        jQuery('div.displayLarge'),
+        jQuery('div.modulelist'),
+        jQuery('div.moduleImageChooser')
+    );
 };
 
-
-Template.moduleListing = _.extend(Template.moduleListing, BaseTemplate);
+Template.moduleEditor.destroyed = function()
+{
+    this.data.moduleEditor.destroy();
+};
 
 Template.moduleListing.moduleImages = function () {
     var imgs = ModuleImages.find({});

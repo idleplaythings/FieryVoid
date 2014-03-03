@@ -90,8 +90,22 @@ model.UiEventManager.prototype.removeInputMode = function(state)
     };
 
     state.deactivate(this);
-    this.getCurrentInputMode().activate(this);
+    var current = this.getCurrentInputMode();
+
+    if (current)
+        current.activate(this);
 };
+
+model.UiEventManager.prototype.removeCurrentInputMode = function()
+{
+    var state = this.getCurrentInputMode();
+
+    if ( ! state)
+        return;
+
+    this.removeInputMode(state);
+};
+
 
 model.UiEventManager.prototype.onZoom = function(event)
 {

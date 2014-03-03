@@ -1,0 +1,9 @@
+<template name="hullImageList">
+  <div class="availableShips hullimagelist" style="z-index: 1000">
+      <h4 style="display:block">Select hull</h4>
+        {{#each hullImages}}
+          {{> smallHullImage}}
+        {{/each}}
+      <button class="hideHullImageList smallClose"></button>
+  </div>
+</template>

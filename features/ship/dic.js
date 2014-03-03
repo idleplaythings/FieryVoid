@@ -12,3 +12,7 @@ dic.register('model.ShipDesignStorage', function(dic) {
     );
 }, { shared: true });
 
+dic.register('model.HullLayoutRepository', function(dic) {
+    return new model.HullLayoutRepository();
+}, { shared: true });
+

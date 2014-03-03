@@ -198,3 +198,53 @@ dic.register('model.inputAction.EnforceShipHullVisibleInEditor', function(dic) {
         true
     );
 });
+
+
+// HULL EDITOR
+
+dic.register(
+    'model.InputModeHullEditorHeight1',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.HullEditorClickHeight1')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeHullEditorHeight2',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.HullEditorClickHeight2')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register('model.inputAction.HullEditorClickHeight1', function(dic) {
+    return new model.inputAction.HullEditorClick(
+        dic.get('model.SelectedHullLayout'),
+        1,
+        dic.get('model.HullEditorService')
+    );
+});
+
+dic.register('model.inputAction.HullEditorClickHeight2', function(dic) {
+    return new model.inputAction.HullEditorClick(
+        dic.get('model.SelectedHullLayout'),
+        2,
+        dic.get('model.HullEditorService')
+    );
+});
+

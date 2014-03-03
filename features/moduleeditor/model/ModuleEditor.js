@@ -1,33 +1,32 @@
 model.ModuleEditor = function ModuleEditor(
-	iconcontainer,
-	modulelist,
-	moduleImageContainer,
-	moduleImageStorage)
+    gameContainer,
+    uiEventManager,
+    dispatcher,
+    iconFactory, 
+    gameScene, 
+    reactiveModuleLayout, 
+    animationLoop, 
+    inputModeFactory,
+    selectedModuleLayout,
+    moduleList)
 {
-    var dispatcher = new model.EventDispatcher();
-    this.gameScene = new model.GameScene(dispatcher);
-    this.gameScene.init(iconcontainer).animate();
+    this._uiEventManager = uiEventManager;
+    this._dispatcher = dispatcher;
+    this._iconFactory = iconFactory;
+    this._gameScene = gameScene;
+    this._reactiveModuleLayout = reactiveModuleLayout;
+    this._animationLoop = animationLoop;
+    this._gameContainer = gameContainer;
+    this._inputModeFactory = inputModeFactory;
+    this._selectedModuleLayout = selectedModuleLayout;
 
-    this.reactiveModuleLayout = new model.ReactiveComponent(
-        dispatcher,
-        ModuleLayouts,
-        "selected_moduleLayout",
-        'moduleLayoutChanged'
-    ).react();
+    this._moduleList = modulelist;
 
-    dispatcher.attach(
-        'click', this.onClick.bind(this));
 
     dispatcher.attach(
         'moduleLayoutChanged', this.onModuleLayoutChanged.bind(this));
-        
-    dispatcher.attach(
-        'selectedModuleChange', function(event){
-			console.log("selecting", event.module._id);
-			Session.set("selected_moduleLayout", event.module._id);
-		});
 
-    this.icon = new model.ModuleIconEditor(['under', 'inside', 'outside', 'hull', 'over']);
+    this._icon = this._iconFactory.create('model.ModuleIconEditor');
     
     this.possibleIconViewModes = ["outside", "inside"];
     this.iconViewMode = 0;
@@ -37,15 +36,19 @@ model.ModuleEditor = function ModuleEditor(
     this.moduleList = new model.ReactiveModuleList(
         modulelist, dispatcher, {})
         .react();
-    
-    this.display = new model.Display(
-        this.icon,
-        this.gameScene,
-        dispatcher)
-    	.renderOn(iconcontainer);
     	
 	this.moduleImageChooser = new model.ModuleImageChooser(
 		dispatcher, moduleImageStorage, moduleImageContainer);
+};
+
+model.ModuleEditor.prototype.init = function(displayTarget, modulelistTarget, moduleImageChooser){
+    this._gameContainer.set(displayTarget);
+    this._gameScene.init();
+    this._uiEventManager.init();
+    this._selectedModuleLayout.react();
+    this._moduleList.init(modulelistTarget).react();
+
+    this._animationLoop.start();
 };
 
 model.ModuleEditor.prototype.createButtons = function()
