@@ -10,17 +10,12 @@ Meteor.methods({
         return ModuleLayouts.insert(layout);
     },
 
-    ModuleLayoutPublish: function(id, imgName)
+    ModuleLayoutPublish: function(id)
     {
         if (! isAdminUser())
             throw new Meteor.Error(403, "You must be admin to edit hull layouts");
 
         var current = ModuleLayouts.findOne({'_id': id}).published;
-
-        ModuleLayouts.update(
-            {$and: [{'published': true}, {'image': imgName}]},
-            {$set: {'published': false}}
-        );
 
         ModuleLayouts.update(
             {'_id': id},

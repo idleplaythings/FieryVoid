@@ -68,17 +68,6 @@ model.ModuleLayout.prototype.getHeight = function()
     return parseInt(r, 10);
 }
 
-model.ModuleLayout.getAvailableTraits = function() {
-    var traits = [];
-
-    for (modelName in model) {
-        if (modelName.match(/^ModuleTrait\D+$/) !== null) {
-            traits.push(modelName);
-        }
-    }
-    return traits;
-}
-
 model.ModuleLayout.prototype.initTraits = function() {
     this.traits.forEach(function(trait) {
         var traitName = 'ModuleTrait' + trait.name[0].toUpperCase() + trait.name.slice(1);
@@ -346,50 +335,6 @@ model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
         this._id,
         i,
         function(err, result){}
-    );
-};
-
-model.ModuleLayout.prototype.updateTrait = function(name, value)
-{
-    this.traits.forEach(function(trait)
-    {
-        if (trait.name == name && trait.value == value)
-        {
-            trait.value = value;
-        }
-    });
-
-    this.updateValue(name, value, true);
-};
-
-model.ModuleLayout.prototype.updateIfDifferent = function(name, value)
-{
-    if (name == 'allowedDirections')
-        value = this.parseAvailableDirections(value);
-
-    if (this[name] != value)
-    {
-        this[name] = value;
-        this.updateValue(name, value);
-    }
-};
-
-model.ModuleLayout.prototype.updateValue = function(name, value, trait)
-{
-    if (! trait)
-        trait = false;
-
-    var updateObject = {};
-    updateObject[name] = value;
-
-    Meteor.call(
-        'ModuleLayoutUpdate',
-        this._id,
-        updateObject,
-        trait,
-        function(err, result){
-            console.log('ModuleLayout ' +name + ' updated to ', value);
-        }
     );
 };
 

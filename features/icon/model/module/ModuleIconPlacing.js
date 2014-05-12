@@ -1,11 +1,17 @@
-model.ModuleIconPlacing = function ModuleIconPlacing(tile)
+model.ModuleIconPlacing = function ModuleIconPlacing(gameScene, dispatacher)
 {
-    model.ModuleIcon.call(this, ["inside", "over"], 10);
-    this.TilePlacingModule = tile;
+    model.ModuleIcon.call(this, gameScene, dispatacher);
+    this.setTypes(["inside", "over"]);
+    this.setZ(10);
+    this.TilePlacingModule = null;
 };
 
 model.ModuleIconPlacing.prototype =
     Object.create(model.ModuleIcon.prototype);
+
+model.ModuleIconPlacing.prototype.setTile = function(tile){
+    this.TilePlacingModule = tile;
+};
 
 model.ModuleIconPlacing.prototype.createSprites = function()
 {

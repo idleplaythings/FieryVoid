@@ -5,7 +5,7 @@ dic.register(
         return new model.ShipIcon(
             dic.get('model.GameScene'),
             dic.get('model.EventDispatcher')
-        );  
+        );
     }, {
         tags: [ 'icon' ]
     }
@@ -17,7 +17,7 @@ dic.register(
         return new model.ShipIconEditor(
             dic.get('model.GameScene'),
             dic.get('model.EventDispatcher')
-        );  
+        );
     }, {
         tags: [ 'icon' ]
     }
@@ -29,7 +29,19 @@ dic.register(
         return new model.ShipIconHullEditor(
             dic.get('model.GameScene'),
             dic.get('model.EventDispatcher')
-        );  
+        );
+    }, {
+        tags: [ 'icon' ]
+    }
+);
+
+dic.register(
+    'model.ModuleIconEditor',
+    function(dic) {
+        return new model.ModuleIconEditor(
+            dic.get('model.GameScene'),
+            dic.get('model.EventDispatcher')
+        );
     }, {
         tags: [ 'icon' ]
     }

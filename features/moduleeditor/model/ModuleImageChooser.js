@@ -1,11 +1,12 @@
 model.ModuleImageChooser = function(
-	dispatcher, moduleImageStorage, target)
+	dispatcher, moduleImageStorage, moduleEditorService)
 {
+	this._moduleEditorService = moduleEditorService;
 	
 	dispatcher.attach(
         'moduleLayoutChanged', this.onModuleLayoutChanged.bind(this));
         
-	this.target = target;
+	this.target = null;
 	
 	this.types = ['inside', 'outside', 'hull', 'over', 'under', 'ui'];
 	
@@ -14,9 +15,17 @@ model.ModuleImageChooser = function(
 	this.module = null;
 };
 
+model.ModuleImageChooser.prototype.init = function(target){
+	this.target = target;
+};
+
 model.ModuleImageChooser.prototype.onModuleLayoutChanged = function(event)
 {
 	var module = event.payload;
+
+	if ( ! module)
+		return;
+	
 	this.module = module;
 	
 	console.log("module changed chooser");
@@ -58,8 +67,7 @@ model.ModuleImageChooser.prototype.change = function(type, value)
 	if ( ! this.module)
 		return;
 		
-	this.module.image[type] = value;	
-	this.module.updateValue('image', this.module.image.serialize());
+	this._moduleEditorService.updateImage(this.module, type, value);
 };
 
 model.ModuleImageChooser.prototype.getBump = function(type, value)

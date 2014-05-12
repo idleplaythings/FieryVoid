@@ -1,7 +1,7 @@
-model.ModuleIconEditor = function ModuleIconEditor(types)
+model.ModuleIconEditor = function ModuleIconEditor(gameScene, dispatacher)
 {
-    model.ModuleIcon.call(this, types);
-    
+    model.ModuleIcon.call(this, gameScene, dispatacher);
+    this.setTypes(['under', 'inside', 'outside', 'hull', 'over']);
     this.outsideTypes = ['under', 'outside', 'hull', 'over'];
     this.insideTypes = ['under', 'inside'];
 };

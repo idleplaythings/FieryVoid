@@ -8,7 +8,8 @@ model.ModuleEditor = function ModuleEditor(
     animationLoop, 
     inputModeFactory,
     selectedModuleLayout,
-    moduleList)
+    moduleList,
+    moduleImageChooser)
 {
     this._uiEventManager = uiEventManager;
     this._dispatcher = dispatcher;
@@ -20,38 +21,53 @@ model.ModuleEditor = function ModuleEditor(
     this._inputModeFactory = inputModeFactory;
     this._selectedModuleLayout = selectedModuleLayout;
 
-    this._moduleList = modulelist;
+    this._moduleList = moduleList;
+    this._moduleImageChooser = moduleImageChooser;
 
 
     dispatcher.attach(
         'moduleLayoutChanged', this.onModuleLayoutChanged.bind(this));
 
+    dispatcher.attach(
+        'selectedModuleChange', function(payload){
+            console.log(payload);
+            Session.set('moduleeditor_selected_moduleLayout', payload.module._id);
+        });
+    
+
     this._icon = this._iconFactory.create('model.ModuleIconEditor');
+
     
-    this.possibleIconViewModes = ["outside", "inside"];
-    this.iconViewMode = 0;
-    
-    this.createButtons();
-    
-    this.moduleList = new model.ReactiveModuleList(
-        modulelist, dispatcher, {})
-        .react();
-    	
-	this.moduleImageChooser = new model.ModuleImageChooser(
-		dispatcher, moduleImageStorage, moduleImageContainer);
+    //this.possibleIconViewModes = ["outside", "inside"];
+    //this.iconViewMode = 0;
 };
 
 model.ModuleEditor.prototype.init = function(displayTarget, modulelistTarget, moduleImageChooser){
     this._gameContainer.set(displayTarget);
     this._gameScene.init();
     this._uiEventManager.init();
-    this._selectedModuleLayout.react();
+    this._reactiveModuleLayout.react();
     this._moduleList.init(modulelistTarget).react();
+    this._moduleImageChooser.init(moduleImageChooser);
+
+    this.createButtons(displayTarget);
 
     this._animationLoop.start();
 };
 
-model.ModuleEditor.prototype.createButtons = function()
+model.ModuleEditor.prototype.onModuleLayoutChanged = function(event)
+{
+    var moduleLayout = event.payload;
+    if ( ! moduleLayout)
+        return;
+
+    console.log("moduleLayout changed");
+    this._selectedModuleLayout.set(moduleLayout);
+    this._icon.create(moduleLayout);
+
+};
+
+model.ModuleEditor.prototype.createButtons = function(target)
 {
     new model.Button(
         '', 
@@ -60,7 +76,7 @@ model.ModuleEditor.prototype.createButtons = function()
             background: '/misc/hullgrid.png',
             size: 'large'
         }
-        ).get().appendTo('.buttoncontainer', this.iconcontainer);
+        ).get().appendTo('.buttoncontainer', target);
         
 	new model.Button(
         '', 
@@ -69,7 +85,7 @@ model.ModuleEditor.prototype.createButtons = function()
             background: '/misc/grid.png',
             size: 'large'
         }
-        ).get().appendTo('.buttoncontainer', this.iconcontainer);
+        ).get().appendTo('.buttoncontainer', target);
 };
 
 model.ModuleEditor.prototype.toggleViewMode = function()
@@ -91,15 +107,6 @@ model.ModuleEditor.prototype.toggleViewMode = function()
 model.ModuleEditor.prototype.toggleGrid = function()
 {
     this.icon.toggleGrid();
-};
-
-
-model.ModuleEditor.prototype.onModuleLayoutChanged = function(event)
-{
-	var moduleLayout = event.payload;
-	if (moduleLayout)
-		this.icon.create(moduleLayout);
-
 };
 
 model.ModuleEditor.prototype.onClick = function(event)

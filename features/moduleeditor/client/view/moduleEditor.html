@@ -62,43 +62,43 @@
             <tr><td colspan="2">Module name</td></tr>
             <tr>
                 <td colspan="2">
-                    <input type="text" name="name" value="{{moduleName}}"/>
+                    <input type="text" name="name" value="{{moduleLayout.name}}"/>
                 </td>
             </tr>
             <tr><td>Width</td><td>Height</td></tr>
             <tr>
                 <td>
-                    <input type="text" name="width" value="{{tileGridWidth}}"/>
+                    <input type="text" name="width" value="{{moduleLayout.width}}"/>
                 </td>
                 <td>
-                    <input type="text" name="height" value="{{tileGridHeight}}"/>
+                    <input type="text" name="height" value="{{moduleLayout.height}}"/>
                 </td>
             </tr>
             <tr><td>Scale</td><td>Tile height</td></tr>
             <tr>
                 <td>
-                    <input type="text" name="scale" value="{{scale}}"/>
+                    <input type="text" name="scale" value="{{moduleLayout.scale}}"/>
                 </td>
                 <td>
-                    <input type="text" name="tileHeight" value="{{tileHeight}}"/>
+                    <input type="text" name="tileHeight" value="{{moduleLayout.tileHeight}}"/>
                 </td>
             </tr>
             <tr><td>Allowed directions</td><td>Mass</td></tr>
             <tr>
                 <td>
-                    <input type="text" name="allowedDirections" value="{{allowedDirections}}"/>
+                    <input type="text" name="allowedDirections" value="{{moduleLayout.allowedDirections}}"/>
                 </td>
                 <td>
-                    <input type="text" name="mass" value="{{mass}}"/>
+                    <input type="text" name="mass" value="{{moduleLayout.mass}}"/>
                 </td>
             </tr>
         </table>
 
         <div>Description</div>
-        <textarea name="description">{{description}}</textarea>
+        <textarea name="description">{{moduleLayout.description}}</textarea>
 
         <div>
-            <div class="button publish {{publishedClass}}">Publish</div>
+            <div class="button publish {{#if moduleLayout.published}}active{{/if}}">Publish</div>
             <h3>Click type</h3>
             <div class="button outside {{outsideClass}}">Outside</div>
             <div class="button disabled {{disabledClass}}">Disabled</div>
@@ -144,27 +144,5 @@
     <div class="sidemenu right" style="height:100%;">
 		<div class="create button">CREATE NEW</div>
         <div class="modulelist"></div>
-    </div>
-</template>
-
-<template name="moduleImage">
-    <div class="img-entry module {{selected}}">
-        <div class="list-entry-img" style="height:auto;">
-            <img style="padding:3px;" src="{{moduleImgSrc}}" />
-        </div>
-        {{#if isSelected}}
-            {{#each moduleLayouts}}
-                {{> moduleLayout}}
-            {{/each}}
-            <div class="create button">
-                CREATE NEW
-            </div>
-        {{/if}}
-    </div>
-</template>
-
-<template name="moduleLayout">
-    <div class="moduleLayout {{selected}} list-entry {{activeClass}}">
-        {{layoutName}}
     </div>
 </template>

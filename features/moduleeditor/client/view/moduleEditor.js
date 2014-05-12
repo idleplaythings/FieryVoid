@@ -18,128 +18,18 @@ Template.moduleEditor.destroyed = function()
     this.data.moduleEditor.destroy();
 };
 
-Template.moduleListing.moduleImages = function () {
-    var imgs = ModuleImages.find({});
-    return imgs;
-};
-
-
-
-
-Template.moduleImage.isSelected = function(){
-    return Session.get("selected_moduleImg") === this._id;
-};
-
-Template.moduleImage.selected = function (){
-    var selected = (Session.get("selected_moduleImg") === this._id);
-    return selected ? 'selected' : '';
-};
-
-Template.moduleImage.events({
-    'click .module': function () {
-        Session.set("selected_moduleImg", this._id);
-    }
-});
-
-Template.moduleImage.moduleImgSrc = function(){
-    return this.getDefault();
-};
-
-Template.moduleImage.moduleLayouts = function()
-{
-    return ModuleLayouts.find({image: this.name});
-};
-
-Template.moduleListing.events({
-    'click .create': function () {
-        Meteor.call('ModuleLayoutInsert', function(err, result){
-           Session.set('selected_moduleLayout', result);
-        });
-    }
-});
-
-
-
-
-
-
-Template.moduleLayout.activeClass = function()
-{
-    return this.published ? 'active' : '';
-};
-
-Template.moduleLayout.layoutName = function()
-{
-    var star = this.published ? '★' : '☆';
-    return star + " " + this.name;
-};
-
-Template.moduleLayout.selected = function()
-{
-    var selected = (Session.get("selected_moduleLayout") === this._id);
-    return selected ? 'selected' : '';
-};
-
-Template.moduleMenu = _.extend(Template.moduleMenu, BaseTemplate);
-
-
-Template.moduleMenu.moduleName = function()
-{
-    return getFromSelectedLayout('name');
-};
-
-Template.moduleMenu.tileGridWidth = function()
-{
-    return getFromSelectedLayout('width');
-};
-
-Template.moduleMenu.tileGridHeight = function()
-{
-    return getFromSelectedLayout('height');
-};
-
-Template.moduleMenu.mass = function()
-{
-    return getFromSelectedLayout('mass');
-};
-
-Template.moduleMenu.scale = function()
-{
-    return getFromSelectedLayout('scale');
-};
-
-Template.moduleMenu.tileHeight = function()
-{
-    return getFromSelectedLayout('tileHeight');
-};
-
-Template.moduleMenu.mass = function()
-{
-    return getFromSelectedLayout('mass');
-};
-
-Template.moduleMenu.allowedDirections = function()
-{
-    return getFromSelectedLayout('allowedDirections');
-};
-
-Template.moduleMenu.description = function()
-{
-    return getFromSelectedLayout('description');
-};
-
 Template.moduleMenu.activetraits = function()
 {
     var trait,
         traits = [];
 
-    model.ModuleLayout.getAvailableTraits().forEach(function(traitName) {
+    dic.get('model.ModuleEditorService').getAvailableTraits(this.moduleLayout).forEach(function(traitName) {
         trait = new model[traitName]();
-        value = getFromSelectedLayoutTrait(trait.name);
+        value = getFromSelectedLayoutTrait(this.moduleLayout, trait.name);
 
         if (value) 
             traits.push(trait);
-    });
+    }, this);
 
     return traits;
 }
@@ -149,13 +39,13 @@ Template.moduleMenu.inactivetraits = function()
     var trait,
         traits = [];
 
-    model.ModuleLayout.getAvailableTraits().forEach(function(traitName) {
+    dic.get('model.ModuleEditorService').getAvailableTraits().forEach(function(traitName) {
         trait = new model[traitName]();
-        value = getFromSelectedLayoutTrait(trait.name);
+        value = getFromSelectedLayoutTrait(this.moduleLayout, trait.name);
 
         if ( ! value) 
             traits.push(trait);
-    });
+    }, this);
 
     return traits;
 }
@@ -165,9 +55,9 @@ Template.moduleMenu.traits = function()
     var trait,
         traits = [];
 
-    model.ModuleLayout.getAvailableTraits().every(function(traitName) {
+    dic.get('model.ModuleEditorService').getAvailableTraits().every(function(traitName) {
         trait = new model[traitName]();
-        value = getFromSelectedLayoutTrait(trait.name);
+        value = getFromSelectedLayoutTrait(this.moduleLayout, trait.name);
 
         if (value) {
             trait.value = value;
@@ -178,25 +68,27 @@ Template.moduleMenu.traits = function()
         traits.push(trait);
 
         return true;
-    });
+    }, this);
 
     return traits;
 }
 
 
 Template.traitDetail.events({
-    'click .smallClose': function(event) {
-		evaluateTraitStatus();
+    'click .smallClose': function(event, template) {
+		evaluateTraitStatus(template.data.moduleLayout);
         Session.set('activetrait', null);
     },
-    'change select, change input': function(event) {
-		console.log("change");
-		evaluateTraitStatus();
+    'change select, change input': function(event, template) {
+		evaluateTraitStatus(template.data.moduleLayout);
     }
 });
 
-function evaluateTraitStatus()
-{
+function evaluateTraitStatus(module){
+
+    if ( ! module)
+        return;
+
 	var traitName = Session.get('activetrait');
 	
 	if ( ! traitName)
@@ -205,7 +97,7 @@ function evaluateTraitStatus()
 	var variables = {};
 	
     jQuery('.traitDetails input, .traitDetails select').get().forEach(function(input){
-		console.log(input);
+
 		var name = input.name;
 		var value = jQuery(input).val().trim();
 		
@@ -214,8 +106,6 @@ function evaluateTraitStatus()
 			
 		variables[name] = value;
 	});
-	
-	console.log(variables);
 	
 	if (Object.keys(variables).length === 0)
 		variables = null;
@@ -228,27 +118,19 @@ function evaluateTraitStatus()
 		return variable.isValid();
 	});
 	
-	var previousValue = getFromSelectedLayoutTrait(traitName);
+	var previousValue = getFromSelectedLayoutTrait(module, traitName);
 	
 	if (previousValue == '')
 		previousValue = null;
 		
-	console.log(previousValue);
-	console.log(variables);
 	if ( previousValue == variables)
 		return;
 		
-    var module = ModuleLayouts.findOne({_id: Session.get("selected_moduleLayout")});
-    
-	if ( ! module)
-		return;
-		
 	if (variables == null)
-		module.updateTrait(trait.name, null); //removes trait from module
+        dic.get('model.ModuleEditorService').updateTrait(module, trait.name, null);
 	else if (valid)
 	{
-		console.log("update trait, value:", value);
-		module.updateTrait(trait.name, variables);
+        dic.get('model.ModuleEditorService').updateTrait(module, trait.name, variables);
 	}
 	else
 	{
@@ -270,15 +152,19 @@ Template.traitDetail.traitVariables = function()
 		return [];
 		
 	var trait = model.ModuleTrait.prototype.instantiateFromName(
-		traitName, getFromSelectedLayoutTrait(traitName));
+		traitName, getFromSelectedLayoutTrait(this.moduleLayout, traitName));
 
-	console.log('trait', trait);
     return trait.getTraitVariables();
 };
 
 Template.traitDetail.hasOptions = function()
 {
-	return this.options
+	return this.options;
+};
+
+Template.traitDetail.get = function()
+{
+    return this.get();
 };
 
 Template.traitDetail.options = function()
@@ -292,19 +178,17 @@ Template.traitDetail.options = function()
 };
 
 Template.moduleMenu.events({
-    'blur input, blur textarea': function (event) {
-        handleDetailChange(event.currentTarget);
+    'blur input, blur textarea': function (event, template) {
+        handleDetailChange(event.currentTarget, template.data.moduleLayout);
     },
     'click .publish': function(event) {
-        var layoutId = Session.get("selected_moduleLayout");
-        if (layoutId)
-        {
-            var layout = ModuleLayouts.findOne({_id: layoutId});
-            if (layout)
-            {
-                layout.publish();
-            }
-        }
+
+        var moduleLayout = this.moduleLayout;
+
+        if ( ! moduleLayout)
+            return;
+
+        dic.get('model.ModuleEditorService').togglePublish(moduleLayout);
     },
     'click .outside': function(event) {
         Session.set('moduleEditor_brushType', 'outside');
@@ -321,11 +205,6 @@ Template.moduleMenu.events({
     }
 });
 
-Template.moduleMenu.publishedClass = function()
-{
-    return getFromSelectedLayout('published') ? 'active' : '';
-};
-
 Template.moduleMenu.outsideClass = function()
 {
     return Session.get('moduleEditor_brushType') == 'outside' ? 'active' : '';
@@ -336,60 +215,31 @@ Template.moduleMenu.disabledClass = function()
     return Session.get('moduleEditor_brushType') ? '' : 'active';
 };
 
-function getFromSelectedLayout(name)
-{
-    var layoutId = Session.get("selected_moduleLayout");
-    if (layoutId)
+function getFromSelectedLayoutTrait(layout, name){
+    if (layout)
     {
-        var layout = ModuleLayouts.findOne({_id: layoutId});
-
-        if (layout && layout[name])
-            return layout[name];
-    }
-
-    return '';
-}
-
-function getFromSelectedLayoutTrait(name)
-{
-    var layoutId = Session.get("selected_moduleLayout");
-    if (layoutId)
-    {
-        var layout = ModuleLayouts.findOne({_id: layoutId});
-
-        if (layout)
+        for (var i in layout.traits)
         {
-            for (var i in layout.traits)
-            {
-                if ( layout.traits[i].name == name)
-                    return layout.traits[i].value;
-            }
+            if ( layout.traits[i].name == name)
+                return layout.traits[i].value;
         }
     }
 
     return '';
-}
+};
 
-function handleDetailChange(element)
+function handleDetailChange(element, layout)
 {
     var name = jQuery(element).attr('name');
     var value = jQuery(element).val();
     value = value.trim();
 
-    var layoutId = Session.get("selected_moduleLayout");
-    if (layoutId)
+    if (jQuery(element).hasClass('trait'))
     {
-        var layout = ModuleLayouts.findOne({_id: layoutId});
-        if (layout)
-        {
-            if (jQuery(element).hasClass('trait'))
-            {
-                layout.updateTrait(name, value);
-            }
-            else
-            {
-                layout.updateIfDifferent(name, value);
-            }
-        }
+        dic.get('model.ModuleEditorService').updateTrait(layout, name, value);
     }
-}
+    else
+    {
+        dic.get('model.ModuleEditorService').update(layout, name, value);
+    }
+};

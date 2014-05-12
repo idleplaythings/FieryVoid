@@ -9,7 +9,8 @@ dic.register('model.ModuleEditor', function(dic) {
     dic.get('model.GameAnimationLoop'),
     dic.get('model.InputModeFactory'),
     dic.get('model.SelectedModuleLayout'),
-    dic.get('moduleEditor.ReactiveModuleList')
+    dic.get('moduleEditor.ReactiveModuleList'),
+    dic.get('model.ModuleImageChooser')
   );
 });
 
@@ -18,10 +19,23 @@ dic.register('model.ReactiveModuleLayout', function(dic) {
     dic.get('model.EventDispatcher'),
     ModuleLayouts,
     "moduleeditor_selected_moduleLayout",
-    'moduleLayoutChanged'
+    'moduleLayoutChanged',
+    dic.get('model.ModuleFactory')
   )
 });
 
 dic.register('model.SelectedModuleLayout', function(dic) {
   return new ObjectContainer();
+}, { shared: true} );
+
+dic.register('model.ModuleImageChooser', function(dic) {
+  return new model.ModuleImageChooser(
+    dic.get('model.EventDispatcher'),
+    dic.get('model.ModuleImageStorage'),
+    dic.get('model.ModuleEditorService')
+  );
+});
+
+dic.register('model.ModuleEditorService', function(dic) {
+  return new model.ModuleEditorService();
 }, { shared: true} );

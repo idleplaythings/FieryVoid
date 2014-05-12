@@ -6,7 +6,8 @@ model.ShipDesignStorage = function ShipDesignStorage(timelineFactory)
 model.ShipDesignStorage.prototype.getReactiveShipDesign = function(id, callback)
 {
 	var self = this;
-	Deps.autorun(function(){
+    //TODO: make sure this handle is stopepd
+	return Deps.autorun(function(){
 		var doc = ShipDesigns.findOne({_id: id});
 		
 		if (! doc)
