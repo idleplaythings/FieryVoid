@@ -1,19 +1,24 @@
 Router.map(function() {
-    this.route('shipDesignEditor', {
-        path: '/shipDesign/:_id/edit',
-        template: 'shipDesignEditor'
-    });
-});
+  this.route('shipDesignEditor', {
+    path: '/shipDesign/:_id/edit',
 
-ShipDesignEditorController = RouteController.extend({
-    getShipDesignId: function() {
-        return this.params._id;
+    waitOn: function () {
+      return Meteor.subscribe('shipDesign', this.params._id);
     },
-    waitOn: function() {
-        return Meteor.subscribe('shipDesign', this.getShipDesignId());
-    },
-    run: function() {
-        Session.set("selected_shipDesign", this.getShipDesignId());
+
+    action: function () {
+      if (this.ready()) {
         this.render();
+      }
+    },
+
+    data: function(){
+      if (this.ready()){
+        return {
+          shipDesignId: this.params._id,
+          ship: dic.get('model.ShipStorage').createFromDesignId(this.params._id, Meteor.user()._id)
+        };
+      }
     }
+  });
 });

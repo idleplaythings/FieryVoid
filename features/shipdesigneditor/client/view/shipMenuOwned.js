@@ -13,11 +13,11 @@ Template.shipMenuOwned.events({
         console.log("clicked publish");
         Template.shipMenuOwned.toggleDetail('public');
     },
-    'click .testdrive': function(event) {
+    'click .testdrive': function(event, template) {
         console.log("Testdrive");
         Meteor.call(
             'TestdriveStart',
-            Session.get('selected_shipDesign'),
+            template.data.shipDesignId,
             function(err, result) {
                 if (err) {
                     console.log(err);

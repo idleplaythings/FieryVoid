@@ -64,6 +64,9 @@ model.ShipStorage.prototype.getShipsInFleet = function(fleetId)
 model.ShipStorage.prototype.createFromDesignId = 
 	function(shipDesignId, owner, shipId)
 {
+    if ( ! shipId)
+        shipId = new Meteor.Collection.ObjectID()._str;
+    
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
 	var timeline = this.timelineFactory.getTimeline();

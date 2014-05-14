@@ -9,6 +9,16 @@ Meteor.publish("shipDesigns", function () {
     ];
 });
 
+Meteor.publish("shipDesign", function (id) {
+    return [
+        ShipDesigns.find({_id: id}),
+        HullImages.find({}),
+        HullLayouts.find({}),
+        ModuleImages.find({}),
+        ModuleLayouts.find({})
+    ];
+});
+
 Meteor.publish("ModuleLayouts", function () {
     if (isAdminUser(this.userId))
         return ModuleLayouts.find({});

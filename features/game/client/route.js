@@ -8,8 +8,7 @@ Router.map(function() {
 CreateGameController = RouteController.extend({
     waitOn: function() {
         return [
-            HullLayouts,
-            shipDesigns
+            Meteor.subscribe('shipDesigns')
         ];
     },
     run: function() {
