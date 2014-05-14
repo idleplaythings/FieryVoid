@@ -1,6 +1,5 @@
 {
   "packages": {
-    "router": {},
     "three": {},
     "iron-router": {}
   }

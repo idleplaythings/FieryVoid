@@ -306,39 +306,11 @@ model.ModuleLayout.prototype.getTileHeight = function(pos)
     return this.tileHeight;
 };
 
-
-
-model.ModuleLayout.prototype.toggleDisabledTile = function(pos)
-{
-    if (this.isOutOfBounds(pos))
-        return;
-
-    var i = pos.y * this.width + pos.x;
-
-    Meteor.call(
-        'ModuleLayoutToggleDisabled',
-        this._id,
-        i,
-        function(err, result){}
-    );
-};
-
-model.ModuleLayout.prototype.toggleOutsideTile = function(pos)
-{
-    if (this.isOutOfBounds(pos))
-        return;
-
-    var i = pos.y * this.width + pos.x;
-
-    Meteor.call(
-        'ModuleLayoutToggleOutside',
-        this._id,
-        i,
-        function(err, result){}
-    );
-};
-
 model.ModuleLayout.prototype.getMass = function()
 {
     return parseInt(this.mass);
+};
+
+model.ModuleLayout.prototype.getTileIndex = function(tile){
+    return tile.y * this.width + tile.x;
 };

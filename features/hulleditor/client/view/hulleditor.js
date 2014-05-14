@@ -1,17 +1,20 @@
 Template.hullEditor.created = function()
 {
-    this.data.hullEditor = dic.get('model.HullEditor');
+    Template.hullEditor.controller = dic.get('model.HullEditor');
 }
 
 Template.hullEditor.rendered = function()
 {
-    this.data.hullEditor.init(jQuery('div.displayLarge'));
+    Template.hullEditor.controller.init(jQuery('div.displayLarge'));
 };
 
 Template.hullEditor.destroyed = function()
 {
-    this.data.hullEditor.destroy();
+    Template.hullEditor.controller.destroy();
+    Template.hullEditor.controller = null;
 };
+
+Template.hullEditor.controller = null;
 
 Template.hullEditor.choosingHull = function()
 {
@@ -20,7 +23,6 @@ Template.hullEditor.choosingHull = function()
 
 Template.hullEditor.events({
     'click .create': function () {
-        console.log("create");
         Session.set('hulleditor_selecting_hull', true);
     },
     'click .hullimagelist .hullImage.selectable' : function(){

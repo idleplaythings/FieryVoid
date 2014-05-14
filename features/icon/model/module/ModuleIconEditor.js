@@ -4,6 +4,8 @@ model.ModuleIconEditor = function ModuleIconEditor(gameScene, dispatacher)
     this.setTypes(['under', 'inside', 'outside', 'hull', 'over']);
     this.outsideTypes = ['under', 'outside', 'hull', 'over'];
     this.insideTypes = ['under', 'inside'];
+
+    this._viewMode = "outside";
 };
 
 model.ModuleIconEditor.prototype =
@@ -23,6 +25,16 @@ model.ModuleIconEditor.prototype.createSprites = function()
         new model.GridLayout(new model.TileLayout(), module), z);
 
     this.addObject(this.sprites.grid.getObject3d());
+};
+
+model.ModuleIconEditor.prototype.toggleViewMode = function(){
+    if ( this._viewMode == 'outside'){
+        this._viewMode = 'inside';
+        this.setInsideMode();
+    }else{
+        this.setOutsideMode();
+        this._viewMode = 'outside';
+    }
 };
 
 model.ModuleIconEditor.prototype.setOutsideMode = function()

@@ -21,7 +21,8 @@ Router.map(function() {
           moduleLayout: dic.get('model.ModuleLayoutRepository').getModuleLayout(
             Session.get('moduleeditor_selected_moduleLayout')),
           moduleImages: ModuleImages.find({}),
-          moduleLayouts: dic.get('model.ModuleLayoutRepository').getModuleLayouts()
+          moduleLayouts: dic.get('model.ModuleLayoutRepository').getModuleLayouts(),
+          inputAction: dic.get('model.inputAction.ModuleEditorClick')
         };
       }
     }

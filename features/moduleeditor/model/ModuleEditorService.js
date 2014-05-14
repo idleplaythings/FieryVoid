@@ -1,5 +1,29 @@
 model.ModuleEditorService = function ModuleEditorService(){}
 
+model.ModuleEditorService.prototype.toggleDisableTile = function(moduleLayout, tile){
+   if (moduleLayout.isOutOfBounds(tile))
+        return;
+
+    Meteor.call(
+        'ModuleLayoutToggleDisabled',
+        moduleLayout._id,
+        moduleLayout.getTileIndex(tile),
+        function(err, result){}
+    );
+};
+
+model.ModuleEditorService.prototype.toggleOutsideTile = function(moduleLayout, tile){
+  if (moduleLayout.isOutOfBounds(tile))
+        return;
+
+    Meteor.call(
+        'ModuleLayoutToggleOutside',
+        moduleLayout._id,
+        moduleLayout.getTileIndex(tile),
+        function(err, result){}
+    );
+};
+
 model.ModuleEditorService.prototype.togglePublish = function(moduleLayout){
   Meteor.call(
     'ModuleLayoutPublish',

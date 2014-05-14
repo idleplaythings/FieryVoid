@@ -10,7 +10,8 @@ dic.register('model.ModuleEditor', function(dic) {
     dic.get('model.InputModeFactory'),
     dic.get('model.SelectedModuleLayout'),
     dic.get('moduleEditor.ReactiveModuleList'),
-    dic.get('model.ModuleImageChooser')
+    dic.get('model.ModuleImageChooser'),
+    dic.get('model.inputAction.ModuleEditorClick')
   );
 });
 
@@ -39,3 +40,24 @@ dic.register('model.ModuleImageChooser', function(dic) {
 dic.register('model.ModuleEditorService', function(dic) {
   return new model.ModuleEditorService();
 }, { shared: true} );
+
+dic.register(
+    'model.InputModeModuleEditor',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.ModuleEditorClick')
+            ]
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register('model.inputAction.ModuleEditorClick', function(dic) {
+    return new model.inputAction.ModuleEditorClick(
+        dic.get('model.SelectedModuleLayout'),
+        dic.get('model.ModuleEditorService')
+    );
+}, {shared: true});

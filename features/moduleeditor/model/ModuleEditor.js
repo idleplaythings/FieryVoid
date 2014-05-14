@@ -9,7 +9,8 @@ model.ModuleEditor = function ModuleEditor(
     inputModeFactory,
     selectedModuleLayout,
     moduleList,
-    moduleImageChooser)
+    moduleImageChooser,
+    inputAction)
 {
     this._uiEventManager = uiEventManager;
     this._dispatcher = dispatcher;
@@ -20,6 +21,7 @@ model.ModuleEditor = function ModuleEditor(
     this._gameContainer = gameContainer;
     this._inputModeFactory = inputModeFactory;
     this._selectedModuleLayout = selectedModuleLayout;
+    this._inputAction = inputAction;
 
     this._moduleList = moduleList;
     this._moduleImageChooser = moduleImageChooser;
@@ -52,7 +54,19 @@ model.ModuleEditor.prototype.init = function(displayTarget, modulelistTarget, mo
 
     this.createButtons(displayTarget);
 
+    var inputMode = this._inputModeFactory.create('model.InputModeModuleEditor');
+    this._uiEventManager.removeCurrentInputMode();
+    this._uiEventManager.addInputMode(inputMode);
+
     this._animationLoop.start();
+};
+
+model.ModuleEditor.prototype.setOnDisable = function(){
+    this._inputAction.setOnDisable();
+};
+
+model.ModuleEditor.prototype.setOnOutside = function(){
+    this._inputAction.setOnOutside();
 };
 
 model.ModuleEditor.prototype.onModuleLayoutChanged = function(event)
@@ -61,17 +75,15 @@ model.ModuleEditor.prototype.onModuleLayoutChanged = function(event)
     if ( ! moduleLayout)
         return;
 
-    console.log("moduleLayout changed");
     this._selectedModuleLayout.set(moduleLayout);
     this._icon.create(moduleLayout);
-
 };
 
 model.ModuleEditor.prototype.createButtons = function(target)
 {
     new model.Button(
         '', 
-        this.toggleViewMode.bind(this),
+        this._icon.toggleViewMode.bind(this._icon),
         {
             background: '/misc/hullgrid.png',
             size: 'large'
@@ -80,33 +92,12 @@ model.ModuleEditor.prototype.createButtons = function(target)
         
 	new model.Button(
         '', 
-        this.toggleGrid.bind(this),
+        this._icon.toggleGrid.bind(this._icon),
         {
             background: '/misc/grid.png',
             size: 'large'
         }
         ).get().appendTo('.buttoncontainer', target);
-};
-
-model.ModuleEditor.prototype.toggleViewMode = function()
-{
-    this.iconViewMode++; 
-    if (this.iconViewMode >= this.possibleIconViewModes.length)
-        this.iconViewMode = 0;
-
-    if (this.possibleIconViewModes[this.iconViewMode] == 'inside')
-    {
-        this.icon.setInsideMode();
-    }
-    else
-    {
-        this.icon.setOutsideMode();
-    }
-};
-
-model.ModuleEditor.prototype.toggleGrid = function()
-{
-    this.icon.toggleGrid();
 };
 
 model.ModuleEditor.prototype.onClick = function(event)
@@ -133,5 +124,5 @@ model.ModuleEditor.prototype.onClick = function(event)
 
 model.ModuleEditor.prototype.destroy = function()
 {
-	this.reactiveModuleLayout.destroy();
+	this._reactiveModuleLayout.destroy();
 };

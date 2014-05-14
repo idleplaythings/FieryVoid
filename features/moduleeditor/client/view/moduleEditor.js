@@ -1,12 +1,14 @@
 
 Template.moduleEditor.created = function()
 {
-    this.data.moduleEditor = dic.get("model.ModuleEditor");
+    Template.moduleEditor.controller = dic.get("model.ModuleEditor");
+    Session.set('moduleeditor_clickType', 'disable');
 }
 
 Template.moduleEditor.rendered = function()
 {
-    this.data.moduleEditor.init(
+    console.log(this);
+    Template.moduleEditor.controller.init(
         jQuery('div.displayLarge'),
         jQuery('div.modulelist'),
         jQuery('div.moduleImageChooser')
@@ -15,8 +17,11 @@ Template.moduleEditor.rendered = function()
 
 Template.moduleEditor.destroyed = function()
 {
-    this.data.moduleEditor.destroy();
+    Template.moduleEditor.controller.destroy();
+    Template.moduleEditor.controller = null;
 };
+
+Template.moduleEditor.controller = null;
 
 Template.moduleMenu.activetraits = function()
 {
@@ -190,11 +195,13 @@ Template.moduleMenu.events({
 
         dic.get('model.ModuleEditorService').togglePublish(moduleLayout);
     },
-    'click .outside': function(event) {
-        Session.set('moduleEditor_brushType', 'outside');
+    'click .outside': function(event, template) {
+        Session.set('moduleeditor_clickType', 'outside');
+        Template.moduleEditor.controller.setOnOutside();
     },
-    'click .disabled': function(event) {
-        Session.set('moduleEditor_brushType', null);
+    'click .disabled': function(event, template) {
+        Session.set('moduleeditor_clickType', 'disable');
+        Template.moduleEditor.controller.setOnDisable();
     }, 
     'click .activetrait': function(event) {
 		jQuery('.traitDetails').show();
@@ -205,14 +212,12 @@ Template.moduleMenu.events({
     }
 });
 
-Template.moduleMenu.outsideClass = function()
-{
-    return Session.get('moduleEditor_brushType') == 'outside' ? 'active' : '';
+Template.moduleMenu.outsideClass = function(){
+    return Session.get('moduleeditor_clickType') == 'outside' ? 'active' : '';
 };
 
-Template.moduleMenu.disabledClass = function()
-{
-    return Session.get('moduleEditor_brushType') ? '' : 'active';
+Template.moduleMenu.disabledClass = function(){
+   return Session.get('moduleeditor_clickType') == 'disable' ? 'active' : '';
 };
 
 function getFromSelectedLayoutTrait(layout, name){
