@@ -64,7 +64,7 @@ model.EditorShip.prototype._doHideHull = function()
 
 model.EditorShip.prototype._doShowHull = function() 
 {
-     var ship = this._ship;
+    var ship = this._ship;
 
     if ( ! ship)
         return;
