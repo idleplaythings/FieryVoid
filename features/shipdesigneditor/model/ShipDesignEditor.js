@@ -13,7 +13,8 @@ model.ShipDesignEditor = function shipDesignEditor(
     animationLoop,
     iconFactory,
     inputModeFactory,
-    editorShip)
+    editorShip,
+    selectedModuleForPlacing)
 {
     this._dispatcher = dispatcher;
     this._gameScene = gameScene;
@@ -30,6 +31,7 @@ model.ShipDesignEditor = function shipDesignEditor(
     this._iconFactory = iconFactory;
     this._inputModeFactory = inputModeFactory;
     this._editorShip = editorShip;
+    this._selectedModuleForPlacing = selectedModuleForPlacing;
 
 
     
@@ -90,7 +92,6 @@ model.ShipDesignEditor = function shipDesignEditor(
     */
     this._iconContainer = null;
     this._icon = null;
-    this._selectedModuleIcon = null;
     this._selectedModule = null;
     this._remove = false;
     //this._shipDesign = null;
@@ -98,6 +99,7 @@ model.ShipDesignEditor = function shipDesignEditor(
     this._iconViewMode = 0;
     this._positionService = null;
     this._reactiveShipDesign = null;
+    this._toggleMenu = this._showModulelist;
 };
 
 model.ShipDesignEditor.prototype.init = function (
@@ -116,6 +118,7 @@ model.ShipDesignEditor.prototype.init = function (
 
     this._shipApperanceMenu.init(shipapperance);
     this._icon = this._iconFactory.create('model.ShipIconEditor');
+
     this._createButtons(iconcontainer);
     this._reactiveShipDesign = this._shipDesignStorage.getReactiveShipDesign(
         shipDesignId, this.onShipDesignChange.bind(this));
@@ -168,33 +171,19 @@ model.ShipDesignEditor.prototype.unselectRemove = function()
 model.ShipDesignEditor.prototype.toggleHullViewMode = function()
 {
     this._dispatcher.dispatch({name:"EditorToggleHullViewModeEvent"});
-    /*
-    console.log("toggleViewMode");
-    this._iconViewMode++; 
+    this._toggleMenu();
+};
 
-    if (this._iconViewMode >= this._possibleIconViewModes.length)
-        this._iconViewMode = 0;
+model.ShipDesignEditor.prototype._showModulelist = function(){
+    this._shipApperanceMenu.hide();
+    this._moduleList.show();
+    this._toggleMenu = this._showApperanceMenu;
+};
 
-    console.log("this._iconViewMode", this._iconViewMode, "this._possibleIconViewModes", this._possibleIconViewModes);
-
-    this.unselectRemove();
-    this.unselectModule();
-
-    if (this._possibleIconViewModes[this._iconViewMode] == 'grid')
-    {
-        this._shipApperanceMenu.hide();
-        this._moduleList.show();
-        this._shipStatusView.show();
-        this._icon.setInsideMode();
-    }
-    else
-    {
-        this._shipApperanceMenu.show();
-        this._moduleList.hide();
-        this._shipStatusView.hide();
-        this._icon.sethullMode();
-    }
-    */
+model.ShipDesignEditor.prototype._showApperanceMenu = function(){
+    this._shipApperanceMenu.show();
+    this._moduleList.hide();
+    this._toggleMenu = this._showModulelist;
 };
 
 model.ShipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
@@ -202,29 +191,16 @@ model.ShipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
     if (shipDesign)
     {
         this._shipApperanceMenu.setShipDesign(shipDesign);
-
-        if ( ! this.selectedModuleIcon)
-        {
-            this._selectedModuleIcon = new model.ModuleIconPlacing(
-                new model.TilePlacingModule(shipDesign));
-            this._gameScene.addToScene(this._selectedModuleIcon.getThreeObject()); 
-
-            if (this._selectedModule)
-                this._selectedModuleIcon.create();
-        }
-        else
-        {
-            this._selectedModuleIcon.changeShipDesign(shipDesign);
-        }
+        //this._selectedModuleIcon.create(shipDesign);
+        //his._selectedModuleIcon.changeShipDesign(shipDesign);
 
         var ship = new model.Ship({shipDesign: shipDesign});
         ship.setIcon(this._icon);
 
-        this._editorShip.setShip(ship);
+        this._editorShip.set(ship);
 
         this._positionService = new model.ShipDesignPositionService(shipDesign);
 
-        shipDesign.calcucalteWeaponArcs();
         this._shipStatusView.display(
             new model.ShipDesignPositionService(shipDesign), 
             new model.Ship({shipDesign: shipDesign}).getModules()
@@ -234,6 +210,23 @@ model.ShipDesignEditor.prototype.onShipDesignChange = function(shipDesign)
 
 model.ShipDesignEditor.prototype.onSelectedModuleChange = function(event)
 {
+
+    var module = event.module;
+
+    console.log("event", module);
+
+    if ( ! module){
+        this._uiEventManager.removeCurrentInputMode();
+        this._uiEventManager.addInputMode(
+            this._inputModeFactory.create('model.InputModeShipEditorDefault'));
+    }else{ 
+        this._selectedModuleForPlacing.set(event.module);
+        this._uiEventManager.removeCurrentInputMode();
+        this._uiEventManager.addInputMode(
+            this._inputModeFactory.create('model.InputModeShipEditorPlaceModule'));
+    }
+    
+    /*
     if (this._possibleIconViewModes[this.iconViewMode] == 'grid')
     {
         this._shipStatusView.hide();
@@ -244,6 +237,7 @@ model.ShipDesignEditor.prototype.onSelectedModuleChange = function(event)
     this.remove = false;
     this.selectedModule = event.module;
     this.selectedModuleIcon.create(event.module);
+    */
 };
 
 model.ShipDesignEditor.prototype.onClick = function(event)
@@ -421,7 +415,7 @@ model.ShipDesignEditor.prototype.getTileSnap = function(module, pos)
 
     return snap;
 };
-
+/*
 model.ShipDesignEditor.prototype.getModuleOffset = function(module, pos)
 {
     return {
@@ -429,6 +423,7 @@ model.ShipDesignEditor.prototype.getModuleOffset = function(module, pos)
         y: pos.y - Math.floor(module.getHeight()/ 2)
     }
 };
+*/
 
 
 model.ShipDesignEditor.prototype.destroy = function()

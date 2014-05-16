@@ -10,9 +10,11 @@ model.InputMode = function InputMode(dispatcher, actions, priority)
 model.InputMode.prototype.activate = function(uiResolver)
 {
 	this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
-    this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
+  this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
 	this._mouseClickCallback = this._dispatcher.attach('ClickEvent', this.onClick.bind(this), 1);
-    this._mouseMoveCallback = this._dispatcher.attach('MouseMoveEvent', this.onMouseMove.bind(this), 1);
+  this._mouseMoveCallback = this._dispatcher.attach('MouseMoveEvent', this.onMouseMove.bind(this), 1);
+  this._mouseOverCallback = this._dispatcher.attach('MouseOverEvent', this.onMouseOver.bind(this), 1);
+  this._mouseOutCallback = this._dispatcher.attach('MouseOutEvent', this.onMouseOut.bind(this), 1);
 	this._delegate('onActivation');
 };
 
@@ -21,7 +23,9 @@ model.InputMode.prototype.deactivate = function(uiResolver)
 	this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
 	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
 	this._dispatcher.detach('ClickEvent', this._mouseClickCallback);
-    this._dispatcher.detach('MouseMoveEvent', this._mouseMoveCallback);
+  this._dispatcher.detach('MouseMoveEvent', this._mouseMoveCallback);
+  this._dispatcher.detach('MouseOverEvent', this._mouseOverCallback);
+  this._dispatcher.detach('MouseOutEvent', this._mouseOutCallback);
 	this._delegate('onDeactivation');
 };
 
@@ -33,6 +37,16 @@ model.InputMode.prototype.onClick = function(event)
 model.InputMode.prototype.onMouseMove = function(event)
 {
 	this._delegate('onMouseMove', event);
+};
+
+model.InputMode.prototype.onMouseOut = function(event)
+{
+	this._delegate('onMouseOut', event);
+};
+
+model.InputMode.prototype.onMouseOver = function(event)
+{
+	this._delegate('onMouseOver', event);
 };
 
 model.InputMode.prototype.onScroll = function(event)
@@ -50,14 +64,15 @@ model.InputMode.prototype._delegate = function(handlerName, event)
 	if ( ! event)
 		event = {};
 	
-	this._actions.forEach(function(action){
-
+	this._actions.every(function(action){
+		
 		if (event.stopped)
-			return;
+			return false;
 
 		if (action[handlerName])
 			action[handlerName](event);
 
+		return true;
 	}, this);
 };
 

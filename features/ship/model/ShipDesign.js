@@ -12,15 +12,15 @@ model.ShipDesign = function ShipDesign(args)
     this.modules = args.modules || [];
 
     this.public = args.public || false;
-    this.calcucalteWeaponArcs();
+    this.calculateWeaponArcs();
 };
 
-model.ShipDesign.prototype.calcucalteWeaponArcs = function()
+model.ShipDesign.prototype.calculateWeaponArcs = function()
 {
     this.modules.filter(function(module){
         return module.weapon;
     }).forEach(function(module){
-        module.weapon.calcucalteWeaponArcs(this);
+        module.weapon.calculateWeaponArcs(this);
     }, this);
 };
 

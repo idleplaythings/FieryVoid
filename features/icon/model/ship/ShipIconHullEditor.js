@@ -18,8 +18,8 @@ model.ShipIconHullEditor.prototype.createSprites = function()
     this.sprites.grid = new model.SpriteGrid(
     	new model.GridLayout(new model.TileLayout(), this.getHullLayout()), 1);
 
-    this.addObject(this.sprites.hull.getObject3d());
-    this.addObject(this.sprites.grid.getObject3d());
+    this.addObject(this.sprites.hull);
+    this.addObject(this.sprites.grid);
     this.created = true;
 };
 

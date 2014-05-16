@@ -26,9 +26,9 @@ model.ShipIconEditor.prototype.createSprites = function()
 
     this.sprites.silhouette.getObject3d().material.opacity = 0.2;
 
-    this.addObject(this.sprites.silhouette.getObject3d());
-    this.addObject(this.sprites.hull.getObject3d());
-    this.addObject(this.sprites.grid.getObject3d());
+    this.addObject(this.sprites.silhouette);
+    this.addObject(this.sprites.hull);
+    this.addObject(this.sprites.grid);
 
 	this.modulesUnder = this.updateOrCreateModules(this.modulesUnder, "under", -1);
     this.modulesInside = this.updateOrCreateModules(this.modulesInside, "inside", 2);

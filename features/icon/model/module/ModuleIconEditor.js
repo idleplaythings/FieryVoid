@@ -24,7 +24,7 @@ model.ModuleIconEditor.prototype.createSprites = function()
     this.sprites.grid = new model.SpriteGrid(
         new model.GridLayout(new model.TileLayout(), module), z);
 
-    this.addObject(this.sprites.grid.getObject3d());
+    this.addObject(this.sprites.grid);
 };
 
 model.ModuleIconEditor.prototype.toggleViewMode = function(){

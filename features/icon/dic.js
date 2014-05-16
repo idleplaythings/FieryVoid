@@ -47,6 +47,18 @@ dic.register(
     }
 );
 
+dic.register(
+    'model.ModuleIconPlacing',
+    function(dic) {
+        return new model.ModuleIconPlacing(
+            dic.get('model.GameScene'),
+            dic.get('model.EventDispatcher')
+        );
+    }, {
+        tags: [ 'icon' ]
+    }
+);
+
 dic.register('model.IconFactory', function(dic) {
     return Factory.createFactoryFromTags('icon');
 });

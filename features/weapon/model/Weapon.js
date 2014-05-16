@@ -11,7 +11,7 @@ model.Weapon = function Weapon(args, module)
 	this._module = module;
 };
 
-model.Weapon.prototype.calcucalteWeaponArcs = function(shipDesign)
+model.Weapon.prototype.calculateWeaponArcs = function(shipDesign)
 {
 	var arcService = new model.WeaponArcService();
 	this._arcs = arcService.calculateWeaponArc(this._module, shipDesign);

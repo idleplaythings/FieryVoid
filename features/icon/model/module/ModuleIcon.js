@@ -33,9 +33,7 @@ model.ModuleIcon.prototype.create = function(moduleLayout)
         height
     );
 
-    //TODO: make sure that module icon is not added too often
-    console.log('adding to scene, should this happen so often?', this.getThreeObject())
-    this.gameScene.addToScene(this.getThreeObject());
+    return this;
 };
 
 model.ModuleIcon.prototype.getModuleLayout = function()

@@ -1,15 +1,12 @@
 model.ShipIcon = function ShipIcon(gameScene, dispatcher)
 {
-    model.Icon.call(this);
+    model.Icon.call(this, gameScene, dispatcher);
     this.ThreeIconGroup = null;
     this.created = false;
     this.hidden = false;
     this.modulesOver = [];
     this.modulesUnder = [];
-    
-    this.gameScene = gameScene;
-    this.dispatcher = dispatcher;
-    
+
     this.iconEffectManager = null;
 };
 
@@ -27,8 +24,6 @@ model.ShipIcon.prototype.create = function(shipDesign)
         width,
         height
     );
-
-    this.gameScene.addToScene(this.getThreeObject());
 
     return this;
 };
@@ -78,11 +73,11 @@ model.ShipIcon.prototype.createSprites = function()
 
     this.sprites.silhouette.uniforms.opacity.value = 0.5;
 
-    this.addObject(this.sprites.silhouette.getObject3d());
-    this.addObject(this.sprites.inside.getObject3d());
-    this.addObject(this.sprites.hull.getObject3d());
-    this.addObject(this.sprites.modules.getObject3d());
-    this.addObject(this.sprites.selected.getObject3d());
+    this.addObject(this.sprites.silhouette);
+    this.addObject(this.sprites.inside);
+    this.addObject(this.sprites.hull);
+    this.addObject(this.sprites.modules);
+    this.addObject(this.sprites.selected);
     
     this.iconEffectManager = new model.EffectManager(this.gameScene, this.dispatcher, this.ThreeIconGroup);
 
@@ -125,7 +120,7 @@ model.ShipIcon.prototype.updateOrCreateModules = function(list, type, z)
             };
             newModules.push(newEntry);
             module.icon[type] = newEntry.icon;
-            this.addObject(newEntry.icon.getObject3d());
+            this.addObject(newEntry.icon);
         }
 
     }, this);

@@ -3,15 +3,11 @@ model.ModuleIconPlacing = function ModuleIconPlacing(gameScene, dispatacher)
     model.ModuleIcon.call(this, gameScene, dispatacher);
     this.setTypes(["inside", "over"]);
     this.setZ(10);
-    this.TilePlacingModule = null;
+    this.TilePlacingModule = new model.TilePlacingModule();
 };
 
 model.ModuleIconPlacing.prototype =
     Object.create(model.ModuleIcon.prototype);
-
-model.ModuleIconPlacing.prototype.setTile = function(tile){
-    this.TilePlacingModule = tile;
-};
 
 model.ModuleIconPlacing.prototype.createSprites = function()
 {
@@ -26,15 +22,15 @@ model.ModuleIconPlacing.prototype.createSprites = function()
     this.sprites.grid = new model.SpriteGrid(
         new model.GridLayout(this.TilePlacingModule, module), 10);
 
-	this.addObject(this.sprites.under.getObject3d());
-    this.addObject(this.sprites.inside.getObject3d());
-    this.addObject(this.sprites.over.getObject3d());
-    this.addObject(this.sprites.grid.getObject3d());
+	this.addObject(this.sprites.under);
+    this.addObject(this.sprites.inside);
+    this.addObject(this.sprites.over);
+    this.addObject(this.sprites.grid);
 
     this.created = true;
 };
 
-model.ModuleIconPlacing.prototype.changeShipDesign = function(shipDesign)
+model.ModuleIconPlacing.prototype.setShipDesign = function(shipDesign)
 {
     this.TilePlacingModule.shipDesign = shipDesign;
 };

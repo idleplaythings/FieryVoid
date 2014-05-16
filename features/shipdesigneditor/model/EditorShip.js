@@ -1,21 +1,21 @@
 model.EditorShip = function EditorShip()
 {
-	this._ship = null;
-
     this._hullViewModeSetter = null;
     this._toggleHullVisibility = this.hideHull.bind(this);
+    ObjectContainer.call(this);
 }
 
-model.EditorShip.prototype.setShip = function(ship) 
+model.EditorShip.prototype = Object.create(ObjectContainer.prototype);
+
+model.EditorShip.prototype.set = function(ship) 
 {
-    console.log("setting editor ship");
-	this._ship = ship;
+    ObjectContainer.prototype.set.call(this, ship);
     this._executeHullViewMode();
 };
 
 model.EditorShip.prototype.getShipAndTileOnScenePosition = function(scenePosition)
 {
-    var ship = this._ship;
+    var ship = this.get();
 
     if (! ship)
         return {ship: null, tile: null};
@@ -52,7 +52,7 @@ model.EditorShip.prototype._executeHullViewMode = function()
 
 model.EditorShip.prototype._doHideHull = function() 
 {
-    var ship = this._ship;
+    var ship = this.get();
 
     if ( ! ship)
         return;
@@ -64,13 +64,12 @@ model.EditorShip.prototype._doHideHull = function()
 
 model.EditorShip.prototype._doShowHull = function() 
 {
-    var ship = this._ship;
+    var ship = this.get();
 
     if ( ! ship)
         return;
 
     ship.getIcon().sethullMode();
-    
 };
 
 model.EditorShip.prototype.toggleHullVisibility = function() 

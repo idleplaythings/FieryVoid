@@ -1,13 +1,16 @@
 if ( typeof model === 'undefined')
     model = {};
 
-model.Icon = function Icon()
+model.Icon = function Icon(gameScene, dispatcher)
 {
     this.ThreeIconGroup = null;
     this.iconObject = null;
     this.width = null;
     this.height = null;
     this.sprites = {};
+
+    this.gameScene = gameScene;
+    this.dispatcher = dispatcher;
 };
 
 model.Icon.prototype.create = function(iconObject, width, height)
@@ -19,12 +22,14 @@ model.Icon.prototype.create = function(iconObject, width, height)
     this.getThreeObject();
     this.createOrUpdateSprites();
     
+    this.gameScene.addToScene(this.getThreeObject());
+
     return this;
 };
 
 model.Icon.prototype.addObject = function(obj)
 {
-    this.ThreeIconGroup.add(obj);
+    this.ThreeIconGroup.add(obj.getObject3d());
 };
 
 model.Icon.prototype.removeObject = function(obj)
@@ -44,6 +49,10 @@ model.Icon.prototype.getThreeObject = function()
     return this.ThreeIconGroup;
 };
 
+model.Icon.prototype.destroy = function(){
+    this.gameScene.removeFromScene(this.getThreeObject());
+};
+
 model.Icon.prototype.hide = function()
 {
     for (var i in this.sprites)
@@ -54,6 +63,7 @@ model.Icon.prototype.hide = function()
 
 model.Icon.prototype.show = function()
 {
+    console.log("showing");
     for (var i in this.sprites)
         this.sprites[i].show();
 

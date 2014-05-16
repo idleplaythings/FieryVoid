@@ -1,10 +1,10 @@
-model.TilePlacingModule = function TilePlacingModule(shipDesign, args)
+model.TilePlacingModule = function TilePlacingModule(args)
 {
     if ( ! args)
         args = {};
     
     model.Tile.call(this, args);
-    this.shipDesign = shipDesign;
+    this.shipDesign = null;
     this.layout = args.layout || null;
     this.position = {x:0, y:0};
 };
