@@ -53,7 +53,7 @@ model.ModuleIcon.prototype.createSprites = function()
         var type = this.types[i];
         var z = parseInt(i, 10) + this.z;
         this.sprites[type] = new model.ModuleSprite(module, type, z);
-        this.addObject(this.sprites[type].getObject3d());
+        this.addObject(this.sprites[type]);
     }
 
     this.created = true;

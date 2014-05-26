@@ -203,56 +203,6 @@ model.ModuleLayout.prototype.getPositionHeight = function(hullLayout)
     return height;
 };
 
-model.ModuleLayout.prototype.isValidPosition = function(ship, pos)
-{
-    for (var x = 0; x < this.getWidth(); x++)
-    {
-        for (var y = 0; y < this.getHeight(); y++)
-        {
-            if ( ! this.isValidTileForPosition(ship, pos, {x:x, y:y}))
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-};
-
-model.ModuleLayout.prototype.isValidTileForPosition  = function(
-    ship, pos, tilePos)
-{
-    var hullLayout = ship.hullLayout;
-    var hullLayoutPos = {x: pos.x + tilePos.x, y: pos.y + tilePos.y};
-
-    if (this.isDisabledTile(tilePos))
-        return true;
-
-    var hullDisabledTile = hullLayout.isUnavailableTile(hullLayoutPos);
-    var outsideTile = this.isOutsideTile(tilePos);
-
-    if (outsideTile != hullDisabledTile)
-        return false;
-
-    if ( ! outsideTile && this.tileHeight > hullLayout.getTileHeight(hullLayoutPos))
-        return false;
-
-    if (ship.getModuleInPosition(hullLayoutPos))
-        return false;
-
-    return true;
-};
-
-model.ModuleLayout.prototype.publish = function()
-{
-    Meteor.call(
-        'ModuleLayoutPublish',
-        this._id,
-        this.image.name,
-        function(err, result){}
-    );
-};
-
 model.ModuleLayout.prototype.isOutOfBounds = function(pos)
 {
     return pos.x < 0 || pos.y < 0 || pos.x >= this.getWidth() || pos.y >= this.getHeight();

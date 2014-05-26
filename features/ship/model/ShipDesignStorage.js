@@ -1,6 +1,7 @@
-model.ShipDesignStorage = function ShipDesignStorage(timelineFactory)
+model.ShipDesignStorage = function ShipDesignStorage(timelineFactory, moduleLayoutRepository)
 {
-    this.timelineFactory =  timelineFactory
+    this.timelineFactory =  timelineFactory;
+    this._moduleLayoutRepository = moduleLayoutRepository;
 };
 
 model.ShipDesignStorage.prototype.getReactiveShipDesign = function(id, callback)
@@ -41,8 +42,7 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
     doc.modules = doc.modules.map(
         function(moduleDetails)
         {
-            var module = ModuleLayouts.findOne(
-                {'_id': moduleDetails.module});
+            var module = this._moduleLayoutRepository.getModuleLayout(moduleDetails.module);
 
             if (! module)
                 console.log("module id", moduleDetails.module, " not found");

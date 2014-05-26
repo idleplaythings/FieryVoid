@@ -55,8 +55,7 @@ model.ModuleEditor.prototype.init = function(displayTarget, modulelistTarget, mo
     this.createButtons(displayTarget);
 
     var inputMode = this._inputModeFactory.create('model.InputModeModuleEditor');
-    this._uiEventManager.removeCurrentInputMode();
-    this._uiEventManager.addInputMode(inputMode);
+    this._uiEventManager.setInputMode(inputMode);
 
     this._animationLoop.start();
 };

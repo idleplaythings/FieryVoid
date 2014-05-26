@@ -1,4 +1,4 @@
-model.TilePlacingModule = function TilePlacingModule(args)
+model.TilePlacingModule = function TilePlacingModule(args, shipDesignEditorService)
 {
     if ( ! args)
         args = {};
@@ -7,6 +7,7 @@ model.TilePlacingModule = function TilePlacingModule(args)
     this.shipDesign = null;
     this.layout = args.layout || null;
     this.position = {x:0, y:0};
+    this._shipDesignEditorService = shipDesignEditorService;
 };
 
 model.TilePlacingModule.prototype =  Object.create(model.Tile.prototype);
@@ -31,7 +32,7 @@ model.TilePlacingModule.prototype.getImageData = function(tilePosition)
     context.strokeStyle = "rgba(255,0,0,0.5)";
     context.fillStyle = "rgba(255,0,0,0.5)";
 
-    if (this.layout.isValidTileForPosition(this.shipDesign, this.position, tilePosition))
+    if (this._shipDesignEditorService.isValidTileForPosition(this.layout, this.shipDesign, this.position, tilePosition))
         return null;
 
     drawingTool.drawBox(

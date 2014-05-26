@@ -47,6 +47,11 @@ model.ShipDesignEditor = function shipDesignEditor(
     this._moduleChangeHandle = dispatcher.attach(
         'selectedModuleChange', this.onSelectedModuleChange.bind(this));
 
+    dispatcher.attach(
+        'KeyUpEvent', this.onKeyup.bind(this));
+
+    this._inputModeStack = [];
+
 /*
     dispatcher.attach(
         'MouseMoveEvent', this.onMouseMove.bind(this));
@@ -57,9 +62,8 @@ model.ShipDesignEditor = function shipDesignEditor(
     dispatcher.attach(
         'ClickEvent', this.onClick.bind(this));
 
-     dispatcher.attach(
-        'KeyUpEvent', this.onKeyup.bind(this));
-*/
+     
+
 
     
 
@@ -125,9 +129,23 @@ model.ShipDesignEditor.prototype.init = function (
 
     this._moduleList.init(modulelist).hide().react();
 
-    this._uiEventManager.addInputMode(this._inputModeFactory.create('model.InputModeShipEditorDefault'));
+    this._addInputMode(this._inputModeFactory.create('model.InputModeShipEditorDefault'));
 
     this._animationLoop.start();
+};
+
+model.ShipDesignEditor.prototype._addInputMode = function(inputMode){
+    this._inputModeStack.push(inputMode);
+    this._uiEventManager.setInputMode(inputMode);
+};
+
+model.ShipDesignEditor.prototype._removeInputMode = function(){
+    if (this._inputModeStack.length <= 1)
+        return;
+
+    this._inputModeStack.pop();
+
+    this._uiEventManager.setInputMode(this._inputModeStack[this._inputModeStack.length - 1]);
 };
 
 model.ShipDesignEditor.prototype._createButtons = function(iconcontainer)
@@ -216,13 +234,10 @@ model.ShipDesignEditor.prototype.onSelectedModuleChange = function(event)
     console.log("event", module);
 
     if ( ! module){
-        this._uiEventManager.removeCurrentInputMode();
-        this._uiEventManager.addInputMode(
-            this._inputModeFactory.create('model.InputModeShipEditorDefault'));
+        this._removeInputMode();
     }else{ 
         this._selectedModuleForPlacing.set(event.module);
-        this._uiEventManager.removeCurrentInputMode();
-        this._uiEventManager.addInputMode(
+        this._addInputMode(
             this._inputModeFactory.create('model.InputModeShipEditorPlaceModule'));
     }
     
@@ -271,55 +286,10 @@ model.ShipDesignEditor.prototype.onKeyup = function(event)
 
     if (key instanceof model.Hotkey.Cancel)
     {
-        this.unselectModule();
-        this.unselectRemove();
-    }
-    else if ( key instanceof model.Hotkey.Left)
-    {
-        this.turnModule("left");
-    }
-    else if ( key instanceof model.Hotkey.Right)
-    {
-        this.turnModule("right");
+        this._removeInputMode();
+        this._moduleList.unselect();
     }
      
-};
-
-model.ShipDesignEditor.prototype.turnModule = function(direction)
-{
-    var module = this.selectedModule;
-
-    if ( ! module)
-        return;
-
-    var newDirection = this.getNewModuleDirection(module, direction);
-
-    if (newDirection == module.direction)
-        return;
-
-    module.setDirection(newDirection);
-    this.selectedModuleIcon.create(module);
-};
-
-model.ShipDesignEditor.prototype.getNewModuleDirection = function(module, direction)
-{
-    var allowed = module.allowedDirections;
-    var currentDirection = module.direction;
-
-    if (direction == 'right')
-    {
-        if (currentDirection >= allowed.length)
-            return allowed[0];
-
-        return allowed[currentDirection];
-    }
-    else
-    {
-        if (currentDirection == 1)
-            return allowed[allowed.length-1];
-
-        return allowed[currentDirection-2];
-    }
 };
 
 model.ShipDesignEditor.prototype.unselectModule = function()

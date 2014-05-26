@@ -52,8 +52,7 @@ model.HullEditor.prototype._changeHeight = function(height)
         height = 1;
 
     var inputMode = this._inputModeFactory.create('model.InputModeHullEditorHeight' + height);
-    this._uiEventManager.removeCurrentInputMode();
-    this._uiEventManager.addInputMode(inputMode);
+    this._uiEventManager.setInputMode(inputMode);
 };
 
 model.HullEditor.prototype.onHullLayoutChanged = function(event)

@@ -25,7 +25,7 @@ model.UiEventManager = function UiEventManager(
     this.distanceDragged = 0;
     this.draggingDistanceTreshold = 10;
 
-    this.InputModeStates = [];
+    this.inputMode = null;
 
     this._coordinateConverter = coordinateConverter;
     this._hotkeys = new model.HotkeyFactory().getHotkeys();
@@ -62,50 +62,21 @@ model.UiEventManager.prototype.destroy = function()
     return this;
 };
 
-model.UiEventManager.prototype.getCurrentInputMode = function()
+model.UiEventManager.prototype.getInputMode = function()
 {
 	return this.InputModeStates[this.InputModeStates.length-1];
 };
 
-model.UiEventManager.prototype.addInputMode = function(state)
+model.UiEventManager.prototype.setInputMode = function(state)
 {
-	var current = this.getCurrentInputMode();
+	if (this.inputMode)
+		this.inputMode.deactivate(this);
 
-	if (current)
-		current.deactivate(this);
+    this.inputMode = state;
 
-	this.InputModeStates.push(state);
-	state.activate(this);
+    if (state.activate)
+	   state.activate(this);
 };
-
-model.UiEventManager.prototype.removeInputMode = function(state)
-{
-    while(true)
-    {
-        var current = this.getCurrentInputMode();
-        if (current != state)
-            break;
-
-        this.InputModeStates.pop();
-    };
-
-    state.deactivate(this);
-    var current = this.getCurrentInputMode();
-
-    if (current)
-        current.activate(this);
-};
-
-model.UiEventManager.prototype.removeCurrentInputMode = function()
-{
-    var state = this.getCurrentInputMode();
-
-    if ( ! state)
-        return;
-
-    this.removeInputMode(state);
-};
-
 
 model.UiEventManager.prototype.onZoom = function(event)
 {

@@ -26,6 +26,10 @@ model.inputAction.ModuleEditorClick.prototype.onClick = function(event)
   var positionService = new model.ModuleLayoutPositionService(moduleLayout);
   var tile = positionService.getTileOnPosition(event.game);
 
+  if (moduleLayout.isOutOfBounds(tile)){
+    return;
+  }
+
   if (this.disable === true){
     if (moduleLayout.isOutsideTile(tile) && ! moduleLayout.isDisabledTile(tile)){
       this._moduleEditorService.toggleOutsideTile(moduleLayout, tile);

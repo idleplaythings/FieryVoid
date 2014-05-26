@@ -21,24 +21,24 @@ Meteor.methods({
         var userid = Meteor.userId();
 
         if ( ! userid)
-            throw new Meteor.Error(403, "You must be logged in to edit a ship");
+            throw new Meteor.Error(403, "You must be logged in to edit a ship design");
 
         var shipDesignStorage = dic.get('model.ShipDesignStorage');
-        var ship = shipDesignStorage.getShipDesign(shipId);
+        var shipDesign = shipDesignStorage.getShipDesign(shipId);
 
-        if ( ! ship || ship.owner != userid)
+        if ( ! shipDesign || shipDesign.owner != userid)
             throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
 
-        var module = ModuleLayouts.findOne({'_id': moduleId});
+        var module = dic.get('model.ModuleLayoutRepository').getModuleLayout(moduleId);
         module.setDirection(direction);
 
-        if ( ! module.isValidPosition(ship, modulePosition))
+        if ( ! dic.get('model.ShipDesignEditorService').isValidPosition(modulePosition, module, shipDesign))
             throw new Meteor.Error(400, "Invalid module placement");
 
         ShipDesigns.update(
             {$and: [{'_id': shipId}, {'owner': userid}]},
             {$push: {'modules':{
-				'moduleIdOnShip': new Meteor.Collection.ObjectID().toHexString(),
+            'moduleIdOnShip': new Meteor.Collection.ObjectID().toHexString(),
                 'module': moduleId,
                 'position': modulePosition,
                 'direction': direction

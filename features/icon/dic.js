@@ -52,7 +52,8 @@ dic.register(
     function(dic) {
         return new model.ModuleIconPlacing(
             dic.get('model.GameScene'),
-            dic.get('model.EventDispatcher')
+            dic.get('model.EventDispatcher'),
+            dic.get('model.TilePlacingModule')
         );
     }, {
         tags: [ 'icon' ]

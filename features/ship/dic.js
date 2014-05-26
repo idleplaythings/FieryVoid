@@ -8,7 +8,8 @@ dic.register('model.ShipStorage', function(dic) {
 
 dic.register('model.ShipDesignStorage', function(dic) {
     return new model.ShipDesignStorage(
-        dic.get('model.TimelineFactory')
+        dic.get('model.TimelineFactory'),
+        dic.get('model.ModuleLayoutRepository')
     );
 }, { shared: true });
 

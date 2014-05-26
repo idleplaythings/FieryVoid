@@ -9,7 +9,25 @@ model.inputAction.ShowSelectedModuleIconInEditor = function ShowSelectedModuleIc
   this._shipContainer.onChange(this.onShipChange.bind(this));
 
   this._selectedModuleIcon = icon;
+
+  model.inputAction.ShipEditorInputAction.call(this);
   this.hide();
+};
+
+model.inputAction.ShowSelectedModuleIconInEditor.prototype = Object.create(model.inputAction.ShipEditorInputAction.prototype);
+
+model.inputAction.ShowSelectedModuleIconInEditor.prototype.onKeyUp = function(event){
+
+  var key = event.key;
+
+  if ( key instanceof model.Hotkey.Left)
+  {
+    this._turnModule("left");
+  }
+  else if ( key instanceof model.Hotkey.Right)
+  {
+    this._turnModule("right");
+  }
 };
 
 model.inputAction.ShowSelectedModuleIconInEditor.prototype.onMouseMove = function(event){
@@ -34,13 +52,13 @@ model.inputAction.ShowSelectedModuleIconInEditor.prototype.onMouseMove = functio
 
 model.inputAction.ShowSelectedModuleIconInEditor.prototype.onActivation = function(event)
 {
-  this._setModule(this._moduleContainer.get());
   var ship = this._shipContainer.get();
 
-  if ( ! ship)
-    return;
+  if (ship)
+    this._setShipDesign(ship.shipDesign);
 
-  this._setShipDesign(ship.shipDesign);
+  this._setModule(this._moduleContainer.get());
+  
 };
 
 model.inputAction.ShowSelectedModuleIconInEditor.prototype.onDeactivation = function(event)
@@ -66,6 +84,7 @@ model.inputAction.ShowSelectedModuleIconInEditor.prototype._setModule = function
   if ( ! module)
     return;
 
+  console.log(module);
   this._selectedModuleIcon.create(module);
 };
 
@@ -99,14 +118,6 @@ model.inputAction.ShowSelectedModuleIconInEditor.prototype.show = function(shipD
   this._selectedModuleIcon.show();
 };
 
-model.inputAction.ShowSelectedModuleIconInEditor.prototype._getModuleOffset = function(module, pos)
-{
-    return {
-        x: pos.x - Math.floor(module.getWidth()/ 2),
-        y: pos.y - Math.floor(module.getHeight()/ 2)
-    }
-};
-
 model.inputAction.ShowSelectedModuleIconInEditor.prototype._getTileSnap = function(module, pos)
 {
     var scale = 30;
@@ -120,4 +131,44 @@ model.inputAction.ShowSelectedModuleIconInEditor.prototype._getTileSnap = functi
         snap.y += scale/2;
 
     return snap;
+};
+
+
+model.inputAction.ShowSelectedModuleIconInEditor.prototype._turnModule = function(direction)
+{
+    var module = this._moduleContainer.get();
+
+    if ( ! module)
+        return;
+
+    console.log("turn")
+
+    var newDirection = this._getNewModuleDirection(module, direction);
+
+    if (newDirection == module.direction)
+      return;
+
+    module.setDirection(newDirection);
+    this._setModule(module);
+};
+
+model.inputAction.ShowSelectedModuleIconInEditor.prototype._getNewModuleDirection = function(module, direction)
+{
+    var allowed = module.allowedDirections;
+    var currentDirection = module.direction;
+
+    if (direction == 'right')
+    {
+        if (currentDirection >= allowed.length)
+            return allowed[0];
+
+        return allowed[currentDirection];
+    }
+    else
+    {
+        if (currentDirection == 1)
+            return allowed[allowed.length-1];
+
+        return allowed[currentDirection-2];
+    }
 };

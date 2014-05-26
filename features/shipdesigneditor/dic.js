@@ -16,14 +16,17 @@ dic.register('model.ShipDesignEditor', function(dic) {
         dic.get('model.IconFactory'),
         dic.get('model.InputModeFactory'),
         dic.get('model.EditorShip'),
-        dic.get('model.SelectedModuleLayoutForPlacing'),
-        dic.get('model.inputAction.ShowSelectedModuleIconInEditor')
+        dic.get('model.SelectedModuleLayoutForPlacing')
     )
 });
 
 dic.register('model.ShipApperanceMenu', function(dic) {
     return new model.ShipApperanceMenu()
 });
+
+dic.register('model.ShipDesignEditorService', function(dic) {
+    return new model.ShipDesignEditorService()
+}, { shared: true});
 
 dic.register('model.EditorShip', function(dic) {
     return new model.EditorShip()
@@ -58,7 +61,10 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
-                dic.get('model.inputAction.ShowSelectedModuleIconInEditor')
+                dic.get('model.inputAction.EnforceShipHullHiddenInEditor'),
+                dic.get('model.inputAction.ShowSelectedModuleIconInEditor'),
+                dic.get('model.inputAction.ShowGridOnShip'),
+                dic.get('model.inputAction.PlaceModuleOnClick')
             ],
             1
         );  
@@ -73,6 +79,7 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
+                dic.get('model.inputAction.EnforceShipHullHiddenInEditor'),
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailViewEditor')
@@ -127,6 +134,20 @@ dic.register('model.inputAction.ShowSelectedModuleIconInEditor', function(dic) {
         dic.get('model.SelectedModuleLayoutForPlacing'),
         dic.get('model.EditorShip')
     );
-}, {shared: true});
+});
+
+dic.register('model.inputAction.ShowGridOnShip', function(dic) {
+    return new model.inputAction.ShowGridOnShip(
+        dic.get('model.EditorShip')
+    );
+});
+
+dic.register('model.inputAction.PlaceModuleOnClick', function(dic) {
+    return new model.inputAction.PlaceModuleOnClick(
+        dic.get('model.SelectedModuleLayoutForPlacing'),
+        dic.get('model.EditorShip'),
+        dic.get('model.ShipDesignEditorService')
+    );
+});
 
 

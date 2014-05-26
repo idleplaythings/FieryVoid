@@ -66,31 +66,6 @@ model.ShipDesign.prototype.validateVariable = function(name, value)
     return false;
 };
 
-model.ShipDesign.prototype.removeModule = function(pos)
-{
-    var module = this.getModuleInPosition(pos);
-    if ( ! module)
-        return;
-
-    Meteor.call(
-        'ShipDesignRemoveModule',
-        this._id, module._id, module.position,
-        function(err, result){}
-    );
-};
-
-model.ShipDesign.prototype.placeModule = function(module, pos)
-{
-    if ( ! module.isValidPosition(this, pos))
-        return false;
-
-    Meteor.call(
-        'ShipDesignAddModule',
-        this._id, module._id, module.direction, pos,
-        function(err, result){}
-    );
-};
-
 model.ShipDesign.prototype.getModuleInPosition = function(pos)
 {
     for (var i in this.modules)

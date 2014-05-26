@@ -15,6 +15,7 @@ model.InputMode.prototype.activate = function(uiResolver)
   this._mouseMoveCallback = this._dispatcher.attach('MouseMoveEvent', this.onMouseMove.bind(this), 1);
   this._mouseOverCallback = this._dispatcher.attach('MouseOverEvent', this.onMouseOver.bind(this), 1);
   this._mouseOutCallback = this._dispatcher.attach('MouseOutEvent', this.onMouseOut.bind(this), 1);
+  this._keyUpCallback = this._dispatcher.attach('KeyUpEvent', this.onKeyUp.bind(this), 1);
 	this._delegate('onActivation');
 };
 
@@ -26,7 +27,13 @@ model.InputMode.prototype.deactivate = function(uiResolver)
   this._dispatcher.detach('MouseMoveEvent', this._mouseMoveCallback);
   this._dispatcher.detach('MouseOverEvent', this._mouseOverCallback);
   this._dispatcher.detach('MouseOutEvent', this._mouseOutCallback);
+  this._dispatcher.detach('KeyUpEvent', this._keyUpCallback);
 	this._delegate('onDeactivation');
+};
+
+model.InputMode.prototype.onKeyUp = function(event)
+{
+	this._delegate('onKeyUp', event);
 };
 
 model.InputMode.prototype.onClick = function(event)
@@ -70,7 +77,7 @@ model.InputMode.prototype._delegate = function(handlerName, event)
 			return false;
 
 		if (action[handlerName])
-			action[handlerName](event);
+			action[handlerName](event, this);
 
 		return true;
 	}, this);
