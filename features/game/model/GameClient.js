@@ -83,6 +83,7 @@ model.GameClient.prototype.play = function()
 
     this.timelineFactory.startGameSaveInterval(this._id);
 
+    this.gameTerrain.startAnimation(this.gameAnimationLoop);
     this.gameAnimationLoop.start();
 };
 

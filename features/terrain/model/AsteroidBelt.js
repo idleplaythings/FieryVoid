@@ -13,12 +13,12 @@ model.AsteroidBelt.prototype.create = function()
     this._createMesh();
 
     return this;
-}
+};
 
 model.AsteroidBelt.prototype.animate = function()
 {
     this.material.uniforms.time.value += 0.001;
-}
+};
 
 model.AsteroidBelt.prototype._createMaterial = function()
 {

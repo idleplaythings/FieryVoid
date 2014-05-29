@@ -11,7 +11,7 @@ CreateGameController = RouteController.extend({
             Meteor.subscribe('shipDesigns')
         ];
     },
-    run: function() {
+    action: function() {
         Meteor.call('StartGame', Meteor.userId(), Meteor.userId(), this._onCreated);
     },
     _onCreated: function(error, game) {
