@@ -40,7 +40,6 @@ model.ShipDesignEditor = function shipDesignEditor(
     this._icon = null;
     this._selectedModule = null;
     this._remove = false;
-    //this._shipDesign = null;
     this._possibleIconViewModes = ["hull", "grid"];
     this._iconViewMode = 0;
     this._positionService = null;

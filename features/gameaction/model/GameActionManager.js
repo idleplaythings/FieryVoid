@@ -8,6 +8,5 @@ model.GameActionManager = function GameActionManager(inputModeFactory, uiEventMa
 
 model.GameActionManager.prototype.init = function()
 {
-	console.log("GameActionManager init", this._inputModeFactory, this._uiEventManager)
-	this._uiEventManager.addInputMode(this._inputModeFactory.create('model.InputModeSelect'));
+	this._uiEventManager.setInputMode(this._inputModeFactory.create('model.InputModeSelect'));
 };
