@@ -37,7 +37,10 @@ model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
 
     if ( event.zoom == 1)
     {
-        var ship = this._shipService.getClosestShip(this._scrolling.getCurrentPosition());
+        var ship = this._shipService.getClosestShip(
+            this._scrolling.getCurrentPosition()
+        );
+        
         if (! ship)
             return;
 

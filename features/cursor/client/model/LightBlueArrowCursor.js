@@ -3,12 +3,12 @@ model.inputAction.LightBlueArrowCursor = function InputActionLightBlueArrowCurso
 	this._gameContainer = gameContainer;
 }
 
-model.inputAction.LightBlueArrowCursor.prototype.onActivate = function(event)
+model.inputAction.LightBlueArrowCursor.prototype.onActivation = function(event)
 {
     this._gameContainer.get().addClass('selectCursor');
 };
 
-model.inputAction.LightBlueArrowCursor.prototype.onDeactivate = function(event)
+model.inputAction.LightBlueArrowCursor.prototype.onDeactivation = function(event)
 {
     this._gameContainer.get().removeClass('selectCursor');
 };

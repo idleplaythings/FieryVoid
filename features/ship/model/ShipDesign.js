@@ -78,33 +78,6 @@ model.ShipDesign.prototype.getModuleInPosition = function(pos)
     return null;
 };
 
-model.ShipDesign.prototype.updateIfDifferent = function(name, value)
-{
-    if ( this[name] === undefined)
-        throw new Error(
-            "Trying to change Ship design value '" + name + "' that does not exist"
-        );
-
-    if (this[name] != value)
-    {
-        this[name] = value;
-        this.updateValue(name, value);
-    }
-};
-
-model.ShipDesign.prototype.updateValue = function(name, value)
-{
-    Meteor.call(
-        'ShipDesignUpdate',
-        this._id,
-        name,
-        value,
-        function(err, result){
-            console.log('Ship ' +name + ' updated to ' + value);
-        }
-    );
-};
-
 model.ShipDesign.prototype.getPositionInIcon = function(pos)
 {
     return this.getCoordinateTool().convertGridToCanvas(pos);

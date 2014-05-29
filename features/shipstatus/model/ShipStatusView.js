@@ -205,7 +205,10 @@ model.ShipStatusView.prototype.onScroll = function(event)
 
 model.ShipStatusView.prototype.onZoom = function(event)
 {
-
+    var zoom = event.zoom;
+    var template = this.getTemplate();
+    template.css('-webkit-transform', 'scale('+zoom+','+zoom+')');
+    template.css('transform', 'scale('+zoom+','+zoom+')');
 };
 
 model.ShipStatusView.prototype.show = function()

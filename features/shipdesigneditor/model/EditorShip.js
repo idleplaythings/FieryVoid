@@ -3,6 +3,8 @@ model.EditorShip = function EditorShip()
     this._hullViewModeSetter = null;
     this._toggleHullVisibility = this.hideHull.bind(this);
     ObjectContainer.call(this);
+
+    this._hullVisible = true;
 }
 
 model.EditorShip.prototype = Object.create(ObjectContainer.prototype);
@@ -35,6 +37,7 @@ model.EditorShip.prototype.hideHull = function()
     this._hullViewModeSetter = this._doHideHull.bind(this);
     this._toggleHullVisibility = this.showHull.bind(this);
     this._executeHullViewMode();
+    this._hullVisible = false;
 };
 
 model.EditorShip.prototype.showHull = function() 
@@ -42,6 +45,7 @@ model.EditorShip.prototype.showHull = function()
     this._hullViewModeSetter = this._doShowHull.bind(this);
     this._toggleHullVisibility = this.hideHull.bind(this);
     this._executeHullViewMode();
+    this._hullVisible = true;
 };
 
 model.EditorShip.prototype._executeHullViewMode = function() 
@@ -75,4 +79,8 @@ model.EditorShip.prototype._doShowHull = function()
 model.EditorShip.prototype.toggleHullVisibility = function() 
 {
     this._toggleHullVisibility();
+};
+
+model.EditorShip.prototype.isHullVisible = function(){
+    return this._hullVisible;
 };

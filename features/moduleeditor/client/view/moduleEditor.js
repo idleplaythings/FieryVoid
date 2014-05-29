@@ -76,7 +76,13 @@ Template.moduleMenu.traits = function()
     }, this);
 
     return traits;
-}
+};
+
+Template.moduleListing.events({
+    'click .create': function () {
+        Meteor.call('ModuleLayoutInsert', function(err, result){});
+    }
+});
 
 
 Template.traitDetail.events({

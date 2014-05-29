@@ -70,12 +70,6 @@ dic.register('model.inputAction.ShowShipStatusView', function(dic) {
     );
 });
 
-dic.register('model.inputAction.LightBlueArrowCursor', function(dic) {
-    return new model.inputAction.LightBlueArrowCursor(
-        dic.get('model.GameHtmlContainer')
-    );
-});
-
 dic.register('model.inputAction.ShowModuleDetailView', function(dic) {
     return new model.inputAction.ShowModuleDetailView(
         dic.get('model.ShipService'),

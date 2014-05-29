@@ -1,0 +1,14 @@
+.selectCursor 
+{
+  cursor:url('/misc/arrow.gif'), default;
+}
+
+.weaponCursor 
+{
+  cursor:url('/misc/target.gif'), default;
+}
+
+.removeCursor 
+{
+  cursor:url('/misc/x.gif'), default;
+}

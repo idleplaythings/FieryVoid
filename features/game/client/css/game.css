@@ -4,13 +4,3 @@
     width:100%;
     height:calc(100% - 45px);
 }
-
-#gameContainer.selectCursor 
-{
-	cursor:url('/misc/arrow.gif'), default;
-}
-
-#gameContainer.weaponCursor 
-{
-	cursor:url('/misc/target.gif'), default;
-}

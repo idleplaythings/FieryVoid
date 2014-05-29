@@ -1,5 +1,18 @@
 model.ShipDesignEditorService = function ShipDesignEditorService(){};
 
+model.ShipDesignEditorService.prototype.removeModule = function(tile, shipDesign)
+{
+    var module = shipDesign.getModuleInPosition(tile);
+    if ( ! module)
+        return;
+
+    Meteor.call(
+        'ShipDesignRemoveModule',
+        shipDesign._id, module._id, module.position,
+        function(err, result){}
+    );
+};
+
 model.ShipDesignEditorService.prototype.placeModule = function(tile, module, shipDesign) {
   if ( ! this.isValidPosition(tile, module, shipDesign))
     return false;
@@ -48,6 +61,28 @@ model.ShipDesignEditorService.prototype.isValidTileForPosition = function(module
   return true;
 };
 
+model.ShipDesignEditorService.prototype.update = function(shipDesign, name, value){
+  if ( shipDesign[name] === undefined)
+    throw new Error(
+        "Trying to change Ship design value '" + name + "' that does not exist"
+    );
+
+    if (shipDesign[name] != value)
+    {
+      shipDesign[name] = value;
+      Meteor.call(
+        'ShipDesignUpdate',
+        shipDesign._id,
+        name,
+        value,
+        function(err, result){
+            console.log('Ship ' +name + ' updated to ' + value);
+        }
+      );
+    }
+};
+
+
 /*
 
 
@@ -76,18 +111,7 @@ model.ModuleLayout.prototype.isValidTileForPosition  = function(
 };
 
 /*
-model.ShipDesign.prototype.removeModule = function(pos)
-{
-    var module = this.getModuleInPosition(pos);
-    if ( ! module)
-        return;
 
-    Meteor.call(
-        'ShipDesignRemoveModule',
-        this._id, module._id, module.position,
-        function(err, result){}
-    );
-};
 
 model.ShipDesign.prototype.placeModule = function(module, pos)
 {

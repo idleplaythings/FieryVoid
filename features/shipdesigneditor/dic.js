@@ -4,14 +4,10 @@ dic.register('model.ShipDesignEditor', function(dic) {
         dic.get('model.EventDispatcher'),
         dic.get('model.GameScene'),
         dic.get('model.GameHtmlContainer'),
-        dic.get('model.CoordinateConverterViewPort'),
-        dic.get('model.ShipStatusView'),
-        dic.get('model.ModuleDetailView'),
         dic.get('model.ShipApperanceMenu'),
         dic.get('model.ShipDesignStorage'),
         dic.get('model.UiEventManager'),
         dic.get('model.ReactiveModuleList'),
-        dic.get('model.ArcIndicatorService'),
         dic.get('model.GameAnimationLoop'),
         dic.get('model.IconFactory'),
         dic.get('model.InputModeFactory'),
@@ -44,7 +40,7 @@ dic.register(
             dic.get('model.EventDispatcher'),
             [
                 dic.get('model.inputAction.AllowShipHullVisibilityTogleInEditor'),
-                dic.get('model.inputAction.ShowShipStatusView'),
+                dic.get('model.inputAction.ShowShipStatusViewEditor'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailViewEditor')
             ],
@@ -79,10 +75,9 @@ dic.register(
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
-                dic.get('model.inputAction.EnforceShipHullHiddenInEditor'),
-                dic.get('model.inputAction.ShowShipStatusView'),
-                dic.get('model.inputAction.LightBlueArrowCursor'),
-                dic.get('model.inputAction.ShowModuleDetailViewEditor')
+                dic.get('model.inputAction.AllowShipHullVisibilityTogleInEditor'),
+                dic.get('model.inputAction.RemoveModuleOnClick'),
+                dic.get('model.inputAction.RedXCursor')
             ],
             1
         );  
@@ -90,6 +85,15 @@ dic.register(
         tags: [ 'inputMode' ]
     }
 );
+
+dic.register('model.inputAction.ShowShipStatusViewEditor', function(dic) {
+    return new model.inputAction.ShowShipStatusViewEditor(
+        dic.get('model.EditorShip'),
+        dic.get('model.Zooming'),
+        dic.get('model.Scrolling'),
+        dic.get('model.ShipStatusView')
+    );
+});
 
 dic.register('model.inputAction.ShowModuleDetailViewEditor', function(dic) {
     return new model.inputAction.ShowModuleDetailViewEditor(
@@ -145,6 +149,13 @@ dic.register('model.inputAction.ShowGridOnShip', function(dic) {
 dic.register('model.inputAction.PlaceModuleOnClick', function(dic) {
     return new model.inputAction.PlaceModuleOnClick(
         dic.get('model.SelectedModuleLayoutForPlacing'),
+        dic.get('model.EditorShip'),
+        dic.get('model.ShipDesignEditorService')
+    );
+});
+
+dic.register('model.inputAction.RemoveModuleOnClick', function(dic) {
+    return new model.inputAction.RemoveModuleOnClick(
         dic.get('model.EditorShip'),
         dic.get('model.ShipDesignEditorService')
     );

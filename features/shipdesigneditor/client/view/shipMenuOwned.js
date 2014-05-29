@@ -6,8 +6,8 @@ Template.shipMenuOwned.designName = function()
 };
 
 Template.shipMenuOwned.events({
-    'blur input': function (event) {
-        Template.shipMenuOwned.handleInputDetailChange(event.currentTarget);
+    'blur input': function (event, template) {
+        handleDetailChange(event.currentTarget, template.data.ship);
     },
     'click .publish': function(event) {
         console.log("clicked publish");
@@ -29,6 +29,19 @@ Template.shipMenuOwned.events({
 
     }
 });
+
+function handleDetailChange(element, ship)
+{
+    if (! ship)
+        return;
+
+    var name = jQuery(element).attr('name');
+    var value = jQuery(element).val();
+    value = value.trim();
+
+    dic.get('model.ShipDesignEditorService').update(ship.shipDesign, name, value);
+    
+};
 
 Template.shipMenuOwned.publishedClass = function()
 {
