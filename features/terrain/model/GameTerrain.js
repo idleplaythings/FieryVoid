@@ -19,6 +19,11 @@ model.GameTerrain.prototype.createRandom = function(seed)
     return this;
 }
 
+model.GameTerrain.prototype.startAnimation = function(animationLoop)
+{
+    animationLoop.register(this.asteroidBelt);
+};
+
 model.GameTerrain.prototype._createBackdrop = function()
 {
     this.gameContainer.get().css('background-color', 'black');
