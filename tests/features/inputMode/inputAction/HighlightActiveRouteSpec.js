@@ -1,11 +1,12 @@
 describe("HighlightActiveRoute", function() {
 
-    var highlightActiveRoute, dispatcher, ship, shipAnimationService;
+    var highlightActiveRoute, dispatcher, ship, shipAnimationService, gameState;
 
     beforeEach(function() {
         this.addMatchers(customMatchers);
 
         dispatcher = jasmine.createSpyObj('Dispatcher', [ 'attach', 'dispatch' ]);
+        gameState = jasmine.createSpyObj('GameState', [ 'getTurn' ]);
 
         ship = { id: 1 };
         selectedShip = { getShip: function() { }};
@@ -21,7 +22,8 @@ describe("HighlightActiveRoute", function() {
         highlightActiveRoute = new model.inputAction.HighlightActiveRoute(
             dispatcher,
             selectedShip,
-            shipAnimationService
+            shipAnimationService,
+            gameState
         );
     });
 
@@ -39,11 +41,13 @@ describe("HighlightActiveRoute", function() {
 
     it("should highlight route only for selected ship on activation", function() {
         spyOn(selectedShip, 'getShip').andReturn(ship);
+        gameState.getTurn.andReturn(1);
 
         highlightActiveRoute.onActivation();
 
         expect(shipAnimationService.clearRouteHighlights).toHaveBeenCalledWith();
-        expect(shipAnimationService.highlightRouteFor).toHaveBeenCalledWith(ship);
+        expect(shipAnimationService.highlightRouteFor).toHaveBeenCalledWith(ship, 1);
+        expect(gameState.getTurn).toHaveBeenCalled();
     });
 
     it("should clear highlights on deactivation", function() {

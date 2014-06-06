@@ -17,6 +17,8 @@ model.movement.ShipAnimationDetails = function ShipAnimationDetails(
     this._animationLoop.register(this);
 
 	this._paths = [];
+
+	this._turnOfRoute = null;
 }
 
 model.movement.ShipAnimationDetails.prototype.getShip = function()
@@ -24,6 +26,23 @@ model.movement.ShipAnimationDetails.prototype.getShip = function()
 	return this._ship;
 };
 
+model.movement.ShipAnimationDetails.prototype.getRouteSegmentOnPosition = function(scenePosition){
+	return this._pathRenderer.getStepIndexOnPosition(scenePosition);
+};
+
+model.movement.ShipAnimationDetails.prototype.getRouteTurnOnPosition = function(scenePosition){
+	var index = this._pathRenderer.getStepIndexOnPosition(scenePosition);
+	if (index !== null)
+		return this._turnOfRoute;
+};
+
+model.movement.ShipAnimationDetails.prototype.highlightRouteSegment = function(index){
+	this._pathRenderer.highlightRouteSegment(index);
+};
+
+model.movement.ShipAnimationDetails.prototype.unhighlightRouteSegment = function(index){
+	this._pathRenderer.unhighlightRouteSegment(index);
+};
 
 model.movement.ShipAnimationDetails.prototype.resolve = function(ship)
 {
@@ -51,7 +70,14 @@ model.movement.ShipAnimationDetails.prototype.showRoute = function(turn)
 	if ( ! turn)
 		turn = 0;
 
+	this._turnOfRoute = turn;
+
 	this._pathRenderer.renderPath(this._paths[turn]);
+};
+
+model.movement.ShipAnimationDetails.prototype.hideRoute = function(turn)
+{
+	this._pathRenderer.hidePath();
 };
 
 model.movement.ShipAnimationDetails.prototype.highlight = function(turn)

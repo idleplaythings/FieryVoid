@@ -52,7 +52,7 @@ model.ParticlePathEmitter.prototype.getObject3d = function()
     if ( ! this.particleMesh)
     {
         this.particleMesh = new THREE.ParticleSystem( this.particleGeometry, this.particleMaterial );
-        this.particleMesh.position = new THREE.Vector3(0, 0, 10);
+        this.particleMesh.position = new THREE.Vector3(0, 0, 30);
     }
 
     return this.particleMesh;

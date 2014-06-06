@@ -14,12 +14,46 @@ model.movement.PathRenderer.prototype.init = function()
 {
 }
 
+model.movement.PathRenderer.prototype.highlightRouteSegment = function(index){
+    this._curves[index].material.color = new THREE.Color(0xffffff);
+};
+
+model.movement.PathRenderer.prototype.unhighlightRouteSegment = function(index){
+    this._curves[index].material.color = new THREE.Color(0x005500);
+};
+
+model.movement.PathRenderer.prototype.getStepIndexOnPosition = function(scenePosition){
+    for (var i in this._curves){
+        if (this._curves[i].pointIsOnCurve(scenePosition))
+            return i;
+    }
+
+    return null;
+};
+
 model.movement.PathRenderer.prototype.renderPath = function(path)
 {
     path.forEach(function(step) {
         this._renderPathStep(step);
     }, this);
-}
+
+    this.clearHighlight();
+    this.showPath();
+};
+
+model.movement.PathRenderer.prototype.hidePath = function(path)
+{
+    this._curves.forEach(function(curve) {
+        curve.hide();
+    }, this);
+};
+
+model.movement.PathRenderer.prototype.showPath = function(path)
+{
+    this._curves.forEach(function(curve) {
+        curve.show();
+    }, this);
+};
 
 model.movement.PathRenderer.prototype.clear = function()
 {
@@ -33,7 +67,8 @@ model.movement.PathRenderer.prototype.clear = function()
 model.movement.PathRenderer.prototype.highlight = function()
 {
     this._curves.forEach(function(curve) {
-        curve.material.opacity = 0.8
+        curve.material.opacity = 0.6
+        curve.mesh.position.z = 10;
     }, this);
 }
 
@@ -41,6 +76,7 @@ model.movement.PathRenderer.prototype.clearHighlight = function()
 {
     this._curves.forEach(function(curve) {
         curve.material.opacity = 0.4
+        curve.mesh.position.z = -30;
     }, this);
 }
 

@@ -1,12 +1,14 @@
 model.inputAction.HighlightActiveRoute = function HighlightActiveRoute(
     dispatcher,
     selectedShip,
-    shipAnimationService
+    shipAnimationService,
+    gameState
 )
 {
     this._dispatcher = dispatcher;
     this._selectedShip = selectedShip;
     this._shipAnimationService = shipAnimationService;
+    this._gameState = gameState;
 
     this._dispatcher.attach('ShipSelectedEvent', this.onShipSelected.bind(this));
 }
@@ -23,7 +25,7 @@ model.inputAction.HighlightActiveRoute.prototype.onActivation = function()
 
     if (ship) {
         this._shipAnimationService.clearRouteHighlights();
-        this._shipAnimationService.highlightRouteFor(ship);
+        this._shipAnimationService.highlightRouteFor(ship, this._gameState.getTurn());
     }
 };
 

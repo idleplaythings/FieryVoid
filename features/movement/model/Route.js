@@ -31,7 +31,7 @@ model.movement.Route.deserialize = function(serialized)
 			return model.movement.Action.deserialize(mod);
 		})
 	);
-}
+};
 
 model.movement.Route.prototype.serialize = function()
 {
@@ -41,17 +41,76 @@ model.movement.Route.prototype.serialize = function()
 		movementAbility: this._movementAbility.serialize(),
 		modifiers: this._modifiers.map(function(action){return action.serialize()})
 	}
-}
+};
+
+model.movement.Route.prototype.createFromSteps = function(steps){
+
+	actions = steps.reduce(function(actions, step){
+		return actions.concat(step.actions);
+	}, []);
+
+	return new model.movement.Route(
+		this._turn,
+		this._startPosition,
+		this._movementAbility,
+		actions
+	);
+};
+
+model.movement.Route.prototype.getModifiers = function()
+{
+	return this._modifiers;
+};
+
+model.movement.Route.prototype.getTurn = function()
+{
+	return this._turn;
+};
+
+model.movement.Route.prototype.getStartPosition = function()
+{
+	return this._startPosition;
+};
 
 model.movement.Route.prototype.getRoute = function()
 {
 	return this._route;
-}
+};
+
+model.movement.Route.prototype.getStep = function(index)
+{
+	return this._route[index];
+};
 
 model.movement.Route.prototype.getCurrent = function()
 {
 	return this._route[this._route.length-1];
-}
+};
+
+model.movement.Route.prototype.getActionsAsSteps = function(){
+	var speed = this._getSpeeds(this._modifiers);
+	var modifiers = this._getOtherThanSpeeds(this._modifiers);
+	
+	var actions = [].concat(speed).concat(modifiers);
+
+	var steps = [];
+	var currentStep = {index: 0, actions: []};
+	for (var i in actions){
+		var action = actions[i];
+
+		if (action instanceof model.movement.Action.Move){
+			steps.push(currentStep);
+			var newIndex = currentStep.index+1;
+			currentStep = {index: newIndex, actions: []};
+		}
+
+		currentStep.actions.push(action);
+	}
+
+	steps.push(currentStep);
+
+	return steps;
+};
 
 model.movement.Route.prototype._constructRoute = function()
 {
@@ -66,7 +125,7 @@ model.movement.Route.prototype._constructRoute = function()
 	{
 		var last = current;
 		var action = actions[i];
-		action.validateInContextOrFail(current);
+		this._validateActionOrFail(action, current);
 		current = action.apply(current, this._movementAbility);
 		
 		if (last.occupiesSamePosition(current))
@@ -78,6 +137,10 @@ model.movement.Route.prototype._constructRoute = function()
 	this._thrusterUsage.payOrFail(current.getThrustCost());
 	this._validateMoveAmount(current.getSpeed());
 	this._route = route;
+};
+
+model.movement.Route.prototype._validateActionOrFail = function(action, current){
+	action.validateInContextOrFail(current);
 };
 
 model.movement.Route.prototype._getSpeeds = function(route)

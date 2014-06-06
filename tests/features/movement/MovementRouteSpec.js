@@ -310,6 +310,94 @@ describe("MovementRoute", function() {
 		expect(route.getRoute().length).toEqual(7);	
     });
 
+    it("returns actions with step index for route that has only moves", function() 
+    {
+			route = new model.movement.Route(
+				0, 
+				start, 
+				movementAbility,
+				[
+					new action.Move(), 
+					new action.Move(),
+					new action.Move(),
+					new action.Move(),
+					new action.Move()
+				]);
+		
+			var steps = route.getActionsAsSteps();
+			expect(steps).toEqual([
+		 		{ index : 0, actions : [  ] },
+		 		{ index : 1, actions : [ new action.Move() ] },
+		 		{ index : 2, actions : [ new action.Move() ] },
+		 		{ index : 3, actions : [ new action.Move() ] },
+		 		{ index : 4, actions : [ new action.Move() ] },
+		 		{ index : 5, actions : [ new action.Move() ] }  
+		 	]);
+
+		 	expect(route.createFromSteps(steps)).toEqual(route);	
+    });
+
+    it("returns actions with step index for route that has turns and acceleration", function() 
+    {
+			route = new model.movement.Route(
+				0, 
+				start, 
+				movementAbility,
+				[
+					new action.SpeedAccelerate(),
+					new action.Move(), 
+					new action.Move(),
+					new action.TurnLeft(),
+					new action.Move(),
+					new action.Move(),
+					new action.Move(),
+					new action.Move()
+				]);
+		
+			var steps = route.getActionsAsSteps();
+			expect(steps).toEqual([
+		 		{ index : 0, actions : [ new action.SpeedAccelerate() ] },
+		 		{ index : 1, actions : [ new action.Move() ] },
+		 		{ index : 2, actions : [ new action.Move(), new action.TurnLeft() ] },
+		 		{ index : 3, actions : [ new action.Move() ] },
+		 		{ index : 4, actions : [ new action.Move() ] },
+		 		{ index : 5, actions : [ new action.Move() ] },
+		 		{ index : 6, actions : [ new action.Move() ] } 
+		 	]);
+
+		 	expect(route.createFromSteps(steps)).toEqual(route);
+    });
+
+    it("returns actions with step index for route that has turns", function() 
+    {
+			route = new model.movement.Route(
+				0, 
+				start, 
+				movementAbility,
+				[
+					new action.Move(), 
+					new action.Move(),
+					new action.TurnLeft(),
+					new action.Move(),
+					new action.Move(),
+					new action.TurnLeft(),
+					new action.Move()
+				]
+			);
+			
+			var steps = route.getActionsAsSteps();
+			expect(steps).toEqual([
+		 		{ index : 0, actions : [  ] },
+		 		{ index : 1, actions : [ new action.Move() ] },
+		 		{ index : 2, actions : [ new action.Move(), new action.TurnLeft() ] },
+		 		{ index : 3, actions : [ new action.Move() ] },
+		 		{ index : 4, actions : [ new action.Move(), new action.TurnLeft() ] },
+		 		{ index : 5, actions : [ new action.Move() ] }  
+		 	]);
+
+		 	expect(route.createFromSteps(steps)).toEqual(route);
+    });
+
     function getMovementAbility(accelerationCost, turnCostSpeedFactor, turnDelaySpeedFactor, thrustAvailable, thrusters)
     {
     	return new model.movement.MovementAbility({
