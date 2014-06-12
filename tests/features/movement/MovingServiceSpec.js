@@ -187,5 +187,124 @@ describe("MovingService", function() {
     expect(movement.addRoute).toHaveBeenCalledWith(resultRoute);
     
   });
+
+  it("should not remove deaccelerate if direction of movement has changed", function() {
   
+    var actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.Move()
+    ];
+
+    var step = {index: 0, actions: actions};
+    var startSpeed = 4;
+    var toRemove = model.movement.Action.SpeedDeaccelerate;
+
+    var result = movingService._removeSpeedFromStep(step, startSpeed, toRemove);
+    expect(step.actions).toEqual(actions);
+    expect(result).toEqual(false);
+  });
+
+  it("should remove accelerate after deaccelerating to -1 speed", function() {
+  
+    var actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedAccelerate(),
+      new action.Move(),
+      new action.Move()
+    ];
+
+    var step = {index: 0, actions: actions};
+    var startSpeed = 4;
+    var toRemove = model.movement.Action.SpeedAccelerate;
+
+    movingService._removeSpeedFromStep(step, startSpeed, toRemove);
+    expect(step.actions).toEqual([
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.Move(),
+      new action.Move()
+    ]);
+  });
+
+  it("should remove deaccelerate from steps", function() {
+  
+    var actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.Move(),
+      new action.Move()
+    ];
+
+    var step = {index: 0, actions: actions};
+    var startSpeed = 4;
+    var toRemove = model.movement.Action.SpeedDeaccelerate;
+
+    movingService._removeSpeedFromStep(step, startSpeed, toRemove);
+    expect(step.actions).toEqual([
+      new action.SpeedDeaccelerate(),
+      new action.Move(),
+      new action.Move()
+    ]);
+  });
+
+  it("should remove deaccelerate when speed is 1 backwards, even if acclerate is specified for remove", function() {
+  
+    var actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.Move(),
+    ];
+
+    var step = {index: 0, actions: actions};
+    var startSpeed = 1;
+    var toRemove = model.movement.Action.SpeedAccelerate;
+
+    movingService._removeSpeedFromStep(step, startSpeed, toRemove);
+    expect(step.actions).toEqual([
+      new action.SpeedDeaccelerate(),
+      new action.Move(),
+    ]);
+  });
+
+  it("should not remove deaccelerate, when it has accelerated to speed -1, and changed direction of movement", function() {
+  
+    actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.Move()
+    ];
+    var route = new model.movement.Route(0, start, movementAbility, actions);
+
+    movement.getRouteByTurn.andReturn(route);
+
+    actions = [
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedDeaccelerate(),
+      new action.SpeedAccelerate(),
+      new action.Move(),
+      new action.Move()
+    ];
+    var resultRoute = new model.movement.Route(0, start, movementAbility, actions);
+
+    movingService.accelerate(ship, 0, 2);
+    expect(movement.addRoute).toHaveBeenCalledWith(resultRoute);
+    
+  });
 });

@@ -41,7 +41,7 @@ model.movement.MovingService.prototype.canAccelerate = function(ship, turn, step
 };
 
 model.movement.MovingService.prototype._getAccelerateRoute = function(ship, turn, stepIndex){
-  return this._act(ship, turn, 0, model.movement.Action.SpeedAccelerate, model.movement.Action.SpeedDeaccelerate)
+  return this._speed(ship, turn, 0, model.movement.Action.SpeedAccelerate, model.movement.Action.SpeedDeaccelerate)
 };
 
 model.movement.MovingService.prototype.deaccelerate = function(ship, turn, stepIndex){
@@ -55,7 +55,7 @@ model.movement.MovingService.prototype.canDeaccelerate = function(ship, turn, st
 };
 
 model.movement.MovingService.prototype._getDeaccelerateRoute = function(ship, turn, stepIndex){
-  return this._act(ship, turn, 0, model.movement.Action.SpeedDeaccelerate, model.movement.Action.SpeedAccelerate)
+  return this._speed(ship, turn, 0, model.movement.Action.SpeedDeaccelerate, model.movement.Action.SpeedAccelerate)
 };
 
 model.movement.MovingService.prototype._act = function(ship, turn, stepIndex, action, reverse){
@@ -69,23 +69,79 @@ model.movement.MovingService.prototype._act = function(ship, turn, stepIndex, ac
     step.actions.push(new action());
   }
 
-  if (action == model.movement.Action.SpeedDeaccelerate){
-    steps.splice(steps.length-1, 1);
+  return route.createFromSteps(steps);
+};
+
+model.movement.MovingService.prototype._speed = function(ship, turn, stepIndex, action, reverse){
+  var movement = ship.getMovement();
+  var route = movement.getRouteByTurn(turn); 
+
+  var steps = route.getActionsAsSteps();
+  var step = steps[stepIndex];
+
+  var isDeaccelerate = (action == model.movement.Action.SpeedDeaccelerate);
+  var isAccelerate = (action == model.movement.Action.SpeedAccelerate);
+  var isStationary = (steps.length === 1);
+
+  if ( ! this._removeSpeedFromStep(step, route.getStartPosition().getSpeed(), reverse)){
+    step.actions.push(new action());
   }
 
-  if (action == model.movement.Action.SpeedAccelerate){
-    steps.push({
+  if ((isStationary && isDeaccelerate) || isAccelerate){
+      steps.push({
       index: steps[steps.length-1].index + 1,
       actions: [new model.movement.Action.Move()]
     });
+  } 
+  else if (isDeaccelerate){
+    steps.splice(steps.length-1, 1);
   }
+  
+  //console.log("MOVING SERVICE IS PROPOSING FOLLOWING");
+  //console.log(steps);
 
   return route.createFromSteps(steps);
 };
 
+model.movement.MovingService.prototype._removeSpeedFromStep = function(step, startSpeed, toRemove){
+  var canRemoveDeaccelerate = false;
+  var toRemoveIsDeaccelerate = (toRemove == model.movement.Action.SpeedDeaccelerate);
+
+  var changedDirection = false;
+
+  step.actions.forEach(function(action){
+    var isDeaccelerate = (action instanceof model.movement.Action.SpeedDeaccelerate);
+    var isAccelerate = (action instanceof model.movement.Action.SpeedAccelerate);
+
+    if (isDeaccelerate){
+      canRemoveDeaccelerate = true;
+      startSpeed--;
+    }
+    if (isAccelerate) {
+      startSpeed++;
+    }
+
+    if (startSpeed === -1){
+      changedDirection = true;
+      canRemoveDeaccelerate = false;
+      startSpeed = 1;
+    }
+  });
+
+  if (startSpeed === 1 && changedDirection && ! toRemoveIsDeaccelerate){
+    toRemove = model.movement.Action.SpeedDeaccelerate;
+    toRemoveIsDeaccelerate = false;
+  }
+
+  if ( ! toRemoveIsDeaccelerate || (toRemoveIsDeaccelerate && canRemoveDeaccelerate))
+    return this._removeFromStep(step, toRemove);
+
+  return false;
+};
+
 model.movement.MovingService.prototype._removeFromStep = function(step, toRemove){
 
-  for (var i in step.actions){
+  for (var i = step.actions.length-1; i >= 0; i--){
     var action = step.actions[i];
     if (action instanceof toRemove){
       step.actions.splice(i, 1);

@@ -5,7 +5,7 @@ describe("HighlightActiveRoute", function() {
     beforeEach(function() {
         this.addMatchers(customMatchers);
 
-        dispatcher = jasmine.createSpyObj('Dispatcher', [ 'attach', 'dispatch' ]);
+        dispatcher = jasmine.createSpyObj('Dispatcher', [ 'attach', 'detach', 'dispatch' ]);
         gameState = jasmine.createSpyObj('GameState', [ 'getTurn' ]);
 
         ship = { id: 1 };
@@ -28,8 +28,9 @@ describe("HighlightActiveRoute", function() {
     });
 
     it("should attach to relevant events", function() {
+        highlightActiveRoute.onActivation();
         expect(dispatcher).toHaveListenerFor('ShipSelectedEvent');
-        expect(dispatcher.attach.calls.length).toBe(1);
+        expect(dispatcher.attach.calls.length).toBe(2);
     });
 
     it("should highlight route only for selected ship when it is selected", function() {

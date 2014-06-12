@@ -272,15 +272,16 @@ describe("MovementRoute", function() {
 			[
 				new action.SpeedDeaccelerate(),
 				new action.SpeedDeaccelerate(),
+				new action.SpeedAccelerate(),
 				new action.Move(),
-				
+				new action.Move(),
 			]);
 		
-		expect(route.getCurrent().getSpeed()).toEqual(1);
+		expect(route.getCurrent().getSpeed()).toEqual(2);
 		expect(route.getCurrent().getDirection()).toEqual(5);
 		expect(route.getCurrent().getFacing()).toEqual(2);	
-		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, -1, 1));
-    });
+		expect(route.getCurrent().getPosition()).toEqual(new model.hexagon.coordinate.Cube(0, -2, 2));
+ 		});
    
 	it("resets pivot (direction == facing) when deaccelerating to zero speed", function() 
     {
