@@ -15,7 +15,7 @@ dic.register('model.movement.ShipMovementHandler', function(dic) {
 
 dic.register('model.movement.MovingService', function(dic) {
     return new model.movement.MovingService(
-      dic.get('model.movement.ShipMovementHandler')
+      dic.get('model.EventDispatcher')
   );
 }, {
     shared: true
@@ -77,7 +77,8 @@ dic.register('model.movement.MovementRadialMenu', function(dic) {
         new model.DrawingToCanvas(MathLib),
         dic.get('model.CoordinateConverterViewPort'),
         dic.get('model.EventDispatcher'),
-        dic.get('model.movement.MovingService')
+        dic.get('model.movement.MovingService'),
+        dic.get('model.GridService')
     );
 }, {
     tags: ['ShipAnimationDetails']

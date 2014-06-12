@@ -30,8 +30,24 @@ describe("MovementRoute", function() {
 	
 		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).toThrow();
 	});
+
+   it("should be ok if deaccelerated to speed zero", function() {	
+
+   	start = new model.movement.Position({
+			position: new model.hexagon.coordinate.Cube(0,0,0),
+			facing: 0,
+			direction: 0,
+			speed: 1
+		});
+
+		actions = [
+			new action.SpeedDeaccelerate(),
+		];
 	
-	 it("should throw if too many moves", function() {	
+		expect(function() { new model.movement.Route(0, start, movementAbility, actions)}).not.toThrow();
+	});
+	
+	it("should throw if too many moves", function() {	
 		actions = [
 			new action.Move(),
 			new action.Move(),

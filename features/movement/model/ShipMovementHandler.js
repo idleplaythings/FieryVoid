@@ -32,8 +32,8 @@ model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship,
 {
     return new model.movement.MovementAbility({
     	accelerationCost: 1,
-  		turnCostSpeedFactor: 0.5,
-  		turnDelaySpeedFactor: 0.5,
+  		turnCostSpeedFactor: 0.001,
+  		turnDelaySpeedFactor: 0.001,
   		thrustAvailable: 20,
   		thrusters: [
         new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 10}),

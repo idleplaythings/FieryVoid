@@ -59,8 +59,3 @@ model.movement.Action.Turn.prototype.validateInContextOrFail = function(current)
 	if (current.getTurnDelay() > 0)
 		throw new Error("Unable to turn within turn delay");
 };
-
-model.movement.Action.Turn.prototype.serialize = function()
-{
-	return {className: 'Turn', args: {turnDirection: this._turnDirection}};
-};

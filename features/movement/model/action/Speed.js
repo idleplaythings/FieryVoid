@@ -49,8 +49,3 @@ model.movement.Action.Speed.prototype.validateInContextOrFail = function(current
 	return;
 };
 
-model.movement.Action.Speed.prototype.serialize = function()
-{
-	return {className: 'Speed', args: {change: this._change}};
-};
-

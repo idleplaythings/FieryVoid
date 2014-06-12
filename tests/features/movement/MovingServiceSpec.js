@@ -1,6 +1,6 @@
 describe("MovingService", function() {
 
-  var movementAbility, movement, ship, start, movingService, action;
+  var movementAbility, movement, ship, start, movingService, action, dispatcher;
   beforeEach(function() {
     action = model.movement.Action;
 
@@ -27,8 +27,9 @@ describe("MovingService", function() {
     movement = jasmine.createSpyObj('ShipMovementStatus', [ 'getRouteByTurn', 'addRoute' ]);
     ship = jasmine.createSpyObj('Ship', [ 'getMovement']);
     ship.getMovement.andReturn(movement);
+    dispatcher = jasmine.createSpyObj('Dispatcher', ['dispatch']);
 
-    movingService = new model.movement.MovingService();
+    movingService = new model.movement.MovingService(dispatcher);
   });
   
   it("should turn left by adding a left turn action", function() {

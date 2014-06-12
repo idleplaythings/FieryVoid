@@ -74,7 +74,7 @@ model.movement.Route.prototype.getStartPosition = function()
 
 model.movement.Route.prototype.getRoute = function()
 {
-	return this._route;
+	return this._route.slice(0);
 };
 
 model.movement.Route.prototype.getStep = function(index)

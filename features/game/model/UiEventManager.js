@@ -33,8 +33,9 @@ model.UiEventManager = function UiEventManager(
 
 model.UiEventManager.prototype.init = function()
 {
-    var element = this._gameContainer.get();
-    this._zooming.init(element);
+    var element = this._gameContainer.getClickContainer();
+    var zoomElement = this._gameContainer.get();
+    this._zooming.init(zoomElement);
 
     element.on("mousedown",  this.mouseDown.bind(this));
     element.on("mouseup",    this.mouseUp.bind(this));
@@ -49,7 +50,7 @@ model.UiEventManager.prototype.init = function()
 
 model.UiEventManager.prototype.destroy = function()
 {
-    var element = this._gameContainer.get();
+    var element = this._gameContainer.getClickContainer();
 
     element.off("mousedown",  this.mouseDown.bind(this));
     element.off("mouseup",    this.mouseUp.bind(this));

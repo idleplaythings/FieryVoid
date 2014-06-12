@@ -4,14 +4,17 @@ model.movement.MovementRadialMenu = function MovementRadialMenu(
   canvasDrawingTool,
   coordinateConverter,
   dispatcher,
-  movingService){
+  movingService,
+  gridService){
 
   this._gameContainer = gameContainer;
   this._id = id;
-  this._size = 900;
+  this._size = 300;
   this._canvasDrawingTool = canvasDrawingTool;
   this._coordinateConverter = coordinateConverter;
   this._movingService = movingService;
+  this._gridService = gridService;
+  this._dispatcher = dispatcher;
   
   this._buttons = this._getButtons();
   this._element = null;
@@ -23,6 +26,9 @@ model.movement.MovementRadialMenu = function MovementRadialMenu(
   this._ship = null;
   this._turn = null;
   this._routeIndex = null;
+  this._direction = null;
+
+  this._routeChangedCallback = this._dispatcher.attach('MovementRouteChanged', this._onRouteChanged.bind(this));
 
 };
 
@@ -31,7 +37,25 @@ model.movement.MovementRadialMenu.prototype.init = function(){
 };
 
 model.movement.MovementRadialMenu.prototype.destroy = function(){
+  this._dispatcher.detach('MovementRouteChanged', this._routeChangedCallback);
   this._element.remove()
+};
+
+model.movement.MovementRadialMenu.prototype._onRouteChanged = function(event)
+{
+    var ship = event.ship;
+    if (ship != this._ship)
+      return;
+
+    var route = ship.getMovement().getRouteByTurn(this._turn).getRoute();
+
+    if (this._routeIndex >= route.length){
+      this.hide();
+      return;
+    }
+
+    this._direction = route[this._routeIndex].getDirection();
+    this._rotate();
 };
 
 model.movement.MovementRadialMenu.prototype.show = function(position, ship, turn, routeIndex)
@@ -39,9 +63,11 @@ model.movement.MovementRadialMenu.prototype.show = function(position, ship, turn
     this._ship = ship;
     this._turn = turn;
     this._routeIndex = routeIndex;
+    this._direction = ship.getMovement().getRouteByTurn(turn).getRoute()[routeIndex].getDirection();
 
     this._scenePosition = position;
     this._rePosition();
+    this._rotate();
     this._element.show();
 };
 
@@ -63,12 +89,23 @@ model.movement.MovementRadialMenu.prototype._rePosition = function()
         .css("left", (pos.x - this._size/2) + "px")
 };
 
+model.movement.MovementRadialMenu.prototype._rotate = function()
+{
+    console.log(this._direction);
+    var degree = this._direction * 60;
+    console.log(degree);
+    var template = this._element;
+    template.css('-webkit-transform', 'rotate('+degree+'deg)');
+    template.css('transform', 'rotate('+degree+'deg)');
+};
+
 model.movement.MovementRadialMenu.prototype.onScroll = function(event){
   this._rePosition();
 };
 
 model.movement.MovementRadialMenu.prototype.onZoom = function(event){
   this._rePosition();
+  return;
 
   var zoom = event.zoom;
   if (zoom < 0.3)
@@ -117,7 +154,9 @@ model.movement.MovementRadialMenu.prototype._getButtons = function()
 {
   return [
     this._createButton('TR', '', 60, this._turnRight.bind(this)),
-    this._createButton('TL', '', 300, this._turnLeft.bind(this))
+    this._createButton('TL', '', 300, this._turnLeft.bind(this)),
+    this._createButton('+', '', 0, this._accelerate.bind(this)),
+    this._createButton('-', '', 180, this._deaccelerate.bind(this))
   ];
 };
 
@@ -136,22 +175,32 @@ model.movement.MovementRadialMenu.prototype._createButton = function(text, backg
 
 model.movement.MovementRadialMenu.prototype._turnLeft = function()
 {
-  console.log("turn left", this._movingService);
   this._movingService.turnLeft(this._ship, this._turn, this._routeIndex);
 };
 
 model.movement.MovementRadialMenu.prototype._turnRight = function()
 {
+  this._movingService.turnRight(this._ship, this._turn, this._routeIndex);
+};
+
+model.movement.MovementRadialMenu.prototype._accelerate = function()
+{
+  this._movingService.accelerate(this._ship, this._turn, this._routeIndex);
+};
+
+model.movement.MovementRadialMenu.prototype._deaccelerate = function()
+{
+  this._movingService.deaccelerate(this._ship, this._turn, this._routeIndex);
 };
 
 model.movement.MovementRadialMenu.prototype._placeButton = function(button, angle)
 {
-    var halfSize = this._size/2;
-    var distance = this._size/2 - 95;
+  var halfSize = this._size/2;
+  var distance = this._size*0.4;
 
-    var pos = MathLib.getPointInDirection(distance, angle, halfSize, halfSize);
-    button
-        .css("top", (pos.y - 60) + "px")
-        .css("left", (pos.x - 60) + "px");
+  var pos = MathLib.getPointInDirection(distance, angle, halfSize, halfSize);
+  button
+      .css("top", (pos.y - 20) + "px")
+      .css("left", (pos.x - 20) + "px");
 };
 

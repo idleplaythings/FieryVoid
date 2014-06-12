@@ -1,8 +1,8 @@
 .movementRadialMenu button{
   position: absolute;
-  border: #8f8f8f solid 8px;
-  width: 120px;
-  height: 120px;
-  box-shadow: 10px 10px 20px #000000, 0px 0px 5px #000000, inset 0px 0px 30px #000000, inset 0px 0px 10px #000000;
-  font-size: 42px;
+  border: #8f8f8f solid 2px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 5px 5px 10px #000000, 0px 0px 5px #000000, inset 0px 0px 15px #000000, inset 0px 0px 5px #000000;
+  font-size: 14px;
 }

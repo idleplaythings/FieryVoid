@@ -3,7 +3,6 @@ model.movement.ShipMovementAnimationService = function ShipMovementAnimationServ
 	this._shipAnimationDetailFactory = shipAnimationDetailFactory;
 
 	this._shipAnimations = [];
-
 	this._paths = this.resolverPathsForShips;
 };
 
@@ -35,6 +34,12 @@ model.movement.ShipMovementAnimationService.prototype.showAllRoutes = function(t
 	this._shipAnimations.forEach(function(animation){
 		animation.showRoute(turn);
 	});
+};
+
+model.movement.ShipMovementAnimationService.prototype.showRouteFor = function(ship, turn){
+	var animation = this._getShipAnimation(ship);
+	animation.resolve(ship);
+	animation.showRoute(turn);
 };
 
 model.movement.ShipMovementAnimationService.prototype.hideAllRoutes = function(turn)

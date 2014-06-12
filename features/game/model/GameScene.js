@@ -56,7 +56,6 @@ model.GameScene.prototype.init = function()
     this.renderer.context.getExtension('OES_standard_derivatives');
 
     $(this.renderer.domElement)
-        .on('contextmenu', function(e){e.stopPropagation(); return false; })
         .addClass("webglCanvas").appendTo(this._gameContainer.get());
 
     this.dispatcher.dispatch({
