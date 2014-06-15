@@ -14,9 +14,13 @@ model.movement.ShipAnimationDetails = function ShipAnimationDetails(
 	this._movementVisualizer = movementVisualizer;
 
 	this._animationLoop = animationLoop;
-    this._animationLoop.register(this);
+  this._animationLoop.register(this);
 
+  this._cacheStep = 0.1;
+  this._cacheResolution = 100 / this._cacheStep;
+  this._movementCaches = [];
 	this._paths = [];
+	this._routes = [];
 
 	this._turnOfRoute = null;
 }
@@ -48,9 +52,16 @@ model.movement.ShipAnimationDetails.prototype.resolve = function(ship)
 {
 	this._ship = ship;
 	var routes = ship.getMovement().getRoutes();
+	this._routes = routes.slice(0);
 	this._paths = routes.map(function(route){
 		return this._pathResolver.resolvePathForRoute(route);
 	}, this);
+
+	for (var i in this._paths){
+		this._movementCaches[i] = this._shipAnimator.cachePath(this._paths[i], this._routes[i], this._cacheResolution);
+	}
+
+	console.log(this._movementCaches)
 
 	return this;
 };
@@ -58,11 +69,15 @@ model.movement.ShipAnimationDetails.prototype.resolve = function(ship)
 model.movement.ShipAnimationDetails.prototype.animate = function(turn, time)
 {
 	var path = this._paths[turn];
+	var route = this._routes[turn];
 
-	if ( ! path)
+	if ( ! path || ! route)
 		return;
 
-	this._shipAnimator.positionShipAlongPath(this._ship, path, time);
+
+	var parameters = this.getShipPositionAndFacing(turn, time);
+	this._ship.setPosition(parameters.position);
+  this._ship.setAzimuth(parameters.rotation);
 };
 
 model.movement.ShipAnimationDetails.prototype.showRoute = function(turn)
@@ -97,10 +112,22 @@ model.movement.ShipAnimationDetails.prototype.clearHighlight = function()
 
 model.movement.ShipAnimationDetails.prototype.getShipPositionAndFacing = function(turn, time)
 {
-	var path = this._paths[turn];
+	var time = Math.floor(time / this._cacheStep);
 
-	if ( ! path)
+	var cache = this._movementCaches[turn];
+	if ( ! cache || ! cache[time]){
+		throw new Error("Ship position not cached: " + time);
+	}
+
+	return cache[time];
+	/*
+
+	var path = this._paths[turn];
+	var route = this._routes[turn];
+
+	if ( ! path || ! route)
 		return null;
 
-	return this._shipAnimator.getShipPositionAndFacing(this._ship, path, time);
+	return this._shipAnimator.getShipPositionAndFacing(path, route, time);
+	*/
 };
