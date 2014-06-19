@@ -7,3 +7,13 @@ dic.register('model.ModuleDetailView', function(dic) {
 }, {
     shared: true
 });
+
+
+dic.register('model.MovementTooltip', function(dic) {
+    return new model.MovementTooltip(
+      dic.get('model.GameHtmlContainer'),
+      dic.get('model.EventDispatcher')
+  )
+}, {
+    shared: true
+});

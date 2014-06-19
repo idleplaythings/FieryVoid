@@ -1,0 +1,9 @@
+.tooltipView.movementtooltip .free{
+  color:#005500;
+  font-weight: bold;
+}
+
+.tooltipView.movementtooltip .cost{
+  color:#550000;
+  font-weight: bold;
+}

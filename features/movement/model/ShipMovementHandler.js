@@ -31,10 +31,10 @@ model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(shi
 model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship, turn)
 {
     return new model.movement.MovementAbility({
-    	accelerationCost: 1,
-  		turnCostSpeedFactor: 0.001,
-  		turnDelaySpeedFactor: 0.001,
-  		thrustAvailable: 20,
+    	accelerationCost: 3,
+  		turnCostSpeedFactor: 0.33,
+  		turnDelaySpeedFactor: 0.25,
+  		thrustAvailable: 12,
   		thrusters: [
         new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 10}),
         new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 10}),

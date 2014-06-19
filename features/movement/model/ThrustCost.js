@@ -11,6 +11,19 @@ model.movement.ThrustCost = function ThrustCost(args)
 	};
 };
 
+model.movement.ThrustCost.prototype.toDisplayString = function()
+{
+	return this.costs[0] + "▼  " + 
+		this.costs[180]+ "▲  " + 
+		this.costs[90]+"◀  " + 
+		this.costs[270] +"▶"
+};
+
+model.movement.ThrustCost.prototype.isFree = function()
+{
+	return this.costs[0] === 0 && this.costs[90] === 0 && this.costs[180] === 0 && this.costs[270] === 0;
+};
+
 model.movement.ThrustCost.prototype.setCost = function(directions, cost)
 {
 	if (cost <= 0)

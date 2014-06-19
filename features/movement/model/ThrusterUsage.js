@@ -55,3 +55,29 @@ model.movement.ThrusterUsage.prototype._resolveAndPay = function(thrusters, cost
 	
 	return true;
 };
+
+model.movement.ThrusterUsage.prototype.getAvailableThrust = function()
+{
+	return this._thrustAvailable - this._thrustUsed;
+};
+
+model.movement.ThrusterUsage.prototype.getThrustCapacityAvailable = function(){
+
+	costs = {};
+
+	costs[0] = this._reduceThrusterToAvailableThrust(this._getThrustersToDirection(0));
+	costs[90] = this._reduceThrusterToAvailableThrust(this._getThrustersToDirection(90));
+	costs[180] = this._reduceThrusterToAvailableThrust(this._getThrustersToDirection(180));
+	costs[270] = this._reduceThrusterToAvailableThrust(this._getThrustersToDirection(270));
+
+	return new model.movement.ThrustCost({costs: costs});
+};
+
+model.movement.ThrusterUsage.prototype._reduceThrusterToAvailableThrust = function(thrusters){
+
+	return thrusters.reduce(function(available, thruster){
+		return available += thruster.getAvailable();
+	}, 0);
+};
+
+

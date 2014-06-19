@@ -341,7 +341,7 @@ describe("MovementRoute", function() {
 					new action.Move()
 				]);
 		
-			var steps = route.getActionsAsSteps();
+			var steps = pruneCostsOutFromSteps(route.getActionsAsSteps());
 			expect(steps).toEqual([
 		 		{ index : 0, actions : [  ] },
 		 		{ index : 1, actions : [ new action.Move() ] },
@@ -371,7 +371,7 @@ describe("MovementRoute", function() {
 					new action.Move()
 				]);
 		
-			var steps = route.getActionsAsSteps();
+			var steps = pruneCostsOutFromSteps(route.getActionsAsSteps());
 			expect(steps).toEqual([
 		 		{ index : 0, actions : [ new action.SpeedAccelerate() ] },
 		 		{ index : 1, actions : [ new action.Move() ] },
@@ -402,7 +402,7 @@ describe("MovementRoute", function() {
 				]
 			);
 			
-			var steps = route.getActionsAsSteps();
+			var steps = pruneCostsOutFromSteps(route.getActionsAsSteps());
 			expect(steps).toEqual([
 		 		{ index : 0, actions : [  ] },
 		 		{ index : 1, actions : [ new action.Move() ] },
@@ -424,6 +424,13 @@ describe("MovementRoute", function() {
     		thrustAvailable: thrustAvailable,
     		thrusters: thrusters
     	});
+    }
+
+    function pruneCostsOutFromSteps(steps){
+    	steps.forEach(function(step){
+    		delete step.costs;
+    	})
+    	return steps;
     }
 	
 });

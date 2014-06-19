@@ -12,13 +12,11 @@ model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
     var occupiedPositions = {};
 
     var route = route.getRoute();
-
-    /*
+    
     route.push(
         new model.movement.Action.Move()
             .apply(route[route.length -1])
     );
-    */
 
     route.reduce(function(last, position, i, a) {
         var currentCenter = this._gridService.resolveGameCoordinates(position.getPosition().toOddR());
@@ -26,6 +24,7 @@ model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
         if (a[i+1] !== undefined) {
             var nextCenter = this._gridService.resolveGameCoordinates(a[i+1].getPosition().toOddR());
         } else {
+            return;
             var nextCenter = currentCenter;
         }
 

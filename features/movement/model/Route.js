@@ -72,6 +72,11 @@ model.movement.Route.prototype.getStartPosition = function()
 	return this._startPosition;
 };
 
+model.movement.Route.prototype.getThrusterUsage = function()
+{
+	return this._thrusterUsage;
+};
+
 model.movement.Route.prototype.getRoute = function()
 {
 	return this._route.slice(0);
@@ -94,17 +99,22 @@ model.movement.Route.prototype.getActionsAsSteps = function(){
 	var actions = [].concat(speed).concat(modifiers);
 
 	var steps = [];
-	var currentStep = {index: 0, actions: []};
+	var currentPosition = this._startPosition;
+
+	var currentStep = {index: 0, actions: [], costs: []};
+
 	for (var i in actions){
 		var action = actions[i];
 
 		if (action instanceof model.movement.Action.Move){
 			steps.push(currentStep);
 			var newIndex = currentStep.index+1;
-			currentStep = {index: newIndex, actions: []};
+			currentStep = {index: newIndex, actions: [], costs: []};
 		}
 
 		currentStep.actions.push(action);
+		currentStep.costs.push(action.getThrustCost(currentPosition, this._movementAbility));
+		currentPosition = action.apply(currentPosition, this._movementAbility);
 	}
 
 	steps.push(currentStep);

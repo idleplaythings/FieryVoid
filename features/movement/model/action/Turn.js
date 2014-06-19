@@ -10,6 +10,11 @@ model.movement.Action.Turn.CCW = -1;
 model.movement.Action.Turn.prototype = 
 	Object.create(model.movement.Action.prototype);
 
+model.movement.Action.Turn.prototype.getDisplayName = function(current, movementAbility)
+{
+	return this._turnDirection === model.movement.Action.Turn.CW ? 'Right turn' : 'Left turn';
+};
+
 model.movement.Action.Turn.prototype.getFacing = function(current, movementAbility)
 {
 	return current.turnFacing(this._turnDirection);
@@ -44,7 +49,6 @@ model.movement.Action.Turn.prototype.getThrustCost =
 	thrustCost.setCost(rear, cost);
 	
 	return thrustCost;
-	
 };
 
 model.movement.Action.Turn.prototype._validateTurnDirection = function()

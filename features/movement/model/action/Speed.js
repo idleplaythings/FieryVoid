@@ -9,6 +9,10 @@ model.movement.Action.Speed.DEACCELERATE = -1;
 model.movement.Action.Speed.prototype = 
 	Object.create(model.movement.Action.prototype);
 
+model.movement.Action.Speed.prototype.getDisplayName = function(current, movementAbility)
+{
+	return this._change < 0 ? 'Deaccelerate' : 'Accelerate';
+};
 
 model.movement.Action.Speed.prototype.getDirection = function(current, movementAbility)
 {
@@ -38,7 +42,7 @@ model.movement.Action.Speed.prototype.getThrustCost =
 	var thrustCost = new model.movement.ThrustCost();
 	var cost = movementAbility.getAccelerationCost();
 	
-	var dir = this._speedChange < 0 ? 0 : 180;
+	var dir = this._change < 0 ? 0 : 180;
 	thrustCost.setCost(current.getThrusterDirection(dir), cost);
 	
 	return thrustCost;

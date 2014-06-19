@@ -31,7 +31,6 @@ model.movement.ShipMovementStatus.prototype.getRoutes = function()
 
 model.movement.ShipMovementStatus.prototype.getRouteByTurn = function(turn)
 {
-  console.log(turn, this.getRoutes())
   return this.getRoutes()[turn];
 };
 

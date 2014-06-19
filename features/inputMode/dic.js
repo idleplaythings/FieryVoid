@@ -5,16 +5,17 @@ dic.register(
             dic.get('model.EventDispatcher'),
             [
                 dic.get('model.inputAction.ActivateTileOnMouseMove'),
-                dic.get('model.inputAction.SelectShipOnClick'),
                 dic.get('model.inputAction.SelectMovementStepOnClick'),
                 dic.get('model.inputAction.ShowMovementMenuOnRouteClick'),
-                //dic.get('model.inputAction.SelectedShipMarker'),
+                dic.get('model.inputAction.SelectShipOnClick'),
+                dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.DisplayRoutes'),
                 dic.get('model.inputAction.HighlightActiveRoute'),
                 dic.get('model.inputAction.ShowShipStatusView'),
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
-                dic.get('model.inputAction.HideHullAtZoom')
+                dic.get('model.inputAction.HideHullAtZoom'),
+                dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver')
             ],
             1
         );
@@ -47,6 +48,18 @@ dic.register('model.inputAction.SelectMovementStepOnClick', function(dic) {
         dic.get('model.SelectedShip'),
         dic.get('model.movement.ShipMovementAnimationService'),
         dic.get('model.EventDispatcher')
+    );
+});
+
+dic.register('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver', function(dic) {
+    return new model.inputAction.ShowMomevemenTooltipOnRouteMouseOver(
+        dic.get('model.ShipService'),
+        dic.get('model.SelectedShip'),
+        dic.get('model.movement.ShipMovementAnimationService'),
+        dic.get('model.EventDispatcher'),
+        dic.get('model.CoordinateConverterViewPort'),
+        dic.get('model.MovementTooltip'),
+        dic.get('model.GridService')
     );
 });
 

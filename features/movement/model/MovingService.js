@@ -9,7 +9,7 @@ model.movement.MovingService.prototype.turnLeft = function(ship, turn, stepIndex
 };
 
 model.movement.MovingService.prototype.canTurnLeft = function(ship, turn, stepIndex){
-  return this._can(this._getTurnLeftRoute, ship, turn, stepIndex);
+  return this._can(this._getTurnLeftRoute.bind(this), ship, turn, stepIndex);
 };
 
 model.movement.MovingService.prototype._getTurnLeftRoute = function(ship, turn, stepIndex){  
@@ -23,7 +23,7 @@ model.movement.MovingService.prototype.turnRight = function(ship, turn, stepInde
 };
 
 model.movement.MovingService.prototype.canTurnRight = function(ship, turn, stepIndex){
-  return this._can(this._getTurnRightRoute, ship, turn, stepIndex);
+  return this._can(this._getTurnRightRoute.bind(this), ship, turn, stepIndex);
 };
 
 model.movement.MovingService.prototype._getTurnRightRoute = function(ship, turn, stepIndex){
@@ -37,7 +37,7 @@ model.movement.MovingService.prototype.accelerate = function(ship, turn, stepInd
 };
 
 model.movement.MovingService.prototype.canAccelerate = function(ship, turn, stepIndex){
-  return this._can(this._getAccelerateRoute, ship, turn, stepIndex);
+  return this._can(this._getAccelerateRoute.bind(this), ship, turn, stepIndex);
 };
 
 model.movement.MovingService.prototype._getAccelerateRoute = function(ship, turn, stepIndex){
@@ -51,7 +51,7 @@ model.movement.MovingService.prototype.deaccelerate = function(ship, turn, stepI
 };
 
 model.movement.MovingService.prototype.canDeaccelerate = function(ship, turn, stepIndex){
-  return this._can(this._getDeaccelerateRoute, ship, turn, stepIndex);
+  return this._can(this._getDeaccelerateRoute.bind(this), ship, turn, stepIndex);
 };
 
 model.movement.MovingService.prototype._getDeaccelerateRoute = function(ship, turn, stepIndex){
@@ -160,6 +160,7 @@ model.movement.MovingService.prototype._can = function(handler, ship, turn, step
     return true;
   }catch(e){
     console.log("Can't do movement, because:", e.message);
+    console.log(e.stack);
     return false;
   }
 };
@@ -167,4 +168,22 @@ model.movement.MovingService.prototype._can = function(handler, ship, turn, step
 model.movement.MovingService.prototype._addRoute = function(ship, route){
   ship.getMovement().addRoute(route);
   this._dispatcher.dispatch({name: 'MovementRouteChanged', ship: ship, route: route});
+};
+
+model.movement.MovingService.prototype._removeNonMoveActionsAfter = function(steps, index){
+
+  index = parseInt(index, 10);
+  for (var i = index+1; i<steps.length; i++){
+    var step = steps[i];
+
+    for (var k = step.actions.length-1; k >= 0; k--){
+      var action = step.actions[k];
+
+      if (action instanceof model.movement.Action.Move || action instanceof model.movement.Action.Speed)
+        continue;
+
+      step.actions.splice(k, 1);
+      
+    }
+  };
 };

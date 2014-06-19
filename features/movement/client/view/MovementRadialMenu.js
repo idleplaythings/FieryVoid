@@ -56,6 +56,7 @@ model.movement.MovementRadialMenu.prototype._onRouteChanged = function(event)
 
     this._direction = route[this._routeIndex].getDirection();
     this._rotate();
+    this._validateButtons();
 };
 
 model.movement.MovementRadialMenu.prototype.show = function(position, ship, turn, routeIndex)
@@ -68,6 +69,7 @@ model.movement.MovementRadialMenu.prototype.show = function(position, ship, turn
     this._scenePosition = position;
     this._rePosition();
     this._rotate();
+    this._validateButtons();
     this._element.show();
 };
 
@@ -85,15 +87,13 @@ model.movement.MovementRadialMenu.prototype._rePosition = function()
     var pos = this._coordinateConverter.fromGameToViewPort(this._scenePosition);
 
     this._element
-        .css("top", (pos.y - this._size/2) + "px")
-        .css("left", (pos.x - this._size/2) + "px")
+        .css("top", (pos.y) + "px")
+        .css("left", (pos.x) + "px")
 };
 
 model.movement.MovementRadialMenu.prototype._rotate = function()
 {
-    console.log(this._direction);
     var degree = this._direction * 60;
-    console.log(degree);
     var template = this._element;
     template.css('-webkit-transform', 'rotate('+degree+'deg)');
     template.css('transform', 'rotate('+degree+'deg)');
@@ -120,8 +120,8 @@ model.movement.MovementRadialMenu.prototype._createElement = function()
 {
   var parent = this._gameContainer.get();
   var container = jQuery('' +
-      '<div id="'+this._id+'" class="movementRadialMenu" style="position:absolute;z-index:100;width:'+this._size+'px;height:'+this._size+'px"></div>');
-
+      '<div id="'+this._id+'" class="movementRadialMenu" style="display:none;position:absolute;z-index:100;width:'+0+'px;height:'+0+'px"></div>');
+  /*
   var drawingTool = this._canvasDrawingTool;
   var drawingCanvas =
       $('<canvas width="'+this._size+'px" height="'+this._size+'px"></canvas>');
@@ -137,6 +137,7 @@ model.movement.MovementRadialMenu.prototype._createElement = function()
 
   drawingTool.drawHollowCircleAndFill(context, halfSize, halfSize, halfSize*0.62, halfSize*0.95, 2);
   drawingCanvas.appendTo(container);
+  */
 
   this._buttons.forEach(function(buttonAndDegree){
       var button = buttonAndDegree.button;
@@ -150,21 +151,28 @@ model.movement.MovementRadialMenu.prototype._createElement = function()
   this._element = container;
 };
 
+model.movement.MovementRadialMenu.prototype._validateButtons = function(){
+  this._buttons.forEach(function(button){
+    button.button.validate(this._ship, this._turn, this._routeIndex);
+  }, this);
+};
+
 model.movement.MovementRadialMenu.prototype._getButtons = function()
 {
   return [
-    this._createButton('TR', '', 60, this._turnRight.bind(this)),
-    this._createButton('TL', '', 300, this._turnLeft.bind(this)),
-    this._createButton('+', '', 0, this._accelerate.bind(this)),
-    this._createButton('-', '', 180, this._deaccelerate.bind(this))
+    this._createButton('TR', '', 60, this._turnRight.bind(this), this._canTurnRight.bind(this)),
+    this._createButton('TL', '', 300, this._turnLeft.bind(this), this._canTurnLeft.bind(this)),
+    this._createButton('+', '', 0, this._accelerate.bind(this), this._canAccelerate.bind(this)),
+    this._createButton('-', '', 180, this._deaccelerate.bind(this), this._canDeaccelerate.bind(this))
   ];
 };
 
-model.movement.MovementRadialMenu.prototype._createButton = function(text, background, degree, callback){
+model.movement.MovementRadialMenu.prototype._createButton = function(text, background, degree, callback, validationCallback){
   return {
-    button: new model.Button(
+    button: new model.MovementButton(
       text, 
       callback,
+      validationCallback,
       {
         background: background,
       }
@@ -178,9 +186,19 @@ model.movement.MovementRadialMenu.prototype._turnLeft = function()
   this._movingService.turnLeft(this._ship, this._turn, this._routeIndex);
 };
 
+model.movement.MovementRadialMenu.prototype._canTurnLeft = function()
+{
+  return this._movingService.canTurnLeft(this._ship, this._turn, this._routeIndex);
+};
+
 model.movement.MovementRadialMenu.prototype._turnRight = function()
 {
   this._movingService.turnRight(this._ship, this._turn, this._routeIndex);
+};
+
+model.movement.MovementRadialMenu.prototype._canTurnRight = function()
+{
+  return this._movingService.canTurnRight(this._ship, this._turn, this._routeIndex);
 };
 
 model.movement.MovementRadialMenu.prototype._accelerate = function()
@@ -188,9 +206,19 @@ model.movement.MovementRadialMenu.prototype._accelerate = function()
   this._movingService.accelerate(this._ship, this._turn, this._routeIndex);
 };
 
+model.movement.MovementRadialMenu.prototype._canAccelerate = function()
+{
+  return this._movingService.canAccelerate(this._ship, this._turn, this._routeIndex);
+};
+
 model.movement.MovementRadialMenu.prototype._deaccelerate = function()
 {
   this._movingService.deaccelerate(this._ship, this._turn, this._routeIndex);
+};
+
+model.movement.MovementRadialMenu.prototype._canDeaccelerate = function()
+{
+  return this._movingService.canDeaccelerate(this._ship, this._turn, this._routeIndex);
 };
 
 model.movement.MovementRadialMenu.prototype._placeButton = function(button, angle)
@@ -200,7 +228,7 @@ model.movement.MovementRadialMenu.prototype._placeButton = function(button, angl
 
   var pos = MathLib.getPointInDirection(distance, angle, halfSize, halfSize);
   button
-      .css("top", (pos.y - 20) + "px")
-      .css("left", (pos.x - 20) + "px");
+      .css("top", (pos.y - 20 - halfSize) + "px")
+      .css("left", (pos.x - 20 - halfSize) + "px");
 };
 
