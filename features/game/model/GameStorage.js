@@ -36,16 +36,16 @@ model.GameStorage.prototype.getGame = function(gameId)
     return game;
 };
 
-model.GameStorage.prototype.updatePlayerOrderTime = function(gameid, userid, time)
+model.GameStorage.prototype.updatePlayerTurn = function(gameid, userid, turn)
 {
     Games.update(
         {$and: [{'_id': gameid}, {'players.id': userid}]},
-        {$set: {'players.$.orderTime': time}});
+        {$set: {'players.$.committedTurn': turn}});
 };
 
-model.GameStorage.prototype.updateCurrentGameTime = function(gameid, time)
+model.GameStorage.prototype.updateTurn = function(gameid, turn)
 {
     Games.update(
         {'_id': gameid},
-        {$set: {currentGameTime: time}});
+        {$set: {currentGameTurn: turn}});
 };

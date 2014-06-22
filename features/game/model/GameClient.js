@@ -77,7 +77,7 @@ model.GameClient.prototype.play = function()
     this.gridService.init(100, 100, 300);
     this.uiEventManager.init();
     this.shipMovementAnimationService.init(this.shipService.getShips());
-    this.gameActionManager.init();
+    this.gameActionManager.init(this._id);
     
     this.gameTerrain.createRandom(this.terrainSeed);
 
@@ -103,6 +103,16 @@ model.GameClient.prototype.load = function(doc)
 
 model.GameClient.prototype.updated = function(doc)
 {
+    for (var i in doc.players){
+        var docPlayer = doc.players[i];
+        var player = this.getPlayer(docPlayer.id);
+
+        if (docPlayer.committedTurn !== player.committedTurn){
+            player.committedTurn = docPlayer.committedTurn;
+            this.dispatcher.dispatch({name: 'PlayerTurnChanged', payload: player});
+        }
+    }
+    
     if (this.gameState.currentGameTurn < doc.currentGameTurn)
     {
         this.timelineFactory.reloadTimelines();

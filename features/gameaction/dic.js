@@ -4,4 +4,4 @@ dic.register('model.GameActionManager', function(dic) {
         dic.get('model.UiEventManager'),
         dic.get('model.movement.ShipMovementAnimationService')
     );
-});
+}, {shared: true});

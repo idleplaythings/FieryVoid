@@ -13,6 +13,14 @@ model.movement.ShipMovementHandler.prototype.setStartPosition = function(ship, m
 	ship.getMovement().addRoute(route);
 };
 
+model.movement.ShipMovementHandler.prototype.addDefaultRouteFor = function(ship, turn)
+{
+  var startPosition = ship.getMovement().getRouteByTurn(turn-1).getEndPosition();
+
+  var route = this.generateDefaultRoute(ship, turn, startPosition);
+  ship.getMovement().addRoute(route);
+};
+
 model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(ship, turn, movementPosition)
 {
 	var movementAbility = this.getMovementAbility(ship);
@@ -26,7 +34,6 @@ model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(shi
 
 	return new model.movement.Route(turn, movementPosition, movementAbility, modifiers);
 };
-
 
 model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship, turn)
 {
