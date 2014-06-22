@@ -10,7 +10,7 @@ model.movement.Thruster = function Thruster(args)
 
 model.movement.Thruster.prototype.pay = function(cost)
 {
-	var available = this.max - this.use;
+	var available = this.getAvailable();
 	
 	if (available < 0)
 		return cost;
@@ -28,5 +28,11 @@ model.movement.Thruster.prototype.pay = function(cost)
 model.movement.Thruster.prototype.getThrustDirection = function()
 {
 	return this.direction;
-}
+};
+
+model.movement.Thruster.prototype.getAvailable = function()
+{
+	return this.max - this.use;
+};
+
 

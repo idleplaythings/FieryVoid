@@ -106,12 +106,13 @@ model.GameState.prototype.getCurrentDisplayTurn = function()
 
 model.GameState.prototype.getCurrentDisplayTime = function()
 {
-    return this.currentDisplayGameTime;
+    return this.currentDisplayGameTime / 100;
 };
 
-model.GameState.prototype.forwardOne = function()
+model.GameState.prototype.replay = function()
 {
-    this.advanceGameTimeTo(this.currentDisplayTarget + 10000);
+    this.currentDisplayGameTime = 0;
+    this.advanceGameTimeTo(9999);
 };
 
 model.GameState.prototype.backOne = function()

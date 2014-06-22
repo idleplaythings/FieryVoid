@@ -1,6 +1,7 @@
-
-model.movement.ShipMovementHandler = function ShipMovementHandler()
+model.movement.ShipMovementHandler = function ShipMovementHandler(gameState, gridService)
 {
+  this._gameState = gameState;
+  this._gridService = gridService;
 };
 
 model.movement.ShipMovementHandler.prototype.setStartPosition = function(ship, movementPosition)
@@ -14,7 +15,7 @@ model.movement.ShipMovementHandler.prototype.setStartPosition = function(ship, m
 
 model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(ship, turn, movementPosition)
 {
-	var movementAbility = this._getMovementAbility(ship);
+	var movementAbility = this.getMovementAbility(ship);
 	var modifiers = [];
 
 	var speed = movementPosition.getSpeed();
@@ -27,18 +28,18 @@ model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(shi
 };
 
 
-model.movement.ShipMovementHandler.prototype._getMovementAbility = function(ship)
+model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship, turn)
 {
     return new model.movement.MovementAbility({
-    	accelerationCost: 1,
-		turnCostSpeedFactor: 0.5,
-		turnDelaySpeedFactor: 0.5,
-		thrustAvailable: 20,
-		thrusters: [
-            new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 30}),
-            new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 30}),
-            new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 30}),
-            new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 30})
-        ]
+    	accelerationCost: 3,
+  		turnCostSpeedFactor: 0.33,
+  		turnDelaySpeedFactor: 0.25,
+  		thrustAvailable: 12,
+  		thrusters: [
+        new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 10}),
+        new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 10}),
+        new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 10}),
+        new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 15})
+      ]
     });
 };

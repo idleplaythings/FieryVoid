@@ -5,3 +5,8 @@ model.movement.Action.TurnLeft = function TurnLeft()
 
 model.movement.Action.TurnLeft.prototype = 
 	Object.create(model.movement.Action.Turn.prototype);
+
+model.movement.Action.TurnLeft.prototype.serialize = function()
+{
+  return {className: 'TurnLeft', args: {turnDirection: this._turnDirection}};
+};

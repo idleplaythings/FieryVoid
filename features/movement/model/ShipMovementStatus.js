@@ -29,9 +29,14 @@ model.movement.ShipMovementStatus.prototype.getRoutes = function()
     });
 };
 
+model.movement.ShipMovementStatus.prototype.getRouteByTurn = function(turn)
+{
+  return this.getRoutes()[turn];
+};
+
 model.movement.ShipMovementStatus.prototype._getTimelineRouteEntry = function(route)
 {
 	return this._timeline.filter(function(entry){ 
-		return entry.name == 'movementRoute' && entry.payload.turn == route.turn;
+		return entry.name == 'movementRoute' && entry.payload.turn == route.getTurn();
 	}, this).pop();
 };

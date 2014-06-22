@@ -23,6 +23,7 @@ module.exports = function(config) {
         'lib/model/model.js',
         'lib/math/Vector2.js',
         'lib/MathLib.js',
+        'lib/Button.js',
         'lib/CoordinateConverter.js',
         'features/coordinateconverter/model/*.js',
         'features/ship/model/ShipDesign.js',

@@ -34,9 +34,9 @@ model.GameScene.prototype.init = function()
     var zoom = 1;
 
     var camera = new THREE.OrthographicCamera(
-        width / (-this.scale*2*zoom), width / (this.scale*2*zoom), height / (this.scale*2*zoom), height / (-this.scale*2*zoom), 1, 200 );
+        width / (-this.scale*2*zoom), width / (this.scale*2*zoom), height / (this.scale*2*zoom), height / (-this.scale*2*zoom), 1, 2000 );
 
-    camera.position.z = 20;
+    camera.position.z = 200;
 
     this.camera = camera;
     this.scene = new THREE.Scene();
@@ -56,7 +56,6 @@ model.GameScene.prototype.init = function()
     this.renderer.context.getExtension('OES_standard_derivatives');
 
     $(this.renderer.domElement)
-        .on('contextmenu', function(e){e.stopPropagation(); return false; })
         .addClass("webglCanvas").appendTo(this._gameContainer.get());
 
     this.dispatcher.dispatch({

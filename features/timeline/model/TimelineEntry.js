@@ -28,7 +28,6 @@ model.TimelineEntry.prototype.update = function(payload)
 {
 	if ( ! this.canUpdate())
 		throw Error("Can't update locked timeline entry");
-		return;
 		
     this.payload = payload;
     this._saved = false;
@@ -77,7 +76,7 @@ model.TimelineEntry.prototype.lock = function(payload)
 	if (Meteor.isClient)
 		throw Error("Can't lock timeline entries on clientside");
 		
-    return this._locked === true;
+    this._locked === true;
     this._saved = false;
 };
 

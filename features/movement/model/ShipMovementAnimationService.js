@@ -3,7 +3,6 @@ model.movement.ShipMovementAnimationService = function ShipMovementAnimationServ
 	this._shipAnimationDetailFactory = shipAnimationDetailFactory;
 
 	this._shipAnimations = [];
-
 	this._paths = this.resolverPathsForShips;
 };
 
@@ -14,20 +13,46 @@ model.movement.ShipMovementAnimationService.prototype.init = function(ships)
 	}, this);
 };
 
-model.movement.ShipMovementAnimationService.prototype.showAllRoutes = function()
-{
-	if (this._shipAnimations.length === 0)
-		return;
+model.movement.ShipMovementAnimationService.prototype.findRouteSegmentOnPosition = function(ship, sceneposition){
+	return this._getShipAnimation(ship).getRouteSegmentOnPosition(sceneposition);
+};
 
+model.movement.ShipMovementAnimationService.prototype.getRouteTurnOnPosition = function(ship, sceneposition){
+	return this._getShipAnimation(ship).getRouteTurnOnPosition(sceneposition);
+};
+
+model.movement.ShipMovementAnimationService.prototype.highlightRouteSegment = function(ship, index){
+	return this._getShipAnimation(ship).highlightRouteSegment(index);
+};
+
+model.movement.ShipMovementAnimationService.prototype.unhighlightRouteSegment = function(ship, index){
+	return this._getShipAnimation(ship).unhighlightRouteSegment(index);
+};
+
+model.movement.ShipMovementAnimationService.prototype.showAllRoutes = function(turn)
+{
 	this._shipAnimations.forEach(function(animation){
-		animation.showRoute();
+		animation.showRoute(turn);
 	});
 };
 
-model.movement.ShipMovementAnimationService.prototype.highlightRouteFor = function(ship)
+model.movement.ShipMovementAnimationService.prototype.showRouteFor = function(ship, turn){
+	var animation = this._getShipAnimation(ship);
+	animation.resolve(ship);
+	animation.showRoute(turn);
+};
+
+model.movement.ShipMovementAnimationService.prototype.hideAllRoutes = function(turn)
+{
+	this._shipAnimations.forEach(function(animation){
+		animation.hideRoute(turn);
+	});
+};
+
+model.movement.ShipMovementAnimationService.prototype.highlightRouteFor = function(ship, turn)
 {
 	var animation = this._getShipAnimation(ship);
-	animation.highlight();
+	animation.highlight(turn);
 };
 
 model.movement.ShipMovementAnimationService.prototype.clearRouteHighlights = function()
