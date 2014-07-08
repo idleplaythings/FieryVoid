@@ -116,6 +116,6 @@ model.GameClient.prototype.updated = function(doc)
     if (this.gameState.currentGameTurn < doc.currentGameTurn)
     {
         this.timelineFactory.reloadTimelines();
-        this.gameState.changeTurn(doc.currentGameTurn);
+        this.gameState.startTurn(doc.currentGameTurn);
     }
 };

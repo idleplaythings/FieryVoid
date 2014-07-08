@@ -43,12 +43,6 @@ model.GameState.prototype.setTurn = function(turn)
     this.currentDisplayTarget = turn * this._turnTime;
 };
 
-model.GameState.prototype.changeTurn = function(turn)
-{
-    this._setTurn(turn);
-    this.startTurn();
-};
-
 model.GameState.prototype.getTurnStartTime = function(turn)
 {
     return turn * this._turnTime;
