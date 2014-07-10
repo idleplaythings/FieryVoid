@@ -1,7 +1,6 @@
-model.movement.MovementVisualizer = function MovementVisualizer(dispatcher, gameScene, animationLoop, zooming)
+model.movement.MovementVisualizer = function MovementVisualizer(dispatcher, gameScene, zooming)
 {
     this._gameScene = gameScene;
-    this._animationLoop = animationLoop;
     this._dispatcher = dispatcher;
     this._zooming = zooming;
 
@@ -22,9 +21,12 @@ model.movement.MovementVisualizer.prototype.init = function()
 
 model.movement.MovementVisualizer.prototype.renderPath = function(path)
 {
-    path.forEach(function(step) {
-        this._renderMovementVisualisation(step);
-    }, this);
+    var length = path.length;
+    for (var i in path){
+        var step = path[i];
+        var offset = 1/length * i;
+        this._renderMovementVisualisation(step, offset, length)
+    }
 }
 
 model.movement.MovementVisualizer.prototype.clear = function()
@@ -36,12 +38,18 @@ model.movement.MovementVisualizer.prototype.clear = function()
     this._particlePaths = [];
 }
 
-model.movement.MovementVisualizer.prototype._renderMovementVisualisation = function(step)
+model.movement.MovementVisualizer.prototype.animate = function(turn, shipAnimatinoDetails)
 {
-    var particlePath = new model.ParticlePath(step, 0x00ff00, 0);
+    this._particlePaths.forEach(function(particlePath){
+        particlePath.animate(turn, shipAnimatinoDetails);
+    })
+};
+
+model.movement.MovementVisualizer.prototype._renderMovementVisualisation = function(step, offset, length)
+{
+    var particlePath = new model.ParticlePath(step, 0x00ff00, 0, offset, length);
     particlePath.setZoomLevel(this._zooming.getCurrentZoom());
     this._gameScene.addToScene(particlePath.get());
-    this._animationLoop.register(particlePath);
 
     this._particlePaths.push(particlePath);
-}
+};

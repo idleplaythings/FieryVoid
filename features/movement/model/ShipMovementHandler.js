@@ -15,7 +15,7 @@ model.movement.ShipMovementHandler.prototype.setStartPosition = function(ship, m
 
 model.movement.ShipMovementHandler.prototype.addDefaultRouteFor = function(ship, turn)
 {
-  var startPosition = ship.getMovement().getRouteByTurn(turn-1).getEndPosition();
+  var startPosition = ship.getMovement().getRouteByTurn(turn-1).getNextStartPosition();
 
   var route = this.generateDefaultRoute(ship, turn, startPosition);
   ship.getMovement().addRoute(route);

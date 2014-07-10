@@ -13,6 +13,13 @@ model.movement.ShipMovementAnimationService.prototype.init = function(ships)
 	}, this);
 };
 
+model.movement.ShipMovementAnimationService.prototype.load = function(turn)
+{
+	this._shipAnimations.forEach(function(animation){
+		animation.load(turn);
+	});
+};
+
 model.movement.ShipMovementAnimationService.prototype.findRouteSegmentOnPosition = function(ship, sceneposition){
 	return this._getShipAnimation(ship).getRouteSegmentOnPosition(sceneposition);
 };

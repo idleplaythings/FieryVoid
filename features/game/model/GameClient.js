@@ -54,7 +54,7 @@ model.GameClient.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-    this.gameState.startTurn(args.currentGameTurn || 0);
+    this.gameState.setTurn(args.currentGameTurn || 0);
     this.created = args.created || null;
 };
 
@@ -85,6 +85,7 @@ model.GameClient.prototype.play = function()
 
     this.gameTerrain.startAnimation(this.gameAnimationLoop);
     this.gameAnimationLoop.start();
+    this.gameState.startTurn();
 };
 
 model.GameClient.prototype.load = function(doc)
@@ -116,6 +117,7 @@ model.GameClient.prototype.updated = function(doc)
     if (this.gameState.currentGameTurn < doc.currentGameTurn)
     {
         this.timelineFactory.reloadTimelines();
-        this.gameState.startTurn(doc.currentGameTurn);
+        this.gameState.setTurn(doc.currentGameTurn);
+        this.gameState.startTurn();
     }
 };

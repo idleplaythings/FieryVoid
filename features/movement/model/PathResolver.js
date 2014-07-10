@@ -1,9 +1,10 @@
 if ( typeof model.movement === 'undefined')
     model.movement = {};
 
-model.movement.PathResolver = function PathResolver(gridService)
+model.movement.PathResolver = function PathResolver(gridService, longEnd)
 {
     this._gridService = gridService;
+    this._longEnd = longEnd;
 };
 
 model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
@@ -12,19 +13,22 @@ model.movement.PathResolver.prototype.resolvePathForRoute = function(route)
     var occupiedPositions = {};
 
     var route = route.getRoute();
-    
-    route.push(
+    if (this._longEnd){
+        route.push(
         new model.movement.Action.Move()
             .apply(route[route.length -1])
-    );
-
+        );
+    }
+    
     route.reduce(function(last, position, i, a) {
         var currentCenter = this._gridService.resolveGameCoordinates(position.getPosition().toOddR());
 
         if (a[i+1] !== undefined) {
             var nextCenter = this._gridService.resolveGameCoordinates(a[i+1].getPosition().toOddR());
         } else {
-            return;
+            if (this._longEnd)
+                return;
+
             var nextCenter = currentCenter;
         }
 

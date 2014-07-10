@@ -15,7 +15,23 @@ dic.register(
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
                 dic.get('model.inputAction.HideHullAtZoom'),
-                dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver')
+                dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver'),
+                dic.get('model.inputAction.TurnButtons')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeReplay',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.Replay')
             ],
             1
         );
@@ -26,6 +42,18 @@ dic.register(
 
 dic.register('model.InputModeFactory', function(dic) {
     return Factory.createFactoryFromTags('inputMode');
+});
+
+dic.register('model.inputAction.TurnButtons', function(dic) {
+    return new model.inputAction.TurnButtons(
+        dic.get('model.GameActionManager')
+    );
+});
+
+dic.register('model.inputAction.Replay', function(dic) {
+    return new model.inputAction.Replay(
+        dic.get('model.GameState')
+    );
 });
 
 dic.register('model.inputAction.ActivateTileOnMouseMove', function(dic) {

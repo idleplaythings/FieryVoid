@@ -53,7 +53,6 @@ dic.register('model.movement.MovementVisualizer', function(dic) {
     return new model.movement.MovementVisualizer(
         dic.get('model.EventDispatcher'),
         dic.get('model.GameScene'),
-        dic.get('model.GameAnimationLoop'),
         dic.get('model.Zooming')
     );
 });

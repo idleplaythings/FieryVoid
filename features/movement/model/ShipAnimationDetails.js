@@ -61,7 +61,16 @@ model.movement.ShipAnimationDetails.prototype.resolve = function(ship)
 		this._movementCaches[i] = this._shipAnimator.cachePath(this._paths[i], this._routes[i], this._cacheResolution);
 	}
 
-	console.log(this._movementCaches)
+	return this;
+};
+
+model.movement.ShipAnimationDetails.prototype.load = function(turn)
+{
+	var route = this._ship.getMovement().getRouteByTurn(turn);
+
+	this._paths[turn] = this._pathResolver.resolvePathForRoute(route);
+	this._routes[turn] = route;
+	this._movementCaches[turn] = this._shipAnimator.cachePath(this._paths[turn], this._routes[turn], this._cacheResolution);
 
 	return this;
 };
@@ -74,10 +83,11 @@ model.movement.ShipAnimationDetails.prototype.animate = function(turn, time)
 	if ( ! path || ! route)
 		return;
 
-
 	var parameters = this.getShipPositionAndFacing(turn, time);
 	this._ship.setPosition(parameters.position);
   this._ship.setAzimuth(parameters.rotation);
+
+  this._movementVisualizer.animate(turn, this);
 };
 
 model.movement.ShipAnimationDetails.prototype.showRoute = function(turn)

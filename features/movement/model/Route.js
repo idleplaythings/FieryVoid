@@ -43,6 +43,19 @@ model.movement.Route.prototype.serialize = function()
 	}
 };
 
+model.movement.Route.prototype.getNextStartPosition = function()
+{
+	var end = this.getEndPosition();
+	return new model.movement.Position({
+		position: end.getPosition(),
+		facing: end.getFacing(),
+		direction: end.getDirection(),
+		speed: end.getSpeed(),
+		turnDelay: end.getTurnDelay(),
+		slipDelay: end.getSlipDelay()
+	});
+};
+
 model.movement.Route.prototype.createFromSteps = function(steps){
 
 	actions = steps.reduce(function(actions, step){

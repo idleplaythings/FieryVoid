@@ -69,7 +69,7 @@ model.Game.prototype.setState = function(args)
     this.asteroids = args.asteroids || [];
 
     this.players = args.players || [];
-    this.gameState.startTurn(args.currentGameTurn || 0);
+    this.gameState.setTurn(args.currentGameTurn || 0);
     this.created = args.created || null;
 };
 

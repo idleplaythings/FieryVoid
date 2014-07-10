@@ -73,3 +73,9 @@ button:focus
 	background-image:url(/misc/x.png);
 }
 
+button.menubarButton{
+    border-radius: 10%;
+    width:auto;
+    display: inline-block;
+}
+
