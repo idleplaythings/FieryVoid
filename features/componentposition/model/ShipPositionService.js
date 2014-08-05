@@ -1,3 +1,5 @@
+
+/* DEPRECATED ? 
 model.ShipPositionService = function ShipPositionService(ship, turn)
 {
     model.ShipDesignPositionService.call(
@@ -11,3 +13,4 @@ model.ShipPositionService = function ShipPositionService(ship, turn)
 };
 
 model.ShipPositionService.prototype = Object.create(model.ShipDesignPositionService.prototype);
+*/

@@ -76,14 +76,20 @@ model.movement.ShipMovementAnimationService.prototype.getShipAnimations = functi
 
 model.movement.ShipMovementAnimationService.prototype.getShipScenePosition = function(ship, turn, time)
 {
+	if ( ! time)
+		time = 0;
+
 	var shipAnimation = this._getShipAnimation(ship);
 	return shipAnimation.getShipPositionAndFacing(turn, time).position;
 };
 
 model.movement.ShipMovementAnimationService.prototype.getShipSceneFacing = function(ship, turn, time)
 {
+	if ( ! time)
+		time = 0;
+
 	var shipAnimation = this._getShipAnimation(ship);
-	return shipAnimation.getShipPositionAndFacing(turn, time).facing;
+	return shipAnimation.getShipPositionAndFacing(turn, time).rotation;
 };
 
 model.movement.ShipMovementAnimationService.prototype._getShipAnimation = function(ship)

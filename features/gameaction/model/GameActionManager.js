@@ -24,6 +24,12 @@ model.GameActionManager.prototype.commitTurn = function(){
   })
 }
 
+model.GameActionManager.prototype.setWeaponMode = function(selectedWeapons){
+  var inputMode = this._inputModeFactory.create('model.InputModeWeapon');
+  inputMode.setState('selectedWeapons', selectedWeapons);
+  this._uiEventManager.setInputMode(inputMode);
+};
+
 model.GameActionManager.prototype.replay = function(event){
   this._uiEventManager.setInputMode(this._inputModeFactory.create('model.InputModeReplay'));
 };
@@ -31,7 +37,6 @@ model.GameActionManager.prototype.replay = function(event){
 model.GameActionManager.prototype.selectMode = function(event){
   this._uiEventManager.setInputMode(this._inputModeFactory.create('model.InputModeSelect'));
 };
-
 
 model.GameActionManager.prototype._onTurnEvent = function(event){
   console.log("start turn", event.turn)

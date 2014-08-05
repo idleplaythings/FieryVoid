@@ -1,7 +1,8 @@
-model.ShipDesignStorage = function ShipDesignStorage(timelineFactory, moduleLayoutRepository)
+model.ShipDesignStorage = function ShipDesignStorage(timelineFactory, moduleLayoutRepository, arcService)
 {
     this.timelineFactory =  timelineFactory;
     this._moduleLayoutRepository = moduleLayoutRepository;
+    this._arcService = arcService;
 };
 
 model.ShipDesignStorage.prototype.getReactiveShipDesign = function(id, callback)
@@ -54,6 +55,8 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
 				moduleDetails.moduleIdOnShip, module, ship);
         }, this);
 
-	return new model.ShipDesignInGame(doc);
+	var design = new model.ShipDesignInGame(doc);
+    design.calculateWeaponArcs(this._arcService);
+    return design;
 	
 };

@@ -10,3 +10,7 @@ model.Hotkey.prototype.matchKeyCode = function(keyCode)
 {
 	return this._keyCode == keyCode;
 };
+
+model.Hotkey.prototype.isHotkey = function(){
+  return true;
+};

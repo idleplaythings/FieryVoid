@@ -16,7 +16,10 @@ dic.register(
                 dic.get('model.inputAction.ShowModuleDetailView'),
                 dic.get('model.inputAction.HideHullAtZoom'),
                 dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver'),
-                dic.get('model.inputAction.TurnButtons')
+                dic.get('model.inputAction.TurnButtons'),
+                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
+                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
+                dic.get('model.inputAction.SelectWeaponMode')
             ],
             1
         );
@@ -32,6 +35,26 @@ dic.register(
             dic.get('model.EventDispatcher'),
             [
                 dic.get('model.inputAction.Replay')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeWeapon',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+
+                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
+                dic.get('model.inputAction.SelectedShipMarker'),
+                dic.get('model.inputAction.TargetCursor'),
+                dic.get('model.inputAction.HighlightSelectedWeapons')
+                //dic.get('model.inputAction.SelectWeapon')
             ],
             1
         );

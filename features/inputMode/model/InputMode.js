@@ -1,17 +1,22 @@
 model.InputMode = function InputMode(dispatcher, actions, priority)
 {
 	this._dispatcher = dispatcher;
-  this._inputState = null;
+  this._inputState = new model.InputState();
 	this._actions = actions;
 	this._priority = priority || 0;
 
 	this._uiResolver = null;
 };
 
+model.InputMode.prototype.setState = function(name, value){
+  if ( ! this._inputState)
+    throw new Error("No active input state");
+
+  this._inputState.set(name, value);
+};
+
 model.InputMode.prototype.activate = function(uiResolver)
 {
-  this._inputState = new model.InputState();
-
 	this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
   this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
 	this._mouseClickCallback = this._dispatcher.attach('ClickEvent', this.onClick.bind(this), 1);
@@ -24,7 +29,7 @@ model.InputMode.prototype.activate = function(uiResolver)
 
 model.InputMode.prototype.deactivate = function(uiResolver)
 {
-  this._inputState = null;
+  this._inputState = new model.InputState();
 
 	this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
 	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
