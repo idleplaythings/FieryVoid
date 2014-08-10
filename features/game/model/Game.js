@@ -75,22 +75,25 @@ model.Game.prototype.setState = function(args)
 
 model.Game.prototype.addPlayer = function(id)
 {
-    var players = [].concat(id).map(function(id){
-        return {id:id, orderTime:-1}
-    });
-    this.players = this.players.concat(players);
+    if (this.getPlayer(id))
+        return;
+
+    this.players.push({id:id, committedTurn:-1});
 };
 
 model.Game.prototype.getPlayer = function(id)
 {
-    var players = this.players.filter(function(player){
+    return players = this.players.filter(function(player){
         return player.id == id;
+    })[0];
+};
+
+model.Game.prototype.allPlayersReady = function()
+{
+    var turn = this.gameState.getTurn();
+    return this.players.every(function(player){
+        return player.committedTurn == turn;
     });
-
-    if (players[0])
-        return players[0];
-
-    return null;
 };
 
 model.Game.prototype.load = function(doc)
@@ -120,68 +123,3 @@ model.Game.prototype.getInitialInsert = function()
         players: this.players
     };
 };
-/*
-Game.prototype.onScroll = function(event)
-{
-
-};
-
-Game.prototype.onZoom = function(event)
-{
-
-};
-
-Game.prototype.onClick = function(event)
-{
-	if (event.stopped)
-		return;
-
-    var coordinates = this.gridService.resolveGridCoordinates(event.game);
-
-    // range
-    // var range = this.gridService.getRange(coordinates, 2);
-    // this.gridService.select(range);
-
-    // distance
-    // var steps = this.gridService.traverse(coordinates, 20, this._validateTerrain.bind(this));
-
-    // var result = [];
-    // steps.forEach(function(coordinatesAtDistance, distance) {
-    //     var opacity = 0.5 - (distance / 20 * 0.5) + 0.5;
-    //     result = result.concat(coordinatesAtDistance.map(function(coordinates) {
-    //         coordinates.opacity = opacity;
-    //         return coordinates;
-    //     }));
-    // });
-
-    this.gridService.select(coordinates);
-};
-
-
-Game.prototype._validateTerrain = function(coordinates)
-{
-    if (this._terrainMap == null) {
-        this._terrainMap = {};
-        this.terrain.asteroidBelt.asteroids.forEach(function(asteroid) {
-            this._terrainMap[asteroid.coordinates.q + ',' + asteroid.coordinates.r] = true;
-        }, this);
-    }
-
-    return this._terrainMap[coordinates.q + ',' + coordinates.r] !== true;
-};
-
-
-Game.prototype.onMouseMove = function(event)
-{
-    var coordinates = this.gridService.resolveGridCoordinates(event.game);
-    // var origin = this.gridService.resolveGridCoordinates({ x: 3, y: 0 });
-    var origin = new model.hexagon.coordinate.Offset(3, 3);
-    var path = this.gridService.rayTrace(origin, coordinates);
-    this.gridService.highlight(path);
-};
-
-Game.prototype._highlightMouseOverHex = function(event)
-{
-    this.gridService.highlightHexAt(event.game);
-};
-*/

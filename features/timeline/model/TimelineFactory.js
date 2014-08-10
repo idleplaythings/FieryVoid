@@ -100,8 +100,6 @@ model.TimelineFactory.prototype.processSavedEntries = function(orginalEntries, s
         if ( ! savedEntry)
             return;
 
-        console.log("matching saves", orginalEntry, savedEntry);
-
         if (orginalEntry.needsSaving() &&  ! savedEntry.needsSaving())
             orginalEntry.setSaved();
 

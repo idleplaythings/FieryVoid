@@ -72,6 +72,11 @@ model.movement.Route.prototype.getStartPosition = function()
 	return this._startPosition;
 };
 
+model.movement.Route.prototype.getEndPosition = function()
+{
+	return this.getRoute().pop();
+};
+
 model.movement.Route.prototype.getThrusterUsage = function()
 {
 	return this._thrusterUsage;
