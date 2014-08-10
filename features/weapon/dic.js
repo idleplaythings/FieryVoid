@@ -14,7 +14,8 @@ dic.register('model.WeaponArcService', function(dic) {
 
 dic.register('model.WeaponIndicatorService', function(dic) {
     return new model.WeaponIndicatorService(
-    	dic.get('model.GameScene')
+    	dic.get('model.GameScene'),
+    	dic.get('model.PositionService')
 	);
 });
 

@@ -22,7 +22,7 @@ model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.onMouseMove = functio
     var tile = shipAndTile ? shipAndTile.tile : null;
     var module = ship ? ship.shipDesign.getModuleInPosition(tile) : null;
 
-    if (! target || ! tile)
+    if (! ship || ! tile)
         return;
 
     //this.showMouseOverView(ship, module, tile);

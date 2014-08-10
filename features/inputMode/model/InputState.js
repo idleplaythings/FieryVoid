@@ -3,7 +3,6 @@ model.InputState = function InputState(){
 };
 
 model.InputState.prototype.set = function(name, value){
-  console.log(">>>INPUTSTATE SET", name, value);
   if (this._state[name]){
     this._state[name].value = value;
   }else{
@@ -16,7 +15,6 @@ model.InputState.prototype.set = function(name, value){
 };
 
 model.InputState.prototype.get = function(name){
-  console.log(">>>INPUTSTATE GET", name, this._state[name].value);
   if (this._state[name])
     return this._state[name].value;
 
@@ -24,7 +22,6 @@ model.InputState.prototype.get = function(name){
 };
 
 model.InputState.prototype.listen = function(name, callback){
-  console.log(">>>INPUTSTATE LISTEN", name);
   if (this._state[name])
     this._state[name].callbacks.push(callback);
   else

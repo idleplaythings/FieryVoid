@@ -56,6 +56,11 @@ model.Ship.prototype.setIcon = function(shipIcon)
     this.icon.create(this.shipDesign);
 };
 
+model.Ship.prototype.getDamage = function()
+{
+    return new model.damage.ShipDamageStatus(this.timeline);
+};
+
 model.Ship.prototype.getMovement = function()
 {
     return new model.movement.ShipMovementStatus(this.timeline);

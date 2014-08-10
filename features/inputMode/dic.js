@@ -57,7 +57,9 @@ dic.register(
                 dic.get('model.inputAction.HighlightSelectedWeapons'),
                 dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
                 dic.get('model.inputAction.RemoveWeaponMode'),
-                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver')
+                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver'),
+                dic.get('model.inputAction.HideHullAtZoom'),
+                dic.get('model.inputAction.ShowGridOnZoom'),
             ],
             1
         );
@@ -176,6 +178,12 @@ dic.register('model.inputAction.HideHullAtZoom', function(dic) {
     return new model.inputAction.HideHullAtZoom(
         dic.get('model.ShipService'),
         dic.get('model.Zooming')
+    );
+});
+
+dic.register('model.inputAction.ShowGridOnZoom', function(dic) {
+    return new model.inputAction.ShowGridOnZoom(
+        dic.get('model.ShipService')
     );
 });
 
