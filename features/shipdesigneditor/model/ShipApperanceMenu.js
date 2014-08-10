@@ -1,9 +1,10 @@
-model.ShipApperanceMenu = function ShipApperanceMenu()
+model.ShipApperanceMenu = function ShipApperanceMenu(shipDesignEditorService)
 {
     this.target = null;
     this.template = null;
     this.spectrum = null;
     this.shipDesign = null;
+    this._shipDesignEditorService = shipDesignEditorService;
 };
 
 model.ShipApperanceMenu.prototype.init = function(target)
@@ -47,7 +48,7 @@ model.ShipApperanceMenu.prototype.changeColor  = function(color)
   if ( ! this.shipDesign.validateVariable('hullColor', cleanColor))
      return false;
 
-	this.shipDesign.updateIfDifferent('hullColor', cleanColor);
+  this._shipDesignEditorService.update(this.shipDesign, 'hullColor', cleanColor);
 }
 
 model.ShipApperanceMenu.prototype.hide = function(modules)

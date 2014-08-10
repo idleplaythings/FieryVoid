@@ -4,6 +4,16 @@ dic.register('model.ArcIndicatorService', function(dic) {
     );
 });
 
+dic.register('model.inputAction.ShowWeaponTargetingOnMouseOver', function(dic) {
+    return new model.inputAction.ShowWeaponTargetingOnMouseOver(
+        dic.get("model.WeaponIndicatorService"),
+        dic.get("model.SelectedShip"),
+        dic.get("model.GameState"),
+        dic.get("model.HitLocationService"),
+        dic.get("model.ShipService")
+    );
+});
+
 dic.register('model.inputAction.ShowWeaponArcsOnWeaponMouseOver', function(dic) {
     return new model.inputAction.ShowWeaponArcsOnWeaponMouseOver(
         dic.get("model.EventDispatcher"),
@@ -13,8 +23,21 @@ dic.register('model.inputAction.ShowWeaponArcsOnWeaponMouseOver', function(dic) 
     );
 });
 
+dic.register('model.inputAction.RemoveWeaponMode', function(dic) {
+    return new model.inputAction.RemoveWeaponMode(
+        dic.get("model.GameActionManager")
+    );
+});
+
 dic.register('model.inputAction.SelectWeaponMode', function(dic) {
     return new model.inputAction.SelectWeaponMode(
+        dic.get("model.EventDispatcher"),
+        dic.get("model.GameActionManager")
+    );
+});
+
+dic.register('model.inputAction.SelectAndDeselectWeapons', function(dic) {
+    return new model.inputAction.SelectAndDeselectWeapons(
         dic.get("model.EventDispatcher"),
         dic.get("model.GameActionManager")
     );

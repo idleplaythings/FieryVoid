@@ -12,3 +12,9 @@ dic.register('model.WeaponArcService', function(dic) {
     return new model.WeaponArcService();
 }, { shared: true });
 
+dic.register('model.WeaponIndicatorService', function(dic) {
+    return new model.WeaponIndicatorService(
+    	dic.get('model.GameScene')
+	);
+});
+

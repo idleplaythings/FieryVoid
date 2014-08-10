@@ -30,6 +30,10 @@ model.GameActionManager.prototype.setWeaponMode = function(selectedWeapons){
   this._uiEventManager.setInputMode(inputMode);
 };
 
+model.GameActionManager.prototype.removeWeaponMode = function(){
+  this.selectMode();
+};
+
 model.GameActionManager.prototype.replay = function(event){
   this._uiEventManager.setInputMode(this._inputModeFactory.create('model.InputModeReplay'));
 };

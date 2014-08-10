@@ -19,7 +19,7 @@ model.inputAction.ShowActionBarForSelectedShip.prototype.onShipSelected = functi
 };
 
 model.inputAction.ShowActionBarForSelectedShip.prototype.onActivation = function()
-{
+{   
     var ship = this._selectedShip.getShip();
 
     if (ship) {

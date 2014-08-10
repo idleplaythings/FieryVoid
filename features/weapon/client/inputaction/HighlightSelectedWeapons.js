@@ -6,15 +6,21 @@ model.inputAction.HighlightSelectedWeapons = function HighlightSelectedWeapons(
     this._dispatcher = dispatcher;
     this._actionBar = actionBar;
 
-    this._weaponClickedCallback = null;
+    this._weaponSelectedCallback = null;
+    this._weaponDeselectedCallback = null;
 }
-
 
 model.inputAction.HighlightSelectedWeapons.prototype.onActivation = function(event, inputMode, inputState)
 {
-    this._weaponClickedCallback = this._dispatcher.attach(
-        'WeaponClickedEvent',
-        this._onWeaponClicked.bind(this, inputState)
+    console.log("activate weapon highlight")
+    this._weaponSelectedCallback = this._dispatcher.attach(
+        'weaponSelectedEvent',
+        this._onWeaponSelected.bind(this, inputState)
+    );
+
+    this._weaponDeselectedCallback = this._dispatcher.attach(
+        'weaponDeselectedEvent',
+        this._onWeaponDeselected.bind(this, inputState)
     );
 
     this._actionBar.selectByModules(inputState.get('selectedWeapons'));
@@ -22,16 +28,16 @@ model.inputAction.HighlightSelectedWeapons.prototype.onActivation = function(eve
 
 model.inputAction.HighlightSelectedWeapons.prototype.onDeactivation = function()
 {
-    this._dispatcher.detach('WeaponClickedEvent', this._weaponClickedCallback);
+    this._dispatcher.detach('weaponSelectedEvent', this._weaponSelectedCallback);
+    this._dispatcher.detach('weaponDeselectedEvent', this._weaponDeselectedCallback);
 };
 
-model.inputAction.HighlightSelectedWeapons.prototype._onWeaponClicked = function(inputState, event)
+model.inputAction.HighlightSelectedWeapons.prototype._onWeaponSelected = function(inputState, event)
 {
-    console.log(arguments);
+    this._actionBar.selectByModules(event.module);
+};
 
-    var weapons = inputState.get('selectedWeapons');
-    weapons.push(event.module);
-
-    inputState.set('selectedWeapons', weapons);
-    this._actionBar.selectByModules(weapons);
+model.inputAction.HighlightSelectedWeapons.prototype._onWeaponDeselected = function(inputState, event)
+{
+    this._actionBar.deselectByModules(event.module);
 };

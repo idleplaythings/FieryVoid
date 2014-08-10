@@ -9,6 +9,7 @@ model.ActionBar = function ActionBar(dispatcher, gameContainer)
 
 model.ActionBar.prototype.create = function(ship, turn)
 {
+	console.log("action bar create", ship._id);
 	var container = this._getContainer().html('');
 	this._buttons.forEach(function(button){button.destroy();});
 	this._buttons = [];
@@ -41,12 +42,23 @@ model.ActionBar.prototype.hide = function()
 
 model.ActionBar.prototype.selectByModules = function(modules)
 { 
-  console.log("selectByModules", this._buttons, modules)
+  modules = [].concat(modules);
+
   this._buttons.filter(function(button){
     return button.owns(modules);
   }).forEach(function(button){
-    console.log("select button")
     button.select();
+  })
+};
+
+model.ActionBar.prototype.deselectByModules = function(modules)
+{ 
+  modules = [].concat(modules);
+
+  this._buttons.filter(function(button){
+    return button.owns(modules);
+  }).forEach(function(button){
+    button.deselect();
   })
 };
 

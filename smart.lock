@@ -3,7 +3,8 @@
   "dependencies": {
     "basePackages": {
       "three": {},
-      "iron-router": {}
+      "iron-router": {},
+      "q": {}
     },
     "packages": {
       "three": {
@@ -15,6 +16,11 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.8.2",
         "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
+      },
+      "q": {
+        "git": "https://github.com/frozeman/q-meteor.git",
+        "tag": "v0.9.7",
+        "commit": "e5c10f087b76fda32ae6be4d8950ab2633c520a3"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

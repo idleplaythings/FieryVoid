@@ -17,28 +17,28 @@ model.InputMode.prototype.setState = function(name, value){
 
 model.InputMode.prototype.activate = function(uiResolver)
 {
-	this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
+  this._scrollCallBack = this._dispatcher.attach("ScrollEvent", this.onScroll.bind(this), this._priority);
   this._zoomCallBack = this._dispatcher.attach("ZoomEvent", this.onZoom.bind(this), this._priority);
-	this._mouseClickCallback = this._dispatcher.attach('ClickEvent', this.onClick.bind(this), 1);
+  this._mouseClickCallback = this._dispatcher.attach('ClickEvent', this.onClick.bind(this), 1);
   this._mouseMoveCallback = this._dispatcher.attach('MouseMoveEvent', this.onMouseMove.bind(this), 1);
   this._mouseOverCallback = this._dispatcher.attach('MouseOverEvent', this.onMouseOver.bind(this), 1);
   this._mouseOutCallback = this._dispatcher.attach('MouseOutEvent', this.onMouseOut.bind(this), 1);
   this._keyUpCallback = this._dispatcher.attach('KeyUpEvent', this.onKeyUp.bind(this), 1);
-	this._delegate('onActivation');
+  this._delegate('onActivation');
 };
 
 model.InputMode.prototype.deactivate = function(uiResolver)
 {
   this._inputState = new model.InputState();
 
-	this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
-	this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
-	this._dispatcher.detach('ClickEvent', this._mouseClickCallback);
+  this._dispatcher.detach("ScrollEvent", this._scrollCallBack);
+  this._dispatcher.detach("ZoomEvent", this._zoomCallBack);
+  this._dispatcher.detach('ClickEvent', this._mouseClickCallback);
   this._dispatcher.detach('MouseMoveEvent', this._mouseMoveCallback);
   this._dispatcher.detach('MouseOverEvent', this._mouseOverCallback);
   this._dispatcher.detach('MouseOutEvent', this._mouseOutCallback);
   this._dispatcher.detach('KeyUpEvent', this._keyUpCallback);
-	this._delegate('onDeactivation');
+  this._delegate('onDeactivation');
 };
 
 model.InputMode.prototype.onKeyUp = function(event)

@@ -53,8 +53,11 @@ dic.register(
                 dic.get('model.inputAction.ShowActionBarForSelectedShip'),
                 dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.TargetCursor'),
-                dic.get('model.inputAction.HighlightSelectedWeapons')
-                //dic.get('model.inputAction.SelectWeapon')
+                dic.get('model.inputAction.SelectAndDeselectWeapons'),
+                dic.get('model.inputAction.HighlightSelectedWeapons'),
+                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
+                dic.get('model.inputAction.RemoveWeaponMode'),
+                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver')
             ],
             1
         );

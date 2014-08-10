@@ -62,8 +62,8 @@ model.ActionButtonWeapon.prototype.owns = function(modules)
 {
 	console.log("owns?")
 	return modules.filter(function(module){
-		console.log(module, this._module);
-		return module === this._module;
+		console.log("owns: ", module.equals(this._module))
+		return module.equals(this._module);
 	}, this).pop();
 };
 

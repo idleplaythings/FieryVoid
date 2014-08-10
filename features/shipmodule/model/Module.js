@@ -7,6 +7,10 @@ model.Module = function Module(moduleLayout, power)
 model.Module.prototype.isWeapon = function() { return Boolean(this.getWeapon()); };
 model.Module.prototype.getWeapon = function() { return this._moduleLayout.weapon; };
 
+model.Module.prototype.equals = function(module){
+    return this.getModuleLayout() === module.getModuleLayout();
+};
+
 model.Module.prototype.getImageByType = function(type){
     return this._moduleLayout.image.getByType(type);
 };
