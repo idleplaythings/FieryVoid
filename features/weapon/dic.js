@@ -7,3 +7,15 @@ dic.register('model.ArcIndicatorService', function(dic) {
     	dic.get('model.GameScene')
 	);
 });
+
+dic.register('model.WeaponArcService', function(dic) {
+    return new model.WeaponArcService();
+}, { shared: true });
+
+dic.register('model.WeaponIndicatorService', function(dic) {
+    return new model.WeaponIndicatorService(
+    	dic.get('model.GameScene'),
+    	dic.get('model.PositionService')
+	);
+});
+

@@ -37,7 +37,7 @@ describe("HighlightActiveRoute", function() {
         highlightActiveRoute.onShipSelected({ ship: ship });
 
         expect(shipAnimationService.clearRouteHighlights).toHaveBeenCalledWith();
-        expect(shipAnimationService.highlightRouteFor).toHaveBeenCalledWith(ship);
+        expect(shipAnimationService.highlightRouteFor).toHaveBeenCalledWith(ship, undefined);
     });
 
     it("should highlight route only for selected ship on activation", function() {

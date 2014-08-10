@@ -1,7 +1,10 @@
-model.WeaponIndicatorService = function WeaponIndicatorService(gameScene)
+model.WeaponIndicatorService = function WeaponIndicatorService(
+	gameScene,
+	positionService)
 {
 	this._gameScene = gameScene;
 	this._indicators = [];
+	this._positionService = positionService;
 }
 
 model.WeaponIndicatorService.prototype.remove = function(shooter, weapon)
@@ -46,8 +49,8 @@ model.WeaponIndicatorService.prototype.addLineAndEllipse = function(shooter, tar
 
 model.WeaponIndicatorService.prototype._addIndication = function(shooter, target, weapon, targetTile, turn, args, actionsToDo)
 {
-	var positionServiceShooter = new model.ShipPositionService(shooter, turn);
-	var positionServiceTarget = new model.ShipPositionService(target, turn);
+	var positionServiceShooter = this._positionService.getComponentPositionService(shooter);
+	var positionServiceTarget = this._positionService.getComponentPositionService(target);
 
 	var weaponPosition = positionServiceShooter.getModuleCenterPositionInScene(weapon);
 	var targetPosition = positionServiceTarget.getTilePositionInScene(targetTile);

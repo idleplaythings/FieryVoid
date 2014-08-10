@@ -183,7 +183,7 @@ Template.traitDetail.options = function()
 	var current = this.get();
 	return this.options.map(function(option){
 		
-		var selected = option == current ? 'selected="selected"' : '';
+		var selected = option == current ? 'selected' : '';
 		return {option: option, selected: selected};
 	});
 };

@@ -1,4 +1,4 @@
-model.ParticlePath = function ParticlePath(path, color, facingOffset /*, dispatcher */)
+model.ParticlePath = function ParticlePath(path, color, facingOffset /*, dispatcher */, offset, length)
 {
     if (typeof color === 'undefined') {
         color = 0x0000ff;
@@ -11,7 +11,8 @@ model.ParticlePath = function ParticlePath(path, color, facingOffset /*, dispatc
     this._facingOffset = facingOffset;
     this._emitter = this.createEmitter(geometry, /* dispatcher, */ color);
     this._animationPosition = 0;
-    this._animationParameters = {};
+    this._offset = offset;
+    this._length = length;
 };
 
 model.ParticlePath.prototype.get = function()
@@ -19,30 +20,23 @@ model.ParticlePath.prototype.get = function()
     return this._emitter.getObject3d();
 };
 
-model.ParticlePath.prototype.animate = function()
+model.ParticlePath.prototype.animate = function(turn, shipAnimationDetails)
 {
     this._advanceAnimationPosition();
+    var position = this._animationPosition/this._length + this._offset*100;
 
-    var parameters = this._animationParameters[this._animationPosition];
-
-    if (parameters == undefined) {
-        parameters = {};
-        parameters.position = this._path.getShape().getPointAt(
-            this._animationPosition / 100
-        );
-        parameters.rotation = - model.VectorUtils.getVectorAngle(
-            this._path.getShape().getTangentAt(this._animationPosition / 100)
-        );
-    }
-
-    this._emitter.setParticleParameters(parameters);
+    var parameters = shipAnimationDetails.getShipPositionAndFacing(turn, position);
+    this._emitter.setParticleParameters({
+        position: parameters.position,
+        rotation: MathLib.degreeToRadian(parameters.rotation)
+    });
 }
 
 model.ParticlePath.prototype._advanceAnimationPosition = function()
 {
     this._animationPosition += 2;
 
-    if (this._animationPosition > 100) {
+    if (this._animationPosition >= 100) {
         this._animationPosition = 0;
     }
 }

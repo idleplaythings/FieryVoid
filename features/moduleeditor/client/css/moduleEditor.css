@@ -5,6 +5,7 @@
 	height:calc(100% - 40px);
 	position:absolute;
 	padding:20px;
+	z-index:2;
 }
 
 .moduleImageChooser

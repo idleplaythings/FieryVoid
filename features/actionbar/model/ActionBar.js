@@ -1,35 +1,65 @@
-model.ActionBar = function ActionBar(dispatcher, uiResolver, gameScene)
+model.ActionBar = function ActionBar(dispatcher, gameContainer)
 {
     this._ship = null;
     this._container = null;
     this._dispatcher = dispatcher;
-    this._uiResolver = uiResolver;
-    this._gameScene = gameScene;
     this._buttons = [];
+    this._gameContainer = gameContainer;
 };
 
-model.ActionBar.prototype._create = function(ship, turn)
+model.ActionBar.prototype.create = function(ship, turn)
 {
+	console.log("action bar create", ship._id);
 	var container = this._getContainer().html('');
 	this._buttons.forEach(function(button){button.destroy();});
 	this._buttons = [];
 	this._addWeapons(ship, turn);
+
+  return this;
 };
 
 model.ActionBar.prototype._addWeapons = function(ship, turn)
 { 
-	ship.status.managers.weapon.getWeapons().map(function(weapon){
-		return new model.ActionButtonWeapon(ship, weapon, this._dispatcher, this._uiResolver, this._gameScene, turn);
+  ship.getWeapons().map(function(module){
+		return new model.ActionButtonWeapon(ship, module, this._dispatcher);
 	}, this).forEach(function(button){
 		this._buttons.push(button);
 		button.get().appendTo(this._getContainer());
 	}, this);
 };
 
-model.ActionBar.prototype.onShipSelected = function(ship, turn)
+model.ActionBar.prototype.show = function()
 { 
-	this._ship = ship;
-	this._create(ship, turn);
+  this._getContainer().show();
+  return this;
+};
+
+model.ActionBar.prototype.hide = function()
+{ 
+  this._getContainer().hide();
+  return this;
+};
+
+model.ActionBar.prototype.selectByModules = function(modules)
+{ 
+  modules = [].concat(modules);
+
+  this._buttons.filter(function(button){
+    return button.owns(modules);
+  }).forEach(function(button){
+    button.select();
+  })
+};
+
+model.ActionBar.prototype.deselectByModules = function(modules)
+{ 
+  modules = [].concat(modules);
+
+  this._buttons.filter(function(button){
+    return button.owns(modules);
+  }).forEach(function(button){
+    button.deselect();
+  })
 };
 
 model.ActionBar.prototype._getContainer = function(event)
@@ -40,7 +70,7 @@ model.ActionBar.prototype._getContainer = function(event)
 	var container = jQuery('#ActionBar');
     if (container.length == 0)
     {
-		this._container = jQuery('<div id="ActionBar"></div>').appendTo('#gameContainer');
+		this._container = jQuery('<div id="ActionBar"></div>').appendTo(this._gameContainer.getClickContainer());
 	}
 	else
 	{

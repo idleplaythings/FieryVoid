@@ -15,7 +15,51 @@ dic.register(
                 dic.get('model.inputAction.LightBlueArrowCursor'),
                 dic.get('model.inputAction.ShowModuleDetailView'),
                 dic.get('model.inputAction.HideHullAtZoom'),
-                dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver')
+                dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver'),
+                dic.get('model.inputAction.TurnButtons'),
+                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
+                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
+                dic.get('model.inputAction.SelectWeaponMode')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeReplay',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.Replay')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeWeapon',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+
+                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
+                dic.get('model.inputAction.SelectedShipMarker'),
+                dic.get('model.inputAction.TargetCursor'),
+                dic.get('model.inputAction.SelectAndDeselectWeapons'),
+                dic.get('model.inputAction.HighlightSelectedWeapons'),
+                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
+                dic.get('model.inputAction.RemoveWeaponMode'),
+                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver'),
+                dic.get('model.inputAction.HideHullAtZoom'),
+                dic.get('model.inputAction.ShowGridOnZoom'),
             ],
             1
         );
@@ -26,6 +70,18 @@ dic.register(
 
 dic.register('model.InputModeFactory', function(dic) {
     return Factory.createFactoryFromTags('inputMode');
+});
+
+dic.register('model.inputAction.TurnButtons', function(dic) {
+    return new model.inputAction.TurnButtons(
+        dic.get('model.GameActionManager')
+    );
+});
+
+dic.register('model.inputAction.Replay', function(dic) {
+    return new model.inputAction.Replay(
+        dic.get('model.GameState')
+    );
 });
 
 dic.register('model.inputAction.ActivateTileOnMouseMove', function(dic) {
@@ -122,6 +178,12 @@ dic.register('model.inputAction.HideHullAtZoom', function(dic) {
     return new model.inputAction.HideHullAtZoom(
         dic.get('model.ShipService'),
         dic.get('model.Zooming')
+    );
+});
+
+dic.register('model.inputAction.ShowGridOnZoom', function(dic) {
+    return new model.inputAction.ShowGridOnZoom(
+        dic.get('model.ShipService')
     );
 });
 

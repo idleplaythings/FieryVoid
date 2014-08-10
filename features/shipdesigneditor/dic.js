@@ -17,7 +17,9 @@ dic.register('model.ShipDesignEditor', function(dic) {
 });
 
 dic.register('model.ShipApperanceMenu', function(dic) {
-    return new model.ShipApperanceMenu()
+    return new model.ShipApperanceMenu(
+        dic.get('model.ShipDesignEditorService')
+    )
 });
 
 dic.register('model.ShipDesignEditorService', function(dic) {

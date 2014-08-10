@@ -1,6 +1,6 @@
-model.HitLocationService = function HitLocationService()
+model.HitLocationService = function HitLocationService(positionService)
 {
-	
+	this._positionService = positionService;
 };
 
 model.HitLocationService.prototype.applyScatter = function(shooter, target, weapon, targetTile)
@@ -10,8 +10,8 @@ model.HitLocationService.prototype.applyScatter = function(shooter, target, weap
 
 model.HitLocationService.prototype._getWeaponDirection = function(shooter, weapon, target, targetTile, turn)
 {
-	var weaponPosition = shooter.getPositionService(turn).getModuleCenterPositionInScene(weapon);
-	var targetPosition = target.getPositionService(turn).getTilePositionInScene(targetTile);
+	var weaponPosition = this._positionService.getComponentPositionService(shooter).getModuleCenterPositionInScene(weapon);
+	var targetPosition = this._positionService.getComponentPositionService(target).getTilePositionInScene(targetTile);
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
 
 	return weaponDirection;
@@ -20,10 +20,7 @@ model.HitLocationService.prototype._getWeaponDirection = function(shooter, weapo
 model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
 	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
-	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
-	
-	console.log("targetTile", targetTile);
-	console.log(tiles);
+	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.getDamage());
 
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
@@ -36,8 +33,8 @@ model.HitLocationService.prototype.getClosestValidTarget = function(shooter, wea
 {
 
 	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
-	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.status.managers.damage);
-	console.log(tiles);
+	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.getDamage());
+	
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];

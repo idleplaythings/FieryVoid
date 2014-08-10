@@ -45,11 +45,6 @@ model.Ship.prototype.serialize = function()
     return doc;
 };
 
-model.Ship.prototype.getPositionService = function(turn)
-{
-    return new model.ShipPositionService(this, turn);
-};
-
 model.Ship.prototype.getIcon = function()
 {
     return this.icon;
@@ -59,6 +54,11 @@ model.Ship.prototype.setIcon = function(shipIcon)
 {
     this.icon = shipIcon;
     this.icon.create(this.shipDesign);
+};
+
+model.Ship.prototype.getDamage = function()
+{
+    return new model.damage.ShipDamageStatus(this.timeline);
 };
 
 model.Ship.prototype.getMovement = function()
@@ -81,6 +81,12 @@ model.Ship.prototype.getModules = function()
     return this.shipDesign.modules.map(function(moduleLayout){
         return this._createModuleFromModuleLayout(moduleLayout);
     }, this);
+};
+
+model.Ship.prototype.getWeapons = function(){
+    return this.getModules().filter(function(module){
+        return module.isWeapon();
+    });
 };
 
 model.Ship.prototype.getModuleOnPosition = function(tile)

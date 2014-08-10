@@ -55,6 +55,17 @@ model.ShipIcon.prototype.getHullLayout = function()
         return this.iconObject.hullLayout;
 };
 
+model.ShipIcon.prototype.showGrid = function()
+{
+    this.sprites.grid.show();
+};
+
+
+model.ShipIcon.prototype.hideGrid = function()
+{
+    this.sprites.grid.hide();
+};
+
 model.ShipIcon.prototype.createSprites = function()
 {
     var shipDesign = this.getShipDesign();
@@ -67,12 +78,16 @@ model.ShipIcon.prototype.createSprites = function()
     this.sprites.hull = new model.ShipSpriteHull(shipDesign, 5);
     this.sprites.modules = new model.ShipSpriteModules(shipDesign, 2);
     this.sprites.selected = new model.ShipSpriteSelected(shipDesign, 0).hide();
+    this.sprites.grid = new model.SpriteGrid(
+        new model.GridLayout(new model.TileLayout(), this.getHullLayout()), 3);
+    this.sprites.grid.hide();
 
 	this.modulesUnder = this.updateOrCreateModules(this.modulesOver, "under", -1);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
 
     this.sprites.silhouette.uniforms.opacity.value = 0.5;
 
+    this.addObject(this.sprites.grid);
     this.addObject(this.sprites.silhouette);
     this.addObject(this.sprites.inside);
     this.addObject(this.sprites.hull);

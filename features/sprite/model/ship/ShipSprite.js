@@ -35,7 +35,7 @@ model.ShipSprite.prototype =  Object.create(model.Sprite.prototype);
 
 model.ShipSprite.prototype.createObject3d = function(texture)
 {
-    var geometry = new THREE.PlaneGeometry(1,1,1,1);
+    var geometry = new THREE.PlaneGeometry(1,1,10,10);
 
 	var attributes = {};
 	

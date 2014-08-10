@@ -8,8 +8,6 @@ accounts-ui
 accounts-base
 accounts-password
 standard-app-packages
-HTML5-History-API
-page-js-ie-support
 iron-router
 
 three
