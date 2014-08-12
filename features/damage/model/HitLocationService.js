@@ -13,28 +13,50 @@ model.HitLocationService.prototype._getWeaponDirection = function(shooter, weapo
 	var weaponPosition = this._positionService.getComponentPositionService(shooter).getModuleCenterPositionInScene(weapon);
 	var targetPosition = this._positionService.getComponentPositionService(target).getTilePositionInScene(targetTile);
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
+    var targetFacing = this._positionService.getSceneFacing(target);
+	
+    var relativeDirection = MathLib.addToAzimuth(360 - targetFacing, weaponDirection);
+	return relativeDirection;
+};
 
-	return weaponDirection;
+model.HitLocationService.prototype.isOnWeaponArc = function(shooter, weapon, target, targetTile, turn){
+    var weaponPosition = this._positionService.getScenePosition(shooter);
+    var targetPosition = this._positionService.getScenePosition(target);
+    var targetDirection = MathLib.getAzimuthFromTarget(weaponPosition, targetPosition);
+    var shooterFacing = this._positionService.getSceneFacing(shooter);
+
+    var relativeDirection = MathLib.addToAzimuth(360 - shooterFacing, targetDirection);
+
+    var onArc = Boolean(weapon.getWeapon().getArcs().filter(function(arc){
+        return arc.isOnArc(relativeDirection);
+    }).pop());
+
+    return onArc;
 };
 
 model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
+    if ( ! this.isOnWeaponArc(shooter, weapon, target, targetTile, turn)){
+        return false;
+    }
+
 	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
 	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.getDamage());
-
+	
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
-
 	return (tile) ? true : false;
 };
 
 model.HitLocationService.prototype.getClosestValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
+    if ( ! this.isOnWeaponArc(shooter, weapon, target, targetTile, turn)){
+        return;
+    }
 
 	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);
 	var tiles = this.getValidTargetTiles(weaponDirection, targetTile, target.shipDesign, target.getDamage());
-	
 	var tile = tiles.filter(function(tile){
 		return tile.x == targetTile.x && tile.y == targetTile.y;
 	})[0];
@@ -104,10 +126,33 @@ model.HitLocationService.prototype.getValidTargetTiles = function(weaponDirectio
 model.HitLocationService.prototype.getTilesInLine = function(weaponDirection, targetTile, shipDesign)
 {
 	var tiles = new model.DirectionalRaytrace(targetTile, weaponDirection, 100).get().reverse();
-	tiles.concat(targetTile);
+
+    if (tiles.indexOf(targetTile) < 0){
+        tiles = tiles.concat(targetTile);
+    }
 	tiles = tiles.concat( new model.DirectionalRaytrace(targetTile,  MathLib.addToAzimuth(weaponDirection, 180), 100).get());
 
-	return tiles.filter(function(tile){return ! shipDesign.hullLayout.isUnavailableTile(tile)});
+	tiles = tiles.filter(function(tile){
+        return ! shipDesign.hullLayout.isUnavailableTile(tile)
+    });
+
+    return this.removeDuplicates(tiles);
+};
+
+model.HitLocationService.prototype.removeDuplicates = function(tiles)
+{
+    for (var i = tiles.length-1; i >= 0; i--){
+        var toDelete = tiles[i];
+        var duplicates = tiles.filter(function(tile){
+            return (tile.x == toDelete.x && tile.y == toDelete.y);
+        });
+
+        if (duplicates.length > 1){
+            tiles.splice(i, 1);
+        }
+    }
+
+    return tiles;
 };
 
 model.HitLocationService.prototype.discountUnreachableTiles = function(tilePositions, shipDesign, damageService)
@@ -134,5 +179,4 @@ model.HitLocationService.prototype.discountUnreachableTiles = function(tilePosit
 
 		return true;
 	}, this);
-	
 };

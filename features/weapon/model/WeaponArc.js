@@ -4,6 +4,11 @@ model.WeaponArc = function WeaponArc(start)
 	this.end = null;
 };
 
+model.WeaponArc.prototype.isOnArc = function(angle)
+{
+	return (angle >= this.start) || (angle <= this.end);
+};
+
 model.WeaponArc.prototype.setEnd = function(end)
 {
 	this.end = end;

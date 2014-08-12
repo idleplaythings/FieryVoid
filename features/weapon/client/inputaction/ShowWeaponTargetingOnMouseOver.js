@@ -13,6 +13,11 @@ model.inputAction.ShowWeaponTargetingOnMouseOver = function ShowWeaponTargetingO
     this._shipService = shipService;
 }
 
+model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.onDeactivation = function()
+{
+    this._weaponIndicatorService.removeAll();
+};
+
 model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.onMouseMove = function(event, inputMode, inputState)
 {
     var scenePosition = event.game;
@@ -22,8 +27,11 @@ model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.onMouseMove = functio
     var tile = shipAndTile ? shipAndTile.tile : null;
     var module = ship ? ship.shipDesign.getModuleInPosition(tile) : null;
 
-    if (! ship || ! tile)
+    if (! ship || ! tile){
+        this._weaponIndicatorService.removeAll();
         return;
+    }
+
 
     //this.showMouseOverView(ship, module, tile);
     this.displayWeaponTargeting(ship, tile, inputState.get('selectedWeapons'));
@@ -36,7 +44,9 @@ model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.displayWeaponTargetin
     var turn = this._gameState.getTurn();
 
     weapons.forEach(function(weapon){
-        var targetTile = this._hitLocationService.getClosestValidTarget(shooter, weapon, target, tile, turn);
-        this._weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, targetTile, turn, {});
+        if (this._hitLocationService.isValidTarget(shooter, weapon, target, tile, turn)){
+            //var targetTile = this._hitLocationService.getClosestValidTarget(shooter, weapon, target, tile, turn);
+            this._weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, tile, turn, {});
+        }
     }, this);
 };
