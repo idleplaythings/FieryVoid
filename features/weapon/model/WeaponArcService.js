@@ -12,7 +12,7 @@ model.WeaponArcService.prototype.calculateWeaponArc = function (module, shipDesi
 	for (var i = 0; i <= this._rayTraceCount; i++)
 	{
 		var theta = 360 / this._rayTraceCount * i;
-		var visible = this.isOnArc(module, shipDesign, theta);
+		var visible = this._isOnArc(module, shipDesign, theta);
 
 
 		if (currentVisible != visible)
@@ -25,7 +25,7 @@ model.WeaponArcService.prototype.calculateWeaponArc = function (module, shipDesi
 	return this._evaluateArcs(arcs);
 };
 
-model.WeaponArcService.prototype.isOnArc = function(module, shipDesign, direction)
+model.WeaponArcService.prototype._isOnArc = function(module, shipDesign, direction)
 {
 	var center = module.getCenterPosition();
 	var height = module.getPositionHeight(shipDesign.hullLayout);

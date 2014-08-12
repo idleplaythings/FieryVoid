@@ -16,7 +16,7 @@ model.Weapon.prototype.calculateWeaponArcs = function(shipDesign, arcService)
 	this._arcs = arcService.calculateWeaponArc(this._module, shipDesign);
 };
 
-model.Weapon.prototype.getArcs = function(shipDesign)
+model.Weapon.prototype.getArcs = function()
 {
 	return this._arcs;
 };

@@ -51,11 +51,14 @@ model.WeaponIndicatorService.prototype._addIndication = function(shooter, target
 {
 	var positionServiceShooter = this._positionService.getComponentPositionService(shooter);
 	var positionServiceTarget = this._positionService.getComponentPositionService(target);
+	var targetFacing = this._positionService.getSceneFacing(target);
 
 	var weaponPosition = positionServiceShooter.getModuleCenterPositionInScene(weapon);
 	var targetPosition = positionServiceTarget.getTilePositionInScene(targetTile);
-		targetPosition.x += 15;
-		targetPosition.y += 15;
+	targetPosition = MathLib.getPointInDirectionInvertY(15, targetFacing, targetPosition.x, targetPosition.y);
+	targetPosition = MathLib.getPointInDirectionInvertY(15, MathLib.addToAzimuth(targetFacing, -90), targetPosition.x, targetPosition.y);
+		//targetPosition.x += 15;
+		//targetPosition.y += 15;
 
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
 
