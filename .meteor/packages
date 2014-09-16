@@ -8,7 +8,7 @@ accounts-ui
 accounts-base
 accounts-password
 standard-app-packages
-iron-router
+iron:router
 
-three
-q
+ldk:three@0.57.0
+mrt:q@0.9.7

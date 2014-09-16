@@ -60,6 +60,7 @@ dic.register(
                 dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver'),
                 dic.get('model.inputAction.HideHullAtZoom'),
                 dic.get('model.inputAction.ShowGridOnZoom'),
+                dic.get('model.inputAction.TargetShipOnClick')
             ],
             1
         );

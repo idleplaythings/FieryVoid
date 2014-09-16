@@ -9,8 +9,17 @@ dic.register('model.inputAction.ShowWeaponTargetingOnMouseOver', function(dic) {
         dic.get("model.WeaponIndicatorService"),
         dic.get("model.SelectedShip"),
         dic.get("model.GameState"),
-        dic.get("model.HitLocationService"),
+        dic.get("model.weapon.WeaponService"),
         dic.get("model.ShipService")
+    );
+});
+
+dic.register('model.inputAction.TargetShipOnClick', function(dic) {
+    return new model.inputAction.TargetShipOnClick(
+        dic.get("model.SelectedShip"),
+        dic.get("model.weapon.WeaponService"),
+        dic.get("model.ShipService"),
+        dic.get("model.GameState")
     );
 });
 

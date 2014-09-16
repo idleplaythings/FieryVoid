@@ -2,14 +2,14 @@ model.inputAction.ShowWeaponTargetingOnMouseOver = function ShowWeaponTargetingO
     weaponIndicatorService,
     selectedShip,
     gameState,
-    hitLocationService,
+    weaponService,
     shipService
 )
 {
     this._weaponIndicatorService = weaponIndicatorService;
     this._selectedShip = selectedShip;
     this._gameState = gameState;
-    this._hitLocationService = hitLocationService;
+    this._weaponService = weaponService;
     this._shipService = shipService;
 }
 
@@ -32,7 +32,6 @@ model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.onMouseMove = functio
         return;
     }
 
-
     //this.showMouseOverView(ship, module, tile);
     this.displayWeaponTargeting(ship, tile, inputState.get('selectedWeapons'));
 };
@@ -44,7 +43,7 @@ model.inputAction.ShowWeaponTargetingOnMouseOver.prototype.displayWeaponTargetin
     var turn = this._gameState.getTurn();
 
     weapons.forEach(function(weapon){
-        if (this._hitLocationService.isValidTarget(shooter, weapon, target, tile, turn)){
+        if (this._weaponService.isValidTarget(shooter, target, weapon, tile, turn)){
             //var targetTile = this._hitLocationService.getClosestValidTarget(shooter, weapon, target, tile, turn);
             this._weaponIndicatorService.addLineAndEllipse(shooter, target, weapon, tile, turn, {});
         }

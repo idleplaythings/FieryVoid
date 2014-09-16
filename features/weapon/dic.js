@@ -19,3 +19,16 @@ dic.register('model.WeaponIndicatorService', function(dic) {
 	);
 });
 
+dic.register('model.weapon.WeaponService', function(dic) {
+    return new model.weapon.WeaponService(
+      dic.get('model.weapon.WeaponFireFactory')
+  );
+});
+
+dic.register('model.weapon.WeaponFireFactory', function(dic) {
+    return new model.weapon.WeaponFireFactory(
+      dic.get('model.HitLocationService'),
+      dic.get('model.ShipService')
+  );
+});
+

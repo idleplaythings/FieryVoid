@@ -2,6 +2,7 @@ model.Module = function Module(moduleLayout, power)
 {
     this._moduleLayout = moduleLayout;
     this._power = power;
+    this._id = moduleLayout._id + moduleLayout.position.x + moduleLayout.position.y;
 };
 
 model.Module.prototype.isWeapon = function() { return Boolean(this.getWeapon()); };

@@ -18,8 +18,8 @@ Meteor.startup(function () {
 
 function getPublicPath()
 {
-    return Npm.require('path').resolve('.') + '/../client/app/';
-}
+    return Npm.require('path').resolve('.') + '/../web.browser/app/';
+};
 
 function crawlResources()
 {

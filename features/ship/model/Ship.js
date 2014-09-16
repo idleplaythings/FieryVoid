@@ -66,6 +66,11 @@ model.Ship.prototype.getMovement = function()
     return new model.movement.ShipMovementStatus(this.timeline);
 };
 
+model.Ship.prototype.getWeaponStatus = function()
+{
+    return new model.weapon.ShipWeaponStatus(this.timeline);
+};
+
 model.Ship.prototype.getPower = function()
 {
     return new model.power.ShipPowerStatus(this.shipDesign.modules);
@@ -81,6 +86,13 @@ model.Ship.prototype.getModules = function()
     return this.shipDesign.modules.map(function(moduleLayout){
         return this._createModuleFromModuleLayout(moduleLayout);
     }, this);
+};
+
+model.Ship.prototype.getModuleById = function(id)
+{
+    return this.getModules().filter(function(module){
+        return module._id === id;
+    }).pop();
 };
 
 model.Ship.prototype.getWeapons = function(){
