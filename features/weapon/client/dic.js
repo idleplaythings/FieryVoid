@@ -4,6 +4,15 @@ dic.register('model.ArcIndicatorService', function(dic) {
     );
 });
 
+dic.register('model.inputAction.DisplayFireOrdersOnActionButtons', function(dic) {
+    return new model.inputAction.DisplayFireOrdersOnActionButtons(
+        dic.get("model.EventDispatcher"),
+        dic.get("model.ActionBar"),
+        dic.get("model.SelectedShip"),
+        dic.get("model.GameState")
+    );
+});
+
 dic.register('model.inputAction.ShowWeaponTargetingOnMouseOver', function(dic) {
     return new model.inputAction.ShowWeaponTargetingOnMouseOver(
         dic.get("model.WeaponIndicatorService"),

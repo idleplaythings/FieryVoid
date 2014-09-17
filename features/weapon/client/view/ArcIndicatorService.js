@@ -19,7 +19,6 @@ model.ArcIndicatorService.prototype.removeAll = function()
 
 model.ArcIndicatorService.prototype.display = function(shipFacing, module, center)
 {
-	console.log("display arcs", arguments)
 	if (module === null)
 	{
 		this.removeAll();
@@ -32,7 +31,6 @@ model.ArcIndicatorService.prototype.display = function(shipFacing, module, cente
 	this.removeAll();
 	this._currentModule = module;
 	var arcs = module.getWeapon().getArcs();
-	console.log(arcs);
 
 	var indicators = [];
 

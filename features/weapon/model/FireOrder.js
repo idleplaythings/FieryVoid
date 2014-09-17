@@ -8,7 +8,7 @@ model.weapon.FireOrder = function FireOrder(turn, shooterId, targetId, targetTil
 }
 
 model.weapon.FireOrder.deserialize = function(serialized){
-	return new model.FireOrder(
+	return new model.weapon.FireOrder(
 		serialized.turn,
 		serialized.shooterId,
 		serialized.targetId,

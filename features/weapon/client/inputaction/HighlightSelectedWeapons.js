@@ -12,7 +12,6 @@ model.inputAction.HighlightSelectedWeapons = function HighlightSelectedWeapons(
 
 model.inputAction.HighlightSelectedWeapons.prototype.onActivation = function(event, inputMode, inputState)
 {
-    console.log("activate weapon highlight")
     this._weaponSelectedCallback = this._dispatcher.attach(
         'weaponSelectedEvent',
         this._onWeaponSelected.bind(this, inputState)

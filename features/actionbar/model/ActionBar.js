@@ -11,7 +11,6 @@ model.ActionBar.prototype.create = function(ship, turn)
 {
 	console.log("action bar create", ship._id);
 	var container = this._getContainer().html('');
-	this._buttons.forEach(function(button){button.destroy();});
 	this._buttons = [];
 	this._addWeapons(ship, turn);
 
@@ -40,25 +39,30 @@ model.ActionBar.prototype.hide = function()
   return this;
 };
 
-model.ActionBar.prototype.selectByModules = function(modules)
-{ 
-  modules = [].concat(modules);
-
-  this._buttons.filter(function(button){
-    return button.owns(modules);
-  }).forEach(function(button){
-    button.select();
-  })
+model.ActionBar.prototype.selectByModules = function(modules){
+  callByModules.call(this, modules, 'select');
 };
 
-model.ActionBar.prototype.deselectByModules = function(modules)
+model.ActionBar.prototype.deselectByModules = function(modules){
+  callByModules.call(this, modules, 'deselect');
+};
+
+model.ActionBar.prototype.activateByModules = function(modules){
+  callByModules.call(this, modules, 'activate');
+};
+
+model.ActionBar.prototype.deactivateByModules = function(modules){
+  callByModules.call(this, modules, 'deactivate');
+};
+
+var callByModules = function(modules, functionName)
 { 
   modules = [].concat(modules);
 
   this._buttons.filter(function(button){
     return button.owns(modules);
   }).forEach(function(button){
-    button.deselect();
+    button[functionName]();
   })
 };
 
