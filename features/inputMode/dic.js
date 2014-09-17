@@ -1,26 +1,20 @@
 dic.register(
-    'model.InputModeSelect',
+    'model.InputModeMovement',
     function(dic) {
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
+                dic.get('model.inputAction.SelectMovementActionBar'),
                 dic.get('model.inputAction.ActivateTileOnMouseMove'),
                 dic.get('model.inputAction.SelectMovementStepOnClick'),
                 dic.get('model.inputAction.ShowMovementMenuOnRouteClick'),
                 dic.get('model.inputAction.SelectShipOnClick'),
-                dic.get('model.inputAction.SelectedShipMarker'),
                 dic.get('model.inputAction.DisplayRoutes'),
                 dic.get('model.inputAction.HighlightActiveRoute'),
-                dic.get('model.inputAction.ShowShipStatusView'),
-                dic.get('model.inputAction.LightBlueArrowCursor'),
-                dic.get('model.inputAction.ShowModuleDetailView'),
-                dic.get('model.inputAction.HideHullAtZoom'),
                 dic.get('model.inputAction.ShowMomevemenTooltipOnRouteMouseOver'),
-                dic.get('model.inputAction.TurnButtons'),
-                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
-                dic.get('model.inputAction.DisplayFireOrdersOnActionButtons'),
-                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
-                dic.get('model.inputAction.SelectWeaponMode')
+                dic.get('basicInputActions'),
+                dic.get('shipStatusInputActions'),
+                dic.get('selectInputActions')
             ],
             1
         );
@@ -28,6 +22,31 @@ dic.register(
         tags: [ 'inputMode' ]
     }
 );
+
+dic.register('basicInputActions', function(dic){
+    return [
+        dic.get('model.inputAction.TurnButtons'),
+        dic.get('model.inputAction.ShowActionBarForSelectedShip'),
+        dic.get('model.inputAction.DisplayFireOrdersOnActionButtons'),
+        dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
+        dic.get('model.inputAction.SelectedShipMarker'),
+        dic.get('model.inputAction.LightBlueArrowCursor'),
+    ];
+});
+
+dic.register('shipStatusInputActions', function(dic){
+    return [
+        dic.get('model.inputAction.HideHullAtZoom'),
+        dic.get('model.inputAction.ShowShipStatusView'),
+        dic.get('model.inputAction.ShowModuleDetailView'),
+    ];
+});
+
+dic.register('selectInputActions', function(dic){
+    return [
+        dic.get('model.inputAction.SelectWeapon'),
+    ];
+});
 
 dic.register(
     'model.InputModeReplay',
@@ -45,23 +64,60 @@ dic.register(
 );
 
 dic.register(
+    'model.InputModeWeaponSelected',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.RemoveFireOrderAtWeaponSelect'),
+                dic.get('basicInputActions'),
+                dic.get('model.inputAction.SelectWeaponActionBar'),
+                dic.get('model.inputAction.SelectAndDeselectWeapons'),
+                dic.get('model.inputAction.HighlightSelectedWeapons'),
+                dic.get('model.inputAction.RemoveInputModeOnCancel'),
+                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver'),
+                dic.get('model.inputAction.HideHullAtZoom'),
+                dic.get('model.inputAction.ShowGridOnZoom'),
+                dic.get('model.inputAction.TargetShipOnClick')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
     'model.InputModeWeapon',
     function(dic) {
         return new model.InputMode(
             dic.get('model.EventDispatcher'),
             [
-                dic.get('model.inputAction.ShowActionBarForSelectedShip'),
-                dic.get('model.inputAction.SelectedShipMarker'),
-                dic.get('model.inputAction.TargetCursor'),
-                dic.get('model.inputAction.SelectAndDeselectWeapons'),
-                dic.get('model.inputAction.HighlightSelectedWeapons'),
-                dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
-                dic.get('model.inputAction.RemoveWeaponMode'),
-                dic.get('model.inputAction.ShowWeaponTargetingOnMouseOver'),
-                dic.get('model.inputAction.HideHullAtZoom'),
-                dic.get('model.inputAction.ShowGridOnZoom'),
-                dic.get('model.inputAction.TargetShipOnClick'),
-                dic.get('model.inputAction.DisplayFireOrdersOnActionButtons')
+                dic.get('basicInputActions'),
+                dic.get('shipStatusInputActions'),
+                dic.get('selectInputActions'),
+                dic.get('model.inputAction.SelectWeaponActionBar'),
+                dic.get('model.inputAction.SelectShipOnClick'),
+                dic.get('model.inputAction.ShowCurrentFireOrders')
+            ],
+            1
+        );
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+
+dic.register(
+    'model.InputModeEW',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('basicInputActions'),
+                dic.get('shipStatusInputActions'),
+                dic.get('selectInputActions'),
+                dic.get('model.inputAction.SelectEWActionBar'),
+                dic.get('model.inputAction.SelectShipOnClick')
             ],
             1
         );
@@ -129,6 +185,12 @@ dic.register('model.inputAction.ShowMovementMenuOnRouteClick', function(dic) {
         dic.get('model.EventDispatcher'),
         dic.get('model.movement.MovementRadialMenu'),
         dic.get('model.GridService')
+    );
+});
+
+dic.register('model.inputAction.RemoveInputModeOnCancel', function(dic) {
+    return new model.inputAction.RemoveInputModeOnCancel(
+        dic.get('model.GameActionManager')
     );
 });
 

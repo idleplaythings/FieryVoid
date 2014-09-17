@@ -21,7 +21,11 @@ model.weapon.WeaponService.prototype.addFireOrder = function(shooter, target, we
   this._dispatcher.dispatch({name: 'fireOrdersChanged', weapon: weapon, fireOrder: fireOrder});
 };
 
-model.weapon.WeaponService.prototype.removeFireOrder = function(shooter, weapon, turn){
+model.weapon.WeaponService.prototype.removeFireOrder = function(weapon, turn){
+  if ( ! weapon.hasFireOrder(turn)){
+    return;
+  }
+  
   weapon.removeFireOrder(turn);
   this._dispatcher.dispatch({name: 'fireOrdersChanged', weapon: weapon, fireOrder: null});
 };

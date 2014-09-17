@@ -38,7 +38,7 @@ model.weapon.FireOrder.prototype.getTargetId = function()
 	return this._targetId;
 };
 
-model.weapon.FireOrder.prototype.getTargeTile = function()
+model.weapon.FireOrder.prototype.getTargetTile = function()
 {
 	return this._targetTile;
 };

@@ -4,12 +4,31 @@ dic.register('model.ArcIndicatorService', function(dic) {
     );
 });
 
+dic.register('model.inputAction.RemoveFireOrderAtWeaponSelect', function(dic) {
+    return new model.inputAction.RemoveFireOrderAtWeaponSelect(
+        dic.get("model.EventDispatcher"),
+        dic.get("model.weapon.WeaponService"),
+        dic.get("model.GameState")
+    );
+});
+
 dic.register('model.inputAction.DisplayFireOrdersOnActionButtons', function(dic) {
     return new model.inputAction.DisplayFireOrdersOnActionButtons(
         dic.get("model.EventDispatcher"),
         dic.get("model.ActionBar"),
         dic.get("model.SelectedShip"),
         dic.get("model.GameState")
+    );
+});
+
+dic.register('model.inputAction.ShowCurrentFireOrders', function(dic) {
+    return new model.inputAction.ShowCurrentFireOrders(
+        dic.get("model.WeaponIndicatorService"),
+        dic.get("model.SelectedShip"),
+        dic.get("model.GameState"),
+        dic.get("model.ShipService"),
+        dic.get("model.weapon.WeaponFireFactory"),
+        dic.get("model.EventDispatcher")
     );
 });
 
@@ -28,7 +47,9 @@ dic.register('model.inputAction.TargetShipOnClick', function(dic) {
         dic.get("model.SelectedShip"),
         dic.get("model.weapon.WeaponService"),
         dic.get("model.ShipService"),
-        dic.get("model.GameState")
+        dic.get("model.GameState"),
+        dic.get("model.EventDispatcher"),
+        dic.get("model.GameActionManager")
     );
 });
 
@@ -41,14 +62,8 @@ dic.register('model.inputAction.ShowWeaponArcsOnWeaponMouseOver', function(dic) 
     );
 });
 
-dic.register('model.inputAction.RemoveWeaponMode', function(dic) {
-    return new model.inputAction.RemoveWeaponMode(
-        dic.get("model.GameActionManager")
-    );
-});
-
-dic.register('model.inputAction.SelectWeaponMode', function(dic) {
-    return new model.inputAction.SelectWeaponMode(
+dic.register('model.inputAction.SelectWeapon', function(dic) {
+    return new model.inputAction.SelectWeapon(
         dic.get("model.EventDispatcher"),
         dic.get("model.GameActionManager")
     );

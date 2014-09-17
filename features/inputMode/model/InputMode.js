@@ -2,7 +2,16 @@ model.InputMode = function InputMode(dispatcher, actions, priority)
 {
 	this._dispatcher = dispatcher;
   this._inputState = new model.InputState();
-	this._actions = actions;
+	this._actions = [];
+
+  actions.forEach(function(action){
+    if (action instanceof Array){
+      this._actions = this._actions.concat(action);
+    }else{
+      this._actions.push(action);
+    }
+  }, this)
+
 	this._priority = priority || 0;
 
 	this._uiResolver = null;

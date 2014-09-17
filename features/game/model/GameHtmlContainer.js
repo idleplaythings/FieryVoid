@@ -9,8 +9,7 @@ model.GameHtmlContainer.prototype.set = function(container)
 {
 	this._container = container;
 	jQuery(window).resize(this._resize.bind(this));
-  this._clickCatcher = jQuery('<div id="gameClickCatcher"></div>').appendTo(container);
-  this._clickCatcher.on('contextmenu', function(e){e.stopPropagation(); return false; })
+  this.getClickContainer().on('contextmenu', function(e){e.stopPropagation(); return false; })
 
 	this._resize();
 
@@ -22,10 +21,7 @@ model.GameHtmlContainer.prototype.set = function(container)
 
 model.GameHtmlContainer.prototype.getClickContainer = function()
 {
-  if ( ! this._clickCatcher)
-    throw new Error("Gamecontainer is not set");
-
-  return this._clickCatcher;
+  return jQuery('#gameClickCatcher');
 };
 
 model.GameHtmlContainer.prototype.get = function()

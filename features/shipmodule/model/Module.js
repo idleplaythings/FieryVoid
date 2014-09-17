@@ -54,7 +54,7 @@ model.Module.prototype.hasFireOrder = function(turn){
 };
 
 model.Module.prototype.getFireOrder = function(turn){
-    return this._weaponStatus.hasFireOrder(turn, this._id);
+    return this._weaponStatus.getFireOrderByTurnAndWeaponId(turn, this._id);
 };
 
 model.Module.prototype.addFireOrder = function(fireOrder){

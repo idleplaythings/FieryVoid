@@ -21,7 +21,7 @@ model.ActionButtonWeapon.prototype = Object.create(model.ActionButton.prototype)
 
 model.ActionButtonWeapon.prototype.onWeaponClick = function()
 {
-	this._dispatcher.dispatch({name: 'WeaponClickedEvent', module: this._module});
+	this._dispatcher.dispatch({name: 'WeaponClickedEvent', module: this._module, ship: this._ship});
 };
 
 model.ActionButtonWeapon.prototype.owns = function(modules)
@@ -45,7 +45,7 @@ model.ActionButtonWeapon.prototype.activate = function(){
 model.ActionButtonWeapon.prototype.deactivate = function(){
 	console.log("deactivate");
 	this.get().css({
-		'background-image': 'url('+this._weapon.image.getByType('ui')+')'
+		'background-image': 'url('+this._module.getImageByType('ui')+')'
 	});
 	this.get().removeClass("fireOrder");
 };

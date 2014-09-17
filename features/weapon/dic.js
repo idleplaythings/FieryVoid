@@ -21,7 +21,8 @@ dic.register('model.WeaponIndicatorService', function(dic) {
 
 dic.register('model.weapon.WeaponService', function(dic) {
     return new model.weapon.WeaponService(
-      dic.get('model.weapon.WeaponFireFactory')
+      dic.get('model.weapon.WeaponFireFactory'),
+      dic.get('model.EventDispatcher')
   );
 });
 
@@ -31,4 +32,3 @@ dic.register('model.weapon.WeaponFireFactory', function(dic) {
       dic.get('model.ShipService')
   );
 });
-

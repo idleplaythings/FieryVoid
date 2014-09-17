@@ -4,7 +4,7 @@ model.weapon.WeaponFireFactory = function(hitLocationService, shipService){
 };
 
 model.weapon.WeaponFireFactory.prototype.getWeaponFireFromFireOrder = function(fireOrder){
-
+  console.log(fireOrder);
   var shooter = this._shipService.getShipById(fireOrder.getShooterId());
   var target = this._shipService.getShipById(fireOrder.getTargetId());
   var weapon = shooter.getModuleById(fireOrder.getWeaponId());

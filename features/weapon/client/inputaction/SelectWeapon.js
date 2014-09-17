@@ -1,4 +1,4 @@
-model.inputAction.SelectWeaponMode = function SelectWeaponMode(
+model.inputAction.SelectWeapon = function SelectWeapon(
     dispatcher,
     gameActionManager
 )
@@ -10,7 +10,7 @@ model.inputAction.SelectWeaponMode = function SelectWeaponMode(
 }
 
 
-model.inputAction.SelectWeaponMode.prototype.onActivation = function()
+model.inputAction.SelectWeapon.prototype.onActivation = function()
 {
     this._weaponClickedCallback = this._dispatcher.attach(
         'WeaponClickedEvent',
@@ -18,13 +18,13 @@ model.inputAction.SelectWeaponMode.prototype.onActivation = function()
     );
 };
 
-model.inputAction.SelectWeaponMode.prototype.onDeactivation = function()
+model.inputAction.SelectWeapon.prototype.onDeactivation = function()
 {
     this._dispatcher.detach('WeaponClickedEvent', this._weaponClickedCallback);
 };
 
-model.inputAction.SelectWeaponMode.prototype._onWeaponClicked = function(event)
+model.inputAction.SelectWeapon.prototype._onWeaponClicked = function(event)
 {
     console.log("weapon clicked");
-    this._gameActionManager.setWeaponMode([event.module]);
+    this._gameActionManager.setWeaponSelectedMode([event.module]);
 };

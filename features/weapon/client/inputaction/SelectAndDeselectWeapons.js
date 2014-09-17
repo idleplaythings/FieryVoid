@@ -36,16 +36,16 @@ model.inputAction.SelectAndDeselectWeapons.prototype._onWeaponClicked = function
             return ! module.equals(clickedModule);
         })
         inputState.set('selectedWeapons', weapons);
-        this._dispatcher.dispatch({name: "weaponDeselectedEvent", module: clickedModule, modules: weapons});
+        this._dispatcher.dispatch({name: "weaponDeselectedEvent", ship: event.ship, module: clickedModule, modules: weapons});
 
         if (weapons.length === 0){
-            this._gameActionManager.removeWeaponMode();
+            this._gameActionManager.activateDefaultInputMode();
         }
     }
     else
     {
         weapons.push(clickedModule);
         inputState.set('selectedWeapons', weapons);
-        this._dispatcher.dispatch({name: "weaponSelectedEvent", module: clickedModule, modules: weapons});
+        this._dispatcher.dispatch({name: "weaponSelectedEvent", ship: event.ship, module: clickedModule, modules: weapons});
     }
 };

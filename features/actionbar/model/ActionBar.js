@@ -5,12 +5,13 @@ model.ActionBar = function ActionBar(dispatcher, gameContainer)
     this._dispatcher = dispatcher;
     this._buttons = [];
     this._gameContainer = gameContainer;
+    getContainer().find('div, h4').on('click', actionBarClick.bind(this));
 };
 
 model.ActionBar.prototype.create = function(ship, turn)
 {
 	console.log("action bar create", ship._id);
-	var container = this._getContainer().html('');
+	var container = getWeaponContainer().html('');
 	this._buttons = [];
 	this._addWeapons(ship, turn);
 
@@ -23,19 +24,19 @@ model.ActionBar.prototype._addWeapons = function(ship, turn)
 		return new model.ActionButtonWeapon(ship, module, this._dispatcher);
 	}, this).forEach(function(button){
 		this._buttons.push(button);
-		button.get().appendTo(this._getContainer());
+		button.get().appendTo(getWeaponContainer());
 	}, this);
 };
 
 model.ActionBar.prototype.show = function()
 { 
-  this._getContainer().show();
+  getContainer().show();
   return this;
 };
 
 model.ActionBar.prototype.hide = function()
 { 
-  this._getContainer().hide();
+  getContainer().hide();
   return this;
 };
 
@@ -55,6 +56,23 @@ model.ActionBar.prototype.deactivateByModules = function(modules){
   callByModules.call(this, modules, 'deactivate');
 };
 
+var actionBarClick = function(event){
+  var id = jQuery(event.target).parent()[0].id;
+  var name = "";
+
+  if (id == 'actionBarMovement'){
+    name = 'movement';
+  }else if (id == 'actionBarWeapons'){
+    name = 'weapons';
+  }else if (id == 'actionBarEW'){
+    name = 'EW';
+  }else{
+    return;
+  }
+
+  this._dispatcher.dispatch({name: 'actionBarClickEvent', type:name});
+};
+
 var callByModules = function(modules, functionName)
 { 
   modules = [].concat(modules);
@@ -66,20 +84,11 @@ var callByModules = function(modules, functionName)
   })
 };
 
-model.ActionBar.prototype._getContainer = function(event)
+var getContainer = function()
 {
-	if ( this._container)
-		return this._container;
-		
-	var container = jQuery('#ActionBar');
-    if (container.length == 0)
-    {
-		this._container = jQuery('<div id="ActionBar"></div>').appendTo(this._gameContainer.getClickContainer());
-	}
-	else
-	{
-		this._container = container;
-	}
-	
-	return this._container;
+	return jQuery("#actionBar");
+};
+
+var getWeaponContainer = function(){
+  return getContainer().find('#actionBarWeapons div');
 };

@@ -13,3 +13,21 @@ dic.register('model.inputAction.ShowActionBarForSelectedShip', function(dic) {
         dic.get('model.ActionBar')
     );
 });
+
+dic.register('model.inputAction.SelectMovementActionBar', function(dic) {
+    return new model.inputAction.SelectActionBar(
+        '#actionBarMovement'
+    );
+});
+
+dic.register('model.inputAction.SelectWeaponActionBar', function(dic) {
+    return new model.inputAction.SelectActionBar(
+        '#actionBarWeapons'
+    );
+});
+
+dic.register('model.inputAction.SelectEWActionBar', function(dic) {
+    return new model.inputAction.SelectActionBar(
+        '#actionBarEW'
+    );
+});

@@ -94,12 +94,18 @@ model.WeaponIndicatorService.prototype.displayFireOrders = function(shooter, fir
 
 model.WeaponIndicatorService.prototype._addLine = function(weaponPosition, targetPosition, weaponDirection, args)
 {
-	return new model.Line(weaponPosition, targetPosition);
+	return [
+		new model.Line(weaponPosition, targetPosition, null, 10, 0.2, 20),
+		new model.Line(weaponPosition, targetPosition, null, 5, 0.2, 30)
+	];
 };
 
 model.WeaponIndicatorService.prototype._addEllipse = function(weaponPosition, targetPosition, weaponDirection, args)
 {
-	return new model.Ellipse(targetPosition, 45, 90, weaponDirection);
+	return [
+		new model.Ellipse(targetPosition, 45, 90, weaponDirection, null, 0.2, 8),
+		new model.Ellipse(targetPosition, 45-5, 90-5, weaponDirection, null, 0.2, 8.1)
+	];
 };
 
 model.WeaponIndicatorService.prototype.destroy = function()
