@@ -70,7 +70,7 @@ model.ShipStorage.prototype.createFromDesignId =
 	var ship = new model.Ship();
 	var shipDesign = this.shipDesignStorage.getShipDesign(shipDesignId, ship);
 	var timeline = this.timelineFactory.getTimeline();
-		
+
 	ship.setState({
 		_id: shipId,
         shipDesign: shipDesign

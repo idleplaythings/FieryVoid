@@ -8,6 +8,9 @@ dic.register('model.TimelineFactory', function(dic) {
 }, { shared: true });
 
 dic.register('TimelineController', function(dic) {
-    return new controller.TimelineController(dic.get('model.GameStorage'), dic.get('model.TimelineFactory'), dic.get('model.TimelineStorage'));
+    return new controller.TimelineController(
+      dic.get('model.GameStorage'),
+      dic.get('model.TimelineFactory')
+    );
 });
 

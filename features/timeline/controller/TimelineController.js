@@ -1,25 +1,33 @@
-controller.TimelineController = function(gameStorage, timelineFactory, timelineStorage)
+controller.TimelineController = function(gameStorage, timelineFactory)
 {
-    this.SaveGameTimelines = function(gameId, timelineEntries)
-    {
-        if (this.isSimulation)
-            return;
+  this.SaveGameTimelines = function(gameId, timelineEntries)
+  {
+    if (this.isSimulation){
+      return;
+    }
 
-        //TODO: load game, and check current player is alloved to persist these timelines
-        context = {gameId: gameId};
+    userid = this.userId;
 
-        timelineEntries.forEach(function(entry){
-            console.log(entry);
-            var timeline = timelineFactory.getTimeline(entry.id);
-            var entries = entry.entries.map(function(entry){
-                entry.context = context;
-                return new model.TimelineEntry(entry);
-            });
+    timelineEntries = timelineEntries.map(function(entry){
 
-            new model.TimelineRemoteSaver(timeline, entries, timelineStorage).persist();
-            entry.entries = entries;
-        });
+      var timeline = timelineFactory.getTimeline(entry.id);
+      var entries = entry.entries.map(function(entry){
+        return new model.TimelineEntry(entry);
+      });
 
-        return timelineEntries;
-    };
+      return {
+        id: entry.id,
+        timeline: timeline,
+        entries: entries
+      }
+    });
+
+    dic.get('order.OrderProcessor').process(userid, gameId, timelineEntries);
+
+    timelineEntries.forEach(function(entry){
+      delete(entry.timeline);
+    });
+
+    return timelineEntries;
+  };
 };

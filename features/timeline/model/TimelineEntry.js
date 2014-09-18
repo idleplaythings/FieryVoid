@@ -7,6 +7,7 @@ model.TimelineEntry = function TimelineEntry(args)
         args = {};
 
 	this._id = args._id || new Meteor.Collection.ObjectID().toHexString();
+    this.timelineId = args.timelineId;
     this.name = args.name || "";
     this.payload = args.payload || null;
     this.time = args.time || new Date().getTime();

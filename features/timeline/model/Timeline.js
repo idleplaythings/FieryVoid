@@ -68,7 +68,7 @@ model.Timeline.prototype.persist = function()
 	if (entries.length == 0)
 		return;
 		
-    this._storage.persist(entries, this._id);
+    this._storage.persist(entries);
     
     this.deleteRemoved();
    
@@ -86,7 +86,8 @@ model.Timeline.prototype.add = function(name, payload)
 {
     var entry = new model.TimelineEntry({
         name: name,
-        payload: payload
+        payload: payload,
+        timelineId: this._id
     });
 
     this._entries.push(entry);

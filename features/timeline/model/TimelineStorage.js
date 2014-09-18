@@ -52,37 +52,27 @@ model.TimelineStorage = function TimelineStorage()
 
 model.TimelineStorage.prototype.load = function(id)
 {
-    var find = {_id: id};
-
-    var timeline = TimelineCollection.findOne(find);
-
-    if ( ! timeline)
-		return [];
-
-    var entries = timeline.entries.map(function(entry){
-		return new model.TimelineEntry().deserialize(entry);
-	});
+  var find = {_id: id};
+  var entries = [];
+  var timelineEntry = TimelineCollection.find({timelineId: id})
+    .fetch()
+    .forEach(function(timelineEntry){
+      entries.push(new model.TimelineEntry().deserialize(timelineEntry.entry));
+    });
 
 	entries.sort(function(a, b){return a.time - b.time});
 
-	/*
-	var orders = TimelineCollectionGameOrders.findOne(find);
-    entries = entries.concat = orders.entries.map(function(entry){
-		return new model.TimelineEntry().deserialize(entry.entry);
-	});
-	*/
-
-    return entries;
+  return entries;
 };
 
-model.TimelineStorage.prototype.persist = function(entries, id)
+model.TimelineStorage.prototype.persist = function(entries)
 {
+  entries = [].concat(entries);
+  
   if (Meteor.isClient)
   {
-      return;
+    return;
   }
-
-  var timeline = TimelineCollection.findOne({_id: id});
 
 	entries.forEach(function(entry)
 	{
@@ -90,32 +80,17 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 		{
 			entry.setSaved();
 
-			if ( ! timeline)
-			{
-				TimelineCollection.insert({_id: id, entries: [entry.serialize()]});
-				timeline = true;
-			}
-			else
-			{
-				var exsists = TimelineCollection.findOne(
-					{$and: [{_id: id}, {'entries._id': entry._id}]}
-				);
+      var savedEntry = TimelineCollection.findOne({_id: entry._id});
 
-				if (exsists)
-				{
-					TimelineCollection.update(
-						{$and: [{_id: id}, {'entries._id': entry._id}]},
-						{$set:{ 'entries.$': entry.serialize()}}
-					);
-				}
-				else
-				{
-					TimelineCollection.update(
-						{_id: id},
-						{$push:{ entries: entry.serialize() }}
-					);
-				}
-			}
+      if (savedEntry){
+        TimelineCollection.update({_id: entry._id}, {$set: {entry: entry.serialize()}})
+      }else{
+        TimelineCollection.insert({
+          _id: entry._id,
+          timelineId: entry.timelineId,
+          entry: entry.serialize()
+        });
+      }
 		}
 
 		if (entry.needsRemoving())
@@ -125,10 +100,7 @@ model.TimelineStorage.prototype.persist = function(entries, id)
 			if ( ! timeline)
 				return;
 
-			TimelineCollection.update(
-				{_id: id},
-				{$pull:{ entries: {_id: entry._id}}}
-			);
+			TimelineCollection.remove({_id: entry._id});
 		}
 	});
 };
