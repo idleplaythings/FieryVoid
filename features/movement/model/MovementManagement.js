@@ -1,3 +1,4 @@
+/*
 model.MovementManagement = function MovementManagement(ship, modules, timeline, thrust, pathResolver)
 {
     model.ShipStatusManager.call(this, ship, modules, timeline);
@@ -168,3 +169,4 @@ model.MovementManagement.prototype.getSpeedCost = function()
 {
     return this.ship.shipDesign.hullLayout.baseSpeedCost;
 };
+*/

@@ -47,6 +47,7 @@ module.exports = function(config) {
         'features/lib/DIC/DIC.js',
         'features/lib/DIC/Factory.js',
 
+        'features/weapon/lib/**/*.js',
         'features/weapon/model/*.js',
 
         'features/raytrace/model/*.js',

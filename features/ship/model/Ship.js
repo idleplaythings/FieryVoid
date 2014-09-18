@@ -163,3 +163,7 @@ model.Ship.prototype.setPosition = function(pos)
   else
     this.getIcon().setPosition(pos);
 };
+
+model.Ship.prototype.isOwnedBy = function(userId){
+  return this.getStatus().getOwner() == userId;
+};

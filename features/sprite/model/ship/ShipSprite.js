@@ -90,7 +90,6 @@ model.ShipSprite.prototype.setDamageOverlay = function(data, data2)
 		{data: data2}, true);
 };
 
-
 model.ShipSprite.prototype.scale = function(width, height)
 {
     this.object3d.scale.set(

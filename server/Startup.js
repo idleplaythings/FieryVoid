@@ -14,6 +14,18 @@ Meteor.startup(function () {
         Meteor.users.update({'username': 'admin'}, {$set: {'isAdmin': true}});
         console.log('created admin account');
     }
+
+    var yellow = Meteor.users.findOne({'username' : 'Yellow state'});
+    if (! yellow)
+    {
+        Accounts.createUser(
+            {
+                username: 'Yellow state',
+                email: 'yellow@fieryvoid.net',
+                password: 'yellow'
+            }
+        );
+    }
 });
 
 function getPublicPath()

@@ -77,12 +77,12 @@ model.TimelineStorage.prototype.load = function(id)
 
 model.TimelineStorage.prototype.persist = function(entries, id)
 {
-    if (Meteor.isClient)
-    {
-        return;
-    }
+  if (Meteor.isClient)
+  {
+      return;
+  }
 
-    var timeline = TimelineCollection.findOne({_id: id});
+  var timeline = TimelineCollection.findOne({_id: id});
 
 	entries.forEach(function(entry)
 	{

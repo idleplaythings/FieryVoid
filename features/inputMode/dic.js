@@ -31,6 +31,7 @@ dic.register('basicInputActions', function(dic){
         dic.get('model.inputAction.ShowWeaponArcsOnWeaponMouseOver'),
         dic.get('model.inputAction.SelectedShipMarker'),
         dic.get('model.inputAction.LightBlueArrowCursor'),
+        dic.get('model.inputAction.ShipSideMarker')
     ];
 });
 
@@ -191,6 +192,12 @@ dic.register('model.inputAction.ShowMovementMenuOnRouteClick', function(dic) {
 dic.register('model.inputAction.RemoveInputModeOnCancel', function(dic) {
     return new model.inputAction.RemoveInputModeOnCancel(
         dic.get('model.GameActionManager')
+    );
+});
+
+dic.register('model.inputAction.ShipSideMarker', function(dic) {
+    return new model.inputAction.ShipSideMarker(
+        dic.get('model.ShipService')
     );
 });
 

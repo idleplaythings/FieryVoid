@@ -1,5 +1,5 @@
 getRandomShipDesignIdForPlayer = function(playerId) {
-    var shipDesigns = ShipDesigns.find({ owner: playerId }).fetch();
+    var shipDesigns = ShipDesigns.find().fetch();
 
     if (shipDesigns.length === 0) {
         return null;

@@ -53,7 +53,7 @@ model.GameActionManager.prototype._onTurnEvent = function(event){
 };
 
 model.GameActionManager.prototype._onReplayEnd = function(event){
-  this._uiEventManager.setInputMode(this._inputModeFactory.create('model.InputModeSelect'));
+  this.activateDefaultInputMode();
 };
 
 var actionBarClicked = function(event){

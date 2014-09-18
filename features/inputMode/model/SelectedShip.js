@@ -11,6 +11,9 @@ model.SelectedShip.prototype.getShip = function()
 
 model.SelectedShip.prototype.selectShip = function(ship)
 {
+  if ( ! ship.isOwnedBy(Meteor.userId()))
+    return;
+  
 	if (this._ship)
 		this._dispatcher.dispatch({name: 'ShipDeselectedEvent', ship:this._ship});
 

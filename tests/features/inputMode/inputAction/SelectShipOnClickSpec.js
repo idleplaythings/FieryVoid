@@ -3,7 +3,7 @@ describe("SelectShipOnClick", function() {
     var shipService, selectedShip, event, selectAction;
 
     beforeEach(function() {
-        shipService = { getShipOnScenePosition: function() { }};
+        shipService = { getShipOnScenePosition: function() {} };
         selectedShip = jasmine.createSpyObj('selectedShip', [ 'selectShip' ]);
         event = {game: 2, stopped: false};
 
@@ -11,11 +11,12 @@ describe("SelectShipOnClick", function() {
     });
 
     it("should select closest ship", function() {
-        spyOn(shipService, 'getShipOnScenePosition').andReturn(1);
+        var ship = {isOwnedBy: function(){return true;}};
+        spyOn(shipService, 'getShipOnScenePosition').andReturn(ship);
 
         selectAction.onClick(event);
 
-        expect(selectedShip.selectShip).toHaveBeenCalledWith(1);
+        expect(selectedShip.selectShip).toHaveBeenCalledWith(ship);
         expect(event.stopped).toBe(true);
     });
 

@@ -9,7 +9,7 @@ model.inputAction.SelectShipOnClick.prototype.onClick = function(event)
 	var scenePosition = event.game;
 	var ship = this._shipService.getShipOnScenePosition(scenePosition);
 
-	if (ship)
+	if (ship && ship.isOwnedBy(Meteor.userId()))
 	{
 		this._selectedShip.selectShip(ship);
 		event.stopped = true;

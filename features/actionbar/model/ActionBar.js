@@ -5,7 +5,7 @@ model.ActionBar = function ActionBar(dispatcher, gameContainer)
     this._dispatcher = dispatcher;
     this._buttons = [];
     this._gameContainer = gameContainer;
-    getContainer().find('div, h4').on('click', actionBarClick.bind(this));
+    jQuery('.actionBar div, .actionBar h4').on('click', actionBarClick.bind(this));
 };
 
 model.ActionBar.prototype.create = function(ship, turn)
@@ -30,13 +30,13 @@ model.ActionBar.prototype._addWeapons = function(ship, turn)
 
 model.ActionBar.prototype.show = function()
 { 
-  getContainer().show();
+  jQuery('.actionBar').show();
   return this;
 };
 
 model.ActionBar.prototype.hide = function()
 { 
-  getContainer().hide();
+  jQuery('.actionBar').hide();
   return this;
 };
 
@@ -84,11 +84,7 @@ var callByModules = function(modules, functionName)
   })
 };
 
-var getContainer = function()
-{
-	return jQuery("#actionBar");
-};
 
 var getWeaponContainer = function(){
-  return getContainer().find('#actionBarWeapons div');
+  return jQuery('#actionBarWeapons div');
 };

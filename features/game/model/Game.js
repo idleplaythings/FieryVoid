@@ -28,7 +28,7 @@ model.Game.prototype.getRandomFleetForPlayer = function(playerId, fleetStorage, 
 
 	while(shipCount--)
 	{
-			var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
+		var shipDesignId = getRandomShipDesignIdForPlayer(playerId);
 
 		if ( ! shipDesignId) {
 			return false;

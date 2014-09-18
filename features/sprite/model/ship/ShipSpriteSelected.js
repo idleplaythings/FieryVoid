@@ -1,16 +1,17 @@
 if ( typeof model === 'undefined')
     model = {};
 
-model.ShipSpriteSelected = function ShipSpriteSelected(shipDesign)
+model.ShipSpriteSelected = function ShipSpriteSelected(shipDesign, z)
 {
-    model.ShipSprite.call(this, shipDesign.hullLayout);
-    this.z = -1;
+    model.Sprite.call(this);
+    this.hullLayout = shipDesign.hullLayout;
+    this.z = z || -1;
 
     this.circle = null;
     this.arrow = null;
 };
 
-model.ShipSpriteSelected.prototype =  Object.create(model.ShipSprite.prototype);
+model.ShipSpriteSelected.prototype =  Object.create(model.Sprite.prototype);
 
 model.ShipSpriteSelected.prototype.animate = function()
 {

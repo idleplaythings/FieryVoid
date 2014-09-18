@@ -78,6 +78,7 @@ model.ShipIcon.prototype.createSprites = function()
     this.sprites.hull = new model.ShipSpriteHull(shipDesign, 5);
     this.sprites.modules = new model.ShipSpriteModules(shipDesign, 2);
     this.sprites.selected = new model.ShipSpriteSelected(shipDesign, 0).hide();
+    this.sprites.side = new model.ShipSpriteSide(shipDesign, 0).hide();
     this.sprites.grid = new model.SpriteGrid(
         new model.GridLayout(new model.TileLayout(), this.getHullLayout()), 3);
     this.sprites.grid.hide();
@@ -85,7 +86,7 @@ model.ShipIcon.prototype.createSprites = function()
 	this.modulesUnder = this.updateOrCreateModules(this.modulesOver, "under", -1);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
 
-    this.sprites.silhouette.uniforms.opacity.value = 0.5;
+    this.sprites.silhouette.uniforms.opacity.value = 0.9;
 
     this.addObject(this.sprites.grid);
     this.addObject(this.sprites.silhouette);
@@ -93,6 +94,7 @@ model.ShipIcon.prototype.createSprites = function()
     this.addObject(this.sprites.hull);
     this.addObject(this.sprites.modules);
     this.addObject(this.sprites.selected);
+    this.addObject(this.sprites.side);
     
     this.iconEffectManager = new model.EffectManager(this.gameScene, this.dispatcher, this.ThreeIconGroup);
 
@@ -168,3 +170,14 @@ model.ShipIcon.prototype.deselect = function()
 {
 	this.sprites.selected.hide();
 };
+
+model.ShipIcon.prototype.showSide = function(type)
+{
+    this.sprites.side.show(type);
+};
+
+model.ShipIcon.prototype.hideSide = function()
+{
+    this.sprites.side.hide();
+};
+

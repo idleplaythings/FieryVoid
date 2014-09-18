@@ -1,17 +1,20 @@
-#actionBar
+.actionBar
 {
 	position:absolute;
 	bottom: 0px;
-    height:30px;
-    width:100%;
     padding:0px;
-    border-collapse: collapse;
 }
 
-#actionBar td{
+#actionBarEW.actionBar {
+    right:0px;
+    width:25%;
 }
 
-#actionBar td div{
+#actionBarWeapons.actionBar{
+    right:25%;
+}
+
+.actionBar div{
     background-color:rgba(0,0,0,0.5);
     padding:5px;
     margin:0px 5px 0px 5px;
@@ -19,7 +22,7 @@
     width:auto;
 }
 
-#actionBar h4{
+.actionBar h4{
     border-width: 0px;
     background-color:rgba(0,0,0,0.5);
     margin:0px 5px;
@@ -28,16 +31,16 @@
     height:25px;
 }
 
-#actionBar td.selected div{
+.actionBar.selected div{
     background-color:#425077;
 }
 
-#actionBar .selected h4{
+.actionBar.selected h4{
     background-color:#425077;
 }
 
 
-#actionBar button
+.actionBar button
 {
 	display: inline-block;
     width:40px;
@@ -51,7 +54,7 @@
     border-radius: 20%;
 }
 
-#actionBar button.selected
+.actionBar button.selected
 {
 	background-color:rgba(200, 255, 255, 0.6);
 	border: lightgray outset 1px;

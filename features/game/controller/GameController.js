@@ -4,6 +4,8 @@ controller.GameController = function(gameStorage)
     {
         if (this.isSimulation)
             return;
+
+        player2Id = Meteor.users.findOne({'username' : 'Yellow state'})._id;
         
         var game = gameStorage.create();
 
