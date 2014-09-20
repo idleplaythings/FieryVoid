@@ -167,3 +167,7 @@ model.Ship.prototype.setPosition = function(pos)
 model.Ship.prototype.isOwnedBy = function(userId){
   return this.getStatus().getOwner() == userId;
 };
+
+model.Ship.prototype.ownsTimeline = function(timeline){
+  return this.timeline._id === timeline._id;
+};

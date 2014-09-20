@@ -3,7 +3,6 @@ model.movement.ShipMovementAnimationService = function ShipMovementAnimationServ
 	this._shipAnimationDetailFactory = shipAnimationDetailFactory;
 
 	this._shipAnimations = [];
-	this._paths = this.resolverPathsForShips;
 };
 
 model.movement.ShipMovementAnimationService.prototype.init = function(ships)

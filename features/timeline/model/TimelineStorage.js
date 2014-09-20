@@ -96,10 +96,6 @@ model.TimelineStorage.prototype.persist = function(entries)
 		if (entry.needsRemoving())
 		{
 			entry.setRemoved();
-
-			if ( ! timeline)
-				return;
-
 			TimelineCollection.remove({_id: entry._id});
 		}
 	});

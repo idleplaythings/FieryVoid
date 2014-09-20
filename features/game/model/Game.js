@@ -1,5 +1,14 @@
 
-model.Game = function Game(gridService, shipService, gameTerrain, gameState, shipMovementHandler, fleetStorage, args) {
+model.Game = function Game(
+    gridService,
+    shipService,
+    gameTerrain,
+    gameState,
+    shipMovementHandler,
+    fleetStorage,
+    shipMovementAnimationService,
+    args
+) {
 
     if ( ! args)
         args = {};
@@ -11,6 +20,7 @@ model.Game = function Game(gridService, shipService, gameTerrain, gameState, shi
     this.gameState = gameState;
     this.shipMovementHandler = shipMovementHandler;
     this.fleetStorage = fleetStorage;
+    this.shipMovementAnimationService = shipMovementAnimationService;
     
 
     this.setState(args);
@@ -106,6 +116,8 @@ model.Game.prototype.load = function(doc)
     }, []);
 
     this.shipService.setShips(ships);
+    this.shipMovementAnimationService.init(this.shipService.getShips());
+    this.gridService.init(100, 100, 300);
     //this.fleets = this.fleetStorage.getFleetsInGame(this._id);
 
     return this;

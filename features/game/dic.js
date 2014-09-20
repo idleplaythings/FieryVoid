@@ -30,7 +30,8 @@ dic.register(
             dic.get('model.GameTerrain'),
             dic.get('model.GameState'),
             dic.get('model.movement.ShipMovementHandler'),
-            dic.get('model.FleetStorage')
+            dic.get('model.FleetStorage'),
+            dic.get('model.movement.ShipMovementAnimationService')
         );  
     }, {
         tags: [ 'game.type' ]

@@ -22,11 +22,14 @@ model.GridService.prototype.init = function(width, height, hexSize)
         hexSize: hexSize
     });
 
-    this._renderer.setScene(this._gameScene);
-    this._selector.setScene(this._gameScene);
-    this._highlighter.setScene(this._gameScene);
 
-    this._renderer.renderGrid(this._grid);
+    if (Meteor.isClient){
+        this._renderer.setScene(this._gameScene);
+        this._selector.setScene(this._gameScene);
+        this._highlighter.setScene(this._gameScene);
+
+        this._renderer.renderGrid(this._grid);
+    }
 
     //this._eventDispatcher.attach('scene.init', this.onSceneInit.bind(this));
 };

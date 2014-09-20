@@ -14,7 +14,9 @@ model.movement.ShipAnimationDetails = function ShipAnimationDetails(
 	this._movementVisualizer = movementVisualizer;
 
 	this._animationLoop = animationLoop;
-  this._animationLoop.register(this);
+
+	if (this._animationLoop)
+  	this._animationLoop.register(this);
 
   this._cacheStep = 0.1;
   this._cacheResolution = 100 / this._cacheStep;

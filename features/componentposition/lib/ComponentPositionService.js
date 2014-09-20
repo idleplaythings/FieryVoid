@@ -39,7 +39,7 @@ model.ComponentPositionService.prototype.getTilePositionInScene = function(tileP
 
     modulePosition = MathLib.turnVector(modulePosition, this._facing);
 
-    return new THREE.Vector3(this._position.x + modulePosition.x, this._position.y + modulePosition.y, 0);
+    return new math.Vector3(this._position.x + modulePosition.x, this._position.y + modulePosition.y, 0);
 };
 
 model.ComponentPositionService.prototype.getTileOnPosition = function(scenePosition)
