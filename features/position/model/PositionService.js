@@ -6,22 +6,38 @@ model.PositionService = function PositionService(gridPositionComparison, gridSer
 	this._shipMovementAnimationService = shipMovementAnimationService;
 };
 
-model.PositionService.prototype.getScenePosition = function(ship)
+model.PositionService.prototype.getScenePosition = function(ship, turn, time)
 {
 	if ( ! this._shipMovementAnimationService)
 		throw new Error("Trying to get scene position but animation service is not set. Are you on server?");
 
+	if (turn == undefined){
+		turn = this._gameState.getCurrentDisplayTurn();
+	}
+
+	if (time == undefined){
+		time = this._gameState.getCurrentDisplayTime();
+	}
+
 	return this._shipMovementAnimationService.getShipScenePosition(
-		ship, this._gameState.getCurrentDisplayTurn(), this._gameState.getCurrentDisplayTime());
+		ship, turn, time);
 };
 
-model.PositionService.prototype.getSceneFacing = function(ship)
+model.PositionService.prototype.getSceneFacing = function(ship, turn, time)
 {
 	if ( ! this._shipMovementAnimationService)
 		throw new Error("Trying to get scene facing but animation service is not set. Are you on server?");
 
+	if (turn == undefined){
+		turn = this._gameState.getCurrentDisplayTurn();
+	}
+
+	if (time == undefined){
+		time = this._gameState.getCurrentDisplayTime();
+	}
+
 	return this._shipMovementAnimationService.getShipSceneFacing(
-		ship, this._gameState.getCurrentDisplayTurn(), this._gameState.getCurrentDisplayTime());
+		ship, turn, time);
 };
 
 model.PositionService.prototype.getShipTileOnScenePosition = function(ship, scenePosition)
@@ -42,9 +58,9 @@ model.PositionService.prototype.shipOccupiesScenePosition = function(ship, scene
 	return componentPosition.occupiesPosition(scenePosition);
 };
 
-model.PositionService.prototype.getComponentPositionService = function(ship)
+model.PositionService.prototype.getComponentPositionService = function(ship, turn, time)
 {
 	return new model.ShipDesignPositionService(
-		ship.shipDesign, this.getScenePosition(ship), this.getSceneFacing(ship)
+		ship.shipDesign, this.getScenePosition(ship, turn, time), this.getSceneFacing(ship, turn, time)
 	);
 };

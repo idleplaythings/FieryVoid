@@ -1,4 +1,5 @@
-model.EffectManager = function EffectManager(gameScene, dispatcher, target, args)
+model.EffectManager = function EffectManager(
+	gameAnimationLoop, gameScene, dispatcher, target, args)
 {
 	if ( ! args)
 		args = {};
@@ -7,27 +8,26 @@ model.EffectManager = function EffectManager(gameScene, dispatcher, target, args
 	this.gameScene = gameScene;
 	this.dispatcher = dispatcher;
 	this.particleCount = args.particleCount || 20000;
+
+	this._gameAnimationLoop = gameAnimationLoop;
 	
 	this.emitters = {
 		additive: this.createEmitter('additive', THREE.AdditiveBlending),
 		normal: this.createEmitter('normal')
 	}
-    
-	gameScene.animators.push(this);
-	
-	this.done = [];
-	this.toCreate = [];
-	this.toDestroy = [];
-	this.usageTop = 0;
-	
-	this.updateFrqeuency = args.updateFrqeuency || 10000;
-	this.lastUpdate = this.updateFrqeuency * -1;
+
+	this.effects = [];
+	this.activeEffects = [];
 };
 
 model.EffectManager.prototype.createEmitter = function(name, blending)
 {
-	return new model.EffectParticleEmitter(this.target, this.particleCount, this.gameScene, blending)
+	var emitter = new model.EffectParticleEmitter(this.target, this.particleCount, this.gameScene, blending)
 		.observeZoomLevelChange(this.dispatcher);
+
+	this._gameAnimationLoop.register(emitter);
+
+	return emitter;
 }
 
 model.EffectManager.prototype.forEmitters = function(callback)
@@ -86,59 +86,50 @@ model.EffectManager.prototype.createExplosion = function()
 
 model.EffectManager.prototype.register = function(effects)
 {
+	effects = [].concat(effects);
+
+	effects.forEach(function(effect){
+		var turn = effect.getTurn();
+		console.log("registering effect for turn", turn);
+
+		if ( ! this.effects[turn]){
+			this.effects[turn] = [];
+		}
+
+		this.effects[turn].push(effect);
+	}, this);
+	/*
 	this.toCreate = this.toCreate.concat(effects);
 	this.toCreate.sort(function(a, b){ return a.time - b.time; });
 	this.toDestroy = this.toDestroy.concat(effects);
 	this.toDestroy.sort(function(a, b){ return a.endTime - b.endTime; });
+	*/
 };
 
-model.EffectManager.prototype.createBatch = function(gameTime)
+model.EffectManager.prototype.loadTurn = function(turn)
 {
-	var toFree = [];
-	
-	while(true)
-	{
-		if (this.toCreate[0] && this.toCreate[0].time - this.updateFrqeuency <= gameTime)
-		{
-			var effect = this.toCreate.shift();
-			effect.create(this.emitters);
-		}
-		else
-		{
-			break;
-		}
-	}
+	createBatch.call(this, turn);
+};
 
-	while(true)
-	{
-		if (this.toDestroy[0] && this.toDestroy[0].endTime <= gameTime)
-		{
-			var effect = this.toDestroy.shift();
-			toFree = toFree.concat(effect.particles);
-			effect.destroy();
-		}
-		else
-		{
-			break;
-		}
-	}
-	
+var createBatch = function(turn)
+{
+	console.log('creating batch for', turn);
+	this.activeEffects.forEach(function(effect){
+		effect.destroy();
+	});
+
+	this.activeEffects = [];
+
 	this.forEmitters(function(emitter){emitter.update();});
-}
 
-model.EffectManager.prototype.animate = function(gameTime)
-{
-	if (gameTime - this.lastUpdate >= this.updateFrqeuency)
-	{
-		this.lastUpdate = gameTime;
-		this.createBatch(gameTime);
-	}
+	if ( ! this.effects[turn])
+		return;
+
+	this.effects[turn].forEach(function(effect){
+		effect.create(this.emitters);
+		this.activeEffects.push(effect);
+	}, this);
+
+	this.forEmitters(function(emitter){emitter.update();});
 };
-
-model.EffectManager.prototype.create = function(gameScene, dispatcher)
-{
-	
-    return this;
-};
-
 

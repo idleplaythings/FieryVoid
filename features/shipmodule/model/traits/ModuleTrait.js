@@ -18,9 +18,6 @@ model.ModuleTrait.prototype.instantiateFromName = function(traitName, value)
 	if ( ! traitName)
 		return null;
 		
-	if ( model[traitName])
-		return new model[traitName](value);
-		
 	traitName = 'ModuleTrait' + traitName[0].toUpperCase() + traitName.slice(1);
 	
 	if ( model[traitName])

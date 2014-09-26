@@ -133,6 +133,8 @@ function evaluateTraitStatus(module){
 	
 	if (previousValue == '')
 		previousValue = null;
+
+    console.log(variables);
 		
 	if ( previousValue == variables)
 		return;
@@ -190,7 +192,7 @@ Template.traitDetail.options = function()
 
 Template.moduleMenu.events({
     'blur input, blur textarea': function (event, template) {
-        handleDetailChange(event.currentTarget, template.data.moduleLayout);
+        handleDetailChange(event.currentTarget, template.data.moduleLayout, template);
     },
     'click .publish': function(event) {
 
@@ -226,6 +228,19 @@ Template.moduleMenu.disabledClass = function(){
    return Session.get('moduleeditor_clickType') == 'disable' ? 'active' : '';
 };
 
+Template.moduleMenu.isChecked = function(name){
+    var moduleLayout = this.moduleLayout;
+
+    if ( ! moduleLayout)
+            return '';
+
+    console.log("checked");
+    console.log(moduleLayout[name]);
+
+    return moduleLayout[name] == true ? 'checked' : '';
+};
+
+
 function getFromSelectedLayoutTrait(layout, name){
     if (layout)
     {
@@ -239,11 +254,22 @@ function getFromSelectedLayoutTrait(layout, name){
     return '';
 };
 
-function handleDetailChange(element, layout)
+function handleDetailChange(element, layout, template)
 {
+    var moduleLayout = template.data.moduleLayout;
+
+    if ( ! moduleLayout)
+            return;
+
     var name = jQuery(element).attr('name');
-    var value = jQuery(element).val();
-    value = value.trim();
+    var value;
+
+    if (jQuery(element).is(':checkbox')){
+        value = ! moduleLayout[name];
+    }else{
+        value = jQuery(element).val();
+        value = value.trim();
+    }
 
     if (jQuery(element).hasClass('trait'))
     {

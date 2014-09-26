@@ -7,8 +7,9 @@ model.inputAction.HullEditorClick = function HullEditorClick(selectedHullLayout,
 
 model.inputAction.HullEditorClick.prototype.onClick = function(event)
 {
+    console.log("click");
 	var hullLayout = this._selectedHullLayout.get();
-
+    console.log(hullLayout);
     if ( ! hullLayout)
         return;
 

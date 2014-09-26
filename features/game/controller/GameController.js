@@ -56,7 +56,7 @@ controller.GameController = function(gameStorage)
         player.committedTurn = currentTurn;
 
         if (game.allPlayersReady()){
-            dic.get("model.TurnProcessor").processTurn(game);
+            dic.get("order.TurnProcessor").processTurn(game);
             dic.get('model.TimelineFactory').persistAll();
             gameStorage.updateTurn(gameId, currentTurn+1);
         }

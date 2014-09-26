@@ -1,11 +1,12 @@
 model.movement.ThrusterUsage = function ThrusterUsage(thrusters, thrust)
 {
 	this._thrusters = thrusters.map(function(thruster){
-		return new model.movement.Thruster(thruster);
+		return new model.movement.ThrusterInUse(thruster);
 	});
 	
 	this._thrustAvailable = thrust;
 	this._thrustUsed = 0;
+	console.log(this._thrusters);
 };
 
 
@@ -39,16 +40,21 @@ model.movement.ThrusterUsage.prototype._getThrustersToDirection = function(direc
 
 model.movement.ThrusterUsage.prototype._resolveAndPay = function(thrusters, cost)
 {
-	
+	console.log(thrusters);
 	this._thrustUsed += cost;
-	if ( this._thrustUsed > this._thrustAvailable)
+	console.log(this._thrustUsed, this._thrustAvailable);
+	if ( this._thrustUsed > this._thrustAvailable){
+		console.log("no more thrust");
 		return false;
+	}
 		
 	//TODO: Sort thrusters so that intact thrusters are preferred
 	while (cost > 0)
 	{
-		if (thrusters.length == 0)
+		if (thrusters.length == 0){
+			console.log("no more thrusters");
 			return false;
+		}
 			
 		cost = thrusters.pop().pay(cost);
 	}

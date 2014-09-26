@@ -21,7 +21,7 @@ model.GameHtmlContainer.prototype.set = function(container)
 
 model.GameHtmlContainer.prototype.getClickContainer = function()
 {
-  return jQuery('#gameClickCatcher');
+  return this._container.find('.clickCatcher');
 };
 
 model.GameHtmlContainer.prototype.get = function()

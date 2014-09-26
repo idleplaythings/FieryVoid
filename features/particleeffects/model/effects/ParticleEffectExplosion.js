@@ -1,13 +1,13 @@
-model.ParticleEffectExplosion = function ParticleEffectExplosion(position, time, args)
+effect.particle.Explosion = function ParticleEffectExplosion(position, time, turn, args)
 {
 	if ( ! args)
 		args = {};
 		
-	model.ParticleEffect.call(this, 'additive', args.seed);
+	effect.particle.Effect.call(this, 'additive', args.seed, turn);
 	
 	this.position = position;
-	this.time = Math.floor(time);
-	this.endTime = this.time + 2000;
+	this.time = time;
+	this.endTime = this.time + 0.2;
 	
 	this.type = args.type || 'gas';
 	this.size = args.size || 16;
@@ -17,9 +17,9 @@ model.ParticleEffectExplosion = function ParticleEffectExplosion(position, time,
 	
 };
 
-model.ParticleEffectExplosion.prototype =  Object.create(model.ParticleEffect.prototype);
+effect.particle.Explosion.prototype =  Object.create(effect.particle.Effect.prototype);
 
-model.ParticleEffectExplosion.prototype._create = function()
+effect.particle.Explosion.prototype._create = function()
 {
 
 	switch (this.type)
@@ -38,7 +38,7 @@ model.ParticleEffectExplosion.prototype._create = function()
 	}
 };
 
-model.ParticleEffectExplosion.prototype.createGlow = function()
+effect.particle.Explosion.prototype.createGlow = function()
 {
 	//if ( this.ring)
 	//	this.createRing(this.size, emitter);
@@ -50,7 +50,7 @@ model.ParticleEffectExplosion.prototype.createGlow = function()
 };
 
 
-model.ParticleEffectExplosion.prototype.createGas = function()
+effect.particle.Explosion.prototype.createGas = function()
 {
 	//if ( this.ring)
 	//	this.createRing(this.size, emitter);
@@ -60,7 +60,7 @@ model.ParticleEffectExplosion.prototype.createGas = function()
 	this.createCore(this.size);
 };
 
-model.ParticleEffectExplosion.prototype.createRing = function(size)
+effect.particle.Explosion.prototype.createRing = function(size)
 {
 	
 	var step = 360 / size;
@@ -93,7 +93,7 @@ model.ParticleEffectExplosion.prototype.createRing = function(size)
 	}	
 };
 
-model.ParticleEffectExplosion.prototype.createShootOffs = function(amount, radius, emitter)
+effect.particle.Explosion.prototype.createShootOffs = function(amount, radius, emitter)
 {
 	var size = radius;
 	//amount = 1;
@@ -123,19 +123,19 @@ model.ParticleEffectExplosion.prototype.createShootOffs = function(amount, radiu
 	}	
 };
 
-model.ParticleEffectExplosion.prototype.createCore = function(radius, emitter)
+effect.particle.Explosion.prototype.createCore = function(radius, emitter)
 {
 	var size = radius;
 
 	var particle = this._getParticle();
-	var activationTime = this.time + Math.floor(Math.random()*50/this.speed);
-	var fadeOutAt = activationTime + Math.floor(Math.random()*200/this.speed) + 300/this.speed;
+	var activationTime = this.time + Math.random()*0.005/this.speed;
+	var fadeOutAt = activationTime + (Math.random()*0.02/this.speed) + 0.03/this.speed;
 	
 	particle
 		.setSize(Math.floor(Math.random()*size) + size/2)
 		.setOpacity(Math.random() * 0.2 + 0.6)
-		.fadeIn(activationTime, Math.random()*50 + 25)
-		.fadeOut(fadeOutAt, Math.random()*500/this.speed + 250/this.speed) 
+		.fadeIn(activationTime, Math.random()*0.005 + 0.0025)
+		.fadeOut(fadeOutAt, Math.random()*0.05/this.speed + 0.025/this.speed) 
 		.setColor(this.getCoreColor())
 		.setPosition({
 			x: this.position.x, // + Math.floor(Math.random()*radius/10)-radius/5,
@@ -152,7 +152,7 @@ model.ParticleEffectExplosion.prototype.createCore = function(radius, emitter)
 };
 
 
-model.ParticleEffectExplosion.prototype.createMain = function(amount, radius, emitter)
+effect.particle.Explosion.prototype.createMain = function(amount, radius, emitter)
 {
 	var size = radius*2;
 	while (amount--)
@@ -179,20 +179,20 @@ model.ParticleEffectExplosion.prototype.createMain = function(amount, radius, em
 	}
 };
 
-model.ParticleEffectExplosion.prototype.createMainGlow = function(amount, radius, emitter)
+effect.particle.Explosion.prototype.createMainGlow = function(amount, radius)
 {
 	var size = radius*2;
 	while (amount--)
 	{
 		var particle = this._getParticle();
-		var activationTime = this.time + Math.floor(Math.random()*300/this.speed);
-		var fadeOutAt = activationTime + Math.floor(Math.random()*500/this.speed);
+		var activationTime = this.time + Math.floor(Math.random()*0.03/this.speed);
+		var fadeOutAt = activationTime + Math.floor(Math.random()*0.05/this.speed);
 		
 		particle
 			.setSize(Math.floor(Math.random()*size) + size/2)
 			.setOpacity(Math.random() * 0.1 + 0.4)
-			.fadeIn(activationTime, Math.random()*50 + 25)
-			.fadeOut(fadeOutAt, Math.random()*500/this.speed + 250/this.speed) 
+			.fadeIn(activationTime, Math.random()*0.005 + 0.0025)
+			.fadeOut(fadeOutAt, Math.random()*0.05/this.speed + 0.025/this.speed) 
 			.setColor(this._getRandomColor())
 			.setVelocity(this.movement)
 			.setPosition({x:this.position.x, y:this.position.y})
@@ -202,7 +202,7 @@ model.ParticleEffectExplosion.prototype.createMainGlow = function(amount, radius
 	}
 };
 
-model.ParticleEffectExplosion.prototype.getCoreColor = function()
+effect.particle.Explosion.prototype.getCoreColor = function()
 {
 	return new THREE.Color().setRGB(
 		255,
@@ -211,7 +211,7 @@ model.ParticleEffectExplosion.prototype.getCoreColor = function()
 	); 
 };
 
-model.ParticleEffectExplosion.prototype.getYellowColor = function()
+effect.particle.Explosion.prototype.getYellowColor = function()
 {
 	return new THREE.Color().setRGB(
 		1,

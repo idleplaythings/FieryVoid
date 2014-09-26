@@ -34,8 +34,8 @@ model.EffectParticleEmitter =
     };
 
     var uniforms = {
-		gameTime: {type: 'f', value: 0},
-		zoomLevel: { type: 'f', value:  1 },
+		gameTime: {type: 'f', value: 0.0},
+		zoomLevel: { type: 'f', value:  1.0 },
 		texture:   { type: 't', value: THREE.ImageUtils.loadTexture("/effect/effectTextures1024.png")}
     };
 
@@ -96,16 +96,20 @@ model.EffectParticleEmitter.prototype.register = function()
 	this.effects++;
 };
 
-model.EffectParticleEmitter.prototype.unregister = function()
+model.EffectParticleEmitter.prototype.unregister = function(effect)
 {
+    this.freeParticles(effect.particles);
 	this.effects--;
+    this.needsUpdate = true;
 };
 
 model.EffectParticleEmitter.prototype.update = function()
 {
 	if ( ! this.needsUpdate)
 		return;
-		
+	
+    console.log("update particle emitter");
+
 	Object.keys(this.particleMaterial.attributes).forEach(function(key){
 		this.particleMaterial.attributes[key].needsUpdate = true;
 	}, this);
@@ -121,11 +125,15 @@ model.EffectParticleEmitter.prototype.getFreeParticle = function()
 
 model.EffectParticleEmitter.prototype.freeParticles = function(particleIndices)
 {
+    particleIndices.forEach(function(i){
+        this.flyParticle.create(i).setInitialValues();
+    }, this);
 	this.free = this.free.concat(particleIndices);
 };
 
-model.EffectParticleEmitter.prototype.animate = function(gameTime)
+model.EffectParticleEmitter.prototype.animate = function(turn, gameTime)
 {
+    gameTime = gameTime / 100;
 	this.particleMaterial.uniforms.gameTime.value = gameTime;
 };
 

@@ -14,6 +14,11 @@ model.ShipDesign = function ShipDesign(args)
     this.public = args.public || false;
 };
 
+model.ShipDesign.prototype.getMovementAbility = function(){
+    return this.hullLayout.getMovementAbility();
+};
+
+/*
 model.ShipDesign.prototype.calculateWeaponArcs = function(arcService)
 {
     this.modules.filter(function(module){
@@ -23,11 +28,11 @@ model.ShipDesign.prototype.calculateWeaponArcs = function(arcService)
     }, this);
 };
 
-
 model.ShipDesign.prototype.getModuleByOnShipId = function(id)
 {
     return this.modules.filter(function(module){return module.idOnShip == id;})[0];
 };
+*/
 
 model.ShipDesign.prototype.getColor = function()
 {

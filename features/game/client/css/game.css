@@ -5,7 +5,7 @@
     height:calc(100% - 45px);
 }
 
-#gameClickCatcher{
+.clickCatcher{
   width:100%;
   height:100%;
   position:absolute;

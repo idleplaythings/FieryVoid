@@ -1,38 +1,14 @@
 model.movement.Thruster = function Thruster(args)
 {
-	this.moduleId = args.moduleId;
-	this.direction = args.direction;
-	this.efficiency = args.efficiency;
-	this.max = args.max;
-	
-	this.use = 0;
+  this.moduleId = args.moduleId;
+  this.direction = args.direction;
+  this.efficiency = args.efficiency;
+  this.max = args.max;
+  this.over = args.over;
 };
 
-model.movement.Thruster.prototype.pay = function(cost)
+model.movement.Thruster.prototype.getThrusterInUse = function(turn)
 {
-	var available = this.getAvailable();
-	
-	if (available < 0)
-		return cost;
-
-	if (available >= cost)
-	{
-		this.use += cost;
-		return 0;
-	}
-	
-	this.use = this.max;
-	return cost - available;
+  //TODO: calculate cababilities for given turn
+  return new model.movement.ThrusterInUse(this);
 };
-
-model.movement.Thruster.prototype.getThrustDirection = function()
-{
-	return this.direction;
-};
-
-model.movement.Thruster.prototype.getAvailable = function()
-{
-	return this.max - this.use;
-};
-
-

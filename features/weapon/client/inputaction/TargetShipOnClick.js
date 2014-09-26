@@ -43,9 +43,8 @@ var targetShip = function(target, tile, weapons, inputState)
     var valid = this._weaponService.isValidTarget(shooter, target, weapon, tile, turn);
     if (valid){
       this._weaponService.addFireOrder(shooter, target, weapon, tile, turn);
+      firingWeapons.push(weapon);
     }
-
-    firingWeapons.push(weapon);
 
     return ! valid;
   }.bind(this));

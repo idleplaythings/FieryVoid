@@ -57,6 +57,10 @@ model.Ship.prototype.setIcon = function(shipIcon)
   this.icon.create(this.shipDesign);
 };
 
+model.Ship.prototype.getMovementAbility = function(){
+    return this.shipDesign.getMovementAbility();
+};
+
 model.Ship.prototype.getDamage = function()
 {
   return new model.damage.ShipDamageStatus(this.timeline);
@@ -98,7 +102,13 @@ model.Ship.prototype.getModuleById = function(id)
 
 model.Ship.prototype.getWeapons = function(){
   return this.getModules().filter(function(module){
-    return module.isWeapon();
+    return module.isWeapon;
+  });
+};
+
+model.Ship.prototype.getThrusters = function(){
+  return this.getModules().filter(function(module){
+    return module.isThruster;
   });
 };
 
@@ -116,6 +126,7 @@ model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
 {
   return new model.Module(
     moduleLayout,
+    this.shipDesign,
     this.getPowerStatus(),
     this.getWeaponStatus()
   );

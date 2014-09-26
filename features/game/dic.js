@@ -14,7 +14,8 @@ dic.register(
             dic.get('model.GameState'),
             dic.get('model.GameAnimationLoop'),
             dic.get('model.movement.ShipMovementAnimationService'),
-            dic.get('model.FleetStorage')
+            dic.get('model.FleetStorage'),
+            dic.get('animation.WeaponFireAnimationService')
         );  
     }, {
         tags: [ 'game.type' ]

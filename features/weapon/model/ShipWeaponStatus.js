@@ -35,6 +35,13 @@ model.weapon.ShipWeaponStatus.prototype.getFireOrders = function()
   });
 };
 
+model.weapon.ShipWeaponStatus.prototype.getFireOrdersForTurn = function(turn)
+{
+  return this.getFireOrders().filter(function(fireOrder){
+    return fireOrder.getTurn() == turn;
+  });
+};
+
 model.weapon.ShipWeaponStatus.prototype.hasFireOrder = function(turn, weaponId)
 {
   var order = this.getFireOrderByTurnAndWeaponId(turn, weaponId);

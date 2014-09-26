@@ -12,7 +12,10 @@ model.movement.MovementAbility = function MovementAbility(args)
 
 model.movement.MovementAbility.deserialize = function(serialized)
 {
-	serialized.thrusters = serialized.thrusters.map(function(thruster){ return new model.movement.Thruster(thruster);});
+	serialized.thrusters = serialized.thrusters.map(function(thruster){
+		return new model.movement.ThrusterInUse(thruster);
+	});
+	
 	return new model.movement.MovementAbility(serialized);
 };
 
@@ -34,6 +37,7 @@ model.movement.MovementAbility.prototype.getTurnCostSpeedFactor = function()
 
 model.movement.MovementAbility.prototype.getShipTurnDelaySpeedFactor = function()
 {
+	console.log(this.turnDelaySpeedFactor);
 	return this.turnDelaySpeedFactor;
 };
 

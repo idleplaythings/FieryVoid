@@ -23,7 +23,7 @@ model.movement.ShipMovementHandler.prototype.addDefaultRouteFor = function(ship,
 
 model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(ship, turn, movementPosition)
 {
-	var movementAbility = this.getMovementAbility(ship);
+	var movementAbility = this.getMovementAbility(ship, turn);
 	var modifiers = [];
 
 	var speed = movementPosition.getSpeed();
@@ -37,16 +37,15 @@ model.movement.ShipMovementHandler.prototype.generateDefaultRoute = function(shi
 
 model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship, turn)
 {
-    return new model.movement.MovementAbility({
-    	accelerationCost: 3,
-  		turnCostSpeedFactor: 0.33,
-  		turnDelaySpeedFactor: 0.25,
-  		thrustAvailable: 12,
-  		thrusters: [
-        new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 10}),
-        new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 10}),
-        new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 10}),
-        new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 15})
-      ]
-    });
+  var hullLayoutMovement = ship.getMovementAbility();
+
+  return new model.movement.MovementAbility({
+  	accelerationCost: hullLayoutMovement.baseSpeedCost,
+		turnCostSpeedFactor: hullLayoutMovement.baseTurnCost,
+		turnDelaySpeedFactor: hullLayoutMovement.baseTurnDelay,
+		thrustAvailable: 12,
+		thrusters: ship.getThrusters(turn).map(function(module){
+      return module.getThruster().getThrusterInUse();
+    })
+  });
 };

@@ -10,6 +10,26 @@ model.weapon.WeaponFire = function WeaponFire(shooter, target, weapon, targetTil
 	validate.call(this);
 };
 
+model.weapon.WeaponFire.prototype.getShooter = function(){
+	return this._shooter;
+};
+
+model.weapon.WeaponFire.prototype.getTarget = function(){
+	return this._target;
+};
+
+model.weapon.WeaponFire.prototype.getWeapon = function(){
+	return this._weapon;
+};
+
+model.weapon.WeaponFire.prototype.getTargetTile = function(){
+	return this._targetTile;
+};
+
+model.weapon.WeaponFire.prototype.getTurn = function(){
+	return this._turn;
+};
+
 model.weapon.WeaponFire.prototype.getFireOrder = function()
 {
 	return new model.weapon.FireOrder(

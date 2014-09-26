@@ -56,7 +56,6 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
         }, this);
 
 	var design = new model.ShipDesignInGame(doc);
-    design.calculateWeaponArcs(this._arcService);
+
     return design;
-	
 };

@@ -38,6 +38,8 @@ model.EffectParticle.prototype.setInitialValues = function()
     this.material.attributes.velocity.value[this.index] 			= new THREE.Vector3(0,0,0);
     this.material.attributes.acceleration.value[this.index] 		= new THREE.Vector3(0,0,0);
     this.material.attributes.textureNumber.value[this.index] 		= 0.0;
+
+    return this;
 };
 
 model.EffectParticle.prototype.setTexture = function(tex)
@@ -98,7 +100,7 @@ model.EffectParticle.prototype.setPosition = function(pos)
 {
 	if ( ! this.geometry.vertices[this.index])
 		console.log("illegal index", this.index);
-		
+	
 	this.geometry.vertices[this.index].set(pos.x, pos.y, 0);
     return this;
 };
@@ -112,7 +114,7 @@ model.EffectParticle.prototype.setAngle = function(angle)
 model.EffectParticle.prototype.setAngleChange = function(angle)
 {
     this.material.attributes.angleChange.value[this.index] = 
-		MathLib.degreeToRadian(angle/1000);
+		MathLib.degreeToRadian(angle);
     return this;
 };
 
@@ -125,14 +127,14 @@ model.EffectParticle.prototype._activate = function()
 model.EffectParticle.prototype.setVelocity = function(velocity)
 {
     this.material.attributes.velocity.value[this.index] =
-		new THREE.Vector3(velocity.x / 1000, velocity.y / 1000, 0);
+		new THREE.Vector3(velocity.x, velocity.y, 0);
     return this;
 };
 
 model.EffectParticle.prototype.setAcceleration = function(acceleration)
 {
     this.material.attributes.acceleration.value[this.index] =
-		new THREE.Vector3(acceleration.x / 1000, acceleration.y / 1000, 0);
+		new THREE.Vector3(acceleration.x, acceleration.y, 0);
     return this;
 };
 
@@ -150,6 +152,6 @@ model.EffectParticle.prototype.isActive = function(gameTime)
 model.EffectParticle.prototype.activateAt = function(gameTime)
 {
 	this._activate();
-	this.material.attributes.activationGameTime.value[this.index] 	= gameTime;
+	this.material.attributes.activationGameTime.value[this.index] = gameTime;
 	return this;
 };

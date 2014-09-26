@@ -4,7 +4,8 @@ dic.register(
     function(dic) {
         return new model.ShipIcon(
             dic.get('model.GameScene'),
-            dic.get('model.EventDispatcher')
+            dic.get('model.EventDispatcher'),
+            dic.get('model.EffectManagerFactory')
         );
     }, {
         tags: [ 'icon' ]

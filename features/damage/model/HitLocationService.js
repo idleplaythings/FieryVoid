@@ -10,24 +10,24 @@ model.HitLocationService.prototype.applyScatter = function(shooter, target, weap
 
 model.HitLocationService.prototype._getWeaponDirection = function(shooter, weapon, target, targetTile, turn)
 {
-	var weaponPosition = this._positionService.getComponentPositionService(shooter).getModuleCenterPositionInScene(weapon);
-	var targetPosition = this._positionService.getComponentPositionService(target).getTilePositionInScene(targetTile);
+	var weaponPosition = this._positionService.getComponentPositionService(shooter, turn, 0).getModuleCenterPositionInScene(weapon);
+	var targetPosition = this._positionService.getComponentPositionService(target, turn, 0).getTilePositionInScene(targetTile);
 	var weaponDirection = MathLib.getAzimuthFromTarget(targetPosition, weaponPosition);
-    var targetFacing = this._positionService.getSceneFacing(target);
+  var targetFacing = this._positionService.getSceneFacing(target, turn, 0);
 	
-    var relativeDirection = MathLib.addToAzimuth(360 - targetFacing, weaponDirection);
+  var relativeDirection = MathLib.addToAzimuth(360 - targetFacing, weaponDirection);
 	return relativeDirection;
 };
 
 model.HitLocationService.prototype.isOnWeaponArc = function(shooter, weapon, target, targetTile, turn){
-    var weaponPosition = this._positionService.getScenePosition(shooter);
-    var targetPosition = this._positionService.getScenePosition(target);
+    var weaponPosition = this._positionService.getScenePosition(shooter, turn, 0);
+    var targetPosition = this._positionService.getScenePosition(target, turn, 0);
     var targetDirection = MathLib.getAzimuthFromTarget(weaponPosition, targetPosition);
-    var shooterFacing = this._positionService.getSceneFacing(shooter);
+    var shooterFacing = this._positionService.getSceneFacing(shooter, turn, 0);
 
     var relativeDirection = MathLib.addToAzimuth(360 - shooterFacing, targetDirection);
 
-    var onArc = Boolean(weapon.getWeapon().getArcs().filter(function(arc){
+    var onArc = Boolean(weapon.getArcs().filter(function(arc){
         return arc.isOnArc(relativeDirection);
     }).pop());
 
@@ -37,7 +37,8 @@ model.HitLocationService.prototype.isOnWeaponArc = function(shooter, weapon, tar
 model.HitLocationService.prototype.isValidTarget = function(shooter, weapon, target, targetTile, turn)
 {
     if ( ! this.isOnWeaponArc(shooter, weapon, target, targetTile, turn)){
-        return false;
+      console.log("not on weapon arc");
+      return false;
     }
 
 	var weaponDirection = this._getWeaponDirection(shooter, weapon, target, targetTile, turn);

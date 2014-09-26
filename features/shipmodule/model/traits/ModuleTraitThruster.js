@@ -1,20 +1,44 @@
 model.ModuleTraitThruster = function ModuleTraitThruster(args)
 {
+    model.ModuleTrait.call(
+        this,
+        [
+            new model.TraitVariable('efficiency', 'Thruster efficiency'),
+            new model.TraitVariable('max', 'Max amount of thrust that can be safely channeled'),
+            new model.TraitVariable('over', 'Max amount of over thrust'),
+        ],
+        args
+    );
+    
+    this.efficiency = this.getVariable('efficiency') || 1.0;
+    this.maxSafeChannel = this.getVariable('max') || 1;
+    this.maxOverThrust = this.getVariable('over') || 0;
+
     this.name = 'thruster';
     this.label = 'Thruster';
     this.value = null;
-    
-    args = {}; //this.getArgsAsJson(args);
-
-    this.efficiency = args.efficiency || 0;
-    this.maxChannel = args.max || 0;
-    this.maxOverThrust = args.over || 0;
-    this.effect = args.effect || null;
-    this.module = null;
 };
 
 model.ModuleTraitThruster.prototype = Object.create(model.ModuleTrait.prototype);
 
+model.ModuleTraitThruster.prototype.extend = function(module)
+{
+    var self = this;
+
+    module.isThruster = true;
+
+    module.getThruster = function(){
+        return new model.movement.Thruster({
+            moduleId: module._id,
+            direction: module.getDirection(),
+            efficiency: self.efficiency,
+            max: self.maxSafeChannel,
+            over: self.maxOverThrust
+        });
+    }.bind(module);
+};
+
+/*
 
 model.ModuleTraitThruster.prototype.getTotalThrusterUsageAtTime = function(time)
 {
@@ -61,3 +85,4 @@ model.ModuleTraitThruster.prototype.getThrustForceVector = function()
     var efficiency = this.getThrustEfficiency();
     return base.multiplyScalar(efficiency);
 };
+*/

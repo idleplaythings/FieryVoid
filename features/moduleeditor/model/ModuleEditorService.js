@@ -44,7 +44,7 @@ model.ModuleEditorService.prototype.getAvailableTraits = function() {
 };
 
 model.ModuleEditorService.prototype.update = function(moduleLayout, name, value){
-  if ( ! moduleLayout[name])
+  if ( ! moduleLayout[name] === undefined)
     return;
 
   if (moduleLayout[name] === value)
@@ -56,7 +56,6 @@ model.ModuleEditorService.prototype.update = function(moduleLayout, name, value)
 };
 
 model.ModuleEditorService.prototype.updateImage = function(moduleLayout, name, value){
-  console.log(arguments);
   if (moduleLayout.image[name] === undefined)
     return;
 

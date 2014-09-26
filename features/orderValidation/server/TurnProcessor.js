@@ -1,9 +1,9 @@
-model.TurnProcessor = function TurnProcessor(shipService, shipMovementHandler){
+order.TurnProcessor = function TurnProcessor(shipService, shipMovementHandler){
   this._shipService = shipService;
   this._shipMovementHandler = shipMovementHandler;
 };
 
-model.TurnProcessor.prototype.processTurn = function(game){
+order.TurnProcessor.prototype.processTurn = function(game){
   var turn = game.gameState.getTurn();
   var nextTurn = turn+1;
 

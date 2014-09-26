@@ -6,7 +6,7 @@ model.ParticleEffectTrail = function ParticleEffectTrail(time, type, args)
 	this.type = type || 'smoke';
 	var blending = this.type == 'smoke' ? 'normal' : 'additive';
 	
-	model.ParticleEffect.call(this, blending, args.seed);
+	effect.particle.Effect.call(this, blending, args.seed);
 	
 	this.path = args.path;
 	this.time = Math.floor(time);
@@ -26,7 +26,7 @@ model.ParticleEffectTrail = function ParticleEffectTrail(time, type, args)
 	
 };
 
-model.ParticleEffectTrail.prototype =  Object.create(model.ParticleEffect.prototype);
+model.ParticleEffectTrail.prototype =  Object.create(effect.particle.Effect.prototype);
 
 model.ParticleEffectTrail.prototype._create = function()
 {

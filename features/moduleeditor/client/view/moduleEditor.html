@@ -1,58 +1,59 @@
 <template name="moduleEditor">
-    <div class="mainContainer" style="height:calc(100% - 37px)">
-        {{> moduleMenu}}
+  <div class="mainContainer" style="height:calc(100% - 37px)">
+      {{> moduleMenu}}
 
-        <div class="displayLarge" style="width:calc(100% - 610px);height:calc(100% - 200px);">
-			<div class="buttoncontainer"></div>
-            {{> traitDetail}}
-        </div>
-        
-        <div class="moduleImageChooser" style="width:calc(100% - 610px);height:calc(200px);">
-				<div class="moduleImageChooseEntry">
-					<select class="inside">
-						<option value="" selected="selected">No inside</option>
-					</select>
-					<div class="inside"></div>
-				</div>
-				
-				<div class="moduleImageChooseEntry">
-					<select class="outside">
-						<option value="" selected="selected">No outside</option>
-					</select>
-					<div class="outside"></div>
-				</div>
-				
-				<div class="moduleImageChooseEntry">
-					<select class="hull">
-						<option value="" selected="selected">No hull</option>
-					</select>
-					<div class="hull"></div>
-				</div>
-				
-				<div class="moduleImageChooseEntry">
-					<select class="over">
-						<option value="" selected="selected">No over</option>
-					</select>
-					<div class="over"></div>
-				</div>
-				
-				<div class="moduleImageChooseEntry">
-					<select class="under">
-						<option value="" selected="selected">No under</option>
-					</select>
-					<div class="under"></div>
-				</div>
-				
-				<div class="moduleImageChooseEntry">
-					<select class="ui">
-						<option value="" selected="selected">No ui</option>
-					</select>
-					<div class="ui"></div>
-				</div>
-        </div>
-    
-        {{> moduleListing}}
+    <div class="displayLarge" style="width:calc(100% - 610px);height:calc(100% - 200px);">
+      <div class="clickCatcher"></div>
+      <div class="buttoncontainer"></div>
+          {{> traitDetail}}
     </div>
+    
+    <div class="moduleImageChooser" style="width:calc(100% - 610px);height:calc(200px);">
+			<div class="moduleImageChooseEntry">
+				<select class="inside">
+					<option value="" selected="selected">No inside</option>
+				</select>
+				<div class="inside"></div>
+			</div>
+			
+			<div class="moduleImageChooseEntry">
+				<select class="outside">
+					<option value="" selected="selected">No outside</option>
+				</select>
+				<div class="outside"></div>
+			</div>
+			
+			<div class="moduleImageChooseEntry">
+				<select class="hull">
+					<option value="" selected="selected">No hull</option>
+				</select>
+				<div class="hull"></div>
+			</div>
+			
+			<div class="moduleImageChooseEntry">
+				<select class="over">
+					<option value="" selected="selected">No over</option>
+				</select>
+				<div class="over"></div>
+			</div>
+			
+			<div class="moduleImageChooseEntry">
+				<select class="under">
+					<option value="" selected="selected">No under</option>
+				</select>
+				<div class="under"></div>
+			</div>
+			
+			<div class="moduleImageChooseEntry">
+				<select class="ui">
+					<option value="" selected="selected">No ui</option>
+				</select>
+				<div class="ui"></div>
+			</div>
+    </div>
+  
+    {{> moduleListing}}
+  </div>
 
 </template>
 
@@ -90,6 +91,13 @@
                 </td>
                 <td>
                     <input type="text" name="mass" value="{{moduleLayout.mass}}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Over hull</td>
+                <td>
+                    <input type="checkbox" name="overHull" value="overHull" {{isChecked 'overHull'}}/>
                 </td>
             </tr>
         </table>

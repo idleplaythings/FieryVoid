@@ -97,9 +97,9 @@ model.GameState.prototype.getCurrentDisplayTime = function()
     return this.currentDisplayGameTime / 100;
 };
 
-model.GameState.prototype.replay = function()
+model.GameState.prototype.replay = function(turn)
 {
-    this.currentDisplayTurn = this.currentGameTurn -1;
+    this.currentDisplayTurn = turn;
     this.currentDisplayGameTime = 0;
     this.advanceGameTimeTo(9999);
 };

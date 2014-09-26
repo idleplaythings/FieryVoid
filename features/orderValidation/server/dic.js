@@ -26,4 +26,16 @@ dic.register('order.FireOrderProcessor', function(dic) {
   );
 }, {shared:true});
 
+dic.register(
+    'order.TurnProcessor',
+    function(dic) {
+        return new order.TurnProcessor(
+            dic.get('model.ShipService'),
+            dic.get('model.movement.ShipMovementHandler')
+        );  
+    }, {
+        shared: true
+    }
+);
+
 

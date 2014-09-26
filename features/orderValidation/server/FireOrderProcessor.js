@@ -22,4 +22,11 @@ order.FireOrderProcessor.prototype.process = function(game, player, timeline, ti
   }
 
   this._weaponFireFactory.getWeaponFireFromFireOrder(fireOrder);
+
+  fireOrder.setRandomSeed(Math.random());
+  timelineEntry.payload = fireOrder.serialize();
+
+  timelineEntry.context = {
+    gameId: game._id
+  }
 };

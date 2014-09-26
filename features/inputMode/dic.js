@@ -139,7 +139,8 @@ dic.register('model.inputAction.TurnButtons', function(dic) {
 
 dic.register('model.inputAction.Replay', function(dic) {
     return new model.inputAction.Replay(
-        dic.get('model.GameState')
+        dic.get('model.GameState'),
+        dic.get('model.EffectManager')
     );
 });
 

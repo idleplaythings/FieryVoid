@@ -1,3 +1,35 @@
+dic.register('animation.ProjectilePathResolver', function(dic) {
+    return new animation.ProjectilePathResolver(
+        dic.get("model.PositionService")
+    );
+}, {shared: true});
+
+dic.register('animation.WeaponFireAnimationService', function(dic) {
+    return new animation.WeaponFireAnimationService(
+        dic.get("animation.ShipWeaponFireAnimatorFactory")
+    );
+}, {shared: true});
+
+dic.register('animation.ShipWeaponFireAnimatorFactory', function(dic) {
+    return Factory.createFactoryFromTags('ShipWeaponFireAnimator');
+}, {shared: true});
+
+dic.register('animation.ShipWeaponFireAnimator', function(dic) {
+    return new animation.ShipWeaponFireAnimator(
+        dic.get("model.GameAnimationLoop"),
+        dic.get("model.weapon.WeaponFireFactory"),
+        dic.get("animation.WeaponFireAnimationFactory")
+    );
+}, {tags: ['ShipWeaponFireAnimator']});
+
+dic.register('animation.WeaponFireAnimationFactory', function(dic) {
+    return new animation.WeaponFireAnimationFactory(
+        dic.get('animation.ProjectilePathResolver'),
+        dic.get('model.EffectManager')
+    );
+}, {shared: true});
+
+
 dic.register('model.ArcIndicatorService', function(dic) {
     return new model.ArcIndicatorService(
         dic.get("model.GameScene")

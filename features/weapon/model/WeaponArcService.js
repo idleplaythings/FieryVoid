@@ -29,7 +29,7 @@ model.WeaponArcService.prototype._isOnArc = function(module, shipDesign, directi
 {
 	var center = module.getCenterPosition();
 	var height = module.getPositionHeight(shipDesign.hullLayout);
-	if ( this.hasTurret(module))
+	if ( this.comesOverHull(module))
 		height += 1;
 
 	var tiles = new model.DirectionalRaytrace(center, direction, 50).get();
@@ -91,9 +91,9 @@ model.WeaponArcService.prototype.checkTiles = function (module, tiles, shipDesig
 	}, this);
 };
 
-model.WeaponArcService.prototype.hasTurret = function (module)
+model.WeaponArcService.prototype.comesOverHull = function (module)
 {
-	return module.turret;
+	return module.comesOverHull();
 };
 
 model.WeaponArcService.prototype.getTileHeight = function (tile, shipDesign)
@@ -110,7 +110,7 @@ model.WeaponArcService.prototype.getTileHeight = function (tile, shipDesign)
 
 	if (module)
 	{
-		if ( this.hasTurret(module))
+		if ( this.comesOverHull(module))
 		{
 			//console.log("returning tile height ", tileHeight+1, " from tile ", tile, "that has module with turret, module:", module);
 			return tileHeight+1;

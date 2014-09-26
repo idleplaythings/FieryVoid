@@ -1,13 +1,13 @@
-model.Module = function Module(moduleLayout, powerStatus, weaponStatus)
+model.Module = function Module(moduleLayout, shipDesign, powerStatus, weaponStatus)
 {
     this._moduleLayout = moduleLayout;
+    this._shipDesign = shipDesign;
     this._powerStatus = powerStatus;
     this._weaponStatus = weaponStatus;
     this._id = moduleLayout._id + moduleLayout.position.x + moduleLayout.position.y;
-};
 
-model.Module.prototype.isWeapon = function() { return Boolean(this.getWeapon()); };
-model.Module.prototype.getWeapon = function() { return this._moduleLayout.weapon; };
+    moduleLayout.initTraits(this);
+};
 
 model.Module.prototype.equals = function(module){
     return this.getModuleLayout() === module.getModuleLayout();
@@ -47,28 +47,15 @@ model.Module.prototype.getDescription = function()
     return this._moduleLayout.description;
 };
 
-// WEAPONS
-
-model.Module.prototype.hasFireOrder = function(turn){
-    return this._weaponStatus.hasFireOrder(turn, this._id);
+model.Module.prototype.getDirection = function()
+{
+    return this._moduleLayout.direction;
 };
 
-model.Module.prototype.getFireOrder = function(turn){
-    return this._weaponStatus.getFireOrderByTurnAndWeaponId(turn, this._id);
-};
-
-model.Module.prototype.addFireOrder = function(fireOrder){
-    this._weaponStatus.addFireOrder(fireOrder);
-};
-
-model.Module.prototype.removeFireOrder = function(turn){
-    var fireOrder = this.getFireOrder(turn);
-
-    if ( ! fireOrder){
-        throw new Error("Weapon does not have a fire order to remove");
-    }
-
-    this._weaponStatus.removeFireOrder(fireOrder);
+model.Module.prototype.getArcs = function(){
+    return new model.WeaponArcService().calculateWeaponArc(
+        this._moduleLayout, this._shipDesign
+    );
 };
 
 

@@ -1,88 +1,65 @@
 model.ModuleTraitWeapon = function ModuleTraitWeapon(args)
 {
+  //TODO: refactor so that moduleTraits come from factory, and this is dependency injected
+  this._weaponFactory = dic.get('model.weapon.module.Factory');
 
 	model.ModuleTrait.call(
 		this,
 		this.buildVariables(),
 		args
 	);
-	
-	this.weaponFactory = new model.WeaponFactory();
-    this.name = 'weapon';
-    this.label = 'Weapon';
-    this.value = null;
+
+  this.name = 'weapon';
+  this.label = 'Weapon';
+  this.value = null;
 };
 
 model.ModuleTraitWeapon.prototype = Object.create(model.ModuleTrait.prototype);
 
 model.ModuleTraitWeapon.prototype.extend = function(module)
 {
-    module.weapon = this.weaponFactory.getWeapon(this.serialize(), module);
+    module.isWeapon = true;
+
+    module.getWeapon = function(){ 
+      return this._weaponFactory.getWeapon(this.serialize(), module);
+    }.bind(this);
+
+    module.hasFireOrder = function(turn){
+      return this._weaponStatus.hasFireOrder(turn, this._id);
+    }.bind(module);
+
+    module.getFireOrder = function(turn){
+      return this._weaponStatus.getFireOrderByTurnAndWeaponId(turn, this._id);
+    }.bind(module);
+
+    module.addFireOrder = function(fireOrder){
+      this._weaponStatus.addFireOrder(fireOrder);
+    }.bind(module);
+
+    module.removeFireOrder = function(turn){
+      var fireOrder = this.getFireOrder(turn);
+
+      if ( ! fireOrder){
+          throw new Error("Weapon does not have a fire order to remove");
+      }
+
+      this._weaponStatus.removeFireOrder(fireOrder);
+    }.bind(module);
 };
 
 model.ModuleTraitWeapon.prototype.buildVariables = function()
 {
-    var variables = [].concat(this.getTargetStrategyVariables())
-    	.concat(this.getRangeStrategyVariables())
-    	.concat(this.getArcStrategyVarialbes())
-    	.concat(this.getScatterVariables());
+    var variables = []
+    	.concat(this.getPossibleWeapons());
+  
 
     return variables;
 };
 
-model.ModuleTraitWeapon.prototype.getArcStrategyVarialbes = function()
-{
-	return new model.TraitVariable(
-		'weaponArc', 
-		'Arc strategy',
-		false,
-		60
-	);
+model.ModuleTraitWeapon.prototype.getPossibleWeapons = function(){
+  return new model.TraitVariable(
+    'weaponClass', 
+    'Weapon',
+    this._weaponFactory.getPossibleWeapons()
+  );
 };
-
-
-model.ModuleTraitWeapon.prototype.getRangeStrategyVariables = function()
-{
-    var rangeStrategy = new model.TraitVariable(
-		'rangeStrategy', 
-		'Range strategy',
-		 ['RangePenaltyStrategy', 'FixedRangeStrategy']);
-		 
-	return [
-		rangeStrategy,
-		new model.TraitVariable('rangePenalty', 'To hit penalty per hex', false, 1)
-			.setCondition(function(){return rangeStrategy.get() == 'RangePenaltyStrategy';}),
-		new model.TraitVariable('maxRange', 'Maximum range', false, 50)
-			.setCondition(function(){return rangeStrategy.get() == 'FixedRangeStrategy';})
-	];
-};
-
-model.ModuleTraitWeapon.prototype.getScatterVariables = function()
-{
-    return [
-	    new model.TraitVariable(
-			'baseScatter', 
-			'Base Scatter in tiles',
-			false,
-			2),
-
-	    new model.TraitVariable(
-			'rangeScatter', 
-			'Scatter modifier pre hex in tiles',
-			false,
-			1)
-	];
-};
-
-model.ModuleTraitWeapon.prototype.getTargetStrategyVariables = function()
-{
-    return new model.TraitVariable(
-		'targetStrategy', 
-		'Target Strategy',
-		 [
-			'ShipTargetStrategy',
-			//'ModuleTargetStrategy',
-			//'HexTargetStrategy'
-		]);
-};
-

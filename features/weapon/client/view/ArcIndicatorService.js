@@ -30,7 +30,7 @@ model.ArcIndicatorService.prototype.display = function(shipFacing, module, cente
 
 	this.removeAll();
 	this._currentModule = module;
-	var arcs = module.getWeapon().getArcs();
+	var arcs = module.getArcs();
 
 	var indicators = [];
 

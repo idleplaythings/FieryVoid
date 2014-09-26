@@ -1,4 +1,4 @@
-model.ShipIcon = function ShipIcon(gameScene, dispatcher)
+model.ShipIcon = function ShipIcon(gameScene, dispatcher, effectManagerFactory)
 {
     model.Icon.call(this, gameScene, dispatcher);
     this.ThreeIconGroup = null;
@@ -6,6 +6,8 @@ model.ShipIcon = function ShipIcon(gameScene, dispatcher)
     this.hidden = false;
     this.modulesOver = [];
     this.modulesUnder = [];
+
+    this._effectManagerFactory = effectManagerFactory;
 
     this.iconEffectManager = null;
 };
@@ -96,7 +98,8 @@ model.ShipIcon.prototype.createSprites = function()
     this.addObject(this.sprites.selected);
     this.addObject(this.sprites.side);
     
-    this.iconEffectManager = new model.EffectManager(this.gameScene, this.dispatcher, this.ThreeIconGroup);
+    if (this._effectManagerFactory)
+        this.iconEffectManager = this._effectManagerFactory(this.ThreeIconGroup, {});
 
     this.created = true;
 

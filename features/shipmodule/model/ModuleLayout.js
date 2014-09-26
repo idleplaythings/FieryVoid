@@ -14,6 +14,7 @@ model.ModuleLayout = function ModuleLayout(args)
     this.disabledTiles = args.disabledTiles || [];
     this.outsideTiles = args.outsideTiles || [];
     this.tileHeight = args.tileHeight || 1;
+    this.overHull = args.overHull || false;
     this.allowedDirections = this.parseAvailableDirections(args.allowedDirections);
     this.direction = 1;
     this.setDirection(args.direction);
@@ -34,7 +35,7 @@ model.ModuleLayout = function ModuleLayout(args)
     this.dispatcher = null;
 
     this.traits = args.traits || [];
-    this.initTraits();
+    //this.initTraits();
 };
 
 model.ModuleLayout.prototype.registerAnimator = function(animator)
@@ -68,7 +69,7 @@ model.ModuleLayout.prototype.getHeight = function()
     return parseInt(r, 10);
 }
 
-model.ModuleLayout.prototype.initTraits = function() {
+model.ModuleLayout.prototype.initTraits = function(module) {
     this.traits.forEach(function(trait) {
         var traitName = 'ModuleTrait' + trait.name[0].toUpperCase() + trait.name.slice(1);
 
@@ -76,7 +77,7 @@ model.ModuleLayout.prototype.initTraits = function() {
             return;
 
         var trait = new model[traitName](trait.value);
-        trait.extend(this);
+        trait.extend(module);
     }, this);
 }
 
@@ -259,6 +260,11 @@ model.ModuleLayout.prototype.getTileHeight = function(pos)
 model.ModuleLayout.prototype.getMass = function()
 {
     return parseInt(this.mass);
+};
+
+model.ModuleLayout.prototype.comesOverHull = function()
+{
+    return this.overHull;
 };
 
 model.ModuleLayout.prototype.getTileIndex = function(tile){

@@ -12,6 +12,7 @@ model.GameClient = function GameClient(
     gameAnimationLoop,
     shipMovementAnimationService,
     fleetStorage,
+    weaponAnimationService,
     args) {
 
     if ( ! args)
@@ -31,6 +32,7 @@ model.GameClient = function GameClient(
     this.gameAnimationLoop = gameAnimationLoop;
     this.shipMovementAnimationService = shipMovementAnimationService;
     this.fleetStorage = fleetStorage;
+    this.weaponAnimationService = weaponAnimationService;
 
     this.setState(args);
 
@@ -77,6 +79,7 @@ model.GameClient.prototype.play = function()
     this.gridService.init(100, 100, 300);
     this.uiEventManager.init();
     this.shipMovementAnimationService.init(this.shipService.getShips());
+    this.weaponAnimationService.init(this.shipService.getShips());
     this.gameActionManager.init(this._id);
     
     this.gameTerrain.createRandom(this.terrainSeed);

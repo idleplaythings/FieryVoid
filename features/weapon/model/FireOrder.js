@@ -1,10 +1,11 @@
-model.weapon.FireOrder = function FireOrder(turn, shooterId, targetId, targetTile, weaponId)
+model.weapon.FireOrder = function FireOrder(turn, shooterId, targetId, targetTile, weaponId, randomSeed)
 {
 	this._turn = turn;
 	this._shooterId = shooterId;
 	this._targetId = targetId;
 	this._targetTile = targetTile;
 	this._weaponId = weaponId;
+	this._randomSeed = randomSeed || null;
 }
 
 model.weapon.FireOrder.deserialize = function(serialized){
@@ -13,7 +14,8 @@ model.weapon.FireOrder.deserialize = function(serialized){
 		serialized.shooterId,
 		serialized.targetId,
 		serialized.targetTile,
-		serialized.weaponId
+		serialized.weaponId,
+		serialized.randomSeed
 	);
 };
 
@@ -24,8 +26,13 @@ model.weapon.FireOrder.prototype.serialize = function()
 		weaponId: this._weaponId,
 		turn: this._turn,
 		targetId: this._targetId,
-		targetTile: this._targetTile
+		targetTile: this._targetTile,
+		randomSeed: this._randomSeed
 	};
+};
+
+model.weapon.FireOrder.prototype.setRandomSeed = function(seed){
+	this._randomSeed = seed;
 };
 
 model.weapon.FireOrder.prototype.getShooterId = function()

@@ -13,15 +13,23 @@ model.HullLayout = function HullLayout(args)
     this.disabledTiles = args.disabledTiles || [];
     this.tileHeights = args.tileHeights || [];
     
-    this.baseTurnCost = args.baseTurnCost || 1;
-    this.baseTurnDelay = args.baseTurnDelay || 1;
-    this.baseSpeedCost = args.baseSpeedCost || 1;
+    this.baseTurnCost = Number(args.baseTurnCost) || 1;
+    this.baseTurnDelay = Number(args.baseTurnDelay) || 1;
+    this.baseSpeedCost = Number(args.baseSpeedCost) || 1;
     
     
     this.color = args.color || '100,100,100';
 
     this.deprecated = args.deprecated || false;
     this.published = args.published || false;
+};
+
+model.HullLayout.prototype.getMovementAbility = function(){
+    return {
+        baseTurnCost: this.baseTurnCost,
+        baseTurnDelay: this.baseTurnDelay,
+        baseSpeedCost: this.baseSpeedCost
+    }
 };
 
 model.HullLayout.prototype.getWidth = function(){
