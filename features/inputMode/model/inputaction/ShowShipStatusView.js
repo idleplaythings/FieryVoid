@@ -27,7 +27,7 @@ model.inputAction.ShowShipStatusView.prototype.onScroll = function(event)
     //this._shipService.getShips().forEach(function(ship){ship.getIcon().showHull()});
     //ship.getIcon().hideHull();
     this._shipStatusView.targetId = ship._id;
-    this._shipStatusView.display(positionService, ship.getModules()).show();
+    this._shipStatusView.display(positionService, ship).show();
 };
 
 model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
@@ -48,7 +48,7 @@ model.inputAction.ShowShipStatusView.prototype.onZoom = function(event)
         var positionService = this._positionService.getComponentPositionService(ship);
 
         this._shipStatusView.targetId = ship._id;
-        this._shipStatusView.display(positionService, ship.getModules()).show();
+        this._shipStatusView.display(positionService, ship).show();
     }
     else
     {

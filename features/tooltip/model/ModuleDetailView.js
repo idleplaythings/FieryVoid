@@ -1,6 +1,7 @@
-model.ModuleDetailView = function ModuleDetailView(gameContainer, dispatcher)
+model.ModuleDetailView = function ModuleDetailView(gameContainer, dispatcher, statusSymbolService)
 {
     model.TooltipView.call(this, gameContainer, dispatcher);
+    this._statusSymbolService = statusSymbolService;
     this.currentModule = null;
     this.htmlClass = 'moduledetailview';
 };
@@ -32,7 +33,7 @@ model.ModuleDetailView.prototype.display = function(
     template.append('<h4>'+module.getName()+'</h4>');
     template.append('<p>'+module.getDescription()+'</p>');
 
-    var symbols = module.getStatusSymbols();
+    var symbols = this._statusSymbolService.getStatusSymbols(module);
     symbols.forEach(function(symbol){
 		if ( ! symbol.displayOnModuleView)
 			return;

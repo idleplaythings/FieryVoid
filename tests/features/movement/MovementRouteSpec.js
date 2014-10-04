@@ -7,10 +7,10 @@ describe("MovementRoute", function() {
 		action = model.movement.Action;
 		
 		movementAbility = getMovementAbility(1, 0.4, 0.4, 10, [
-			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
+			new model.movement.ThrusterInUse({moduleId:1, direction:1, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:2, direction:2, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:3, direction:3, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:4, direction:4, efficiency: 1, max: 3})
 		]);
 		start = new model.movement.Position({
 			position: new model.hexagon.coordinate.Cube(0,0,0),
@@ -104,10 +104,10 @@ describe("MovementRoute", function() {
     
     it("should throw if not enough thrust to pay", function() {	
 		movementAbility = getMovementAbility(1, 0.4, 0.4, 1, [
-			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
-			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
+			new model.movement.ThrusterInUse({moduleId:1, direction:1, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:2, direction:2, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:3, direction:3, efficiency: 1, max: 3}),
+			new model.movement.ThrusterInUse({moduleId:4, direction:4, efficiency: 1, max: 3})
 		]);
 		
 		actions = [
@@ -124,10 +124,10 @@ describe("MovementRoute", function() {
     
      it("should throw if not enough thruster capacity to pay", function() {	
 		movementAbility = getMovementAbility(1, 1, 1, 10, [
-			new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 1}),
-			new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 1}),
-			new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 1}),
-			new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 1})
+			new model.movement.ThrusterInUse({moduleId:1, direction:1, efficiency: 1, max: 1}),
+			new model.movement.ThrusterInUse({moduleId:2, direction:2, efficiency: 1, max: 1}),
+			new model.movement.ThrusterInUse({moduleId:3, direction:3, efficiency: 1, max: 1}),
+			new model.movement.ThrusterInUse({moduleId:4, direction:4, efficiency: 1, max: 1})
 		]);
 		
 		actions = [

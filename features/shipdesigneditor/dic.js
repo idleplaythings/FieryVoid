@@ -34,6 +34,10 @@ dic.register('model.SelectedModuleLayoutForPlacing', function(dic) {
   return new ObjectContainer();
 }, { shared: true} );
 
+dic.register('model.SelectedArmorForPlacing', function(dic) {
+  return new ObjectContainer();
+}, { shared: true} );
+
 
 dic.register(
     'model.InputModeShipEditorDefault',
@@ -87,6 +91,29 @@ dic.register(
         tags: [ 'inputMode' ]
     }
 );
+
+dic.register(
+    'model.InputModeShipPlaceArmor',
+    function(dic) {
+        return new model.InputMode(
+            dic.get('model.EventDispatcher'),
+            [
+                dic.get('model.inputAction.EnforceShipHullHiddenInEditor'),
+                dic.get('model.inputAction.ShowArmorMenu'),
+                dic.get('model.inputAction.ShowGridOnShip'),
+                //dic.get('model.inputAction.ShowArmorMenu'),
+                //dic.get('model.inputAction.ShowGridOnShip'),
+                dic.get('model.inputAction.PlaceArmorOnClick')
+            ],
+            1
+        );  
+    }, {
+        tags: [ 'inputMode' ]
+    }
+);
+dic.register('model.inputAction.ShowArmorMenu', function(dic) {
+    return new model.inputAction.ShowArmorMenu();
+});
 
 dic.register('model.inputAction.ShowShipStatusViewEditor', function(dic) {
     return new model.inputAction.ShowShipStatusViewEditor(
@@ -145,6 +172,14 @@ dic.register('model.inputAction.ShowSelectedModuleIconInEditor', function(dic) {
 dic.register('model.inputAction.ShowGridOnShip', function(dic) {
     return new model.inputAction.ShowGridOnShip(
         dic.get('model.EditorShip')
+    );
+});
+
+dic.register('model.inputAction.PlaceArmorOnClick', function(dic) {
+    return new model.inputAction.PlaceArmorOnClick(
+        dic.get('model.SelectedArmorForPlacing'),
+        dic.get('model.EditorShip'),
+        dic.get('model.ShipDesignEditorService')
     );
 });
 

@@ -16,11 +16,8 @@ model.ModuleTraitEnergyConsumer.prototype = Object.create(model.ModuleTrait.prot
 
 model.ModuleTraitEnergyConsumer.prototype.extend = function(module)
 {
-    module.energyConsumer = this;
-    this.module = module;
-};
-
-model.ModuleTraitEnergyConsumer.prototype.getConsumedEnergy = function()
-{
-    return this.energyConsumed;
+    module.isEnergyConsumer = true;
+    module.getEnergyConsumer = function(){
+        return new model.EnergyConsumer(this.energyConsumed);
+    }.bind(this);
 };

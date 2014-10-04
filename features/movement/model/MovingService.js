@@ -96,9 +96,6 @@ model.movement.MovingService.prototype._speed = function(ship, turn, stepIndex, 
   else if (isDeaccelerate){
     steps.splice(steps.length-1, 1);
   }
-  
-  //console.log("MOVING SERVICE IS PROPOSING FOLLOWING");
-  //console.log(steps);
 
   return route.createFromSteps(steps);
 };

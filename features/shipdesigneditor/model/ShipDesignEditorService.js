@@ -13,6 +13,18 @@ model.ShipDesignEditorService.prototype.removeModule = function(tile, shipDesign
     );
 };
 
+model.ShipDesignEditorService.prototype.placeArmor = function(tile1, tile2, armor, shipDesign) {
+
+  var className = armor ? armor.className : null;
+
+  Meteor.call(
+    'ShipDesignAddArmor',
+    shipDesign._id, tile1, tile2, className,
+    function(err, result){
+    }
+  );
+};
+
 model.ShipDesignEditorService.prototype.placeModule = function(tile, module, shipDesign) {
   if ( ! this.isValidPosition(tile, module, shipDesign))
     return false;

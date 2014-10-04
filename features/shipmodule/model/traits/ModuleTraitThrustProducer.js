@@ -17,11 +17,8 @@ model.ModuleTraitThrustProducer.prototype = Object.create(model.ModuleTrait.prot
 
 model.ModuleTraitThrustProducer.prototype.extend = function(module)
 {
-    module.thrustProducer = this;
-    this.module = module;
-};
-
-model.ModuleTraitThrustProducer.prototype.getThrustProduced = function()
-{
-    return this.thrustProduced;
+    module.isThrustProducer = true;
+    module.getThrustProducer = function(){
+        return new model.movement.ThrustProducer(this.thrustProduced);
+    }.bind(this);
 };

@@ -43,7 +43,7 @@ model.movement.ShipMovementHandler.prototype.getMovementAbility = function(ship,
   	accelerationCost: hullLayoutMovement.baseSpeedCost,
 		turnCostSpeedFactor: hullLayoutMovement.baseTurnCost,
 		turnDelaySpeedFactor: hullLayoutMovement.baseTurnDelay,
-		thrustAvailable: 12,
+		thrustAvailable: new model.movement.ThrustService().getTotalThrustProduced(ship, turn),
 		thrusters: ship.getThrusters(turn).map(function(module){
       return module.getThruster().getThrusterInUse();
     })

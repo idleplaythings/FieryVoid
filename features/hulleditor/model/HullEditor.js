@@ -62,7 +62,9 @@ model.HullEditor.prototype.onHullLayoutChanged = function(event)
         return;
 
     this._selectedHullLayout.set(hullLayout);
-	this._icon.create(new model.ShipDesign({hullLayout: hullLayout}))
+    var ship = new model.Ship({shipDesign: new model.ShipDesign({hullLayout: hullLayout})});
+
+	this._icon.create(ship);
 };
 
 model.HullEditor.prototype.destroy = function()

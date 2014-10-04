@@ -6,7 +6,6 @@ model.movement.ThrusterUsage = function ThrusterUsage(thrusters, thrust)
 	
 	this._thrustAvailable = thrust;
 	this._thrustUsed = 0;
-	console.log(this._thrusters);
 };
 
 
@@ -40,11 +39,9 @@ model.movement.ThrusterUsage.prototype._getThrustersToDirection = function(direc
 
 model.movement.ThrusterUsage.prototype._resolveAndPay = function(thrusters, cost)
 {
-	console.log(thrusters);
 	this._thrustUsed += cost;
-	console.log(this._thrustUsed, this._thrustAvailable);
+
 	if ( this._thrustUsed > this._thrustAvailable){
-		console.log("no more thrust");
 		return false;
 	}
 		
@@ -52,7 +49,6 @@ model.movement.ThrusterUsage.prototype._resolveAndPay = function(thrusters, cost
 	while (cost > 0)
 	{
 		if (thrusters.length == 0){
-			console.log("no more thrusters");
 			return false;
 		}
 			

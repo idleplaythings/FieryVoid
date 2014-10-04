@@ -1,11 +1,14 @@
-model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverter, dispatcher)
+model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverter, dispatcher, statusSymbolService)
 {
 	this.coordinateConverter = coordinateConverter;
 	this._gameContainer = gameContainer;
+    this._statusSymbolService = statusSymbolService;
     this.positionService = null;
     this.hidden = false;
     this.targetId = null;
     this.dragging = false;
+
+    this._ship = null;
     
     this.symbols = [];
 
@@ -13,14 +16,15 @@ model.ShipStatusView = function ShipStatusView(gameContainer, coordinateConverte
     dispatcher.attach("ZoomEvent", this.onZoom.bind(this));
 };
 
-model.ShipStatusView.prototype.display = function(positionService, modules)
+model.ShipStatusView.prototype.display = function(positionService, ship)
 {
+    this._ship = ship;
     this.positionService = positionService;
     this.positionStatusView();
     var template = this.getTemplate();
     this.clean();
    
-    modules.forEach(function(module){
+    this._ship.getModules().forEach(function(module){
         this.createIcons(positionService, module, template);
     }, this);
 
@@ -56,7 +60,7 @@ model.ShipStatusView.prototype.positionStatusView = function()
 
 model.ShipStatusView.prototype.createIcons = function(positionService, module, template)
 {
-    var symbols = module.getStatusSymbols();
+    var symbols = this._statusSymbolService.getStatusSymbols(module);
     
 	symbols.forEach(function(symbol){
 		symbol.enableDrag(

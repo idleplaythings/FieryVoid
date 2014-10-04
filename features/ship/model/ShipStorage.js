@@ -15,11 +15,10 @@ ShipsInGameCollection.allow({
 });
 
 
-model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage, shipStatusFactory)
+model.ShipStorage = function ShipStorage(timelineFactory, shipDesignStorage)
 {
     this.timelineFactory = timelineFactory;
     this.shipDesignStorage = shipDesignStorage;
-    this._shipStatusFactory = shipStatusFactory;
 };
 
 model.ShipStorage.prototype.getShip = function(id)

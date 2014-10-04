@@ -30,14 +30,12 @@ model.inputAction.ShowShipStatusViewEditor.prototype._hullVisibilityChange = fun
 
 model.inputAction.ShowShipStatusViewEditor.prototype._show = function(hullVisible)
 {
-  console.log("trying to show");
   if (this._showing)
     return;
 
-  console.log("show");
   var ship = this._editorShip.get();
   var positionService = new model.ShipDesignPositionService(ship.shipDesign);
-  this._shipStatusView.display(positionService, ship.getModules()).show();
+  this._shipStatusView.display(positionService, ship).show();
   this._showing = true;
 };
 

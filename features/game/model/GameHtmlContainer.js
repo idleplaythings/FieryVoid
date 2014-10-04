@@ -7,6 +7,7 @@ model.GameHtmlContainer = function GameHtmlContainer(dispatcher)
 
 model.GameHtmlContainer.prototype.set = function(container)
 {
+  console.log("setting game container");
 	this._container = container;
 	jQuery(window).resize(this._resize.bind(this));
   this.getClickContainer().on('contextmenu', function(e){e.stopPropagation(); return false; })

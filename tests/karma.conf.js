@@ -30,10 +30,18 @@ module.exports = function(config) {
         'features/ship/model/HullLayout.js',
         'features/shipmodule/model/ModuleLayout.js',
         'features/shipstatus/model/lib/ShipStatusManager.js',
+        'features/math/lib/**/*.js',
+        'features/math/model/lib/**/*.js',
+        'features/math/**/*.js',
+
+        'features/ship/model/Ship.js',
 
         'features/movement/model/*.js',
         'features/movement/model/action/lib/Action.js',
         'features/movement/model/action/*.js',
+
+        'features/electronicWarfare/lib/**/*.js',
+        'features/electronicWarfare/model/**/*.js',
 
         'features/game/model/*.js',
 

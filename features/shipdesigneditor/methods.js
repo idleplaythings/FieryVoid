@@ -16,6 +16,33 @@ Meteor.methods({
         return ShipDesigns.insert(ship);
     },
 
+    ShipDesignAddArmor: function(shipId, tile1, tile2, armorClass)
+    {
+        var userid = Meteor.userId();
+
+        if ( ! userid)
+            throw new Meteor.Error(403, "You must be logged in to edit a ship design");
+
+        var shipDesignStorage = dic.get('model.ShipDesignStorage');
+        var shipDesign = shipDesignStorage.getShipDesign(shipId);
+
+        if ( ! shipDesign || shipDesign.owner != userid)
+            throw new Meteor.Error(404, "Ship id " + shipId + " not found!");
+
+
+        var armor = null;
+
+        if (armorClass)
+            armor = dic.get(armorClass);
+        
+        shipDesign.setArmor(tile1, tile2, armor);
+
+        ShipDesigns.update(
+            {$and: [{'_id': shipId}, {'owner': userid}]},
+            {$set: {'armor': shipDesign.serializeArmor()}}
+        );
+    },
+
     ShipDesignAddModule: function(shipId, moduleId, direction, modulePosition)
     {
         var userid = Meteor.userId();

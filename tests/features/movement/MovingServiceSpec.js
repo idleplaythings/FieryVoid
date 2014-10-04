@@ -10,10 +10,10 @@ describe("MovingService", function() {
       turnDelaySpeedFactor: 0.1,
       thrustAvailable: 100,
       thrusters: [
-        new model.movement.Thruster({moduleId:1, direction:0, efficiency: 1, max: 3}),
-        new model.movement.Thruster({moduleId:2, direction:90, efficiency: 1, max: 3}),
-        new model.movement.Thruster({moduleId:3, direction:270, efficiency: 1, max: 3}),
-        new model.movement.Thruster({moduleId:4, direction:180, efficiency: 1, max: 3})
+        new model.movement.ThrusterInUse({moduleId:1, direction:1, efficiency: 1, max: 3}),
+        new model.movement.ThrusterInUse({moduleId:2, direction:2, efficiency: 1, max: 3}),
+        new model.movement.ThrusterInUse({moduleId:3, direction:3, efficiency: 1, max: 3}),
+        new model.movement.ThrusterInUse({moduleId:4, direction:4, efficiency: 1, max: 3})
       ]
     });
 

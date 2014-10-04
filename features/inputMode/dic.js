@@ -118,7 +118,8 @@ dic.register(
                 dic.get('shipStatusInputActions'),
                 dic.get('selectInputActions'),
                 dic.get('model.inputAction.SelectEWActionBar'),
-                dic.get('model.inputAction.SelectShipOnClick')
+                dic.get('model.inputAction.SelectShipOnClick'),
+                dic.get('model.inputAction.ShowEWMenu')
             ],
             1
         );

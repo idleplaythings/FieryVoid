@@ -32,6 +32,8 @@ model.Ship.prototype.serialize = function()
     }
   );
 
+  shipDesign.armor = shipDesign.serializeArmor();
+
 
   var doc = {
     shipDesign: shipDesign,
@@ -46,6 +48,10 @@ model.Ship.prototype.serialize = function()
   return doc;
 };
 
+model.Ship.prototype.getArmor = function(tile1, tile2){
+  return this.shipDesign.getArmor(tile1, tile2);
+};
+
 model.Ship.prototype.getIcon = function()
 {
   return this.icon;
@@ -54,11 +60,16 @@ model.Ship.prototype.getIcon = function()
 model.Ship.prototype.setIcon = function(shipIcon)
 {
   this.icon = shipIcon;
-  this.icon.create(this.shipDesign);
+  this.icon.create(this);
 };
 
 model.Ship.prototype.getMovementAbility = function(){
     return this.shipDesign.getMovementAbility();
+};
+
+model.Ship.prototype.getEwStatus = function()
+{
+  return new model.ew.ShipElectronicWarfareStatus(this.timeline);
 };
 
 model.Ship.prototype.getDamage = function()
@@ -78,7 +89,7 @@ model.Ship.prototype.getWeaponStatus = function()
 
 model.Ship.prototype.getPowerStatus = function()
 {
-  return new model.power.ShipPowerStatus(this.shipDesign.modules);
+  return new model.power.ShipPowerStatus(this.timeline, this);
 };
 
 model.Ship.prototype.getStatus = function()
@@ -100,6 +111,13 @@ model.Ship.prototype.getModuleById = function(id)
   }).pop();
 };
 
+model.Ship.prototype.getModuleOnPosition = function(tile)
+{
+  return this.getModules().filter(function(module){
+    return module.occupiesTile(tile);
+  }).pop();
+};
+
 model.Ship.prototype.getWeapons = function(){
   return this.getModules().filter(function(module){
     return module.isWeapon;
@@ -112,15 +130,18 @@ model.Ship.prototype.getThrusters = function(){
   });
 };
 
-model.Ship.prototype.getModuleOnPosition = function(tile)
-{
-  var moduleLayout = this.shipDesign.getModuleInPosition(tile);
-
-  if (! moduleLayout)
-    return null;
-
-  return this._createModuleFromModuleLayout(moduleLayout);
+model.Ship.prototype.getThrustProducers = function(){
+  return this.getModules().filter(function(module){
+    return module.isThrustProducer;
+  });
 };
+
+model.Ship.prototype.getScanners = function(){
+  return this.getModules().filter(function(module){
+    return module.isScanner;
+  });
+};
+
 
 model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
 {
@@ -128,7 +149,8 @@ model.Ship.prototype._createModuleFromModuleLayout = function(moduleLayout)
     moduleLayout,
     this.shipDesign,
     this.getPowerStatus(),
-    this.getWeaponStatus()
+    this.getWeaponStatus(),
+    this.getEwStatus()
   );
 };
 

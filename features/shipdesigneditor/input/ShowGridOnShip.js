@@ -10,6 +10,7 @@ model.inputAction.ShowGridOnShip.prototype.onActivation = function(event)
   if ( ! ship)
     return;
 
+  console.log("showing grid")
   ship.getIcon().showGrid();
 };
 
@@ -20,15 +21,18 @@ model.inputAction.ShowGridOnShip.prototype.onDeactivation = function(event)
   if ( ! ship)
     return;
 
+  console.log("hiding grid")
   ship.getIcon().hideGrid();
 };
 
 model.inputAction.ShowGridOnShip.prototype.onShipChange = function(event)
 {
+  console.log("ship changed", event.payload);
   var ship = event.payload;
 
   if ( ! ship)
     return;
 
-  ship.getIcon().hideGrid();
+  console.log("showing grid");
+  ship.getIcon().showGrid();
 };

@@ -11,7 +11,6 @@ model.movement.ThrusterInUse = function ThrusterInUse(args)
 model.movement.ThrusterInUse.prototype.pay = function(cost)
 {
 	var available = this.getAvailable();
-	console.log(available);
 	if (available < 0)
 		return cost;
 
@@ -30,8 +29,8 @@ model.movement.ThrusterInUse.prototype.getThrustDirection = function()
   switch(this.direction)
   {
     case 1: return 0;
-    case 2: return 270;
-    case 3: return 90;
+    case 2: return 90;
+    case 3: return 270;
     case 4: return 180;
   }
 };

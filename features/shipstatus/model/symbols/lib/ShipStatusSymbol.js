@@ -142,9 +142,9 @@ model.ShipStatusSymbol.prototype.drawString = function(context, text, center)
 model.ShipStatusSymbol.prototype.strokeAndFillWithShadow = function(context)
 {
     context.shadowColor = '#000';
-    context.shadowBlur = 5;
-    context.shadowOffsetX = 5;
-    context.shadowOffsetY = 5;
+    context.shadowBlur = 0;
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 0;
     context.fill();
     context.shadowBlur = 0;
     context.shadowOffsetX = 0;

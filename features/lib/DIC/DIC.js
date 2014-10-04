@@ -6,6 +6,12 @@ DIC = function DIC()
     this._resolved = false;
 };
 
+DIC.prototype.cleanShared = function(){
+    Object.keys(this._shared).forEach(function(key){
+        this._shared[key] = null;
+    }, this)
+};
+
 DIC.prototype.register = function(name, item, opts)
 {
     opts = opts || {};

@@ -101,6 +101,15 @@ model.ShipDesignEditor.prototype._createButtons = function(iconcontainer)
 
     new model.Button(
         '', 
+        this._selectArmor.bind(this),
+        {
+            background: '/misc/target.gif',
+            size: 'large'
+        }
+        ).get().appendTo('.buttoncontainer', iconcontainer);
+
+    new model.Button(
+        '', 
         this._selectRemove.bind(this),
         {
             background: '/misc/x.png',
@@ -115,6 +124,14 @@ model.ShipDesignEditor.prototype._selectRemove = function()
 
     this._addInputMode(
         this._inputModeFactory.create('model.InputModeShipEditorRemoveModule'));
+};
+
+model.ShipDesignEditor.prototype._selectArmor = function()
+{
+    this._removeInputMode();
+
+    this._addInputMode(
+        this._inputModeFactory.create('model.InputModeShipPlaceArmor'));
 };
 
 model.ShipDesignEditor.prototype._toggleHullViewMode = function()
@@ -158,6 +175,7 @@ model.ShipDesignEditor.prototype._onSelectedModuleChange = function(event)
     this._selectedModuleForPlacing.set(event.module);
     this._addInputMode(
         this._inputModeFactory.create('model.InputModeShipEditorPlaceModule'));
+    this._showModulelist();
 };
 
 model.ShipDesignEditor.prototype._onKeyup = function(event)

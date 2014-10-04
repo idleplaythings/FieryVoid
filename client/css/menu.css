@@ -11,3 +11,12 @@
     display:inline-block;
     width:100px;
 }
+
+.radialMenu button{
+  position: absolute;
+  border: #8f8f8f solid 2px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 5px 5px 10px #000000, 0px 0px 5px #000000, inset 0px 0px 15px #000000, inset 0px 0px 5px #000000;
+  font-size: 14px;
+}

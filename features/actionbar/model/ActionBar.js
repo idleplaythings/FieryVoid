@@ -1,10 +1,11 @@
-model.ActionBar = function ActionBar(dispatcher, gameContainer)
+model.ActionBar = function ActionBar(dispatcher, gameContainer, ewService)
 {
     this._ship = null;
     this._container = null;
     this._dispatcher = dispatcher;
     this._buttons = [];
     this._gameContainer = gameContainer;
+    this._ewService = ewService;
     jQuery('.actionBar div, .actionBar h4').on('click', actionBarClick.bind(this));
 };
 
@@ -15,7 +16,14 @@ model.ActionBar.prototype.create = function(ship, turn)
 	this._buttons = [];
 	this._addWeapons(ship, turn);
 
+  this.setEW(ship, turn);
+
   return this;
+};
+
+model.ActionBar.prototype.setEW = function(ship, turn){
+  var dew = this._ewService.getDew(ship, turn);
+  getEWContainer().find('.dew').html(dew);
 };
 
 model.ActionBar.prototype._addWeapons = function(ship, turn)
@@ -88,3 +96,8 @@ var callByModules = function(modules, functionName)
 var getWeaponContainer = function(){
   return jQuery('#actionBarWeapons div');
 };
+
+var getEWContainer = function(){
+  return jQuery('#actionBarEW div');
+};
+

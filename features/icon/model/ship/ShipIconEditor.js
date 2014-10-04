@@ -24,11 +24,16 @@ model.ShipIconEditor.prototype.createSprites = function()
     	new model.GridLayout(new model.TileLayout(), this.getHullLayout()), 1);
     this.sprites.grid.hide();
 
+    this._tileLayoutArmor = new model.TileLayoutArmor(this.ship);
+    this.sprites.armorGrid = new model.SpriteGrid(
+        new model.GridLayout(this._tileLayoutArmor, this.getHullLayout()), 4);
+
     this.sprites.silhouette.getObject3d().material.opacity = 0.2;
 
     this.addObject(this.sprites.silhouette);
     this.addObject(this.sprites.hull);
     this.addObject(this.sprites.grid);
+    this.addObject(this.sprites.armorGrid);
 
 	this.modulesUnder = this.updateOrCreateModules(this.modulesUnder, "under", -1);
     this.modulesInside = this.updateOrCreateModules(this.modulesInside, "inside", 2);
@@ -43,6 +48,8 @@ model.ShipIconEditor.prototype.createSprites = function()
 model.ShipIconEditor.prototype.updateSprites = function()
 {
     this.sprites.hull.update(this.getShipDesign());
+    this._tileLayoutArmor.setShip(this.ship);
+    this.sprites.armorGrid.update(this.getHullLayout());
     this.modulesInside = this.updateOrCreateModules(this.modulesInside, "inside", 2);
     this.modulesOutside = this.updateOrCreateModules(this.modulesOutside, "outside", 3);
     this.modulesOver = this.updateOrCreateModules(this.modulesOver, "over", 6);
@@ -52,7 +59,6 @@ model.ShipIconEditor.prototype.sethullMode = function()
 {
     this.sprites.hull.show();
     this.sprites.silhouette.hide();
-    this.sprites.grid.hide();
     this.modulesOutside.forEach(function(entry){entry.icon.show()});
 };
 
@@ -61,7 +67,6 @@ model.ShipIconEditor.prototype.setInsideMode = function()
     console.log("insideMode");
     this.modulesOutside.forEach(function(entry){entry.icon.hide()});
     this.sprites.hull.hide();
-    this.sprites.grid.hide();
     this.sprites.silhouette.show();
 };
 

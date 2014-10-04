@@ -21,3 +21,8 @@
 {
     cursor:url('/misc/x.gif'), no-drop;
 }
+
+.sidemenu.right button{
+  width:auto;
+  border-radius: 2px;
+}

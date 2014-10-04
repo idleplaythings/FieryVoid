@@ -17,11 +17,11 @@ model.ModuleTraitEnergyProducer.prototype = Object.create(model.ModuleTrait.prot
 
 model.ModuleTraitEnergyProducer.prototype.extend = function(module)
 {
-    module.energyProducer = this;
-    this.module = module;
-};
+    var self = this;
 
-model.ModuleTraitEnergyProducer.prototype.getProducedEnergy = function()
-{
-    return this.energyProduced;
+    module.isEnergyProducer = true;
+
+    module.getEnergyProducer = function(){
+        return new model.EnergyProducer(this.energyProduced);
+    }.bind(this);
 };

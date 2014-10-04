@@ -1,0 +1,8 @@
+<template name="shipDesignArmorMenu">
+  <div class="shipDesignArmorMenu sideMenuEntry" style="display:none;">
+    <button value="">no armor</button>
+    {{#each armors}}
+      <button value="{{this}}">{{this}}</button>
+    {{/each}}
+  </div>
+</template>

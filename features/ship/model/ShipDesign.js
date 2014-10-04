@@ -10,6 +10,7 @@ model.ShipDesign = function ShipDesign(args)
     this.hullLayout = args.hullLayout || null;
     this.hullColor = args.hullColor || null;
     this.modules = args.modules || [];
+    this.armor = args.armor || {};
 
     this.public = args.public || false;
 };
@@ -18,21 +19,51 @@ model.ShipDesign.prototype.getMovementAbility = function(){
     return this.hullLayout.getMovementAbility();
 };
 
-/*
-model.ShipDesign.prototype.calculateWeaponArcs = function(arcService)
-{
-    this.modules.filter(function(module){
-        return module.weapon;
-    }).forEach(function(module){
-        module.weapon.calculateWeaponArcs(this, arcService);
+model.ShipDesign.prototype.serializeArmor = function(){
+    var armor = {};
+    Object.keys(this.armor).forEach(function(key){
+        if(this.armor[key]){
+            armor[key] = this.armor[key].className;
+        }
     }, this);
+
+    console.log(armor);
+    return armor;
 };
 
-model.ShipDesign.prototype.getModuleByOnShipId = function(id)
-{
-    return this.modules.filter(function(module){return module.idOnShip == id;})[0];
+model.ShipDesign.prototype.setArmor = function(tile1, tile2, armor){
+
+    if ( ! armor){
+        delete this.armor[tilesToArmorId(tile1, tile2)];
+    }
+    else
+    {
+        this.armor[tilesToArmorId(tile1, tile2)] = armor;
+    }
 };
-*/
+
+var tilesToArmorId = function(tile1, tile2){
+
+    if (tile1.y < tile2.y){
+        var o = tile1;
+        tile1 = tile2;
+        tile2 = o;
+    }
+
+    if (tile1.y == tile2.y){
+        if (tile1.x < tile2.x){
+            var o = tile1;
+            tile1 = tile2;
+            tile2 = o;
+        }
+    }
+
+    return tile1.x+'x'+tile1.y+'-'+tile2.x+'x'+tile2.y;
+}
+
+model.ShipDesign.prototype.getArmor = function(tile1, tile2){
+    return this.armor[tilesToArmorId(tile1, tile2)];
+};
 
 model.ShipDesign.prototype.getColor = function()
 {
@@ -114,52 +145,4 @@ model.ShipDesign.prototype.getPositionInIconRelativeFromCenter = function(pos)
         x: pos.x - center.x,
         y: -pos.y + center.y
     };
-};
-
-model.ShipDesign.prototype.getMass = function()
-{
-    var mass = 0;
-    this.modules.forEach(
-        function(module){mass += module.getMass();}
-    );
-
-    return mass;
-};
-
-model.ShipDesign.prototype.calculateCenterOfMass = function()
-{
-    var totalMass = this.getMass();
-    var x = 0;
-    var y = 0;
-
-    this.modules.forEach(
-        function(module)
-        {
-            var pos = module.getCenterPosition();
-            var mass = module.mass;
-
-            x += mass * pos.x;
-            y += mass * pos.y;
-        }
-    );
-
-    return {x: x / totalMass, y: y / totalMass};
-};
-
-model.ShipDesign.prototype.calculateMomentOfIntertia = function()
-{
-    var massCenter = this.calculateCenterOfMass();
-    var moment = 0;
-
-    this.modules.forEach(
-        function(module)
-        {
-            var distance = MathLib.distance(massCenter, module.getCenterPosition());
-            var mass = module.mass;
-
-            moment += mass * Math.pow(distance, 2);
-        }
-    );
-
-    return moment;
 };

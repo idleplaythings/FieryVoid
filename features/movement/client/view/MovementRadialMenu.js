@@ -120,7 +120,7 @@ model.movement.MovementRadialMenu.prototype._createElement = function()
 {
   var parent = this._gameContainer.get();
   var container = jQuery('' +
-      '<div id="'+this._id+'" class="movementRadialMenu" style="display:none;position:absolute;z-index:100;width:'+0+'px;height:'+0+'px"></div>');
+      '<div id="'+this._id+'" class="radialMenu" style="display:none;position:absolute;z-index:100;width:'+0+'px;height:'+0+'px"></div>');
   /*
   var drawingTool = this._canvasDrawingTool;
   var drawingCanvas =

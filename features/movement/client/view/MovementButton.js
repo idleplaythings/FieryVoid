@@ -7,8 +7,8 @@ model.MovementButton = function MovementButton(contents, onClick, validationCall
 
 model.MovementButton.prototype = Object.create(model.Button.prototype);
 
-model.MovementButton.prototype.validate = function(ship, route, routeIndex){
-  if ( ! this._validationCallback(ship, route, routeIndex)){
+model.MovementButton.prototype.validate = function(){
+  if ( ! this._validationCallback()){
     this.get().addClass("error");
   }else{
     this.get().removeClass("error");

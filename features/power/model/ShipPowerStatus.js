@@ -1,27 +1,27 @@
-model.power.ShipPowerStatus = function ShipPowerStatus(moduleLayouts)
-{
-	this.moduleLayouts = moduleLayouts;
+model.power.ShipPowerStatus = function ShipPowerStatus(timeline, ship){
+  this._timeline = timeline;
+  this._ship = ship;
 };
 
 model.power.ShipPowerStatus.prototype.resolvePowerStatus = function()
 {
-	var powerStatuses = this.moduleLayouts.map(function(moduleLayout){
-        return {moduleLayout:moduleLayout, status: null};
+  var powerStatuses = this._ship.getModules().map(function(module){
+        return {module:module, status: null};
     });
 
     var energyProducers = powerStatuses.filter(
         function(status){
-            return status.moduleLayout.energyProducer;
+            return status.module.isEnergyProducer;
         });
 
     var energyConsumers = powerStatuses.filter(
         function(status){
-            return status.moduleLayout.energyConsumer;
+            return status.module.isEnergyConsumer;
         });
 
     var totalEnergyProduced = energyProducers.reduce(
         function(value, status){
-            return value + status.moduleLayout.energyProducer.getProducedEnergy();
+            return value + status.module.getEnergyProducer().getProducedEnergy();
         },
         0
     );
@@ -29,7 +29,7 @@ model.power.ShipPowerStatus.prototype.resolvePowerStatus = function()
     var totalEnergyConsumed = 0;
 
     energyConsumers.forEach(function(status){
-        var energyConsumption = status.moduleLayout.energyConsumer.getConsumedEnergy();
+        var energyConsumption = status.module.getEnergyConsumer().getConsumedEnergy();
         if (totalEnergyProduced >= totalEnergyConsumed + energyConsumption)
         {
             status.status = new model.PowerStatusPowered(energyConsumption);
@@ -44,7 +44,7 @@ model.power.ShipPowerStatus.prototype.resolvePowerStatus = function()
     var powerConsumptionUnassigned = totalEnergyConsumed;
 
     energyProducers.forEach(function(status){
-        var powerOutput = status.moduleLayout.energyProducer.getProducedEnergy();
+        var powerOutput = status.module.getEnergyProducer().getProducedEnergy();
 
         if (powerConsumptionUnassigned > powerOutput)
         {
@@ -62,34 +62,13 @@ model.power.ShipPowerStatus.prototype.resolvePowerStatus = function()
     return powerStatuses;
 };
 
-model.power.ShipPowerStatus.prototype.getStatusSymbols = function(module)
+model.power.ShipPowerStatus.prototype.getPowerStatus = function(module)
 {
-	var moduleLayout = module instanceof model.ModuleLayout ? module : module.getModuleLayout();
-	var status = this.getPowerStatus(moduleLayout);
-
-    if (status !== null)
-        return new model.ShipStatusSymbolPower(status);
-
-    return [];
-};
-
-model.power.ShipPowerStatus.prototype.isPowered = function(moduleLayout)
-{
-	var powerStatus = this.getPowerStatus(moduleLayout);
-	
-	return powerStatus === null || powerStatus instanceof model.PowerStatusPowered;
-};
-
-model.power.ShipPowerStatus.prototype.getPowerStatus = function(moduleLayout)
-{
-    var candidate = this.resolvePowerStatus().filter(function(status){return status.moduleLayout == moduleLayout});
+    var candidate = this.resolvePowerStatus().filter(function(status){
+        return status.module._id == module._id;
+    });
     if (candidate.length == 0)
         return null;
 
     return candidate[0].status;
-};
-
-model.power.ShipPowerStatus.prototype.getActionButtons = function()
-{
-    return [];
 };

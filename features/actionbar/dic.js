@@ -1,7 +1,8 @@
 dic.register('model.ActionBar', function(dic) {
     return new model.ActionBar(
         dic.get('model.EventDispatcher'),
-        dic.get('model.GameHtmlContainer')
+        dic.get('model.GameHtmlContainer'),
+        dic.get('model.ew.EWService')
     );
 }, {shared:true});
 

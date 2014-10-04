@@ -37,7 +37,6 @@ model.movement.MovementAbility.prototype.getTurnCostSpeedFactor = function()
 
 model.movement.MovementAbility.prototype.getShipTurnDelaySpeedFactor = function()
 {
-	console.log(this.turnDelaySpeedFactor);
 	return this.turnDelaySpeedFactor;
 };
 

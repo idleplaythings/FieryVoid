@@ -55,6 +55,16 @@ model.ShipDesignStorage.prototype.createShipDesign = function(doc, ship)
 				moduleDetails.moduleIdOnShip, module, ship);
         }, this);
 
+    var armor = {};
+
+    if (! doc.armor)
+        doc.armor = {};
+
+    Object.keys(doc.armor).forEach(function(key){
+        armor[key] = dic.get(doc.armor[key]);
+    })
+    doc.armor = armor;
+
 	var design = new model.ShipDesignInGame(doc);
 
     return design;

@@ -20,6 +20,12 @@ Factory.prototype.create = function(key)
     return this._registry[key];
 };
 
+Factory.prototype.createAll = function(){
+    return Object.keys(this._registry).map(function(key){
+        return this.create(key);
+    }.bind(this))
+};
+
 Factory.createFactoryFromTags = function (tag)
 {
 	var factory = new Factory();

@@ -1,5 +1,3 @@
-dic.register('model.movement.ShipPowerStatus', function(dic) {
-    return new model.power.ShipPowerStatus();
-}, {
-        tags: [ 'shipStatus' ]
-});
+dic.register('model.power.PowerService', function(dic) {
+    return new model.power.PowerService();
+}, {shared: true});
