@@ -14,5 +14,6 @@ Router.configure({
 Router.configure({
   onBeforeAction: function(){
     dic.cleanShared();
+    this.next();
   }
 })
